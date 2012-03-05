@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands\DeployCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
@@ -53,7 +56,6 @@
     <Compile Include="Commands\ListProjectsCommand.cs" />
     <Compile Include="Commands\ReadEvalPrintLoopCommand.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
