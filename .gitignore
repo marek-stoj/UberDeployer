@@ -15,3 +15,7 @@
 /Src/UberDeployer.1.2.dotCover
 /UberDeployer.sln — skrót.lnk
 /UberDeployer.sln - Shortcut.lnk
+/Src/UberDeployer.Database/obj
+/Src/UberDeployer.Database/sql
+/Src/UberDeployer.Database/UberDeployer.Database.dbmdl
+/Src/UberDeployer.Database/UberDeployer.Database.dbproj.user
