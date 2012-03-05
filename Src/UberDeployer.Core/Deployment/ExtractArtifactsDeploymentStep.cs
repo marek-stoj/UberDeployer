@@ -60,9 +60,14 @@ namespace UberDeployer.Core.Deployment
       _targetArtifactsDirPath = targetArtifactsDirPath;
 
       _archiveSubPath =
-        !string.IsNullOrEmpty(_projectInfo.ArtifactsRepositoryDirName)
-          ? string.Format("{0}/{1}/", _environmentInfo.ConfigurationTemplatesName, _projectInfo.ArtifactsRepositoryDirName)
-          : string.Format("{0}/", _environmentInfo.ConfigurationTemplatesName);
+        !string.IsNullOrEmpty(_environmentInfo.ConfigurationTemplateName)
+          ? string.Format("{0}/", _environmentInfo.ConfigurationTemplateName)
+          : "";
+
+      if (!string.IsNullOrEmpty(_projectInfo.ArtifactsRepositoryDirName))
+      {
+        _archiveSubPath += string.Format("{0}/", _projectInfo.ArtifactsRepositoryDirName);
+      }
     }
 
     #endregion

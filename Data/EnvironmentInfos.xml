@@ -5,19 +5,19 @@
     <!-- Local -->
     <EnvironmentInfoXml>
       <Name>Local</Name>
-      <ConfigurationTemplatesName>Local</ConfigurationTemplatesName>
-      <AppServerMachineName>%{ComputerName}</AppServerMachineName>
-      <WebServerMachineName>%{ComputerName}</WebServerMachineName>
-      <TerminalServerMachineName>%{ComputerName}</TerminalServerMachineName>
-      <DatabaseServerMachineName>%{ComputerName}</DatabaseServerMachineName>
-      <NtServicesBaseDirPath>%{ProgramFiles}\\NtServices</NtServicesBaseDirPath>
+      <ConfigurationTemplateName>Dev</ConfigurationTemplateName>
+      <AppServerMachineName>localhost</AppServerMachineName>
+      <WebServerMachineName>localhost</WebServerMachineName>
+      <TerminalServerMachineName>localhost</TerminalServerMachineName>
+      <DatabaseServerMachineName>localhost</DatabaseServerMachineName>
+      <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
-      <SchedulerAppsBaseDirPath>%{ProgramFiles}\SchedulerApps</SchedulerAppsBaseDirPath>
-      <TerminalAppsBaseDirPath>%{ProgramFiles}\TerminalApps</TerminalAppsBaseDirPath>
+      <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
+      <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
       <EnvironmentUsers>
         <EnvironmentUserXml>
           <Id>Sample.User</Id>
-          <UserName>%{UserDomain}\UberDeployer</UserName>
+          <UserName>UberDeployer</UserName>
         </EnvironmentUserXml>
       </EnvironmentUsers>
     </EnvironmentInfoXml>
@@ -25,19 +25,19 @@
     <!-- Remote -->
     <EnvironmentInfoXml>
       <Name>Remote</Name>
-      <ConfigurationTemplatesName>Remote</ConfigurationTemplatesName>
+      <ConfigurationTemplateName>Prod</ConfigurationTemplateName>
       <AppServerMachineName>REMOTE</AppServerMachineName>
       <WebServerMachineName>REMOTE</WebServerMachineName>
       <TerminalServerMachineName>REMOTE</TerminalServerMachineName>
       <DatabaseServerMachineName>REMOTE</DatabaseServerMachineName>
-      <NtServicesBaseDirPath>%{ProgramFiles}\NtServices</NtServicesBaseDirPath>
+      <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
-      <SchedulerAppsBaseDirPath>%{ProgramFiles}\SchedulerApps</SchedulerAppsBaseDirPath>
-      <TerminalAppsBaseDirPath>%{ProgramFiles}\TerminalApps</TerminalAppsBaseDirPath>
+      <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
+      <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
       <EnvironmentUsers>
         <EnvironmentUserXml>
           <Id>Sample.User</Id>
-          <UserName>%{UserDomain}\UberDeployer</UserName>
+          <UserName>UberDeployer</UserName>
         </EnvironmentUserXml>
       </EnvironmentUsers>
     </EnvironmentInfoXml>

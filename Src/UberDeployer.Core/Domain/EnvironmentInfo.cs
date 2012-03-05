@@ -17,7 +17,7 @@ namespace UberDeployer.Core.Domain
 
     public EnvironmentInfo(
       string name,
-      string configurationTemplatesName,
+      string configurationTemplateName,
       string appServerMachineName,
       string webServerMachineName,
       string terminalServerMachineName,
@@ -33,9 +33,9 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentException("Argument can't be null nor empty.", "name");
       }
 
-      if (string.IsNullOrEmpty(configurationTemplatesName))
+      if (configurationTemplateName == null)
       {
-        throw new ArgumentException("Argument can't be null nor empty.", "configurationTemplatesName");
+        throw new ArgumentNullException("configurationTemplateName");
       }
 
       if (string.IsNullOrEmpty(appServerMachineName))
@@ -84,7 +84,7 @@ namespace UberDeployer.Core.Domain
       }
       
       Name = name;
-      ConfigurationTemplatesName = configurationTemplatesName;
+      ConfigurationTemplateName = configurationTemplateName;
       AppServerMachineName = appServerMachineName;
       WebServerMachineName = webServerMachineName;
       TerminalServerMachineName = terminalServerMachineName;
@@ -167,7 +167,7 @@ namespace UberDeployer.Core.Domain
 
     public string Name { get; private set; }
 
-    public string ConfigurationTemplatesName { get; private set; }
+    public string ConfigurationTemplateName { get; private set; }
 
     public string AppServerMachineName { get; private set; }
 

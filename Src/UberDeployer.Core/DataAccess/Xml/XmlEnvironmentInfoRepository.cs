@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.IO;
 using UberDeployer.Core.Domain;
@@ -10,8 +9,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 {
   public class XmlEnvironmentInfoRepository : IEnvironmentInfoRepository
   {
-    private static readonly Regex _EnvironmentVariableRegex = new Regex("%{(?<VariableName>[^}]+)}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
     #region Nested types
 
     public class EnvironmentInfosXml
@@ -23,7 +20,7 @@ namespace UberDeployer.Core.DataAccess.Xml
     {
       public string Name { get; set; }
 
-      public string ConfigurationTemplatesName { get; set; }
+      public string ConfigurationTemplateName { get; set; }
 
       public string AppServerMachineName { get; set; }
 
@@ -105,29 +102,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     #region Private helper methods
 
-    private static string ExpandEnvironmentVariables(string s)
-    {
-      if (s == null)
-      {
-        throw new ArgumentNullException("s");
-      }
-
-      if (s.Length == 0)
-      {
-        return s;
-      }
-
-      return
-        _EnvironmentVariableRegex.Replace(
-          s,
-          match =>
-          {
-            string variableName = match.Groups["VariableName"].Value;
-
-            return Environment.GetEnvironmentVariable(variableName) ?? "";
-          });
-    }
-
     private void LoadXmlIfNeeded()
     {
       if (_environmentInfosXml != null)
@@ -147,21 +121,21 @@ namespace UberDeployer.Core.DataAccess.Xml
           .Select(
             eiXml =>
             new EnvironmentInfo(
-              ExpandEnvironmentVariables(eiXml.Name),
-              ExpandEnvironmentVariables(eiXml.ConfigurationTemplatesName),
-              ExpandEnvironmentVariables(eiXml.AppServerMachineName),
-              ExpandEnvironmentVariables(eiXml.WebServerMachineName),
-              ExpandEnvironmentVariables(eiXml.TerminalServerMachineName),
-              ExpandEnvironmentVariables(eiXml.DatabaseServerMachineName),
-              ExpandEnvironmentVariables(eiXml.NtServicesBaseDirPath),
-              ExpandEnvironmentVariables(eiXml.WebAppsBaseDirPath),
-              ExpandEnvironmentVariables(eiXml.SchedulerAppsBaseDirPath),
-              ExpandEnvironmentVariables(eiXml.TerminalAppsBaseDirPath),
+              eiXml.Name,
+              eiXml.ConfigurationTemplateName,
+              eiXml.AppServerMachineName,
+              eiXml.WebServerMachineName,
+              eiXml.TerminalServerMachineName,
+              eiXml.DatabaseServerMachineName,
+              eiXml.NtServicesBaseDirPath,
+              eiXml.WebAppsBaseDirPath,
+              eiXml.SchedulerAppsBaseDirPath,
+              eiXml.TerminalAppsBaseDirPath,
               eiXml.EnvironmentUsers.Select(
                 eu =>
                 new EnvironmentUser(
-                  ExpandEnvironmentVariables(eu.Id),
-                  ExpandEnvironmentVariables(eu.UserName)))))
+                  eu.Id,
+                  eu.UserName))))
           .ToDictionary(ei => ei.Name);
     }
 

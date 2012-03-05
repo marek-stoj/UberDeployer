@@ -52,6 +52,7 @@ namespace UberDeployer.Core.TeamCity
 
     public Project GetProjectByName(string projectName)
     {
+      // TODO IMM HI: optimize
       IEnumerable<Project> projects = GetAllProjects();
 
       return
