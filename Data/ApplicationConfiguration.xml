@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <ApplicationConfigurationXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   
-  <TeamCityHostName>%{ComputerName}</TeamCityHostName>
-  <TeamCityPort>81</TeamCityPort>
+  <TeamCityHostName>localhost</TeamCityHostName>
+  <TeamCityPort>8080</TeamCityPort>
   <TeamCityUserName>UberDeployer</TeamCityUserName>
   <TeamCityPassword>abc123</TeamCityPassword>
-  <ScExePath>%{SystemRoot}\system32\sc.exe</ScExePath>
-  <ConnectionString>Database=UberDeployer;Server=${LocalMachineName};Integrated Security=SSPI;Application Name=UberDeployer</ConnectionString>
+  <ScExePath>C:\Windows\System32\sc.exe</ScExePath>
+  <ConnectionString>Database=UberDeployer;Server=localhost;Integrated Security=SSPI;Application Name=UberDeployer</ConnectionString>
   
 </ApplicationConfigurationXml>
