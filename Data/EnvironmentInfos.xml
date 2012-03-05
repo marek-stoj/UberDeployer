@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<EnvironmentInfosXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <EnvironmentInfos>
+    <!-- Local -->
+    <EnvironmentInfoXml>
+      <Name>Local</Name>
+      <ConfigurationTemplatesName>Local</ConfigurationTemplatesName>
+      <AppServerMachineName>%{ComputerName}</AppServerMachineName>
+      <WebServerMachineName>%{ComputerName}</WebServerMachineName>
+      <TerminalServerMachineName>%{ComputerName}</TerminalServerMachineName>
+      <DatabaseServerMachineName>%{ComputerName}</DatabaseServerMachineName>
+      <NtServicesBaseDirPath>%{ProgramFiles}\\NtServices</NtServicesBaseDirPath>
+      <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
+      <SchedulerAppsBaseDirPath>%{ProgramFiles}\SchedulerApps</SchedulerAppsBaseDirPath>
+      <TerminalAppsBaseDirPath>%{ProgramFiles}\TerminalApps</TerminalAppsBaseDirPath>
+      <EnvironmentUsers>
+        <EnvironmentUserXml>
+          <Id>Sample.User</Id>
+          <UserName>%{UserDomain}\UberDeployer</UserName>
+        </EnvironmentUserXml>
+      </EnvironmentUsers>
+    </EnvironmentInfoXml>
+
+    <!-- Remote -->
+    <EnvironmentInfoXml>
+      <Name>Remote</Name>
+      <ConfigurationTemplatesName>Remote</ConfigurationTemplatesName>
+      <AppServerMachineName>REMOTE</AppServerMachineName>
+      <WebServerMachineName>REMOTE</WebServerMachineName>
+      <TerminalServerMachineName>REMOTE</TerminalServerMachineName>
+      <DatabaseServerMachineName>REMOTE</DatabaseServerMachineName>
+      <NtServicesBaseDirPath>%{ProgramFiles}\NtServices</NtServicesBaseDirPath>
+      <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
+      <SchedulerAppsBaseDirPath>%{ProgramFiles}\SchedulerApps</SchedulerAppsBaseDirPath>
+      <TerminalAppsBaseDirPath>%{ProgramFiles}\TerminalApps</TerminalAppsBaseDirPath>
+      <EnvironmentUsers>
+        <EnvironmentUserXml>
+          <Id>Sample.User</Id>
+          <UserName>%{UserDomain}\UberDeployer</UserName>
+        </EnvironmentUserXml>
+      </EnvironmentUsers>
+    </EnvironmentInfoXml>
+  </EnvironmentInfos>
+
+</EnvironmentInfosXml>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ProjectInfosXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <ProjectInfos>
+    <!-- NT services -->
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>UberDeployer.SampleNtService</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleNtService</ArtifactsRepositoryDirName>
+      <NtServiceName>UberDeployer.SampleNtService</NtServiceName>
+      <NtServiceDirName>UberDeployer.SampleNtService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.UberDeployer.SampleNtService</NtServiceDisplayName>
+      <NtServiceExeName>UberDeployerSamples.SampleNtService.exe</NtServiceExeName>
+      <NtServiceUserId>Sample.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <!-- Web apps -->
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>UberDeployer.SampleWebApp</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleWebApp</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
+      <WebAppDirName>KRD\UberDeployer.SampleWebApp</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <!-- Scheduler apps -->
+    <ProjectInfoXml xsi:type="SchedulerAppProjectInfoXml">
+      <Name>UberDeployer.SampleSchedulerApp</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleSchedulerApp</ArtifactsRepositoryDirName>
+      <SchedulerAppName>KRD.SampleSchedulerApp</SchedulerAppName>
+      <SchedulerAppDirName>SampleSchedulerApp</SchedulerAppDirName>
+      <SchedulerAppExeName>UberDeployerSamples.SampleSchedulerApp.exe</SchedulerAppExeName>
+      <SchedulerAppUserId>Sample.User</SchedulerAppUserId>
+      <ScheduledHour>12</ScheduledHour>
+      <ScheduledMinute>0</ScheduledMinute>
+      <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
+    </ProjectInfoXml>
+
+    <!-- Terminal apps -->
+    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml">
+      <Name>UberDeployer.SampleTerminalApp</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleTerminalApp</ArtifactsRepositoryDirName>
+      <TerminalAppName>UberDeployer.SampleTerminalApp</TerminalAppName>
+      <TerminalAppDirName>UberDeployer.SampleTerminalApp</TerminalAppDirName>
+      <TerminalAppExeName>UberDeployer.SampleTerminalApp.exe</TerminalAppExeName>
+    </ProjectInfoXml>
+  </ProjectInfos>
+
+</ProjectInfosXml>

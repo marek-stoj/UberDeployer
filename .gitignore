@@ -1,0 +1,14 @@
+
+/Src/_ReSharper.UberDeployer
+/Src/UberDeployer.sln.DotSettings.user
+/Src/UberDeployer.suo
+/Src/UberDeployer.CommonConfiguration/bin
+/Src/UberDeployer.CommonConfiguration/obj
+/Src/UberDeployer.ConsoleApp/obj
+/Src/UberDeployer.ConsoleApp/bin
+/Src/UberDeployer.ConsoleCommander/bin
+/Src/UberDeployer.ConsoleCommander/obj
+/Src/UberDeployer.Core/bin
+/Src/UberDeployer.Core/obj
+/Src/UberDeployer.Core/UberDeployer.Core.csproj.user
+/Src/UberDeployer.ConsoleApp/UberDeployer.ConsoleApp.csproj.user
