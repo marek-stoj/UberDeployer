@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.WinApp", "Uber
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectDepsVisualizer", "ProjectDepsVisualizer\ProjectDepsVisualizer.csproj", "{FF8FA293-8903-4C8E-9722-1CA7016B2164}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.NAnt", "UberDeployer.NAnt\UberDeployer.NAnt.csproj", "{49E58BC9-597F-4921-82EC-7F8310480AAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,16 @@ Global
 		{FF8FA293-8903-4C8E-9722-1CA7016B2164}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FF8FA293-8903-4C8E-9722-1CA7016B2164}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FF8FA293-8903-4C8E-9722-1CA7016B2164}.Release|x86.ActiveCfg = Release|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{49E58BC9-597F-4921-82EC-7F8310480AAA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
