@@ -19,3 +19,5 @@
 /Src/UberDeployer.Database/sql
 /Src/UberDeployer.Database/UberDeployer.Database.dbmdl
 /Src/UberDeployer.Database/UberDeployer.Database.dbproj.user
+/Src/UberDeployer.Core.Tests/obj
+/Src/UberDeployer.Core.Tests/bin
