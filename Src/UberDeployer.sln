@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.Core.Tests", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7F766DDD-7462-4E8C-88F8-612E49C4C37C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.WinApp", "UberDeployer.WinApp\UberDeployer.WinApp.csproj", "{0EB8E47F-AD0B-4D24-B343-8131E819EB17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,16 @@ Global
 		{F6E27B5E-EC49-4A62-9346-D8B726CA57E6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F6E27B5E-EC49-4A62-9346-D8B726CA57E6}.Release|x86.ActiveCfg = Release|x86
 		{F6E27B5E-EC49-4A62-9346-D8B726CA57E6}.Release|x86.Build.0 = Release|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Debug|x86.ActiveCfg = Debug|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Debug|x86.Build.0 = Debug|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Release|Any CPU.ActiveCfg = Release|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Release|x86.ActiveCfg = Release|x86
+		{0EB8E47F-AD0B-4D24-B343-8131E819EB17}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

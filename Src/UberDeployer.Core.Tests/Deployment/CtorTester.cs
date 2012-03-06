@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
-  // TODO IMM HI: generalize; make sequential; move to KRD.Testing
+  // TODO IMM HI: generalize; make sequential
   public class CtorTester<T>
   {
     private readonly List<object> _argumentsList;

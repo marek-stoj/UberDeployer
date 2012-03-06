@@ -62,6 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Core\DataAccess\Xml\XmlEnvironmentInfoRepositoryTests.cs" />
     <Compile Include="Core\DataAccess\Xml\XmlPojectInfoRepositoryTests.cs" />
     <Compile Include="DataAccess\TeamCityArtifactsRepositoryTests.cs" />
@@ -88,7 +91,6 @@
     <Compile Include="Management\NtServices\ScExeBasedNtServiceManagerTests.cs" />
     <Compile Include="Management\TaskScheduler\ScheduledTaskSpecificationTests.cs" />
     <Compile Include="Management\TaskScheduler\TaskSchedulerTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCity\ModelsTests.cs" />
   </ItemGroup>
   <ItemGroup>

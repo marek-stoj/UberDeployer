@@ -21,3 +21,5 @@
 /Src/UberDeployer.Database/UberDeployer.Database.dbproj.user
 /Src/UberDeployer.Core.Tests/obj
 /Src/UberDeployer.Core.Tests/bin
+/Src/UberDeployer.WinApp/obj
+/Src/UberDeployer.WinApp/bin

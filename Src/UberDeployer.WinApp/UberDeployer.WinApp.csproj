@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0EB8E47F-AD0B-4D24-B343-8131E819EB17}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UberDeployer.WinApp</RootNamespace>
+    <AssemblyName>UberDeployer.WinApp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="ConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigurationForm.designer.cs">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\MyDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DbVersionsDiffForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DbVersionsDiffForm.designer.cs">
+      <DependentUpon>DbVersionsDiffForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DeploymentAuditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeploymentAuditForm.designer.cs">
+      <DependentUpon>DeploymentAuditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiUtils.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="ProjectDeploymentInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Properties\Settings.Designer.cs" />
+    <Compile Include="UberDeployerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewEnvironmentInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewEnvironmentInfoForm.designer.cs">
+      <DependentUpon>ViewEnvironmentInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\DeploymentRequestInListViewModel.cs" />
+    <Compile Include="ViewModels\EnvironmentInfoInComboBoxViewModel.cs" />
+    <Compile Include="ViewModels\ProjectConfigurationBuildInListViewModel.cs" />
+    <Compile Include="ViewModels\ProjectConfigurationInListViewModel.cs" />
+    <Compile Include="ViewModels\ProjectInfoInListViewModel.cs" />
+    <Compile Include="ViewProjectInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewProjectInfoForm.designer.cs">
+      <DependentUpon>ViewProjectInfoForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ConfigurationForm.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DbVersionsDiffForm.resx">
+      <DependentUpon>DbVersionsDiffForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeploymentAuditForm.resx">
+      <DependentUpon>DeploymentAuditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="ViewEnvironmentInfoForm.resx">
+      <DependentUpon>ViewEnvironmentInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewProjectInfoForm.resx">
+      <DependentUpon>ViewProjectInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Data\ApplicationConfiguration.xml">
+      <Link>Data\ApplicationConfiguration.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\EnvironmentInfos.xml">
+      <Link>Data\EnvironmentInfos.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\ProjectInfos.xml">
+      <Link>Data\ProjectInfos.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\indeterminate_progress.gif" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
+      <Project>{CAFF4BEB-C983-4041-8A6C-A34EC68E546B}</Project>
+      <Name>UberDeployer.CommonConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
+      <Project>{A7FBD8CF-8E87-4029-B8B3-9F37B59C2BC1}</Project>
+      <Name>UberDeployer.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
