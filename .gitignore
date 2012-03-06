@@ -23,3 +23,6 @@
 /Src/UberDeployer.Core.Tests/bin
 /Src/UberDeployer.WinApp/obj
 /Src/UberDeployer.WinApp/bin
+/Src/ProjectDepsVisualizer/obj
+/Src/ProjectDepsVisualizer/bin
+/Src/ProjectDepsVisualizer/ProjectDepsVisualizer.csproj.DotSettings.user

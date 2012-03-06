@@ -340,11 +340,8 @@ namespace UberDeployer.WinApp
       viewEnvironmentInfoForm.ShowDialog(this);
     }
 
-    // TODO IMM HI: support this or remove it completely
     private void btn_showDependencies_Click(object sender, EventArgs e)
     {
-      throw new NotSupportedException();
-/*
       ProjectConfiguration selectedProjectConfiguration = GetSelectedProjectConfiguration();
       var projectDepsVisualizerMainForm = new ProjectDepsVisualizer.UI.MainForm();
 
@@ -354,7 +351,6 @@ namespace UberDeployer.WinApp
           selectedProjectConfiguration.Name);
 
       projectDepsVisualizerMainForm.Show();
-*/
     }
 
     private void OpenWebApp(WebAppProjectInfo webAppProjectInfo, EnvironmentInfo environmentInfo)
@@ -449,15 +445,11 @@ namespace UberDeployer.WinApp
       GuiUtils.BeginInvoke(this, () => dgv_projectConfigurationBuilds.DataSource = projectConfigurationBuilds);
     }
 
-    // TODO IMM HI: support this or remove it completely
     private void dependenciesVisualizerToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      throw new NotSupportedException();
-/*
       var projectDepsVisualizerMainForm = new ProjectDepsVisualizer.UI.MainForm();
 
       projectDepsVisualizerMainForm.Show();
-*/
     }
 
     #endregion

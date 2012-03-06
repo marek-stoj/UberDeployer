@@ -142,6 +142,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\ProjectDepsVisualizer\ProjectDepsVisualizer.csproj">
+      <Project>{FF8FA293-8903-4C8E-9722-1CA7016B2164}</Project>
+      <Name>ProjectDepsVisualizer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
       <Project>{CAFF4BEB-C983-4041-8A6C-A34EC68E546B}</Project>
       <Name>UberDeployer.CommonConfiguration</Name>

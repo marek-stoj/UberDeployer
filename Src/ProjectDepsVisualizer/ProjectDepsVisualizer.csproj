@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FF8FA293-8903-4C8E-9722-1CA7016B2164}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProjectDepsVisualizer</RootNamespace>
+    <AssemblyName>ProjectDepsVisualizer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GraphSharp">
+      <HintPath>..\..\Lib\GraphSharp\GraphSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphSharp.Controls">
+      <HintPath>..\..\Lib\GraphSharp\GraphSharp.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Windows.Design.Markup, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\Lib\GraphSharp\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WPFExtensions">
+      <HintPath>..\..\Lib\GraphSharp\WPFExtensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Core\BuildFileAnalyzer.cs" />
+    <Compile Include="Core\Exporters\DgmlProjectDependenciesModelExporter.cs" />
+    <Compile Include="Core\Exporters\IProjectDependenciesModelExporter.cs" />
+    <Compile Include="Core\ISvnClient.cs" />
+    <Compile Include="Core\LogMessageEventArgs.cs" />
+    <Compile Include="Core\ProjectDependenciesModel.cs" />
+    <Compile Include="Core\ProjectDependenciesModelBuilder.cs" />
+    <Compile Include="Core\SvnClient.cs" />
+    <Compile Include="Core\VersionFileAnalyzer.cs" />
+    <Compile Include="Core\VersionsIntegrityCheckResult.cs" />
+    <Compile Include="Domain\ProjectDependency.cs" />
+    <Compile Include="Domain\ProjectDesignator.cs" />
+    <Compile Include="Domain\ProjectInfo.cs" />
+    <Compile Include="UI\GuiUtils.cs" />
+    <Compile Include="UI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ProjectDependenciesModelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ProjectDependenciesModelForm.Designer.cs">
+      <DependentUpon>ProjectDependenciesModelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Visualization\DistributorsHierarchyGraphLayoutControl.xaml.cs">
+      <DependentUpon>DistributorsHierarchyGraphLayoutControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visualization\ProjectDependenciesGraph.cs" />
+    <Compile Include="Visualization\ProjectDependenciesGraphBuilder.cs" />
+    <Compile Include="Visualization\ProjectDependenciesGraphLayout.cs" />
+    <Compile Include="Visualization\ProjectInfoVertex.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Visualization\DistributorsHierarchyGraphLayoutControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ProjectDependenciesModelForm.resx">
+      <DependentUpon>ProjectDependenciesModelForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
