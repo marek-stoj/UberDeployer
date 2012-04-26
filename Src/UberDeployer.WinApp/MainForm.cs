@@ -24,6 +24,14 @@ namespace UberDeployer.WinApp
 
     private bool _suppressProjectConfigurationsLoading;
 
+    private int _projectsRequestsCounter;
+    private int _projectConfigurationsRequestsCounter;
+    private int _projectConfigurationBuildsRequestsCounter;
+
+    private readonly object _projectsRequestsMutex = new object();
+    private readonly object _projectConfigurationsRequestsMutex = new object();
+    private readonly object _projectConfigurationBuildsRequestsMutex = new object();
+
     #region Constructor(s)
 
     public MainForm()
@@ -493,6 +501,14 @@ namespace UberDeployer.WinApp
           {
             try
             {
+              int requestNumber;
+
+              lock (_projectsRequestsMutex)
+              {
+                _projectsRequestsCounter++;
+                requestNumber = _projectsRequestsCounter;
+              }
+
               LogMessage("Loading projects...");
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
@@ -503,20 +519,31 @@ namespace UberDeployer.WinApp
                   .Select(p => new ProjectInfoInListViewModel(p))
                   .ToList();
 
-              GuiUtils.BeginInvoke(this, () =>
-                                           {                                             
-                                               try
-                                               {
-                                                 _suppressProjectConfigurationsLoading = true;
-                                                 dgv_projectInfos.DataSource = allProjects;
-                                               }
-                                               finally
-                                               {
-                                                 _suppressProjectConfigurationsLoading = false;
-                                               }
+              lock (_projectsRequestsMutex)
+              {
+                if (requestNumber != _projectsRequestsCounter)
+                {
+                  // don't update UI because there already was a new request
+                  return;
+                }
 
-                                               dgv_projectInfos.ClearSelection();
-                                           });
+                GuiUtils.BeginInvoke(
+                  this,
+                  () =>
+                  {
+                    try
+                    {
+                      _suppressProjectConfigurationsLoading = true;
+                      dgv_projectInfos.DataSource = allProjects;
+                    }
+                    finally
+                    {
+                      _suppressProjectConfigurationsLoading = false;
+                    }
+
+                    dgv_projectInfos.ClearSelection();
+                  });
+              }
             }
             catch (Exception exc)
             {
@@ -544,6 +571,14 @@ namespace UberDeployer.WinApp
           {
             try
             {
+              int requestNumber;
+
+              lock (_projectConfigurationsRequestsMutex)
+              {
+                _projectConfigurationsRequestsCounter++;
+                requestNumber = _projectConfigurationsRequestsCounter;
+              }
+
               LogMessage(string.Format("Loading project configurations for project: '{0}'...", projectInfo.Name));
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
@@ -558,7 +593,16 @@ namespace UberDeployer.WinApp
                       .ToList()
                   : new List<ProjectConfigurationInListViewModel>();
 
-              GuiUtils.BeginInvoke(this, () => dgv_projectConfigurations.DataSource = projectConfigurations);
+              lock (_projectConfigurationsRequestsMutex)
+              {
+                if (requestNumber != _projectConfigurationsRequestsCounter)
+                {
+                  // don't update UI because there already was a new request
+                  return;
+                }
+
+                GuiUtils.BeginInvoke(this, () => dgv_projectConfigurations.DataSource = projectConfigurations);
+              }
             }
             catch (Exception exc)
             {
@@ -586,6 +630,14 @@ namespace UberDeployer.WinApp
           {
             try
             {
+              int requestNumber;
+
+              lock (_projectConfigurationBuildsRequestsMutex)
+              {
+                _projectConfigurationBuildsRequestsCounter++;
+                requestNumber = _projectConfigurationBuildsRequestsCounter;
+              }
+
               LogMessage(string.Format("Loading project configuration builds for project configuration: '{0} ({1})'...", projectConfiguration.ProjectName, projectConfiguration.Name));
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
@@ -604,7 +656,16 @@ namespace UberDeployer.WinApp
                       .ToList()
                   : new List<ProjectConfigurationBuildInListViewModel>();
 
-              GuiUtils.BeginInvoke(this, () => dgv_projectConfigurationBuilds.DataSource = projectConfigurationBuilds);
+              lock (_projectConfigurationBuildsRequestsMutex)
+              {
+                if (requestNumber != _projectConfigurationBuildsRequestsCounter)
+                {
+                  // don't update UI because there already was a new request
+                  return;
+                }
+
+                GuiUtils.BeginInvoke(this, () => dgv_projectConfigurationBuilds.DataSource = projectConfigurationBuilds);
+              }
             }
             catch (Exception exc)
             {
