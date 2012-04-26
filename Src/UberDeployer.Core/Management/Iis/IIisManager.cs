@@ -13,6 +13,8 @@ namespace UberDeployer.Core.Management.Iis
     
     void SetAppPool(string machineName, string fullWebAppName, string appPoolName);
 
+    /// <param name="machineName"></param>
+    /// <param name="fullWebAppName">site/app_name</param>
     string GetWebApplicationPath(string machineName, string fullWebAppName);
   }
 }

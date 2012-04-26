@@ -55,7 +55,7 @@ namespace UberDeployer.Core.Tests.Management.Iis
     public void CreateAppPool_WhenMachineNameIsNullOrEmpty_ThrowArgumentExcpetion()
     {
       // Act & Assert
-      Assert.Throws<ArgumentException>(() => _msDeployBasedIisManager.CreateAppPool(string.Empty, new IisAppPoolInfo("test", IisAppPoolVersion.V4_0, IisAppPoolMode.Classic)));
+      Assert.Throws<ArgumentException>(() => _msDeployBasedIisManager.CreateAppPool(string.Empty, new IisAppPoolInfo("test", IisAppPoolVersion.V4_0,IisAppPoolMode.Classic)));
     }
 
     [Test]
@@ -99,7 +99,7 @@ namespace UberDeployer.Core.Tests.Management.Iis
     }
 
     #endregion Throwing Exception
-
+    
     [Test]
     public void GetWebApplicationPath_ApplicationNotExistOnServer_ReturnsNull()
     {
@@ -109,10 +109,10 @@ namespace UberDeployer.Core.Tests.Management.Iis
       string console;
 
       _iMsDeploy.Setup(imsd => imsd.Run(
-        It.IsAny<string[]>(),
+        It.IsAny<string[]>(), 
         out console)).Throws(new MsDeployException(consoleError));
-
-      Assert.IsNull(_msDeployBasedIisManager.GetWebApplicationPath("machineName", "fullWebApplicationName"));
+      
+      Assert.IsNull( _msDeployBasedIisManager.GetWebApplicationPath("machineName", "fullWebApplicationName"));
     }
 
     [Test]

@@ -2,23 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Microsoft.Web.Administration;
 using UberDeployer.Core.Domain;
-using System.Text.RegularExpressions;
-using System.Threading;
 using UberDeployer.Core.Management.MsDeploy;
+using System.Text.RegularExpressions;
 
 namespace UberDeployer.Core.Management.Iis
 {
-  // TODO IMM HI: RETRIES ARE NOT ENOUGH!
-
   public class MsDeployBasedIisManager : IIisManager
   {
-    private readonly IMsDeploy _msDeploy;
     private const string _RemoteAppCmdExePath = "C:\\Windows\\system32\\inetsrv\\appcmd.exe";
-    private const int _AppCmdRetriesCount = 9;
 
-    private static readonly Regex _AppPoolInfoRegex = new Regex("APPPOOL \"(?<AppPoolName>[^\"]+)\" \\(MgdVersion:(?<AppPoolVersion>[^,]+),MgdMode:(?<AppPoolMode>[^,\\)]+)[^\\)]+\\)\\r?\\n", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private static readonly Regex _ExitCodeRegex = new Regex("exited with code '(?<ExitCode>0x[0-9a-fA-F]+)'", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex _SiteDoesNotExistRegex = new Regex(@"(Application '[^']+' does not exist in site '[^']+'\.)|(Site '[^']+' does not exist\.)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private readonly IMsDeploy _msDeploy;
 
     #region Constructor(s)
 
@@ -35,7 +33,6 @@ namespace UberDeployer.Core.Management.Iis
 
     #region IIisManager Members
 
-    // TODO IMM HI: retries on call site?
     public IDictionary<string, IisAppPoolInfo> GetAppPools(string machineName)
     {
       if (string.IsNullOrEmpty(machineName))
@@ -43,7 +40,20 @@ namespace UberDeployer.Core.Management.Iis
         throw new ArgumentException("Argument can't be null nor empty.", "machineName");
       }
 
-      return GetAppPoolsImpl(machineName, _AppCmdRetriesCount, 0);
+      using (ServerManager serverManager = ServerManager.OpenRemote(machineName))
+      {
+        return
+          serverManager.ApplicationPools
+            .Select(
+              ap =>
+              new IisAppPoolInfo(
+                ap.Name,
+                GetIisAppPoolVersion(ap.ManagedRuntimeVersion),
+                GetIisAppPoolMode(ap.ManagedPipelineMode)))
+            .ToDictionary(
+              iapi => iapi.Name,
+              iapi => iapi);
+      }
     }
 
     public bool AppPoolExists(string machineName, string appPoolName)
@@ -58,10 +68,9 @@ namespace UberDeployer.Core.Management.Iis
         throw new ArgumentException("Argument can't be null nor empty.", "appPoolName");
       }
 
-      IDictionary<string, IisAppPoolInfo> appPools =
-        GetAppPoolsImpl(machineName, _AppCmdRetriesCount, 0);
+      IDictionary<string, IisAppPoolInfo> iisAppPoolInfos = GetAppPools(machineName);
 
-      return appPools.ContainsKey(appPoolName);
+      return iisAppPoolInfos.ContainsKey(appPoolName);
     }
 
     public void CreateAppPool(string machineName, IisAppPoolInfo appPoolInfo)
@@ -140,16 +149,31 @@ namespace UberDeployer.Core.Management.Iis
       try
       {
         string consoleOutput;
+
         _msDeploy.Run(msDeployArgs, out consoleOutput);
-        return XDocument.Parse(consoleOutput).Descendants("virtualDirectory").Single().Descendants("dirPath").Single().Attribute("path").Value;
+
+        XAttribute attribute =
+          XDocument.Parse(consoleOutput)
+            .Descendants("virtualDirectory")
+            .Single()
+            .Descendants("dirPath")
+            .Single()
+            .Attribute("path");
+
+        if (attribute == null)
+        {
+          throw new InternalException("Couldn't get 'path' attribute.");
+        }
+
+        return attribute.Value;
       }
       catch (MsDeployException e)
       {
-        var pat = new Regex(@"(Application '[^']+' does not exist in site '[^']+'\.)|(Site '[^']+' does not exist\.)");
-        if (pat.IsMatch(e.ConsoleError))
+        if (_SiteDoesNotExistRegex.IsMatch(e.ConsoleError))
         {
           return null;
         }
+
         throw;
       }
     }
@@ -157,30 +181,6 @@ namespace UberDeployer.Core.Management.Iis
     #endregion
 
     #region Private helper methods
-
-    private static IisAppPoolInfo CreateIisAppPoolInfoFromMatch(Match match)
-    {
-      string appPoolName = match.Groups["AppPoolName"].Value;
-      string appPoolVersionStr = match.Groups["AppPoolVersion"].Value;
-      string appPoolModeStr = match.Groups["AppPoolMode"].Value;
-      IisAppPoolVersion appPoolVersion;
-      IisAppPoolMode appPoolMode;
-
-      appPoolVersionStr = appPoolVersionStr.Replace(".", "_");
-
-      if (!Enum.TryParse(appPoolVersionStr, true, out appPoolVersion))
-      {
-        throw new InternalException(string.Format("Couldn't parse application pool version: '{0}'.", appPoolVersionStr));
-      }
-
-      if (!Enum.TryParse(appPoolModeStr, true, out appPoolMode))
-      {
-        throw new InternalException(string.Format("Couldn't parse application pool mode: '{0}'.", appPoolModeStr));
-      }
-
-      return new IisAppPoolInfo(appPoolName, appPoolVersion, appPoolMode);
-    }
-
 
     private static void HandleAppCmdExitCode(string exitCodeString, string machineName)
     {
@@ -200,51 +200,42 @@ namespace UberDeployer.Core.Management.Iis
       }
     }
 
-    private IDictionary<string, IisAppPoolInfo> GetAppPoolsImpl(string machineName, int retriesCount, int sleepBeforeRetryInMs)
+    private static IisAppPoolMode GetIisAppPoolMode(ManagedPipelineMode managedPipelineMode)
     {
-      /*
-      ArturS: Imho we should be using this: http://stackoverflow.com/questions/4791701/create-an-application-pool-that-uses-net-4-0 (reply #2)
-      (Microsoft.Web.Administration)
-      */
-
-      string consoleOutput = RunAppCmd(machineName, "list apppool");
-
-      MatchCollection appPoolInfosMatches = _AppPoolInfoRegex.Matches(consoleOutput);
-
-      Dictionary<string, IisAppPoolInfo> appPools =
-        (from Match appPoolInfoMatch in appPoolInfosMatches select appPoolInfoMatch)
-          .ToDictionary(
-            match => match.Groups["AppPoolName"].Value,
-            match => CreateIisAppPoolInfoFromMatch(match));
-
-      // sometimes msdeploy doesn't get the output from appcmd.exe,
-      // so we think there are no application pools at all;
-      // let's retry the operation just to be sure
-      if (appPools.Count == 0 && retriesCount > 0)
+      switch (managedPipelineMode)
       {
-        // TODO IMM HI: log
-        Console.WriteLine("Will retry.");
+        case ManagedPipelineMode.Integrated:
+          return IisAppPoolMode.Integrated;
 
-        if (sleepBeforeRetryInMs > 0)
-        {
-          // TODO IMM HI: log
-          Console.WriteLine("Sleeping for {0:F2} s.", sleepBeforeRetryInMs / 1000.0);
-          Thread.Sleep(sleepBeforeRetryInMs);
-        }
-        else
-        {
-          // we'll start with 100 ms (2 * 50 ms)
-          sleepBeforeRetryInMs = 50;
-        }
+        case ManagedPipelineMode.Classic:
+          return IisAppPoolMode.Classic;
 
-        return GetAppPoolsImpl(machineName, retriesCount - 1, 2 * sleepBeforeRetryInMs);
+        default:
+          throw new NotSupportedException(string.Format("Unknown managed pipeline mode: '{0}'.", managedPipelineMode));
       }
-
-      return appPools;
     }
 
-    private string RunAppCmd(string machineName, string appCmdArgs)
+    private static IisAppPoolVersion GetIisAppPoolVersion(string managedRuntimeVersionString)
     {
+      switch (managedRuntimeVersionString)
+      {
+        case "v1.1":
+          return IisAppPoolVersion.V1_1;
+
+        case "v2.0":
+          return IisAppPoolVersion.V2_0;
+
+        case "v4.0":
+          return IisAppPoolVersion.V4_0;
+
+        default:
+          throw new NotSupportedException(string.Format("Unknown managed runtime version string: '{0}'.", managedRuntimeVersionString));
+      }
+    }
+
+    private void RunAppCmd(string machineName, string appCmdArgs)
+    {
+
       var msDeployArgs =
         new[]
           {
@@ -266,8 +257,6 @@ namespace UberDeployer.Core.Management.Iis
       }
 
       HandleAppCmdExitCode(exitCodeString, machineName);
-
-      return consoleOutput;
     }
 
     #endregion

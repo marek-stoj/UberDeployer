@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace UberDeployer.Core.Management.MsDeploy
 {
-  public class MsDeploy:IMsDeploy
+  public class MsDeploy : IMsDeploy
   {
     private static readonly CultureInfo _EnUsCultureInfo = new CultureInfo("en-US");
 
