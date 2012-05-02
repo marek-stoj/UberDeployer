@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.Core.Configuration;
 
-namespace UberDeployer.WinApp
+namespace UberDeployer.WinApp.Forms
 {
   public partial class ConfigurationForm : Form
   {

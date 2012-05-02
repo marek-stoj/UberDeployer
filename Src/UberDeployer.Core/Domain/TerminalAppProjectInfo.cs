@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using UberDeployer.Core.Deployment;
@@ -53,7 +54,7 @@ namespace UberDeployer.Core.Domain
           targetEnvironmentName);
     }
 
-    public override string GetTargetFolder(EnvironmentInfo environmentInfo)
+    public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
     {
       if (environmentInfo == null)
       {
@@ -61,8 +62,11 @@ namespace UberDeployer.Core.Domain
       }
 
       return
-        environmentInfo.GetTerminalServerNetworkPath(
-          Path.Combine(environmentInfo.TerminalAppsBaseDirPath, TerminalAppDirName));
+        new List<string>
+          {
+            environmentInfo.GetTerminalServerNetworkPath(
+              Path.Combine(environmentInfo.TerminalAppsBaseDirPath, TerminalAppDirName))
+          };
     }
 
     #endregion

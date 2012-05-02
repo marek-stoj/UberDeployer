@@ -7,7 +7,9 @@
       <Name>Local</Name>
       <ConfigurationTemplateName>Dev</ConfigurationTemplateName>
       <AppServerMachineName>localhost</AppServerMachineName>
-      <WebServerMachineName>localhost</WebServerMachineName>
+      <WebServerMachineNames>
+        <string>localhost</string>
+      </WebServerMachineNames>
       <TerminalServerMachineName>localhost</TerminalServerMachineName>
       <DatabaseServerMachineName>localhost</DatabaseServerMachineName>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
@@ -27,7 +29,9 @@
       <Name>Remote</Name>
       <ConfigurationTemplateName>Prod</ConfigurationTemplateName>
       <AppServerMachineName>REMOTE</AppServerMachineName>
-      <WebServerMachineName>REMOTE</WebServerMachineName>
+      <WebServerMachineNames>
+        <string>REMOTE</string>
+      </WebServerMachineNames>
       <TerminalServerMachineName>REMOTE</TerminalServerMachineName>
       <DatabaseServerMachineName>REMOTE</DatabaseServerMachineName>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using UberDeployer.Core.Deployment;
 using System.IO;
@@ -79,7 +80,7 @@ namespace UberDeployer.Core.Domain
           targetEnvironmentName);
     }
 
-    public override string GetTargetFolder(EnvironmentInfo environmentInfo)
+    public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
     {
       if (environmentInfo == null)
       {
@@ -87,8 +88,11 @@ namespace UberDeployer.Core.Domain
       }
 
       return
-        environmentInfo.GetAppServerNetworkPath(
-          Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, SchedulerAppDirName));
+        new List<string>
+          {
+            environmentInfo.GetAppServerNetworkPath(
+              Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, SchedulerAppDirName))
+          };
     }
 
     #endregion

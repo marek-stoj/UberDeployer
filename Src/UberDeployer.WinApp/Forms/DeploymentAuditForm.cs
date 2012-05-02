@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
+using UberDeployer.WinApp.Utils;
 using UberDeployer.WinApp.ViewModels;
 
-namespace UberDeployer.WinApp
+namespace UberDeployer.WinApp.Forms
 {
   public partial class DeploymentAuditForm : UberDeployerForm
   {

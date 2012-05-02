@@ -11,8 +11,9 @@ using UberDeployer.Core;
 using UberDeployer.Core.DbDiff;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.DataAccess.Dapper;
+using UberDeployer.WinApp.Utils;
 
-namespace UberDeployer.WinApp
+namespace UberDeployer.WinApp.Forms
 {
   public partial class DbVersionsDiffForm : UberDeployerForm
   {

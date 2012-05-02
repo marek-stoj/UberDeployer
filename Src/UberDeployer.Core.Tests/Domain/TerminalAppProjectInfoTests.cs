@@ -153,7 +153,7 @@ namespace UberDeployer.Core.Tests.Domain
       const string baseDirPath = "c:\\basedir";
       string terminalmachine = "terminalmachine";
       var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, "webmachine", terminalmachine, "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "c:\\terminal", _EnvironmentUsers);
+        "name", "templates", machine, new[] { "webmachine" }, terminalmachine, "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "c:\\terminal", _EnvironmentUsers);
 
       var projectInfo = new TerminalAppProjectInfo(
             _Name,
@@ -163,7 +163,7 @@ namespace UberDeployer.Core.Tests.Domain
             _TerminalAppDirName,
             _TerminalAppExeName);
 
-      var result = projectInfo.GetTargetFolder(envInfo);
+      var result = projectInfo.GetTargetFolders(envInfo);
       Assert.AreEqual("\\\\" + terminalmachine + "\\c$\\terminal\\" + _TerminalAppDirName, result);
     }
 
@@ -178,7 +178,7 @@ namespace UberDeployer.Core.Tests.Domain
             _TerminalAppDirName,
             _TerminalAppExeName);
 
-      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolder(null));
+      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(null));
     }
   }
 }

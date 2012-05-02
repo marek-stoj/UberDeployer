@@ -128,6 +128,10 @@
     <Compile Include="Deployment\StartNtServiceDeploymentStep.cs" />
     <Compile Include="Deployment\StopNtServiceDeploymentStep.cs" />
     <Compile Include="Deployment\UpdateAppScheduleDeploymentStep.cs" />
+    <Compile Include="Domain\UI\MyCollectionBase.cs" />
+    <Compile Include="Domain\UI\WebServerMachineNameCollectionPropertyDescriptor.cs" />
+    <Compile Include="Domain\UI\WebServerMachineNamesCollectionConverter.cs" />
+    <Compile Include="Domain\UI\WebServerMachineNameCollection.cs" />
     <Compile Include="Domain\EnvironmentInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -135,10 +139,10 @@
     <Compile Include="Domain\EnvironmentUser.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Domain\EnvironmentUserCollectionPropertyDescriptor.cs" />
-    <Compile Include="Domain\EnvironmentUserConverter.cs" />
-    <Compile Include="Domain\EnvironmentUsersCollection.cs" />
-    <Compile Include="Domain\EnvironmentUsersCollectionConverter.cs" />
+    <Compile Include="Domain\UI\EnvironmentUserCollectionPropertyDescriptor.cs" />
+    <Compile Include="Domain\UI\EnvironmentUserConverter.cs" />
+    <Compile Include="Domain\UI\EnvironmentUsersCollection.cs" />
+    <Compile Include="Domain\UI\EnvironmentUsersCollectionConverter.cs" />
     <Compile Include="Domain\IArtifactsRepository.cs">
       <SubType>Code</SubType>
     </Compile>

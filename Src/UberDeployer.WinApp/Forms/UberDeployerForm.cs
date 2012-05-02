@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using UberDeployer.WinApp.Utils;
 
-namespace UberDeployer.WinApp
+namespace UberDeployer.WinApp.Forms
 {
   public class UberDeployerForm : Form
   {

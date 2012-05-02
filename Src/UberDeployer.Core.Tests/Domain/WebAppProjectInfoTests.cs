@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Domain;
@@ -182,7 +183,7 @@ namespace UberDeployer.Core.Tests.Domain
       string machine = Environment.MachineName;
 
       var envInfo = new EnvironmentInfo(
-        "name", "templates", machine , "webmachine", "terminalmachine", "databasemachine", "C:\\basedir", "C:\\basedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
+        "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", "C:\\basedir", "C:\\basedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
       var projectInfo = new WebAppProjectInfo(
             Name,
@@ -193,7 +194,7 @@ namespace UberDeployer.Core.Tests.Domain
             WebAppDirName,
             AppPoolInfo);
 
-      Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolder(envInfo));
+      Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolders(envInfo).FirstOrDefault());
     }
 
     [Test]
@@ -208,7 +209,7 @@ namespace UberDeployer.Core.Tests.Domain
             WebAppDirName,
             AppPoolInfo);
 
-      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolder(null));
+      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(null));
     }
 
     [Test]
@@ -217,7 +218,7 @@ namespace UberDeployer.Core.Tests.Domain
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
       var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, "webmachine", "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
+        "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
       var projectInfo = new WebAppProjectInfo(
             Name,
@@ -228,7 +229,7 @@ namespace UberDeployer.Core.Tests.Domain
             WebAppDirName,
             AppPoolInfo);
 
-      var result = projectInfo.GetTargetUrl(envInfo);
+      var result = projectInfo.GetTargetUrls(envInfo);
       Assert.AreEqual("http://webmachine/" + WebAppName, result);
     }
 
@@ -245,7 +246,7 @@ namespace UberDeployer.Core.Tests.Domain
             WebAppDirName,
             AppPoolInfo);
 
-      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetUrl(null));
+      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetUrls(null));
     }
 
     [Test]

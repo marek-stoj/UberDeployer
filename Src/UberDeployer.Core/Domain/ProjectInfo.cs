@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using UberDeployer.Core.Deployment;
 
@@ -26,7 +27,7 @@ namespace UberDeployer.Core.Domain
 
     public abstract DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
 
-    public abstract string GetTargetFolder(EnvironmentInfo environmentInfo);
+    public abstract IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo);
 
     [Category("Common")]
     public string Name { get; private set; }

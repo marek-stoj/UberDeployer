@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using UberDeployer.Core.Domain;
 
-namespace UberDeployer.WinApp
+namespace UberDeployer.WinApp.Forms
 {
   public partial class ViewEnvironmentInfoForm : Form
   {

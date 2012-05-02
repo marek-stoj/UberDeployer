@@ -24,7 +24,7 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public string AppServerMachineName { get; set; }
 
-      public string WebServerMachineName { get; set; }
+      public List<string> WebServerMachineNames { get; set; }
 
       public string TerminalServerMachineName { get; set; }
 
@@ -124,7 +124,7 @@ namespace UberDeployer.Core.DataAccess.Xml
               eiXml.Name,
               eiXml.ConfigurationTemplateName,
               eiXml.AppServerMachineName,
-              eiXml.WebServerMachineName,
+              eiXml.WebServerMachineNames,
               eiXml.TerminalServerMachineName,
               eiXml.DatabaseServerMachineName,
               eiXml.NtServicesBaseDirPath,

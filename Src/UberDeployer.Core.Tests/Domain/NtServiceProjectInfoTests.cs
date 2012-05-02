@@ -176,7 +176,7 @@ namespace UberDeployer.Core.Tests.Domain
         "name",
         "templates",
         machine,
-        "webmachine",
+        new[] { "webmachine" },
         "terminalmachine",
         "databasemachine",
         baseDirPath,
@@ -196,7 +196,7 @@ namespace UberDeployer.Core.Tests.Domain
           _NtServiceExeName,
           _NtServiceUserId);
 
-      var result = projectInfo.GetTargetFolder(envInfo);
+      var result = projectInfo.GetTargetFolders(envInfo);
 
       Assert.AreEqual("\\\\" + machine + "\\c$\\basedir\\" + _NtServiceDirName, result);
     }
@@ -214,7 +214,7 @@ namespace UberDeployer.Core.Tests.Domain
           _NtServiceExeName,
           _NtServiceUserId);
 
-      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolder(null));
+      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(null));
     }
   }
 }

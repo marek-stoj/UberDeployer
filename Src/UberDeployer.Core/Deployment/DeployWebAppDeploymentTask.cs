@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.MsDeploy;
@@ -100,67 +101,73 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(extractArtifactsDeploymentStep);
 
-      string webApplicationPhysicalPath =
-        _iisManager.GetWebApplicationPath(
-          environmentInfo.WebServerMachineName,
-          string.Format("{0}/{1}", _projectInfo.IisSiteName, _projectInfo.WebAppName));
-
-      if (!string.IsNullOrEmpty(webApplicationPhysicalPath))
+      foreach (string webServerMachineName in environmentInfo.WebServerMachineNames)
       {
-        string webApplicationNetworkPath =
-          string.Format(
-            "\\\\{0}\\{1}${2}",
-            environmentInfo.WebServerMachineName,
-            webApplicationPhysicalPath[0],
-            webApplicationPhysicalPath.Substring(2));
+        string webApplicationPhysicalPath =
+          _iisManager.GetWebApplicationPath(
+            webServerMachineName,
+            string.Format("{0}/{1}", _projectInfo.IisSiteName, _projectInfo.WebAppName));
 
-        var backupFilesDeploymentStep = new BackupFilesDeploymentStep(webApplicationNetworkPath);
+        if (!string.IsNullOrEmpty(webApplicationPhysicalPath))
+        {
+          string webApplicationNetworkPath =
+            string.Format(
+              "\\\\{0}\\{1}${2}",
+              webServerMachineName,
+              webApplicationPhysicalPath[0],
+              webApplicationPhysicalPath.Substring(2));
 
-        AddSubTask(backupFilesDeploymentStep);
-      }
+          if (Directory.Exists(webApplicationNetworkPath))
+          {
+            var backupFilesDeploymentStep = new BackupFilesDeploymentStep(webApplicationNetworkPath);
 
-      // create a step for creating a WebDeploy package
-      // TODO IMM HI: add possibility to specify physical path on the target machine
-      var createWebDeployPackageDeploymentStep =
-        new CreateWebDeployPackageDeploymentStep(
-          extractArtifactsDeploymentStep.BinariesDirPath,
-          _projectInfo.IisSiteName,
-          _projectInfo.WebAppName);
+            AddSubTask(backupFilesDeploymentStep);
+          }
+        }
 
-      AddSubTask(createWebDeployPackageDeploymentStep);
+        // create a step for creating a WebDeploy package
+        // TODO IMM HI: add possibility to specify physical path on the target machine
+        var createWebDeployPackageDeploymentStep =
+          new CreateWebDeployPackageDeploymentStep(
+            extractArtifactsDeploymentStep.BinariesDirPath,
+            _projectInfo.IisSiteName,
+            _projectInfo.WebAppName);
 
-      // create a step for deploying the WebDeploy package to the target machine
-      var deployWebDeployPackageDeploymentStep =
-        new DeployWebDeployPackageDeploymentStep(
-          _msDeploy,
-          createWebDeployPackageDeploymentStep.PackageFilePath,
-          environmentInfo.WebServerMachineName);
+        AddSubTask(createWebDeployPackageDeploymentStep);
 
-      AddSubTask(deployWebDeployPackageDeploymentStep);
+        // create a step for deploying the WebDeploy package to the target machine
+        var deployWebDeployPackageDeploymentStep =
+          new DeployWebDeployPackageDeploymentStep(
+            _msDeploy,
+            createWebDeployPackageDeploymentStep.PackageFilePath,
+            webServerMachineName);
 
-      // check if the app pool exists on the target machine
-      if (!_iisManager.AppPoolExists(environmentInfo.WebServerMachineName, _projectInfo.AppPool.Name))
-      {
-        // create a step for creating a new app pool
-        var createAppPoolDeploymentStep =
-          new CreateAppPoolDeploymentStep(
+        AddSubTask(deployWebDeployPackageDeploymentStep);
+
+        // check if the app pool exists on the target machine
+        if (!_iisManager.AppPoolExists(webServerMachineName, _projectInfo.AppPool.Name))
+        {
+          // create a step for creating a new app pool
+          var createAppPoolDeploymentStep =
+            new CreateAppPoolDeploymentStep(
+              _iisManager,
+              webServerMachineName,
+              _projectInfo.AppPool);
+
+          AddSubTask(createAppPoolDeploymentStep);
+        }
+
+        // create a step for assigning the app pool to the web application
+        var setAppPoolDeploymentStep =
+          new SetAppPoolDeploymentStep(
             _iisManager,
-            environmentInfo.WebServerMachineName,
+            webServerMachineName,
+            _projectInfo.IisSiteName,
+            _projectInfo.WebAppName,
             _projectInfo.AppPool);
 
-        AddSubTask(createAppPoolDeploymentStep);
+        AddSubTask(setAppPoolDeploymentStep);
       }
-
-      // create a step for assigning the app pool to the web application
-      var setAppPoolDeploymentStep =
-        new SetAppPoolDeploymentStep(
-          _iisManager,
-          environmentInfo.WebServerMachineName,
-          _projectInfo.IisSiteName,
-          _projectInfo.WebAppName,
-          _projectInfo.AppPool);
-
-      AddSubTask(setAppPoolDeploymentStep);
     }
 
     protected override void DoExecute()

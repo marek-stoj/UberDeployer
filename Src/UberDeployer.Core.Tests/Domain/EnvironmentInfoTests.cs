@@ -12,7 +12,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string Machine = "machine";
     private const string Name = "name";
     private const string Template = "template";
-    private const string Webmachine = "webmachine";
+    private static readonly List<string> Webmachines = new List<string> { "webmachine1", "webmachine2" };
     private const string Terminalmachine = "terminalmachine";
     private const string DatabaseMachine = "databasemachine";
     private const string BaseDirPath = "baseDirPath";
@@ -33,7 +33,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            null, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            null, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
         });
     }
 
@@ -44,7 +44,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, null, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, null, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
         });
     }
 
@@ -55,7 +55,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, "", Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, "", Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
         });
     }
 
@@ -66,7 +66,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, Template, null, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, Template, null, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
         });
     }
 
@@ -88,7 +88,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, null, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, null, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
         });
     }
 
@@ -99,7 +99,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, null, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, null, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
         });
     }
 
@@ -110,7 +110,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, null, Scheduler, Terminal, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, null, Scheduler, Terminal, EnvironmentUsers);
         });
     }
 
@@ -121,7 +121,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, null, Terminal, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, null, Terminal, EnvironmentUsers);
         });
     }
 
@@ -132,7 +132,7 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, null, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, null, EnvironmentUsers);
         });
     }
 
@@ -140,7 +140,7 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_GetAppServerNetworkPath_Throws_When_path_null()
     {
       var envInfo = new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(null));
@@ -150,7 +150,7 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_GetAppServerNetworkPath_Throws_When_path_startswithbackslashes()
     {
       var envInfo = new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(@"\\kasjdkasdj"));
@@ -160,7 +160,7 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_GetAppServerNetworkPath_Throws_When_path_doesntstartwithdriveletter()
     {
       var envInfo = new EnvironmentInfo(
-            Name, Template, Machine, Webmachine, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath("qlwelqwelw"));
@@ -174,7 +174,7 @@ namespace UberDeployer.Core.Tests.Domain
           Name,
           Template,
           Machine,
-          Webmachine,
+          Webmachines,
           Terminalmachine,
           DatabaseMachine,
           BaseDirPath,
@@ -183,7 +183,7 @@ namespace UberDeployer.Core.Tests.Domain
           Terminal,
           EnvironmentUsers);
 
-      Assert.AreEqual("\\\\" + Webmachine + "\\c$\\", envInfo.GetWebServerNetworkPath("c:\\"));
+      Assert.AreEqual("\\\\" + Webmachines[0] + "\\c$\\", envInfo.GetWebServerNetworkPath(Webmachines[0], "c:\\"));
     }
   }
 }

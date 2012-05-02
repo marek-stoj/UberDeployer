@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace UberDeployer.Core.Domain
+namespace UberDeployer.Core.Domain.UI
 {
   // TODO IMM HI: that's for UI!
   public class EnvironmentUserConverter : ExpandableObjectConverter

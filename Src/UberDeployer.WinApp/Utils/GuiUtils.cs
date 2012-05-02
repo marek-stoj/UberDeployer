@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace UberDeployer.WinApp
+namespace UberDeployer.WinApp.Utils
 {
   public static class GuiUtils
   {

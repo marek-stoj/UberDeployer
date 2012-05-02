@@ -12,10 +12,10 @@ using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.TeamCity;
 using UberDeployer.Core.TeamCity.Models;
+using UberDeployer.WinApp.Utils;
 using UberDeployer.WinApp.ViewModels;
-using System.IO;
 
-namespace UberDeployer.WinApp
+namespace UberDeployer.WinApp.Forms
 {
   // TODO IMM HI: multiple loads
   public partial class MainForm : UberDeployerForm
@@ -220,19 +220,19 @@ namespace UberDeployer.WinApp
     {
       if (dgv_projectConfigurations.SelectedRows.Count == 0)
       {
-        NotifyUserInvalidOperation("No project configuration is selected.");
+        AppUtils.NotifyUserInvalidOperation("No project configuration is selected.");
         return;
       }
 
       if (dgv_projectConfigurationBuilds.SelectedRows.Count == 0)
       {
-        NotifyUserInvalidOperation("No project configuration build is selected.");
+        AppUtils.NotifyUserInvalidOperation("No project configuration build is selected.");
         return;
       }
 
       if (cbx_targetEnvironment.SelectedItem == null)
       {
-        NotifyUserInvalidOperation("No target environment is selected.");
+        AppUtils.NotifyUserInvalidOperation("No target environment is selected.");
         return;
       }
 
@@ -242,7 +242,7 @@ namespace UberDeployer.WinApp
 
       if (projectConfigurationBuild.Status != BuildStatus.Success)
       {
-        NotifyUserInvalidOperation("Can't deploy a build which is not successful.");
+        AppUtils.NotifyUserInvalidOperation("Can't deploy a build which is not successful.");
         return;
       }
 
@@ -251,7 +251,7 @@ namespace UberDeployer.WinApp
       if (targetEnvironmentName == EnforceTargetEnvironmentConstraintsModule.ProductionEnvironmentName
        && projectConfiguration.Name != EnforceTargetEnvironmentConstraintsModule.ProductionProjectConfigurationName)
       {
-        NotifyUserInvalidOperation(string.Format("Can't deploy project ('{0}') with non-production configuration ('{1}') to the production environment!", projectConfiguration.ProjectName, projectConfiguration.Name));
+        AppUtils.NotifyUserInvalidOperation(string.Format("Can't deploy project ('{0}') with non-production configuration ('{1}') to the production environment!", projectConfiguration.ProjectName, projectConfiguration.Name));
         return;
       }
 
@@ -267,7 +267,7 @@ namespace UberDeployer.WinApp
     {
       if (dgv_projectInfos.SelectedRows.Count == 0)
       {
-        NotifyUserInvalidOperation("No project is selected.");
+        AppUtils.NotifyUserInvalidOperation("No project is selected.");
         return;
       }
 
@@ -288,13 +288,13 @@ namespace UberDeployer.WinApp
     {
       if (dgv_projectInfos.SelectedRows.Count == 0)
       {
-        NotifyUserInvalidOperation("No project is selected.");
+        AppUtils.NotifyUserInvalidOperation("No project is selected.");
         return;
       }
 
       if (cbx_targetEnvironment.SelectedItem == null)
       {
-        NotifyUserInvalidOperation("No target environment is selected.");
+        AppUtils.NotifyUserInvalidOperation("No target environment is selected.");
         return;
       }
 
@@ -308,13 +308,13 @@ namespace UberDeployer.WinApp
     {
       if (dgv_projectInfos.SelectedRows.Count == 0)
       {
-        NotifyUserInvalidOperation("No project is selected.");
+        AppUtils.NotifyUserInvalidOperation("No project is selected.");
         return;
       }
 
       if (cbx_targetEnvironment.SelectedItem == null)
       {
-        NotifyUserInvalidOperation("No target environment is selected.");
+        AppUtils.NotifyUserInvalidOperation("No target environment is selected.");
         return;
       }
 
@@ -323,7 +323,7 @@ namespace UberDeployer.WinApp
 
       if (webAppProjectInfo == null)
       {
-        NotifyUserInvalidOperation("Selected project is not a web application.");
+        AppUtils.NotifyUserInvalidOperation("Selected project is not a web application.");
         return;
       }
 
@@ -336,7 +336,7 @@ namespace UberDeployer.WinApp
     {
       if (cbx_targetEnvironment.SelectedItem == null)
       {
-        NotifyUserInvalidOperation("No target environment is selected.");
+        AppUtils.NotifyUserInvalidOperation("No target environment is selected.");
         return;
       }
 
@@ -363,9 +363,19 @@ namespace UberDeployer.WinApp
 
     private void OpenWebApp(WebAppProjectInfo webAppProjectInfo, EnvironmentInfo environmentInfo)
     {
-      string url = webAppProjectInfo.GetTargetUrl(environmentInfo);
+      List<string> targetUrls =
+        webAppProjectInfo.GetTargetUrls(environmentInfo)
+          .ToList();
 
-      Process.Start(url);
+      if (targetUrls.Count == 1)
+      {
+        Process.Start(targetUrls[0]);
+      }
+      else
+      {
+        new OpenTargetUrlsForm(targetUrls)
+          .ShowDialog();
+      }
     }
 
     private void reloadProjectsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -464,32 +474,21 @@ namespace UberDeployer.WinApp
 
     #region Private helper methods
 
-    private static void NotifyUser(string message, string caption, MessageBoxIcon messageBoxIcon)
-    {
-      MessageBox.Show(message, caption, MessageBoxButtons.OK, messageBoxIcon);
-    }
-
-    private static void NotifyUserInfo(string message)
-    {
-      NotifyUser(message, "Information", MessageBoxIcon.Information);
-    }
-
-    private static void NotifyUserInvalidOperation(string message)
-    {
-      NotifyUser(message, "Information", MessageBoxIcon.Warning);
-    }
-
     private static void OpenProjectTargetFolder(ProjectInfo projectInfo, EnvironmentInfo environmentInfo)
     {
-      string projectTargetFolder = projectInfo.GetTargetFolder(environmentInfo);
+      List<string> projectTargetFolders =
+        projectInfo.GetTargetFolders(environmentInfo)
+          .ToList();
 
-      if (!Directory.Exists(projectTargetFolder))
+      if (projectTargetFolders.Count == 1)
       {
-        NotifyUserInfo(string.Format("Target folder ('{0}') doesn't exist.", projectTargetFolder));
-        return;
+        SystemUtils.OpenFolder(projectTargetFolders[0]);
       }
-
-      Process.Start(projectTargetFolder);
+      else
+      {
+        new OpenTargetFoldersForm(projectTargetFolders)
+          .ShowDialog();
+      }
     }
 
     private void LoadProjects()

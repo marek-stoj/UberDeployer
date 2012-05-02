@@ -284,7 +284,7 @@ namespace UberDeployer.Core.Tests.Domain
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
       var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, "webmachine", "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
+        "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
       var schedulerAppProjectInfo = new SchedulerAppProjectInfo(
         _Name,
@@ -298,7 +298,7 @@ namespace UberDeployer.Core.Tests.Domain
         _ScheduledMinute,
         _ExecutionTimeLimitInMinutes);
 
-      var result = schedulerAppProjectInfo.GetTargetFolder(envInfo);
+      var result = schedulerAppProjectInfo.GetTargetFolders(envInfo);
 
       Assert.AreEqual("\\\\" + machine + "\\c$\\scheduler\\" + _SchedulerAppDirName, result);
     }
@@ -318,7 +318,7 @@ namespace UberDeployer.Core.Tests.Domain
         _ScheduledMinute,
         _ExecutionTimeLimitInMinutes);
 
-      Assert.Throws<ArgumentNullException>(() => schedulerAppProjectInfo.GetTargetFolder(null));
+      Assert.Throws<ArgumentNullException>(() => schedulerAppProjectInfo.GetTargetFolders(null));
     }
   }
 }

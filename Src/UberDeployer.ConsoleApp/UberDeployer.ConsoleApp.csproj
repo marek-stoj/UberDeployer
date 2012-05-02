@@ -43,6 +43,9 @@
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="msdeploy, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <ExecutableExtension>.exe</ExecutableExtension>
+    </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
       <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>

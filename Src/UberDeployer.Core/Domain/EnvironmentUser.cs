@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using UberDeployer.Core.Domain.UI;
 
 namespace UberDeployer.Core.Domain
 {

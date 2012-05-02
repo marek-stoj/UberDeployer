@@ -73,7 +73,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       string machine = Environment.MachineName;
       var ntServiceProjectInfo = new NtServiceProjectInfo("name", artifactsRepo, "artifactsRepoDir", serviceName, serviceDir, "serviceDisplayed", "exeName", "Sample.User");
-      var envInfo = new EnvironmentInfo("name", "templates", machine , "webmachine", "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "scheduler", "terminal", _EnvironmentUsers);
+      var envInfo = new EnvironmentInfo("name", "templates", machine , new[] { "webmachine" }, "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "scheduler", "terminal", _EnvironmentUsers);
 
       environmentInfoRepository
         .Setup(e => e.GetByName(envName))

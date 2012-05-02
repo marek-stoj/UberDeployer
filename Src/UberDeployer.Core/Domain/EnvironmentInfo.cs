@@ -4,13 +4,15 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UberDeployer.Core.Domain.UI;
 
 namespace UberDeployer.Core.Domain
 {
   public class EnvironmentInfo
   {
     private static readonly Regex _DriveLetterRegex = new Regex(@"^(?<DriveLetter>[a-z]):\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    
+
+    private readonly List<String> _webServerMachines;
     private readonly Dictionary<string, EnvironmentUser> _environmentUsersDict;
 
     #region Constructor(s)
@@ -19,7 +21,7 @@ namespace UberDeployer.Core.Domain
       string name,
       string configurationTemplateName,
       string appServerMachineName,
-      string webServerMachineName,
+      IEnumerable<string> webServerMachineNames,
       string terminalServerMachineName,
       string databaseServerMachineName,
       string ntServicesBaseDirPath,
@@ -43,9 +45,9 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentException("Argument can't be null nor empty.", "appServerMachineName");
       }
 
-      if (string.IsNullOrEmpty(webServerMachineName))
+      if (webServerMachineNames == null)
       {
-        throw new ArgumentException("Argument can't be null nor empty.", "webServerMachineName");
+        throw new ArgumentNullException("webServerMachineNames");
       }
 
       if (string.IsNullOrEmpty(terminalServerMachineName))
@@ -86,7 +88,7 @@ namespace UberDeployer.Core.Domain
       Name = name;
       ConfigurationTemplateName = configurationTemplateName;
       AppServerMachineName = appServerMachineName;
-      WebServerMachineName = webServerMachineName;
+      _webServerMachines = new List<string>(webServerMachineNames);
       TerminalServerMachineName = terminalServerMachineName;
       DatabaseServerMachineName = databaseServerMachineName;
       NtServicesBaseDirPath = ntServicesBaseDirPath;
@@ -106,9 +108,9 @@ namespace UberDeployer.Core.Domain
       return GetNetworkPath(AppServerMachineName, absoluteLocalPath);
     }
 
-    public string GetWebServerNetworkPath(string absoluteLocalPath)
+    public string GetWebServerNetworkPath(string webServerMachineName, string absoluteLocalPath)
     {
-      return GetNetworkPath(WebServerMachineName, absoluteLocalPath);
+      return GetNetworkPath(webServerMachineName, absoluteLocalPath);
     }
 
     public string GetTerminalServerNetworkPath(string absoluteLocalPath)
@@ -171,7 +173,12 @@ namespace UberDeployer.Core.Domain
 
     public string AppServerMachineName { get; private set; }
 
-    public string WebServerMachineName { get; private set; }
+    // TODO IMM HI: that attribute is for UI!
+    [Browsable(false)]
+    public IEnumerable<string> WebServerMachineNames
+    {
+      get { return _webServerMachines.AsReadOnly(); }
+    }
     
     public string TerminalServerMachineName { get; private set; }
 
@@ -185,10 +192,19 @@ namespace UberDeployer.Core.Domain
 
     public string TerminalAppsBaseDirPath { get; private set; }
 
+    // TODO IMM HI: that attribute is for UI!
     [Browsable(false)]
     public IEnumerable<EnvironmentUser> EnvironmentUsers
     {
       get { return _environmentUsersDict.Values; }
+    }
+
+    // TODO IMM HI: that's for UI!
+    [TypeConverter(typeof(WebServerMachineNamesCollectionConverter))]
+    [Editor(typeof(ReadOnlyUITypeEditor), typeof(UITypeEditor))]
+    public WebServerMachineNameCollection WebServerMachinesNameCollection
+    {
+      get { return new WebServerMachineNameCollection(WebServerMachineNames); }
     }
 
     // TODO IMM HI: that's for UI!

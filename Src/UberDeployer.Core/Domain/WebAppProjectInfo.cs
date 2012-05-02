@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using UberDeployer.Core.Deployment;
 
 namespace UberDeployer.Core.Domain
@@ -56,7 +58,7 @@ namespace UberDeployer.Core.Domain
           targetEnvironmentName);
     }
 
-    public override string GetTargetFolder(EnvironmentInfo environmentInfo)
+    public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
     {
       if (environmentInfo == null)
       {
@@ -65,23 +67,28 @@ namespace UberDeployer.Core.Domain
 
       // TODO IMM HI: this might be wrong (due to msdeploy)!
       return
-        environmentInfo.GetWebServerNetworkPath(
-          Path.Combine(environmentInfo.WebAppsBaseDirPath, WebAppDirName));
+        environmentInfo
+          .WebServerMachineNames
+          .Select(
+            wsmn =>
+            environmentInfo.GetWebServerNetworkPath(
+              wsmn,
+              Path.Combine(environmentInfo.WebAppsBaseDirPath, WebAppDirName)))
+          .ToList();
     }
 
-    [Category("Specific")]
-    public string GetTargetUrl(EnvironmentInfo environmentInfo)
+    public IEnumerable<string> GetTargetUrls(EnvironmentInfo environmentInfo)
     {
       if (environmentInfo == null)
       {
         throw new ArgumentNullException("environmentInfo");
       }
 
+      // TODO IMM HI: what about https vs http?
       return
-        string.Format(
-          "http://{0}/{1}",
-          environmentInfo.WebServerMachineName,
-          WebAppName);
+        environmentInfo.WebServerMachineNames
+          .Select(wsmn => string.Format("http://{0}/{1}", wsmn, WebAppName))
+          .ToList();
     }
 
     [Category("Specific")]

@@ -1,33 +1,12 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace UberDeployer.Core.Domain
+namespace UberDeployer.Core.Domain.UI
 {
   // TODO IMM HI: that's for UI!
-  [ReadOnly(true)]
-  public class EnvironmentUsersCollection : CollectionBase, ICustomTypeDescriptor
+  public abstract class MyCollectionBase : CollectionBase, ICustomTypeDescriptor
   {
-    #region Constructor(s)
-
-    public EnvironmentUsersCollection(IEnumerable<EnvironmentUser> environmentUsers)
-    {
-      if (environmentUsers == null)
-      {
-        throw new ArgumentNullException("environmentUsers");
-      }
-
-      foreach (EnvironmentUser environmentUser in environmentUsers)
-      {
-        List.Add(environmentUser);
-      }
-    }
-
-    #endregion
-
-    #region ICustomTypeDescriptor members
-
     public AttributeCollection GetAttributes()
     {
       return TypeDescriptor.GetAttributes(this, true);
@@ -78,35 +57,11 @@ namespace UberDeployer.Core.Domain
       return GetProperties();
     }
 
-    public PropertyDescriptorCollection GetProperties()
-    {
-      var propertyDescriptorCollection = new PropertyDescriptorCollection(null);
-
-      for (int i = 0; i < List.Count; i++)
-      {
-        var environmentUserCollectionPropertyDescriptor =
-          new EnvironmentUserCollectionPropertyDescriptor(this, i);
-        
-        propertyDescriptorCollection.Add(environmentUserCollectionPropertyDescriptor);
-      }
-
-      return propertyDescriptorCollection;
-    }
+    public abstract PropertyDescriptorCollection GetProperties();
 
     public object GetPropertyOwner(PropertyDescriptor pd)
     {
       return this;
     }
-
-    #endregion
-
-    #region Properties
-
-    public EnvironmentUser this[int index]
-    {
-      get { return (EnvironmentUser)List[index]; }
-    }
-
-    #endregion
   }
 }

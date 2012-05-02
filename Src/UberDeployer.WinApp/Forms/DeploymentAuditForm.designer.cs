@@ -1,4 +1,4 @@
-﻿namespace UberDeployer.WinApp
+﻿namespace UberDeployer.WinApp.Forms
 {
   partial class DeploymentAuditForm
   {

@@ -1,4 +1,4 @@
-﻿namespace UberDeployer.WinApp
+﻿namespace UberDeployer.WinApp.Forms
 {
   partial class MainForm
   {
@@ -152,7 +152,7 @@
       this.btn_openWebApp.Name = "btn_openWebApp";
       this.btn_openWebApp.Size = new System.Drawing.Size(85, 23);
       this.btn_openWebApp.TabIndex = 2;
-      this.btn_openWebApp.Text = "Open web app";
+      this.btn_openWebApp.Text = "Target URL(s)";
       this.btn_openWebApp.UseVisualStyleBackColor = true;
       this.btn_openWebApp.Click += new System.EventHandler(this.btn_openWebApp_Click);
       // 
@@ -163,7 +163,7 @@
       this.btn_openProjectTargetFolder.Name = "btn_openProjectTargetFolder";
       this.btn_openProjectTargetFolder.Size = new System.Drawing.Size(103, 23);
       this.btn_openProjectTargetFolder.TabIndex = 1;
-      this.btn_openProjectTargetFolder.Text = "Open target folder";
+      this.btn_openProjectTargetFolder.Text = "Target folder(s)";
       this.btn_openProjectTargetFolder.UseVisualStyleBackColor = true;
       this.btn_openProjectTargetFolder.Click += new System.EventHandler(this.btn_openProjectTargetFolder_Click);
       // 
@@ -174,7 +174,7 @@
       this.btn_showProjectInfo.Name = "btn_showProjectInfo";
       this.btn_showProjectInfo.Size = new System.Drawing.Size(62, 23);
       this.btn_showProjectInfo.TabIndex = 0;
-      this.btn_showProjectInfo.Text = "Show info";
+      this.btn_showProjectInfo.Text = "Info";
       this.btn_showProjectInfo.UseVisualStyleBackColor = true;
       this.btn_showProjectInfo.Click += new System.EventHandler(this.btn_showProjectInfo_Click);
       // 
