@@ -9,18 +9,17 @@ using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Tests.Domain
 {
-  // TODO IMM HI: formatting; code style
   [TestFixture]
   public class NtServiceProjectInfoTests
   {
-    private const string Name = "name";
-    private const string ArtifactsRepositoryName = "artifRepoName";
-    private const string ArtifactsRepositoryDirName = "artifRepoDirName";
-    private const string NtServiceName = "ntServiceName";
-    private const string NtServiceDirName = "ntServiceDirName";
-    private const string NtServiceDisplayName = "ntServiceDisplayName";
-    private const string NtServiceExeName = "ntServiceExeName";
-    private const string NtServiceUserId = "Sample.User";
+    private const string _Name = "name";
+    private const string _ArtifactsRepositoryName = "artifRepoName";
+    private const string _ArtifactsRepositoryDirName = "artifRepoDirName";
+    private const string _NtServiceName = "ntServiceName";
+    private const string _NtServiceDirName = "ntServiceDirName";
+    private const string _NtServiceDisplayName = "ntServiceDisplayName";
+    private const string _NtServiceExeName = "ntServiceExeName";
+    private const string _NtServiceUserId = "Sample.User";
 
     private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
@@ -36,13 +35,13 @@ namespace UberDeployer.Core.Tests.Domain
           {
             new NtServiceProjectInfo(
               null,
-              ArtifactsRepositoryName,
-              ArtifactsRepositoryDirName,
-              NtServiceName,
-              NtServiceDirName,
-              NtServiceDisplayName,
-              NtServiceExeName,
-              NtServiceUserId);
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _NtServiceName,
+              _NtServiceDirName,
+              _NtServiceDisplayName,
+              _NtServiceExeName,
+              _NtServiceUserId);
           });
     }
 
@@ -53,14 +52,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
           {
             new NtServiceProjectInfo(
-              Name,
+              _Name,
               null,
-              ArtifactsRepositoryDirName,
-              NtServiceName,
-              NtServiceDirName,
-              NtServiceDisplayName,
-              NtServiceExeName,
-              NtServiceUserId);
+              _ArtifactsRepositoryDirName,
+              _NtServiceName,
+              _NtServiceDirName,
+              _NtServiceDisplayName,
+              _NtServiceExeName,
+              _NtServiceUserId);
           });
     }
 
@@ -71,14 +70,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
           {
             new NtServiceProjectInfo(
-              Name,
-              ArtifactsRepositoryName,
-              ArtifactsRepositoryDirName,
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
               null,
-              NtServiceDirName,
-              NtServiceDisplayName,
-              NtServiceExeName,
-              NtServiceUserId);
+              _NtServiceDirName,
+              _NtServiceDisplayName,
+              _NtServiceExeName,
+              _NtServiceUserId);
           });
     }
 
@@ -89,14 +88,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new NtServiceProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          NtServiceName,
+          _Name,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _NtServiceName,
           null,
-          NtServiceDisplayName,
-          NtServiceExeName,
-          NtServiceUserId);
+          _NtServiceDisplayName,
+          _NtServiceExeName,
+          _NtServiceUserId);
         });
     }
 
@@ -107,14 +106,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new NtServiceProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          NtServiceName,
-          NtServiceDirName,
-          NtServiceDisplayName,
+          _Name,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _NtServiceName,
+          _NtServiceDirName,
+          _NtServiceDisplayName,
           null,
-          NtServiceUserId);
+          _NtServiceUserId);
         });
     }
 
@@ -122,14 +121,14 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_CreateDeploymentTask_Thows_When_ObjectFactory_null()
     {
       var projectInfo = new NtServiceProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          NtServiceName,
-          NtServiceDirName,
-          NtServiceDisplayName,
-          NtServiceExeName,
-          NtServiceUserId);
+          _Name,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _NtServiceName,
+          _NtServiceDirName,
+          _NtServiceDisplayName,
+          _NtServiceExeName,
+          _NtServiceUserId);
 
       Assert.Throws<ArgumentNullException>(
         () => projectInfo.CreateDeploymentTask(null, "configName", "buildID", "targetEnvironmentName"));
@@ -146,14 +145,14 @@ namespace UberDeployer.Core.Tests.Domain
       var passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Loose);
 
       var projectInfo = new NtServiceProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          NtServiceName,
-          NtServiceDirName,
-          NtServiceDisplayName,
-          NtServiceExeName,
-          NtServiceUserId);
+          _Name,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _NtServiceName,
+          _NtServiceDirName,
+          _NtServiceDisplayName,
+          _NtServiceExeName,
+          _NtServiceUserId);
 
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
       objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object);
@@ -165,44 +164,57 @@ namespace UberDeployer.Core.Tests.Domain
           objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
     }
 
-
     [Test]
     public void Test_GetTargetFolde_RunsProperly_WhenAllIsWell()
     {
-      string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
-      var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, "webmachine", "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
-      var projectInfo = new NtServiceProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          NtServiceName,
-          NtServiceDirName,
-          NtServiceDisplayName,
-          NtServiceExeName,
-          NtServiceUserId);
+      string machine = Environment.MachineName;
+
+      var envInfo =
+        new EnvironmentInfo(
+        "name",
+        "templates",
+        machine,
+        "webmachine",
+        "terminalmachine",
+        "databasemachine",
+        baseDirPath,
+        "webbasedir",
+        "c:\\scheduler",
+        "terminal",
+        _EnvironmentUsers);
+
+      var projectInfo =
+        new NtServiceProjectInfo(
+          _Name,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _NtServiceName,
+          _NtServiceDirName,
+          _NtServiceDisplayName,
+          _NtServiceExeName,
+          _NtServiceUserId);
 
       var result = projectInfo.GetTargetFolder(envInfo);
-      Assert.AreEqual("\\\\" + machine + "\\c$\\basedir\\" + NtServiceDirName, result);
+
+      Assert.AreEqual("\\\\" + machine + "\\c$\\basedir\\" + _NtServiceDirName, result);
     }
 
     [Test]
     public void Test_GetTargetFolde_Throws_EnvInfo_null()
     {
       var projectInfo = new NtServiceProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          NtServiceName,
-          NtServiceDirName,
-          NtServiceDisplayName,
-          NtServiceExeName,
-          NtServiceUserId);
+          _Name,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _NtServiceName,
+          _NtServiceDirName,
+          _NtServiceDisplayName,
+          _NtServiceExeName,
+          _NtServiceUserId);
 
       Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolder(null));
     }
-
   }
 }

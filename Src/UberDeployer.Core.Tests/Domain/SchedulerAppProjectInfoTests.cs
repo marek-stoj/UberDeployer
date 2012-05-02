@@ -8,20 +8,19 @@ using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Tests.Domain
 {
-  // TODO IMM HI: formatting; code style
   [TestFixture]
   public class SchedulerAppProjectInfoTests
   {
-    private const int ExecutionTimeLimitInMinutes = 1;
-    private const string Name = "name";
-    private const string ArtifactsRepositoryName = "repoName";
-    private const string ArtifactsRepositoryDirName = "repoDirName";
-    private const string SchedulerAppName = "appName";
-    private const string SchedulerAppDirName = "appDirName";
-    private const string SchedulerAppExeName = "appExeName";
-    private const string SchedulerAppUserId = "appUser";
-    private const int ScheduledHour = 1;
-    private const int ScheduledMinute = 1;
+    private const int _ExecutionTimeLimitInMinutes = 1;
+    private const string _Name = "name";
+    private const string _ArtifactsRepositoryName = "repoName";
+    private const string _ArtifactsRepositoryDirName = "repoDirName";
+    private const string _SchedulerAppName = "appName";
+    private const string _SchedulerAppDirName = "appDirName";
+    private const string _SchedulerAppExeName = "appExeName";
+    private const string _SchedulerAppUserId = "appUser";
+    private const int _ScheduledHour = 1;
+    private const int _ScheduledMinute = 1;
 
     private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
@@ -34,19 +33,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            null,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              null,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -54,19 +53,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            null,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              null,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -74,19 +73,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            -1,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              -1,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -94,19 +93,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            24,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              24,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -114,19 +113,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            60,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              60,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -134,19 +133,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            -1,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              -1,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -154,19 +153,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            -1);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              -1);
+          });
     }
 
     [Test]
@@ -174,19 +173,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            null,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              null,
+              _SchedulerAppDirName,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -194,19 +193,19 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            null,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              null,
+              _SchedulerAppExeName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
@@ -214,35 +213,35 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            null,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
-        });
+          {
+            new SchedulerAppProjectInfo(
+              _Name,
+              _ArtifactsRepositoryName,
+              _ArtifactsRepositoryDirName,
+              _SchedulerAppName,
+              _SchedulerAppDirName,
+              null,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes);
+          });
     }
 
     [Test]
     public void Test_CreateDeployemntTask_Throws_When_ObjectFactory_null()
     {
       var schedulerAppProjectInfo = new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
+        _Name,
+        _ArtifactsRepositoryName,
+        _ArtifactsRepositoryDirName,
+        _SchedulerAppName,
+        _SchedulerAppDirName,
+        _SchedulerAppExeName,
+        _SchedulerAppUserId,
+        _ScheduledHour,
+        _ScheduledMinute,
+        _ExecutionTimeLimitInMinutes);
 
       Assert.Throws<ArgumentNullException>(
         () => schedulerAppProjectInfo.CreateDeploymentTask(
@@ -259,16 +258,16 @@ namespace UberDeployer.Core.Tests.Domain
       var passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Loose);
 
       var schedulerAppProjectInfo = new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
+        _Name,
+        _ArtifactsRepositoryName,
+        _ArtifactsRepositoryDirName,
+        _SchedulerAppName,
+        _SchedulerAppDirName,
+        _SchedulerAppExeName,
+        _SchedulerAppUserId,
+        _ScheduledHour,
+        _ScheduledMinute,
+        _ExecutionTimeLimitInMinutes);
 
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
       objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object);
@@ -276,7 +275,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
 
       schedulerAppProjectInfo.CreateDeploymentTask(
-          objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
+        objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
     }
 
     [Test]
@@ -288,36 +287,36 @@ namespace UberDeployer.Core.Tests.Domain
         "name", "templates", machine, "webmachine", "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
       var schedulerAppProjectInfo = new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
+        _Name,
+        _ArtifactsRepositoryName,
+        _ArtifactsRepositoryDirName,
+        _SchedulerAppName,
+        _SchedulerAppDirName,
+        _SchedulerAppExeName,
+        _SchedulerAppUserId,
+        _ScheduledHour,
+        _ScheduledMinute,
+        _ExecutionTimeLimitInMinutes);
 
       var result = schedulerAppProjectInfo.GetTargetFolder(envInfo);
-      
-      Assert.AreEqual("\\\\" + machine + "\\c$\\scheduler\\" + SchedulerAppDirName, result);
+
+      Assert.AreEqual("\\\\" + machine + "\\c$\\scheduler\\" + _SchedulerAppDirName, result);
     }
 
     [Test]
     public void Test_GetTargetFolde_Throws_EnvInfo_null()
     {
       var schedulerAppProjectInfo = new SchedulerAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            SchedulerAppName,
-            SchedulerAppDirName,
-            SchedulerAppExeName,
-            SchedulerAppUserId,
-            ScheduledHour,
-            ScheduledMinute,
-            ExecutionTimeLimitInMinutes);
+        _Name,
+        _ArtifactsRepositoryName,
+        _ArtifactsRepositoryDirName,
+        _SchedulerAppName,
+        _SchedulerAppDirName,
+        _SchedulerAppExeName,
+        _SchedulerAppUserId,
+        _ScheduledHour,
+        _ScheduledMinute,
+        _ExecutionTimeLimitInMinutes);
 
       Assert.Throws<ArgumentNullException>(() => schedulerAppProjectInfo.GetTargetFolder(null));
     }
