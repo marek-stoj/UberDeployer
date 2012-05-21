@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Domain;
@@ -163,8 +164,13 @@ namespace UberDeployer.Core.Tests.Domain
             _TerminalAppDirName,
             _TerminalAppExeName);
 
-      var result = projectInfo.GetTargetFolders(envInfo);
-      Assert.AreEqual("\\\\" + terminalmachine + "\\c$\\terminal\\" + _TerminalAppDirName, result);
+      List<string> targetFolders =
+        projectInfo.GetTargetFolders(envInfo)
+          .ToList();
+
+      Assert.IsNotNull(targetFolders);
+      Assert.AreEqual(1, targetFolders.Count);
+      Assert.AreEqual("\\\\" + terminalmachine + "\\c$\\terminal\\" + _TerminalAppDirName, targetFolders[0]);
     }
 
     [Test]

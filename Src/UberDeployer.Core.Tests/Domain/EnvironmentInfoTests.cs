@@ -73,7 +73,7 @@ namespace UberDeployer.Core.Tests.Domain
     [Test]
     public void Test_EnvironmentInfoTests_Thows_When_Webmachine_null()
     {
-      Assert.Throws<ArgumentException>(
+      Assert.Throws<ArgumentNullException>(
         () =>
         {
           new EnvironmentInfo(

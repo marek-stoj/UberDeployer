@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
@@ -196,9 +197,13 @@ namespace UberDeployer.Core.Tests.Domain
           _NtServiceExeName,
           _NtServiceUserId);
 
-      var result = projectInfo.GetTargetFolders(envInfo);
+      List<string> targetFolders =
+        projectInfo.GetTargetFolders(envInfo)
+          .ToList();
 
-      Assert.AreEqual("\\\\" + machine + "\\c$\\basedir\\" + _NtServiceDirName, result);
+      Assert.IsNotNull(targetFolders);
+      Assert.AreEqual(1, targetFolders.Count);
+      Assert.AreEqual("\\\\" + machine + "\\c$\\basedir\\" + _NtServiceDirName, targetFolders[0]);
     }
 
     [Test]

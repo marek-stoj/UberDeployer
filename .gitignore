@@ -29,3 +29,5 @@
 /Src/UberDeployer.NAnt/obj
 /Src/UberDeployer.NAnt/bin
 /Data/KRD
+/Bin
+/Tests

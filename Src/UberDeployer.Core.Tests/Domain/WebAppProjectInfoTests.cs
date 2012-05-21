@@ -229,8 +229,13 @@ namespace UberDeployer.Core.Tests.Domain
             WebAppDirName,
             AppPoolInfo);
 
-      var result = projectInfo.GetTargetUrls(envInfo);
-      Assert.AreEqual("http://webmachine/" + WebAppName, result);
+      List<string> targetUrls =
+        projectInfo.GetTargetUrls(envInfo)
+          .ToList();
+
+      Assert.IsNotNull(targetUrls);
+      Assert.AreEqual(1, targetUrls.Count);
+      Assert.AreEqual("http://webmachine/" + WebAppName, targetUrls[0]);
     }
 
     [Test]

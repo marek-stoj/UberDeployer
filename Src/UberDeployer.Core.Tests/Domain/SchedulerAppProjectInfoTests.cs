@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
@@ -298,9 +299,13 @@ namespace UberDeployer.Core.Tests.Domain
         _ScheduledMinute,
         _ExecutionTimeLimitInMinutes);
 
-      var result = schedulerAppProjectInfo.GetTargetFolders(envInfo);
+      List<string> targetFolders =
+        schedulerAppProjectInfo.GetTargetFolders(envInfo)
+          .ToList();
 
-      Assert.AreEqual("\\\\" + machine + "\\c$\\scheduler\\" + _SchedulerAppDirName, result);
+      Assert.IsNotNull(targetFolders);
+      Assert.AreEqual(1, targetFolders.Count);
+      Assert.AreEqual("\\\\" + machine + "\\c$\\scheduler\\" + _SchedulerAppDirName, targetFolders[0]);
     }
 
     [Test]

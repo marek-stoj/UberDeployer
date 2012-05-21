@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project default="run">
+
+  <target name="clean">
+    <delete dir="Bin" />
+  </target>
+  
+  <target name="configure">
+    <property name="msbuild.path" value="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" />
+    <if test="${not file::exists(msbuild.path)}">
+      <property name="devenv.com.path" value="C:\WINDOWS\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe" />
+    </if>
+  </target>
+
+  <target name="build">
+    <exec program="${msbuild.path}">
+      <arg value="src/UberDeployer.sln" />
+      <arg value="/p:Configuration=Release" />
+      <arg value="/p:DebugType=none" />
+    </exec>
+  </target>
+  
+  <target name="test">
+    <nunit2>
+      <formatter type="Xml" usefile="true" extension=".xml" outputdir="Tests/Results" />
+      <test assemblyname="Tests\UberDeployer.Core.Tests.dll" />
+    </nunit2>
+  </target>
+	
+  <target name="run">
+    <echo message="Using snapshot: ${snapshot.path}" />
+    <call target="clean" />
+    <call target="configure" />
+    <call target="build" />
+    <call target="test" />
+  </target>
+
+</project>
