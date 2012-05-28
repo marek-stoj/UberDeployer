@@ -4,8 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Web.Administration;
 using UberDeployer.Core.Domain;
-using UberDeployer.Core.Management.MsDeploy;
 using System.Text.RegularExpressions;
+using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Management.Iis
 {

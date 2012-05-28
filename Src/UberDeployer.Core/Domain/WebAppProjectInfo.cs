@@ -10,8 +10,8 @@ namespace UberDeployer.Core.Domain
   // TODO IMM HI: create WebServiceProjectInfo
   public class WebAppProjectInfo : ProjectInfo
   {
-    public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, string iisSiteName, string webAppName, string webAppDirName, IisAppPoolInfo appPoolInfo)
-      : base(name, artifactsRepositoryName, artifactsRepositoryDirName)
+    public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string iisSiteName, string webAppName, string webAppDirName, IisAppPoolInfo appPoolInfo)
+      : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
       if (string.IsNullOrEmpty(iisSiteName))
       {

@@ -8,7 +8,7 @@ namespace UberDeployer.Core.Domain
   // TODO IMM HI: get rid of System.ComponentModel attributes in ProjectInfo and all derived classes?
   public abstract class ProjectInfo
   {
-    protected ProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName = null)
+    protected ProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName = null, bool artifactsAreNotEnvironmentSpecific = false)
     {
       if (string.IsNullOrEmpty(name))
       {
@@ -23,6 +23,7 @@ namespace UberDeployer.Core.Domain
       Name = name;
       ArtifactsRepositoryName = artifactsRepositoryName;
       ArtifactsRepositoryDirName = artifactsRepositoryDirName;
+      ArtifactsAreEnvironmentSpecific = !artifactsAreNotEnvironmentSpecific;
     }
 
     public abstract DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
@@ -43,5 +44,8 @@ namespace UberDeployer.Core.Domain
 
     [Category("Common")]
     public string ArtifactsRepositoryDirName { get; private set; }
+    
+    [Category("Common")]
+    public bool ArtifactsAreEnvironmentSpecific { get; private set; }
   }
 }

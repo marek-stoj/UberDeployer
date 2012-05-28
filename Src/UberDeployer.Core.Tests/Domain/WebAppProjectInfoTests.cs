@@ -20,6 +20,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string Name = "name";
     private const string ArtifactsRepositoryName = "repoName";
     private const string ArtifactsRepositoryDirName = "repoDirName";
+    private const bool ArtifactsAreNotEnvironmentSpecific = false;
 
     private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
@@ -34,16 +35,17 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new WebAppProjectInfo(
-            null,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
-        });
+          {
+            new WebAppProjectInfo(
+              null,
+              ArtifactsRepositoryName,
+              ArtifactsRepositoryDirName,
+              ArtifactsAreNotEnvironmentSpecific,
+              IisSiteName,
+              WebAppName,
+              WebAppDirName,
+              AppPoolInfo);
+          });
     }
 
     [Test]
@@ -51,16 +53,17 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new WebAppProjectInfo(
-            Name,
-            null,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
-        });
+          {
+            new WebAppProjectInfo(
+              Name,
+              null,
+              ArtifactsRepositoryDirName,
+              ArtifactsAreNotEnvironmentSpecific,
+              IisSiteName,
+              WebAppName,
+              WebAppDirName,
+              AppPoolInfo);
+          });
     }
 
     [Test]
@@ -68,16 +71,17 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            null,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
-        });
+          {
+            new WebAppProjectInfo(
+              Name,
+              ArtifactsRepositoryName,
+              ArtifactsRepositoryDirName,
+              ArtifactsAreNotEnvironmentSpecific,
+              null,
+              WebAppName,
+              WebAppDirName,
+              AppPoolInfo);
+          });
     }
 
     [Test]
@@ -85,16 +89,17 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            null,
-            WebAppDirName,
-            AppPoolInfo);
-        });
+          {
+            new WebAppProjectInfo(
+              Name,
+              ArtifactsRepositoryName,
+              ArtifactsRepositoryDirName,
+              ArtifactsAreNotEnvironmentSpecific,
+              IisSiteName,
+              null,
+              WebAppDirName,
+              AppPoolInfo);
+          });
     }
 
     [Test]
@@ -102,16 +107,17 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            null,
-            AppPoolInfo);
-        });
+          {
+            new WebAppProjectInfo(
+              Name,
+              ArtifactsRepositoryName,
+              ArtifactsRepositoryDirName,
+              ArtifactsAreNotEnvironmentSpecific,
+              IisSiteName,
+              WebAppName,
+              null,
+              AppPoolInfo);
+          });
     }
 
     [Test]
@@ -119,29 +125,32 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentNullException>(
         () =>
-        {
-          new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            null);
-        });
+          {
+            new WebAppProjectInfo(
+              Name,
+              ArtifactsRepositoryName,
+              ArtifactsRepositoryDirName,
+              ArtifactsAreNotEnvironmentSpecific,
+              IisSiteName,
+              WebAppName,
+              WebAppDirName,
+              null);
+          });
     }
 
     [Test]
     public void Test_CreateDeployemntTask_Thows_When_ObjectFactory_null()
     {
-      var projectInfo = new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
+      var projectInfo =
+        new WebAppProjectInfo(
+          Name,
+          ArtifactsRepositoryName,
+          ArtifactsRepositoryDirName,
+          ArtifactsAreNotEnvironmentSpecific,
+          IisSiteName,
+          WebAppName,
+          WebAppDirName,
+          AppPoolInfo);
 
       Assert.Throws<ArgumentNullException>(
         () => projectInfo.CreateDeploymentTask(
@@ -158,76 +167,84 @@ namespace UberDeployer.Core.Tests.Domain
       var imsDeploy = new Mock<IMsDeploy>(MockBehavior.Strict);
       var iisManager = new Mock<IIisManager>(MockBehavior.Strict);
 
-      var projectInfo = new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
+      var projectInfo =
+        new WebAppProjectInfo(
+          Name,
+          ArtifactsRepositoryName,
+          ArtifactsRepositoryDirName,
+          ArtifactsAreNotEnvironmentSpecific,
+          IisSiteName,
+          WebAppName,
+          WebAppDirName,
+          AppPoolInfo);
 
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
-      objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object); 
+      objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object);
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreateIMsDeploy()).Returns(imsDeploy.Object);
       objectFactory.Setup(o => o.CreateIIisManager()).Returns(iisManager.Object);
-      
+
       projectInfo.CreateDeploymentTask(
-          objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
+        objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
     }
 
     [Test]
-    public void Test_GetTargetFolder_RunsProperly_WhenAllIsWell()
+    public void Test_GetTargetFolders_RunsProperly_WhenAllIsWell()
     {
       string machine = Environment.MachineName;
 
       var envInfo = new EnvironmentInfo(
         "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", "C:\\basedir", "C:\\basedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
-      var projectInfo = new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
+      var projectInfo =
+        new WebAppProjectInfo(
+          Name,
+          ArtifactsRepositoryName,
+          ArtifactsRepositoryDirName,
+          false,
+          IisSiteName,
+          WebAppName,
+          WebAppDirName,
+          AppPoolInfo);
 
       Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolders(envInfo).FirstOrDefault());
     }
 
     [Test]
-    public void Test_GetTargetFolder_Throws_EnvInfo_null()
+    public void Test_GetTargetFolders_Throws_EnvInfo_null()
     {
-      var projectInfo = new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
+      var projectInfo =
+        new WebAppProjectInfo(
+          Name,
+          ArtifactsRepositoryName,
+          ArtifactsRepositoryDirName,
+          ArtifactsAreNotEnvironmentSpecific,
+          IisSiteName,
+          WebAppName,
+          WebAppDirName,
+          AppPoolInfo);
 
       Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(null));
     }
 
     [Test]
-    public void Test_GetTargetUrl_RunsProperly_WhenAllIsWell()
+    public void Test_GetTargetUrls_RunsProperly_WhenAllIsWell()
     {
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
       var envInfo = new EnvironmentInfo(
         "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
-      var projectInfo = new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
+      var projectInfo =
+        new WebAppProjectInfo(
+          Name,
+          ArtifactsRepositoryName,
+          ArtifactsRepositoryDirName,
+          ArtifactsAreNotEnvironmentSpecific,
+          IisSiteName,
+          WebAppName,
+          WebAppDirName,
+          AppPoolInfo);
 
       List<string> targetUrls =
         projectInfo.GetTargetUrls(envInfo)
@@ -239,17 +256,19 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_GetTargetUrl_Throws_EnvInfo_null()
+    public void Test_GetTargetUrls_Throws_EnvInfo_null()
     {
-      
-      var projectInfo = new WebAppProjectInfo(
-            Name,
-            ArtifactsRepositoryName,
-            ArtifactsRepositoryDirName,
-            IisSiteName,
-            WebAppName,
-            WebAppDirName,
-            AppPoolInfo);
+
+      var projectInfo =
+        new WebAppProjectInfo(
+          Name,
+          ArtifactsRepositoryName,
+          ArtifactsRepositoryDirName,
+          ArtifactsAreNotEnvironmentSpecific,
+          IisSiteName,
+          WebAppName,
+          WebAppDirName,
+          AppPoolInfo);
 
       Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetUrls(null));
     }
@@ -258,26 +277,30 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_WebServiceProjectInfoTests_RunsOK_WhenALLIZWELL()
     {
       new WebServiceProjectInfo(
-                  Name,
-                  ArtifactsRepositoryName,
-                  ArtifactsRepositoryDirName,
-                  IisSiteName,
-                  WebAppName,
-                  WebAppDirName,
-                  AppPoolInfo);
+        Name,
+        ArtifactsRepositoryName,
+        ArtifactsRepositoryDirName,
+        ArtifactsAreNotEnvironmentSpecific,
+        IisSiteName,
+        WebAppName,
+        WebAppDirName,
+        AppPoolInfo);
     }
 
     [Test]
     public void Test_GetType_ReturnsType()
     {
-      var info = new WebServiceProjectInfo(
-                  Name,
-                  ArtifactsRepositoryName,
-                  ArtifactsRepositoryDirName,
-                  IisSiteName,
-                  WebAppName,
-                  WebAppDirName,
-                  AppPoolInfo);
+      var info =
+        new WebServiceProjectInfo(
+          Name,
+          ArtifactsRepositoryName,
+          ArtifactsRepositoryDirName,
+          ArtifactsAreNotEnvironmentSpecific,
+          IisSiteName,
+          WebAppName,
+          WebAppDirName,
+          AppPoolInfo);
+
       Assert.AreEqual("WebService", info.Type);
     }
   }

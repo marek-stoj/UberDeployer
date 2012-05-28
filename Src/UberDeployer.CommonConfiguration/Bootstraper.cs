@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
@@ -8,6 +9,7 @@ using UberDeployer.Core.DataAccess.NHibernate;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.DataAccess.Xml;
 using UberDeployer.Core.DataAccess;
+using UberDeployer.Core.Management.Db;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.TeamCity;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
@@ -22,22 +24,12 @@ namespace UberDeployer.CommonConfiguration
   public class Bootstraper
   {
     private const string ApplicationConfigPath = @"Data\ApplicationConfiguration.xml";
-
     private const string ProjectInfoPath = @"Data\ProjectInfos.xml";
-
     private const string EnvironmentInfoPath = @"Data\EnvironmentInfos.xml";
 
     private static readonly TimeSpan _NtServiceManagerOperationsTimeout = TimeSpan.FromMinutes(1);
 
     private static ISessionFactory _sessionFactory;
-
-    private static ISessionFactory SessionFactory
-    {
-      get
-      {
-        return _sessionFactory ?? (_sessionFactory = CreateNHibernateSessionFactory());
-      }
-    }
 
     public static void Bootstrap()
     {
@@ -56,16 +48,17 @@ namespace UberDeployer.CommonConfiguration
 
       container.Register(
         Component.For<ITeamCityClient>()
-          .UsingFactoryMethod(() =>
-                                {
-                                  var appConfig = container.Resolve<IApplicationConfiguration>();
+          .UsingFactoryMethod(
+            () =>
+              {
+                var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                                  return new TeamCityClient(
-                                    appConfig.TeamCityHostName,
-                                    appConfig.TeamCityPort,
-                                    appConfig.TeamCityUserName,
-                                    appConfig.TeamCityPassword);
-                                })
+                return new TeamCityClient(
+                  appConfig.TeamCityHostName,
+                  appConfig.TeamCityPort,
+                  appConfig.TeamCityUserName,
+                  appConfig.TeamCityPassword);
+              })
           .LifeStyle.Transient);
 
       container.Register(
@@ -80,15 +73,16 @@ namespace UberDeployer.CommonConfiguration
 
       container.Register(
         Component.For<INtServiceManager>()
-          .UsingFactoryMethod(() =>
-                                {
-                                  var appConfig = container.Resolve<IApplicationConfiguration>();
+          .UsingFactoryMethod(
+            () =>
+              {
+                var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                                  return
-                                    new ScExeBasedNtServiceManager(
-                                      appConfig.ScExePath,
-                                      _NtServiceManagerOperationsTimeout);
-                                })
+                return
+                  new ScExeBasedNtServiceManager(
+                    appConfig.ScExePath,
+                    _NtServiceManagerOperationsTimeout);
+              })
           .LifeStyle.Transient);
 
       container.Register(
@@ -111,17 +105,43 @@ namespace UberDeployer.CommonConfiguration
       // TODO IMM HI: config?
       container.Register(
         Component.For<IDeploymentPipeline>()
-          .UsingFactoryMethod(() =>
-                                {
-                                  var deploymentRequestRepository = container.Resolve<IDeploymentRequestRepository>();
-                                  var auditingModule = new AuditingModule(deploymentRequestRepository);
-                                  var deploymentPipeline = new DeploymentPipeline();
+          .UsingFactoryMethod(
+            () =>
+              {
+                var deploymentRequestRepository = container.Resolve<IDeploymentRequestRepository>();
+                var auditingModule = new AuditingModule(deploymentRequestRepository);
+                var deploymentPipeline = new DeploymentPipeline();
 
-                                  deploymentPipeline.AddModule(auditingModule);
+                deploymentPipeline.AddModule(auditingModule);
 
-                                  return deploymentPipeline;
-                                })
+                return deploymentPipeline;
+              })
           .LifeStyle.Transient);
+
+      container.Register(
+        Component.For<IDbVersionProvider>()
+          .UsingFactoryMethod(
+            () =>
+              {
+                IEnumerable<DbVersionTableInfo> versionTableInfos =
+                  new List<DbVersionTableInfo>
+                    {
+                      new DbVersionTableInfo
+                        {
+                          TableName = "VERSION",
+                          ColumnName = "dbVersion"
+                        },
+                      new DbVersionTableInfo
+                        {
+                          TableName = "VERSIONHISTORY",
+                          ColumnName = "DBLabel"
+                        }
+                    };
+
+                return new DbVersionProvider(versionTableInfos);
+              })
+          .LifeStyle.Transient);
+
     }
 
     private static ISessionFactory CreateNHibernateSessionFactory()
@@ -136,6 +156,11 @@ namespace UberDeployer.CommonConfiguration
           .Mappings(mc => mc.FluentMappings.AddFromAssemblyOf<NHibernateRepository>());
 
       return fluentConfiguration.BuildSessionFactory();
+    }
+
+    private static ISessionFactory SessionFactory
+    {
+      get { return _sessionFactory ?? (_sessionFactory = CreateNHibernateSessionFactory()); }
     }
   }
 }

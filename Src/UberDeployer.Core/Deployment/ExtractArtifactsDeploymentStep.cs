@@ -17,7 +17,7 @@ namespace UberDeployer.Core.Deployment
     private readonly string _targetArtifactsDirPath;
 
     private readonly string _archiveSubPath;
-    
+
     #region Constructor(s)
 
     public ExtractArtifactsDeploymentStep(EnvironmentInfo environmentInfo, ProjectInfo projectInfo, string projectConfigurationName, string projectConfigurationBuildId, string artifactsFilePath, string targetArtifactsDirPath)
@@ -59,15 +59,17 @@ namespace UberDeployer.Core.Deployment
       _artifactsFilePath = artifactsFilePath;
       _targetArtifactsDirPath = targetArtifactsDirPath;
 
-      _archiveSubPath =
-        !string.IsNullOrEmpty(_environmentInfo.ConfigurationTemplateName)
-          ? string.Format("{0}/", _environmentInfo.ConfigurationTemplateName)
-          : "";
+      string archiveParentPath = string.Empty;
 
-      if (!string.IsNullOrEmpty(_projectInfo.ArtifactsRepositoryDirName))
+      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
       {
-        _archiveSubPath += string.Format("{0}/", _projectInfo.ArtifactsRepositoryDirName);
+        archiveParentPath = string.Format("{0}/", _environmentInfo.ConfigurationTemplateName);
       }
+
+      _archiveSubPath =
+        !string.IsNullOrEmpty(_projectInfo.ArtifactsRepositoryDirName)
+          ? string.Format("{0}{1}/", archiveParentPath, _projectInfo.ArtifactsRepositoryDirName)
+          : archiveParentPath;
     }
 
     #endregion

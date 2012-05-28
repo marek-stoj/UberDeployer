@@ -16,6 +16,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _Name = "name";
     private const string _ArtifactsRepositoryName = "artifRepoName";
     private const string _ArtifactsRepositoryDirName = "artifRepoDirName";
+    private const bool _ArtifactsAreNotEnvirionmentSpecific = false;
     private const string _TerminalAppName = "terminalAppName";
     private const string _TerminalAppDirName = "terminalAppDirName";
     private const string _TerminalAppExeName = "terminalAppExeName";
@@ -36,6 +37,7 @@ namespace UberDeployer.Core.Tests.Domain
             null,
             _ArtifactsRepositoryName,
             _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
             _TerminalAppName,
             _TerminalAppDirName,
             _TerminalAppExeName);
@@ -52,6 +54,7 @@ namespace UberDeployer.Core.Tests.Domain
           _Name,
           null,
           _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvirionmentSpecific,
           _TerminalAppName,
           _TerminalAppDirName,
           _TerminalAppExeName);
@@ -68,6 +71,7 @@ namespace UberDeployer.Core.Tests.Domain
           _Name,
           _ArtifactsRepositoryName,
           _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvirionmentSpecific,
           null,
           _TerminalAppDirName,
           _TerminalAppExeName);
@@ -84,6 +88,7 @@ namespace UberDeployer.Core.Tests.Domain
           _Name,
           _ArtifactsRepositoryName,
           _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvirionmentSpecific,
           _TerminalAppName,
           null,
           _TerminalAppExeName);
@@ -100,6 +105,7 @@ namespace UberDeployer.Core.Tests.Domain
           _Name,
           _ArtifactsRepositoryName,
           _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvirionmentSpecific,
           _TerminalAppName,
           _TerminalAppDirName,
           null);
@@ -113,6 +119,7 @@ namespace UberDeployer.Core.Tests.Domain
             _Name,
             _ArtifactsRepositoryName,
             _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
             _TerminalAppName,
             _TerminalAppDirName,
             _TerminalAppExeName);
@@ -134,6 +141,7 @@ namespace UberDeployer.Core.Tests.Domain
             _Name,
             _ArtifactsRepositoryName,
             _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
             _TerminalAppName,
             _TerminalAppDirName,
             _TerminalAppExeName);
@@ -148,7 +156,7 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_GetTargetFolde_RunsProperly_WhenAllIsWell()
+    public void Test_GetTargetFolders_RunsProperly_WhenAllIsWell()
     {
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
@@ -160,13 +168,14 @@ namespace UberDeployer.Core.Tests.Domain
             _Name,
             _ArtifactsRepositoryName,
             _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
             _TerminalAppName,
             _TerminalAppDirName,
             _TerminalAppExeName);
 
       List<string> targetFolders =
-        projectInfo.GetTargetFolders(envInfo)
-          .ToList();
+              projectInfo.GetTargetFolders(envInfo)
+                .ToList();
 
       Assert.IsNotNull(targetFolders);
       Assert.AreEqual(1, targetFolders.Count);
@@ -174,12 +183,13 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_GetTargetFolde_Throws_EnvInfo_null()
+    public void Test_GetTargetFolders_Throws_EnvInfo_null()
     {
       var projectInfo = new TerminalAppProjectInfo(
             _Name,
             _ArtifactsRepositoryName,
             _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
             _TerminalAppName,
             _TerminalAppDirName,
             _TerminalAppExeName);

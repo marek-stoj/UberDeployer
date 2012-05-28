@@ -48,12 +48,17 @@ namespace UberDeployer.Core.Deployment
 
     protected void PostDiagnosticMessage(string message)
     {
+      PostDiagnosticMessage(message, MessageType.Info);
+    }
+
+    protected void PostDiagnosticMessage(string message, MessageType messageType)
+    {
       if (string.IsNullOrEmpty(message))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "message");
       }
 
-      OnDiagnosticMessagePosted(this, new DiagnosticMessageEventArgs(message));
+      OnDiagnosticMessagePosted(this, new DiagnosticMessageEventArgs(message, messageType));
     }
 
     protected void OnDiagnosticMessagePosted(object sender, DiagnosticMessageEventArgs diagnosticMessageEventArgs)

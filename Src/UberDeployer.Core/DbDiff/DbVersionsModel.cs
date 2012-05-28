@@ -154,6 +154,16 @@ namespace UberDeployer.Core.DbDiff
       return dbVersions.Contains(dbVersion);
     }
 
+    public string GetCurrentDbVersion(string databaseName)
+    {
+      if (string.IsNullOrEmpty(databaseName))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "databaseName");
+      }
+
+      return GetAllSortedDbVersions(databaseName).First();
+    }
+
     public bool AreDatabasesConsistentAcrossEnvironments(string databaseName)
     {
       if (string.IsNullOrEmpty(databaseName))

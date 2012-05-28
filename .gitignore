@@ -31,3 +31,10 @@
 /Data/KRD
 /Bin
 /Tests
+/Src/ProjectDepsVisualizer/ProjectDepsVisualizer.csproj.user
+/Src/UberDeployer.CommonConfiguration/UberDeployer.CommonConfiguration.csproj.user
+/Src/UberDeployer.ConsoleCommander/UberDeployer.ConsoleCommander.csproj.user
+/Src/UberDeployer.Core.Tests/UberDeployer.Core.Tests.csproj.user
+/Src/UberDeployer.NAnt/UberDeployer.NAnt.csproj.user
+/Src/UberDeployer.WinApp/UberDeployer.WinApp.csproj.user
+/Src/ProjectDepsVisualizer/StyleCop.Cache

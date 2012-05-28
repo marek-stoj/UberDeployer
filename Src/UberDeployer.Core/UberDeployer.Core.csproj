@@ -5,19 +5,21 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A7FBD8CF-8E87-4029-B8B3-9F37B59C2BC1}</ProjectGuid>
+    <ProjectGuid>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UberDeployer.Core</RootNamespace>
     <AssemblyName>UberDeployer.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Bin\UberDeployer.Core\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Bin\UberDeployer.Core\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,6 +39,10 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\..\Lib\DotNetZip\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SqlServer.Smo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Win32.TaskScheduler">
       <HintPath>..\..\Lib\TaskScheduler\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
@@ -46,10 +52,12 @@
     <Reference Include="NHibernate">
       <HintPath>..\..\Lib\NHibernate\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -59,56 +67,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Configuration\IApplicationConfiguration.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\XmlApplicationConfiguration.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
-    <Compile Include="DataAccess\NHibernate\Mappings\DeploymentRequestMap.cs" />
-    <Compile Include="DataAccess\NHibernate\NHibernateDeploymentRequestRepository.cs" />
-    <Compile Include="DataAccess\NHibernate\NHibernateRepository.cs" />
-    <Compile Include="DataAccess\TeamCityArtifactsRepository.cs" />
-    <Compile Include="DataAccess\Xml\XmlEnvironmentInfoRepository.cs" />
-    <Compile Include="DataAccess\Xml\XmlProjectInfoRepository.cs" />
     <Compile Include="DbDiff\DbVersion.cs" />
     <Compile Include="DbDiff\DbVersionsModel.cs" />
-    <Compile Include="Deployment\BackupFilesDeploymentStep.cs" />
-    <Compile Include="Deployment\CopyFilesDeploymentStep.cs" />
+    <Compile Include="Deployment\DeferredEnumerable.cs" />
+    <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStep.cs" />
+    <Compile Include="Domain\UI\EnvironmentUserCollectionPropertyDescriptor.cs" />
+    <Compile Include="Domain\UI\EnvironmentUserConverter.cs" />
+    <Compile Include="Domain\UI\EnvironmentUsersCollection.cs" />
+    <Compile Include="Domain\UI\EnvironmentUsersCollectionConverter.cs" />
+    <Compile Include="Domain\UI\MyCollectionBase.cs" />
+    <Compile Include="Domain\UI\WebServerMachineNameCollection.cs" />
+    <Compile Include="Domain\UI\WebServerMachineNameCollectionPropertyDescriptor.cs" />
+    <Compile Include="Domain\UI\WebServerMachineNamesCollectionConverter.cs" />
+    <Compile Include="Management\Db\DbScriptRunnerException.cs" />
+    <Compile Include="Management\Db\DbVersionTableInfo.cs" />
+    <Compile Include="Management\Db\DbVersionProvider.cs" />
+    <Compile Include="Management\Db\IDbScriptRunner.cs" />
+    <Compile Include="Management\Db\IDbScriptRunnerFactory.cs" />
+    <Compile Include="Deployment\MessageType.cs" />
+    <Compile Include="Deployment\MigrateDbDeploymentTask.cs" />
+    <Compile Include="Management\Db\IDbVersionProvider.cs" />
+    <Compile Include="Management\Db\MsSqlDbScriptRunnerFactory.cs" />
+    <Compile Include="Deployment\RunDbScriptsDeploymentStep.cs" />
+    <Compile Include="Management\Db\MsSqlDbScriptRunner.cs" />
+    <Compile Include="Deployment\UpdateAppScheduleDeploymentStep.cs" />
     <Compile Include="Deployment\CreateAppPoolDeploymentStep.cs" />
-    <Compile Include="Deployment\CreateWebDeployPackageDeploymentStep.cs" />
-    <Compile Include="Deployment\DeploymentStep.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Deployment\DeploymentTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Deployment\DeploymentTaskBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Deployment\DeploymentTaskException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Deployment\DeployNTServiceDeploymentTask.cs" />
-    <Compile Include="Deployment\DeploySchedulerAppDeploymentTask.cs" />
-    <Compile Include="Deployment\DeployTerminalAppDeploymentTask.cs" />
-    <Compile Include="Deployment\DeployWebAppDeploymentTask.cs" />
-    <Compile Include="Deployment\DeployWebDeployPackageDeploymentStep.cs" />
-    <Compile Include="Deployment\DeployWebServiceDeploymentTask.cs" />
-    <Compile Include="Deployment\DiagnosticMessageEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Deployment\DialogPromptPasswordCollector.cs" />
-    <Compile Include="Deployment\DownloadArtifactsDeploymentStep.cs" />
-    <Compile Include="Deployment\ExtractArtifactsDeploymentStep.cs" />
-    <Compile Include="Deployment\InstallNtServiceDeploymentStep.cs" />
+    <Compile Include="Deployment\Pipeline\Modules\EnforceTargetEnvironmentConstraintsModule.cs" />
     <Compile Include="Deployment\IPasswordCollector.cs" />
-    <Compile Include="Deployment\NTServiceControlAction.cs" />
-    <Compile Include="Deployment\NTServiceControlDeploymentStep.cs" />
+    <Compile Include="Deployment\DialogPromptPasswordCollector.cs" />
     <Compile Include="Deployment\PasswordCollectorHelper.cs" />
     <Compile Include="Deployment\PasswordPromptForm.cs">
       <SubType>Form</SubType>
@@ -116,95 +103,90 @@
     <Compile Include="Deployment\PasswordPromptForm.Designer.cs">
       <DependentUpon>PasswordPromptForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Deployment\Pipeline\DeploymentPipeline.cs" />
+    <Compile Include="Deployment\SetAppPoolDeploymentStep.cs" />
+    <Compile Include="Domain\DbProjectInfo.cs" />
+    <Compile Include="Domain\EnvironmentUser.cs" />
+    <Compile Include="Domain\IisAppPoolInfo.cs" />
+    <Compile Include="Domain\IisAppPoolMode.cs" />
+    <Compile Include="Domain\IisAppPoolVersion.cs" />
+    <Compile Include="Domain\ReadOnlyUITypeEditor.cs" />
+    <Compile Include="Management\Iis\IIisManager.cs" />
+    <Compile Include="DataAccess\NHibernate\Mappings\DeploymentRequestMap.cs" />
+    <Compile Include="DataAccess\NHibernate\NHibernateDeploymentRequestRepository.cs" />
+    <Compile Include="DataAccess\NHibernate\NHibernateRepository.cs" />
+    <Compile Include="Deployment\BackupFilesDeploymentStep.cs" />
+    <Compile Include="Deployment\Pipeline\DeploymentPipeline.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Deployment\Pipeline\IDeploymentPipeline.cs" />
-    <Compile Include="Deployment\Pipeline\IDeploymentPipelineModule.cs" />
+    <Compile Include="Deployment\Pipeline\IDeploymentPipelineModule.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Deployment\Pipeline\Modules\AuditingModule.cs" />
     <Compile Include="Deployment\Pipeline\Modules\DeploymentRequest.cs" />
-    <Compile Include="Deployment\Pipeline\Modules\EnforceTargetEnvironmentConstraintsModule.cs" />
-    <Compile Include="Deployment\Pipeline\Modules\IDeploymentRequestRepository.cs" />
+    <Compile Include="Configuration\IApplicationConfiguration.cs" />
+    <Compile Include="Configuration\XmlApplicationConfiguration.cs" />
+    <Compile Include="Deployment\CreateWebDeployPackageDeploymentStep.cs" />
+    <Compile Include="Deployment\DeployTerminalAppDeploymentTask.cs" />
+    <Compile Include="Deployment\DeployWebDeployPackageDeploymentStep.cs" />
+    <Compile Include="Deployment\DownloadArtifactsDeploymentStep.cs" />
+    <Compile Include="Deployment\ExtractArtifactsDeploymentStep.cs" />
     <Compile Include="Deployment\ScheduleNewAppDeploymentStep.cs" />
-    <Compile Include="Deployment\SetAppPoolDeploymentStep.cs" />
-    <Compile Include="Deployment\StartNtServiceDeploymentStep.cs" />
-    <Compile Include="Deployment\StopNtServiceDeploymentStep.cs" />
-    <Compile Include="Deployment\UpdateAppScheduleDeploymentStep.cs" />
-    <Compile Include="Domain\UI\MyCollectionBase.cs" />
-    <Compile Include="Domain\UI\WebServerMachineNameCollectionPropertyDescriptor.cs" />
-    <Compile Include="Domain\UI\WebServerMachineNamesCollectionConverter.cs" />
-    <Compile Include="Domain\UI\WebServerMachineNameCollection.cs" />
-    <Compile Include="Domain\EnvironmentInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\EnvironmentInfosList.cs" />
-    <Compile Include="Domain\EnvironmentUser.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\UI\EnvironmentUserCollectionPropertyDescriptor.cs" />
-    <Compile Include="Domain\UI\EnvironmentUserConverter.cs" />
-    <Compile Include="Domain\UI\EnvironmentUsersCollection.cs" />
-    <Compile Include="Domain\UI\EnvironmentUsersCollectionConverter.cs" />
-    <Compile Include="Domain\IArtifactsRepository.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\IEnvironmentInfoRepository.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\IisAppPoolInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\IisAppPoolMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\IisAppPoolVersion.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\IProjectInfoRepository.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\NtServiceProjectInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\ProjectInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\ReadOnlyUITypeEditor.cs" />
-    <Compile Include="Domain\SchedulerAppProjectInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\TerminalAppProjectInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\WebAppProjectInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Domain\WebServiceProjectInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="InternalException.cs" />
-    <Compile Include="IObjectFactory.cs" />
-    <Compile Include="Management\Iis\IIisManager.cs" />
+    <Compile Include="Deployment\Pipeline\Modules\IDeploymentRequestRepository.cs" />
     <Compile Include="Management\Iis\MsDeployBasedIisManager.cs" />
     <Compile Include="Management\MsDeploy\IMsDeploy.cs" />
     <Compile Include="Management\MsDeploy\MsDeploy.cs" />
     <Compile Include="Management\MsDeploy\MsDeployException.cs" />
-    <Compile Include="Management\NtServices\INtServiceManager.cs" />
-    <Compile Include="Management\NtServices\NtServiceDescriptor.cs" />
-    <Compile Include="Management\NtServices\ScExeBasedNtServiceManager.cs" />
     <Compile Include="Management\ScheduledTasks\ITaskScheduler.cs" />
     <Compile Include="Management\ScheduledTasks\ScheduledTaskSpecification.cs" />
     <Compile Include="Management\ScheduledTasks\TaskScheduler.cs" />
-    <Compile Include="TeamCity\ITeamCityClient.cs" />
+    <Compile Include="Domain\TerminalAppProjectInfo.cs" />
+    <Compile Include="Deployment\DeploySchedulerAppDeploymentTask.cs" />
+    <Compile Include="Deployment\DeployWebAppDeploymentTask.cs" />
+    <Compile Include="Deployment\DeployWebServiceDeploymentTask.cs" />
+    <Compile Include="Deployment\InstallNtServiceDeploymentStep.cs" />
+    <Compile Include="Management\NtServices\INtServiceManager.cs" />
+    <Compile Include="IObjectFactory.cs" />
+    <Compile Include="Management\NtServices\NtServiceDescriptor.cs" />
+    <Compile Include="Management\NtServices\ScExeBasedNtServiceManager.cs" />
+    <Compile Include="Domain\SchedulerAppProjectInfo.cs" />
+    <Compile Include="Domain\WebAppProjectInfo.cs" />
+    <Compile Include="Domain\EnvironmentInfosList.cs" />
+    <Compile Include="Domain\IProjectInfoRepository.cs" />
+    <Compile Include="Deployment\DeploymentStep.cs" />
+    <Compile Include="Deployment\DeploymentTaskBase.cs" />
+    <Compile Include="Deployment\DeployNtServiceDeploymentTask.cs" />
+    <Compile Include="Deployment\DiagnosticMessageEventArgs.cs" />
+    <Compile Include="Deployment\StartNtServiceDeploymentStep.cs" />
+    <Compile Include="Deployment\StopNtServiceDeploymentStep.cs" />
+    <Compile Include="Domain\EnvironmentInfo.cs" />
+    <Compile Include="Domain\IEnvironmentInfoRepository.cs" />
+    <Compile Include="Domain\IArtifactsRepository.cs" />
+    <Compile Include="Deployment\NtServiceControlAction.cs" />
+    <Compile Include="Deployment\NtServiceControlDeploymentStep.cs" />
+    <Compile Include="Deployment\CopyFilesDeploymentStep.cs" />
+    <Compile Include="Deployment\DeploymentTask.cs" />
+    <Compile Include="Deployment\DeploymentTaskException.cs" />
+    <Compile Include="InternalException.cs" />
+    <Compile Include="Domain\NtServiceProjectInfo.cs" />
+    <Compile Include="Domain\ProjectInfo.cs" />
+    <Compile Include="DataAccess\TeamCityArtifactsRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCity\Models\BuildsLocation.cs" />
     <Compile Include="TeamCity\Models\BuildStatus.cs" />
-    <Compile Include="TeamCity\Models\Project.cs" />
-    <Compile Include="TeamCity\Models\ProjectConfiguration.cs" />
     <Compile Include="TeamCity\Models\ProjectConfigurationBuild.cs" />
-    <Compile Include="TeamCity\Models\ProjectConfigurationBuildsList.cs" />
     <Compile Include="TeamCity\Models\ProjectConfigurationDetails.cs" />
     <Compile Include="TeamCity\Models\ProjectConfigurationsList.cs" />
+    <Compile Include="TeamCity\Models\ProjectConfiguration.cs" />
     <Compile Include="TeamCity\Models\ProjectDetails.cs" />
+    <Compile Include="TeamCity\Models\ProjectConfigurationBuildsList.cs" />
+    <Compile Include="TeamCity\ITeamCityClient.cs" />
+    <Compile Include="TeamCity\Models\Project.cs" />
     <Compile Include="TeamCity\Models\ProjectsList.cs" />
     <Compile Include="TeamCity\TeamCityClient.cs" />
+    <Compile Include="Domain\WebServiceProjectInfo.cs" />
+    <Compile Include="DataAccess\Xml\XmlEnvironmentInfoRepository.cs" />
+    <Compile Include="DataAccess\Xml\XmlProjectInfoRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Deployment\PasswordPromptForm.resx">

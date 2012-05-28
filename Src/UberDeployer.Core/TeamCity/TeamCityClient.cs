@@ -50,15 +50,12 @@ namespace UberDeployer.Core.TeamCity
       return projectsList.Projects;
     }
 
+    // TODO IMM HI: optimize?
     public Project GetProjectByName(string projectName)
     {
-      // TODO IMM HI: optimize
       IEnumerable<Project> projects = GetAllProjects();
 
-      return
-        projects
-          .Where(pi => pi.Name == projectName)
-          .SingleOrDefault();
+      return projects.SingleOrDefault(pi => pi.Name == projectName);
     }
 
     public ProjectDetails GetProjectDetails(Project project)

@@ -10,8 +10,8 @@ namespace UberDeployer.Core.Domain
   {
     #region Constructor(s)
 
-    public NtServiceProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, string ntServiceName, string ntServiceDirName, string ntServiceDisplayName, string ntServiceExeName, string ntServiceUserId)
-      : base(name, artifactsRepositoryName, artifactsRepositoryDirName)
+    public NtServiceProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string ntServiceName, string ntServiceDirName, string ntServiceDisplayName, string ntServiceExeName, string ntServiceUserId)
+      : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
       if (string.IsNullOrEmpty(ntServiceName))
       {

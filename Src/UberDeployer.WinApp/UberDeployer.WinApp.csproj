@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0EB8E47F-AD0B-4D24-B343-8131E819EB17}</ProjectGuid>
+    <ProjectGuid>{80E906E0-CE73-45FE-A8A9-54BAE88F709C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UberDeployer.WinApp</RootNamespace>
@@ -14,33 +14,16 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>..\..\Bin\UberDeployer.WinApp\</OutputPath>
+    <OutputPath>..\..\bin\UberDeployer.WinApp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>..\..\Bin\UberDeployer.WinApp\</OutputPath>
+    <OutputPath>..\..\bin\UberDeployer.WinApp\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="msdeploy, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
@@ -48,7 +31,7 @@
       <HintPath>..\..\Lib\MsWebDeploy\msdeploy.exe</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+      <HintPath>..\..\libs\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,23 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="Forms\ConfigurationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ConfigurationForm.designer.cs">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\MyDataGridView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Forms\OpenTargetUrlsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OpenTargetUrlsForm.Designer.cs">
-      <DependentUpon>OpenTargetUrlsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DbVersionsDiffForm.cs">
       <SubType>Form</SubType>
@@ -92,25 +63,24 @@
     <Compile Include="Forms\DeploymentAuditForm.designer.cs">
       <DependentUpon>DeploymentAuditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OpenTargetFoldersForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OpenTargetFoldersForm.Designer.cs">
-      <DependentUpon>OpenTargetFoldersForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\AppUtils.cs" />
-    <Compile Include="Utils\GuiUtils.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\MainForm.designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="ProjectDeploymentInfo.cs" />
-    <Compile Include="Utils\SystemUtils.cs" />
-    <Compile Include="Properties\Resources.Designer.cs" />
-    <Compile Include="Properties\Settings.Designer.cs" />
+    <Compile Include="Forms\OpenTargetFoldersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OpenTargetFoldersForm.Designer.cs">
+      <DependentUpon>OpenTargetFoldersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OpenTargetUrlsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OpenTargetUrlsForm.Designer.cs">
+      <DependentUpon>OpenTargetUrlsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UberDeployerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,23 +90,28 @@
     <Compile Include="Forms\ViewEnvironmentInfoForm.designer.cs">
       <DependentUpon>ViewEnvironmentInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\DeploymentRequestInListViewModel.cs" />
-    <Compile Include="ViewModels\EnvironmentInfoInComboBoxViewModel.cs" />
-    <Compile Include="ViewModels\ProjectConfigurationBuildInListViewModel.cs" />
-    <Compile Include="ViewModels\ProjectConfigurationInListViewModel.cs" />
-    <Compile Include="ViewModels\ProjectInfoInListViewModel.cs" />
     <Compile Include="Forms\ViewProjectInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ViewProjectInfoForm.designer.cs">
       <DependentUpon>ViewProjectInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\AppUtils.cs" />
+    <Compile Include="Utils\GuiUtils.cs" />
+    <Compile Include="Utils\SystemUtils.cs" />
+    <Compile Include="CustomControls\MyDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ViewModels\DeploymentRequestInListViewModel.cs" />
+    <Compile Include="ViewModels\EnvironmentInfoInComboBoxViewModel.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ProjectDeploymentInfo.cs" />
+    <Compile Include="ViewModels\ProjectConfigurationBuildInListViewModel.cs" />
+    <Compile Include="ViewModels\ProjectConfigurationInListViewModel.cs" />
+    <Compile Include="ViewModels\ProjectInfoInListViewModel.cs" />
     <EmbeddedResource Include="Forms\ConfigurationForm.resx">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OpenTargetUrlsForm.resx">
-      <DependentUpon>OpenTargetUrlsForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DbVersionsDiffForm.resx">
       <DependentUpon>DbVersionsDiffForm.cs</DependentUpon>
@@ -150,13 +125,51 @@
     <EmbeddedResource Include="Forms\OpenTargetFoldersForm.resx">
       <DependentUpon>OpenTargetFoldersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="Forms\OpenTargetUrlsForm.resx">
+      <DependentUpon>OpenTargetUrlsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ViewEnvironmentInfoForm.resx">
       <DependentUpon>ViewEnvironmentInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ViewProjectInfoForm.resx">
       <DependentUpon>ViewProjectInfoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectDepsVisualizer\ProjectDepsVisualizer.csproj">
+      <Project>{C223DA00-7413-4BEE-B4A3-272E8E02CC45}</Project>
+      <Name>ProjectDepsVisualizer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
+      <Project>{1F7893B7-4540-4469-BE29-39A3BEEE2584}</Project>
+      <Name>UberDeployer.CommonConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
+      <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
+      <Name>UberDeployer.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\indeterminate_progress.gif" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\Data\ApplicationConfiguration.xml">
@@ -170,26 +183,8 @@
     <Content Include="..\..\Data\ProjectInfos.xml">
       <Link>Data\ProjectInfos.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
-    <Content Include="Resources\indeterminate_progress.gif" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\ProjectDepsVisualizer\ProjectDepsVisualizer.csproj">
-      <Project>{FF8FA293-8903-4C8E-9722-1CA7016B2164}</Project>
-      <Name>ProjectDepsVisualizer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
-      <Project>{CAFF4BEB-C983-4041-8A6C-A34EC68E546B}</Project>
-      <Name>UberDeployer.CommonConfiguration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
-      <Project>{A7FBD8CF-8E87-4029-B8B3-9F37B59C2BC1}</Project>
-      <Name>UberDeployer.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\Settings.settings" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

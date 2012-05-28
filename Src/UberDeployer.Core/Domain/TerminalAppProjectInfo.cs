@@ -10,8 +10,8 @@ namespace UberDeployer.Core.Domain
   {
     #region Constructor(s)
 
-    public TerminalAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, string terminalAppName, string terminalAppDirName, string terminalAppExeName)
-      : base(name, artifactsRepositoryName, artifactsRepositoryDirName)
+    public TerminalAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string terminalAppName, string terminalAppDirName, string terminalAppExeName)
+      : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
       if (string.IsNullOrEmpty(terminalAppName))
       {

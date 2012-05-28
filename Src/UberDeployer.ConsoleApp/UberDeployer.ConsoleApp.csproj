@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DA9D8E32-4CEF-44FD-90C5-14B20C1B74C5}</ProjectGuid>
+    <ProjectGuid>{24B7E460-580D-4C34-89A2-4CEBEB0302FB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UberDeployer.ConsoleApp</RootNamespace>
@@ -14,43 +14,35 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>..\..\Bin\UberDeployer.ConsoleApp\</OutputPath>
+    <OutputPath>..\..\bin\UberDeployer.ConsoleApp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>..\..\Bin\UberDeployer.ConsoleApp\</OutputPath>
+    <OutputPath>..\..\bin\UberDeployer.ConsoleApp\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\Lib\DotNetZip_1.9\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="msdeploy, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\..\Lib\MsWebDeploy\msdeploy.exe</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.2.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\Lib\Newtonsoft.Json\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+      <HintPath>..\..\libs\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,34 +50,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="Commands\DeployCommand.cs" />
+    <Compile Include="Commands\DeployLatestCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
-    <Compile Include="Commands\ListEnvironmentsCommand.cs" />
     <Compile Include="Commands\ListProjectConfigurationBuildsCommand.cs" />
     <Compile Include="Commands\ListProjectConfigurationsCommand.cs" />
+    <Compile Include="Commands\ListEnvironmentsCommand.cs" />
     <Compile Include="Commands\ListProjectsCommand.cs" />
-    <Compile Include="Commands\ReadEvalPrintLoopCommand.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Commands\ReadEvalPrintLoopCommand.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
-      <Project>{CAFF4BEB-C983-4041-8A6C-A34EC68E546B}</Project>
+      <Project>{1F7893B7-4540-4469-BE29-39A3BEEE2584}</Project>
       <Name>UberDeployer.CommonConfiguration</Name>
     </ProjectReference>
     <ProjectReference Include="..\UberDeployer.ConsoleCommander\UberDeployer.ConsoleCommander.csproj">
-      <Project>{141546D0-C641-4146-8F0C-DFBBF66A0F6C}</Project>
+      <Project>{9FD59C63-52EF-40D1-8341-1ED7F24605A2}</Project>
       <Name>UberDeployer.ConsoleCommander</Name>
     </ProjectReference>
     <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
-      <Project>{A7FBD8CF-8E87-4029-B8B3-9F37B59C2BC1}</Project>
+      <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
       <Name>UberDeployer.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="..\..\Data\ApplicationConfiguration.xml">
       <Link>Data\ApplicationConfiguration.xml</Link>
@@ -99,11 +89,8 @@
       <Link>Data\ProjectInfos.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\Lib\MsWebDeploy\msdeploy.exe">
-      <Link>msdeploy.exe</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -4,7 +4,7 @@ namespace UberDeployer.Core.Deployment
 {
   public class DiagnosticMessageEventArgs : EventArgs
   {
-    public DiagnosticMessageEventArgs(string message)
+    public DiagnosticMessageEventArgs(string message, MessageType messageType)
     {
       if (string.IsNullOrEmpty(message))
       {
@@ -12,8 +12,11 @@ namespace UberDeployer.Core.Deployment
       }
 
       Message = message;
+      MessageType = messageType;
     }
 
     public string Message { get; private set; }
+
+    public MessageType MessageType { get; private set; }
   }
 }

@@ -73,117 +73,101 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      try
+      EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+
+      // create a step for downloading the artifacts
+      var downloadArtifactsDeploymentStep =
+        new DownloadArtifactsDeploymentStep(
+          _artifactsRepository,
+          _projectInfo,
+          _projectConfigurationName,
+          _projectConfigurationBuildId,
+          GetTempDirPath());
+
+      AddSubTask(downloadArtifactsDeploymentStep);
+
+      // create a step for extracting the artifacts
+      var extractArtifactsDeploymentStep =
+        new ExtractArtifactsDeploymentStep(
+          environmentInfo,
+          _projectInfo,
+          _projectConfigurationName,
+          _projectConfigurationBuildId,
+          downloadArtifactsDeploymentStep.ArtifactsFilePath,
+          GetTempDirPath());
+
+      AddSubTask(extractArtifactsDeploymentStep);
+
+      // check if the service is present on the target machine
+      bool serviceExists =
+        _ntServiceManager
+          .DoesServiceExist(environmentInfo.AppServerMachineName, _projectInfo.NtServiceName);
+
+      if (serviceExists)
       {
-        EnvironmentInfo environmentInfo = GetEnvironmentInfo();
-
-        CreateTemporaryDirectory();
-
-        // create a step for downloading the artifacts
-        var downloadArtifactsDeploymentStep =
-          new DownloadArtifactsDeploymentStep(
-            _artifactsRepository,
-            _projectInfo,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
-            TempDirPath);
-
-        AddSubTask(downloadArtifactsDeploymentStep);
-
-        // create a step for extracting the artifacts
-        var extractArtifactsDeploymentStep =
-          new ExtractArtifactsDeploymentStep(
-            environmentInfo,
-            _projectInfo,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
-            downloadArtifactsDeploymentStep.ArtifactsFilePath,
-            TempDirPath);
-
-        AddSubTask(extractArtifactsDeploymentStep);
-
-        // check if the service is present on the target machine
-        bool serviceExists =
-          _ntServiceManager
-            .DoesServiceExist(environmentInfo.AppServerMachineName, _projectInfo.NtServiceName);
-
-        if (serviceExists)
-        {
-          // create a step for stopping the service
-          AddSubTask(
-            new StopNtServiceDeploymentStep(
-              _ntServiceManager,
-              environmentInfo.AppServerMachineName,
-              _projectInfo.NtServiceName));
-        }
-
-        // create a step for copying the binaries to the target machine
-        string targetDirPath = Path.Combine(environmentInfo.NtServicesBaseDirPath, _projectInfo.NtServiceDirName);
-
-        // create a backup step if needed
-        string targetDirNetworkPath = environmentInfo.GetAppServerNetworkPath(targetDirPath);
-
-        if (Directory.Exists(targetDirNetworkPath))
-        {
-          AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
-        }
-
+        // create a step for stopping the service
         AddSubTask(
-          new CopyFilesDeploymentStep(
-            extractArtifactsDeploymentStep.BinariesDirPath,
-            environmentInfo.GetAppServerNetworkPath(targetDirPath)));
-
-        if (!serviceExists)
-        {
-          // collect password
-          EnvironmentUser environmentUser;
-
-          string environmentUserPassword =
-            PasswordCollectorHelper
-              .CollectPasssword(
-                _passwordCollector,
-                environmentInfo,
-                _projectInfo.NtServiceUserId,
-                out environmentUser);
-
-          // create a step for installing the service,
-          string serviceExecutablePath = Path.Combine(targetDirPath, _projectInfo.NtServiceExeName);
-
-          var ntServiceDescriptor =
-            new NtServiceDescriptor(
-              _projectInfo.NtServiceName,
-              serviceExecutablePath,
-              ServiceAccount.NetworkService,
-              ServiceStartMode.Automatic,
-              _projectInfo.NtServiceDisplayName,
-              environmentUser.UserName,
-              environmentUserPassword);
-
-          AddSubTask(
-            new InstallNtServiceDeploymentStep(
-              _ntServiceManager,
-              environmentInfo.AppServerMachineName,
-              ntServiceDescriptor));
-        }
-
-        // create a step for starting the service
-        AddSubTask(
-          new StartNtServiceDeploymentStep(
+          new StopNtServiceDeploymentStep(
             _ntServiceManager,
             environmentInfo.AppServerMachineName,
             _projectInfo.NtServiceName));
-
-        // execute all steps
-        base.DoExecute();
       }
-      finally
+
+      // create a step for copying the binaries to the target machine
+      string targetDirPath = Path.Combine(environmentInfo.NtServicesBaseDirPath, _projectInfo.NtServiceDirName);
+
+      // create a backup step if needed
+      string targetDirNetworkPath = environmentInfo.GetAppServerNetworkPath(targetDirPath);
+
+      if (Directory.Exists(targetDirNetworkPath))
       {
-        DeleteTemporaryDirectory();
+        AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
       }
-    }
 
-    protected override void DoExecute()
-    {
+      AddSubTask(
+        new CopyFilesDeploymentStep(
+          extractArtifactsDeploymentStep.BinariesDirPath,
+          environmentInfo.GetAppServerNetworkPath(targetDirPath)));
+
+      if (!serviceExists)
+      {
+        // collect password
+        EnvironmentUser environmentUser;
+
+        string environmentUserPassword =
+          PasswordCollectorHelper
+            .CollectPasssword(
+              _passwordCollector,
+              environmentInfo,
+              _projectInfo.NtServiceUserId,
+              out environmentUser);
+
+        // create a step for installing the service,
+        string serviceExecutablePath = Path.Combine(targetDirPath, _projectInfo.NtServiceExeName);
+
+        var ntServiceDescriptor =
+          new NtServiceDescriptor(
+            _projectInfo.NtServiceName,
+            serviceExecutablePath,
+            ServiceAccount.NetworkService,
+            ServiceStartMode.Automatic,
+            _projectInfo.NtServiceDisplayName,
+            environmentUser.UserName,
+            environmentUserPassword);
+
+        AddSubTask(
+          new InstallNtServiceDeploymentStep(
+            _ntServiceManager,
+            environmentInfo.AppServerMachineName,
+            ntServiceDescriptor));
+      }
+
+      // create a step for starting the service
+      AddSubTask(
+        new StartNtServiceDeploymentStep(
+          _ntServiceManager,
+          environmentInfo.AppServerMachineName,
+          _projectInfo.NtServiceName));
     }
 
     public override string Description

@@ -10,8 +10,8 @@ namespace UberDeployer.Core.Domain
   {
     #region Constructor(s)
 
-    public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, string schedulerAppName, string schedulerAppDirName, string schedulerAppExeName, string schedulerAppUserId, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
-      : base(name, artifactsRepositoryName, artifactsRepositoryDirName)
+    public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string schedulerAppName, string schedulerAppDirName, string schedulerAppExeName, string schedulerAppUserId, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
+      : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
       if (string.IsNullOrEmpty(schedulerAppName))
       {

@@ -76,8 +76,6 @@ namespace UberDeployer.Core.Deployment
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
-      CreateTemporaryDirectory();
-
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
@@ -85,7 +83,7 @@ namespace UberDeployer.Core.Deployment
           _projectInfo,
           _projectConfigurationName,
           _projectConfigurationBuildId,
-          TempDirPath);
+          GetTempDirPath());
 
       AddSubTask(downloadArtifactsDeploymentStep);
 
@@ -97,7 +95,7 @@ namespace UberDeployer.Core.Deployment
           _projectConfigurationName,
           _projectConfigurationBuildId,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          TempDirPath);
+          GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
 
@@ -167,18 +165,6 @@ namespace UberDeployer.Core.Deployment
             _projectInfo.AppPool);
 
         AddSubTask(setAppPoolDeploymentStep);
-      }
-    }
-
-    protected override void DoExecute()
-    {
-      try
-      {
-        base.DoExecute();
-      }
-      finally
-      {
-        DeleteTemporaryDirectory();
       }
     }
 

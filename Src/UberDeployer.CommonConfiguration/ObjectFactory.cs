@@ -4,6 +4,7 @@ using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Management.Db;
 using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Management.NtServices;
@@ -88,6 +89,16 @@ namespace UberDeployer.CommonConfiguration
     public IPasswordCollector CreatePasswordCollector()
     {
       return new DialogPromptPasswordCollector();
+    }
+
+    public IDbScriptRunnerFactory CreateDbScriptRunnerFactory()
+    {
+      return new MsSqlDbScriptRunnerFactory();
+    }
+
+    public IDbVersionProvider CreateDbVersionProvider()
+    {
+      return _container.Resolve<IDbVersionProvider>();
     }
 
     #endregion

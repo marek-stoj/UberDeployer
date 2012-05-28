@@ -2,135 +2,180 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F6E27B5E-EC49-4A62-9346-D8B726CA57E6}</ProjectGuid>
+    <ProjectGuid>{9D43050A-2614-4022-A024-28FE293BB203}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UberDeployer.Core.Tests</RootNamespace>
     <AssemblyName>UberDeployer.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\tests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\tests\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>..\..\Tests\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>..\..\Tests\</OutputPath>
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
-      <HintPath>..\..\Lib\Moq\Moq.dll</HintPath>
+      <HintPath>..\..\libs\Moq\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NAnt.Core">
+      <HintPath>..\..\Lib\NAnt\NAnt.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\Lib\NUnit\framework\nunit.framework.dll</HintPath>
+      <HintPath>..\..\libs\NUnit\framework\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="Core\DataAccess\Xml\XmlEnvironmentInfoRepositoryTests.cs" />
-    <Compile Include="Core\DataAccess\Xml\XmlPojectInfoRepositoryTests.cs" />
     <Compile Include="DataAccess\TeamCityArtifactsRepositoryTests.cs" />
-    <Compile Include="Deployment\BackupFilesDeploymentStepTests.cs" />
-    <Compile Include="Deployment\CopyFilesDeploymentStepTests.cs" />
-    <Compile Include="Deployment\CtorTester.cs" />
+    <Compile Include="Deployment\DeploymentDataGenerator.cs" />
     <Compile Include="Deployment\DeployNtServiceDeploymentTaskTests.cs" />
-    <Compile Include="Deployment\DeployWebDeployPackageDeploymentStepTests.cs" />
+    <Compile Include="Deployment\BackupFilesDeploymentStepTests.cs" />
+    <Compile Include="Deployment\CtorTester.cs" />
+    <Compile Include="Deployment\ExtractArtifactsDeploymentStepTests.cs" />
+    <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStepTests.cs" />
     <Compile Include="Deployment\InstallNtServiceDeploymentStepTests.cs" />
+    <Compile Include="Deployment\MigrateDbDeploymentTaskTests.cs" />
     <Compile Include="Deployment\NtServiceControlDeploymentStepTests.cs" />
+    <Compile Include="Deployment\CopyFilesDeploymentStepTests.cs" />
     <Compile Include="Deployment\Pipeline\DeploymentPipelineTests.cs" />
     <Compile Include="Deployment\Pipeline\Modules\AuditingModuleTests.cs" />
     <Compile Include="Deployment\Pipeline\Modules\DeploymentRequestTests.cs" />
     <Compile Include="Deployment\Pipeline\Modules\EnforceTargetEnvironmentConstraintsModuleTests.cs" />
-    <Compile Include="Domain\EnvironmentInfoTests.cs" />
+    <Compile Include="Deployment\MsSqlDbScriptRunnerTests.cs" />
+    <Compile Include="Deployment\RunDbScriptsDeploymentStepTests.cs" />
     <Compile Include="Domain\IisAppPoolInfoTests.cs" />
-    <Compile Include="Domain\NtServiceProjectInfoTests.cs" />
-    <Compile Include="Domain\SchedulerAppProjectInfoTests.cs" />
+    <Compile Include="Domain\EnvironmentInfoTests.cs" />
     <Compile Include="Domain\TerminalAppProjectInfoTests.cs" />
     <Compile Include="Domain\WebAppProjectInfoTests.cs" />
+    <Compile Include="Domain\NtServiceProjectInfoTests.cs" />
+    <Compile Include="Domain\SchedulerAppProjectInfoTests.cs" />
+    <Compile Include="Deployment\DeployWebDeployPackageDeploymentStepTests.cs" />
+    <Compile Include="AllFixturesSetUp.cs" />
     <Compile Include="InternalExceptionTests.cs" />
+    <Compile Include="Management\Db\DbVersionProviderTests.cs" />
+    <Compile Include="Management\Db\DbVersionProviderTestUtils.cs" />
+    <Compile Include="Management\NtServices\ScExeBasedNtServiceManagerTests.cs" />
     <Compile Include="Management\Iis\MsDeployBasedIisManagerTests.cs" />
     <Compile Include="Management\NtServices\NtServiceDescriptorTests.cs" />
-    <Compile Include="Management\NtServices\ScExeBasedNtServiceManagerTests.cs" />
     <Compile Include="Management\TaskScheduler\ScheduledTaskSpecificationTests.cs" />
     <Compile Include="Management\TaskScheduler\TaskSchedulerTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCity\ModelsTests.cs" />
+    <Compile Include="TestUtils\ReflectionTools.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\TestSrcDir\SubDir1\File3.txt">
+    <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
+      <Project>{1F7893B7-4540-4469-BE29-39A3BEEE2584}</Project>
+      <Name>UberDeployer.CommonConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
+      <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
+      <Name>UberDeployer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.NAnt\UberDeployer.NAnt.csproj">
+      <Project>{F8B00BFD-BA4F-41A6-BA31-9187759C0C75}</Project>
+      <Name>UberDeployer.NAnt</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
+    <None Include="TestData\TestArtifacts\artifacts.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\TestSrcDir\File7.doc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="..\..\Data\ApplicationConfiguration.xml">
+      <Link>Data\ApplicationConfiguration.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\EnvironmentInfos.xml">
+      <Link>Data\EnvironmentInfos.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\ProjectInfos.xml">
+      <Link>Data\ProjectInfos.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\TestSqlScripts\1.2.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\TestSqlScripts\1.3.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\TestSqlScripts\1.4.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\TestSqlScripts\1.3a.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\TestSrcDir\SubDir1\File4.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\TestSrcDir\SubDir1\SubSubDir\File1.txt">
+    <Content Include="TestData\TestSrcDir\SubDir1\File3.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\TestSrcDir\SubDir2\File5.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TestData\TestSrcDir\File7.doc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\TestSrcDir\File8.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\TestSrcDir\SubDir1\SubSubDir\File2.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="TestData\TestSrcDir\SubDir1\SubSubDir\File1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="TestData\TestSrcDir\SubDir2\File6.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
-      <Project>{A7FBD8CF-8E87-4029-B8B3-9F37B59C2BC1}</Project>
-      <Name>UberDeployer.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -12,7 +12,7 @@ namespace UberDeployer.Core.Deployment
     protected readonly string _targetEnvironmentName;
 
     private readonly List<DeploymentTaskBase> _subTasks;
-    
+
     private string _tempDirPath;
 
     #region Constructor(s)
@@ -41,13 +41,20 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      foreach (DeploymentTaskBase subTask in _subTasks)
+      try
       {
-        subTask.Prepare();
-        subTask.Execute();
-      }
+        foreach (DeploymentTaskBase subTask in _subTasks)
+        {
+          subTask.Prepare();
+          subTask.Execute();
+        }
 
-      PostDiagnosticMessage(string.Format("Finished '{0}' (\"{1}\").", GetType().Name, Description));
+        PostDiagnosticMessage(string.Format("Finished '{0}' (\"{1}\").", GetType().Name, Description));
+      }
+      finally
+      {
+        DeleteTemporaryDirectoryIfNeeded();
+      }
     }
 
     public override string Description
@@ -84,26 +91,30 @@ namespace UberDeployer.Core.Deployment
       return environmentInfo;
     }
 
-    protected void CreateTemporaryDirectory()
+    protected string GetTempDirPath()
     {
-      string tempDirName = Guid.NewGuid().ToString("N");
-      
-      _tempDirPath = Path.Combine(Path.GetTempPath(), tempDirName);
+      if (string.IsNullOrEmpty(_tempDirPath))
+      {
+        string tempDirName = Guid.NewGuid().ToString("N");
 
-      Directory.CreateDirectory(_tempDirPath);
+        _tempDirPath = Path.Combine(Path.GetTempPath(), tempDirName);
+
+        Directory.CreateDirectory(_tempDirPath);
+      }
+
+      return _tempDirPath;
     }
 
-    protected void DeleteTemporaryDirectory()
+    #endregion
+
+    #region Private methods
+
+    private void DeleteTemporaryDirectoryIfNeeded()
     {
       if (!string.IsNullOrEmpty(_tempDirPath) && Directory.Exists(_tempDirPath))
       {
         Directory.Delete(_tempDirPath, true);
       }
-    }
-
-    protected string TempDirPath
-    {
-      get { return _tempDirPath; }
     }
 
     #endregion
@@ -118,6 +129,11 @@ namespace UberDeployer.Core.Deployment
     public string TargetEnvironmentName
     {
       get { return _targetEnvironmentName; }
+    }
+
+    public IEnumerable<DeploymentTaskBase> SubTasks
+    {
+      get { return _subTasks.AsReadOnly(); }
     }
 
     #endregion
