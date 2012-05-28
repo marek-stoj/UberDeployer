@@ -39,10 +39,9 @@ namespace UberDeployer.Core.Tests.Management.Db
     }
 
     [Test]
-    public void Constructor_check_arguments()
+    public void Constructor_checks_arguments()
     {
       Assert.Throws<ArgumentNullException>(() => new DbVersionProvider(null));
-      Assert.Throws<ArgumentException>(() => new DbVersionProvider(new List<DbVersionTableInfo>()));
     }
 
     [Test]

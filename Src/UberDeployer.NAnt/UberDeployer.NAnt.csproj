@@ -36,7 +36,7 @@
       <HintPath>..\..\Lib\NAnt\NAnt.CompressionTasks.dll</HintPath>
     </Reference>
     <Reference Include="NAnt.Core">
-      <HintPath>..\..\libs\NAnt.Core.dll</HintPath>
+      <HintPath>..\..\Lib\NAnt\NAnt.Core.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
       <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
