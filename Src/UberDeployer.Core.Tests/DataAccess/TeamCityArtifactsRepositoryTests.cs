@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.DataAccess;
 using UberDeployer.Core.TeamCity;
@@ -12,6 +10,18 @@ namespace UberDeployer.Core.Tests.DataAccess
   [TestFixture]
   public class TeamCityArtifactsRepositoryTests
   {
+    private Mock<ITeamCityClient> _teamCityClient;
+
+    // SUT
+    private TeamCityArtifactsRepository _teamCityArtifactsRepository;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _teamCityClient = new Mock<ITeamCityClient>(MockBehavior.Loose);
+      _teamCityArtifactsRepository = new TeamCityArtifactsRepository(_teamCityClient.Object);
+    }
+
     [Test]
     public void TeamCityArtifactsRepositoryConstructor_WhenTeamCityClientIsNull_ThrowsArgumentNullException()
     {
@@ -21,37 +31,25 @@ namespace UberDeployer.Core.Tests.DataAccess
     [Test]
     public void GetArtifacts_WhenProjectNameIsNullOrEmpty_ThrowsArgumentException()
     {
-      ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-      var artifactsRepository = new TeamCityArtifactsRepository(teamCityClient);
-
-      Assert.Throws<ArgumentException>(() => artifactsRepository.GetArtifacts(null, "projectConfigurationName", "projectConfigurationBuildId", "destinationFilePath"));
+      Assert.Throws<ArgumentException>(() => _teamCityArtifactsRepository.GetArtifacts(null, "projectConfigurationName", "projectConfigurationBuildId", "destinationFilePath"));
     }
 
     [Test]
     public void GetArtifacts_WhenProjectConfigurationNameIsNullOrEmpty_ThrowsArgumentException()
     {
-      ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-      var artifactsRepository = new TeamCityArtifactsRepository(teamCityClient);
-
-      Assert.Throws<ArgumentException>(() => artifactsRepository.GetArtifacts("projectName", null, "projectConfigurationBuildId", "destinationFilePath"));
+      Assert.Throws<ArgumentException>(() => _teamCityArtifactsRepository.GetArtifacts("projectName", null, "projectConfigurationBuildId", "destinationFilePath"));
     }
 
     [Test]
     public void GetArtifacts_WhenProjectConfigurationBuildIdIsNullOrEmpty_ThrowsArgumentException()
     {
-      ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-      var artifactsRepository = new TeamCityArtifactsRepository(teamCityClient);
-
-      Assert.Throws<ArgumentException>(() => artifactsRepository.GetArtifacts("projectName", "projectConfigurationName", null, "destinationFilePath"));
+      Assert.Throws<ArgumentException>(() => _teamCityArtifactsRepository.GetArtifacts("projectName", "projectConfigurationName", null, "destinationFilePath"));
     }
 
     [Test]
     public void GetArtifacts_WhenDestinationFilePathIsNullOrEmpty_ThrowsArgumentException()
     {
-      ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-      var artifactsRepository = new TeamCityArtifactsRepository(teamCityClient);
-
-      Assert.Throws<ArgumentException>(() => artifactsRepository.GetArtifacts("projectName", "projectConfigurationName", "projectConfigurationBuildId", null));
+      Assert.Throws<ArgumentException>(() => _teamCityArtifactsRepository.GetArtifacts("projectName", "projectConfigurationName", "projectConfigurationBuildId", null));
     }
   }
 }

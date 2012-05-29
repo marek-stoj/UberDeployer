@@ -94,7 +94,6 @@
     <Compile Include="Domain\NtServiceProjectInfoTests.cs" />
     <Compile Include="Domain\SchedulerAppProjectInfoTests.cs" />
     <Compile Include="Deployment\DeployWebDeployPackageDeploymentStepTests.cs" />
-    <Compile Include="AllFixturesSetUp.cs" />
     <Compile Include="InternalExceptionTests.cs" />
     <Compile Include="Management\Db\DbVersionProviderTests.cs" />
     <Compile Include="Management\Db\DbVersionProviderTestUtils.cs" />

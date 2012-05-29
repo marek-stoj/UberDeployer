@@ -16,7 +16,7 @@ namespace UberDeployer.CommonConfiguration
 {
   public class ObjectFactory : IObjectFactory
   {
-    private static WindsorContainer _container;    
+    private static WindsorContainer _container;
 
     private static IObjectFactory _instance;
 
@@ -33,22 +33,22 @@ namespace UberDeployer.CommonConfiguration
 
     public IApplicationConfiguration CreateApplicationConfiguration()
     {
-      return _container.Resolve<IApplicationConfiguration>();      
+      return _container.Resolve<IApplicationConfiguration>();
     }
 
     public IProjectInfoRepository CreateProjectInfoRepository()
     {
-      return _container.Resolve<IProjectInfoRepository>();      
+      return _container.Resolve<IProjectInfoRepository>();
     }
 
     public IEnvironmentInfoRepository CreateEnvironmentInfoRepository()
     {
-      return _container.Resolve<IEnvironmentInfoRepository>();      
+      return _container.Resolve<IEnvironmentInfoRepository>();
     }
 
     public IArtifactsRepository CreateArtifactsRepository()
     {
-      return _container.Resolve<IArtifactsRepository>();      
+      return _container.Resolve<IArtifactsRepository>();
     }
 
     public IDeploymentRequestRepository CreateDeploymentRequestRepository()
@@ -58,27 +58,27 @@ namespace UberDeployer.CommonConfiguration
 
     public ITeamCityClient CreateTeamCityClient()
     {
-      return _container.Resolve<ITeamCityClient>();     
+      return _container.Resolve<ITeamCityClient>();
     }
 
     public INtServiceManager CreateNtServiceManager()
     {
-      return _container.Resolve<INtServiceManager>();      
+      return _container.Resolve<INtServiceManager>();
     }
 
     public IMsDeploy CreateIMsDeploy()
     {
-      return _container.Resolve<IMsDeploy>();  
+      return _container.Resolve<IMsDeploy>();
     }
- 
+
     public IIisManager CreateIIisManager()
     {
-      return _container.Resolve<IIisManager>();      
+      return _container.Resolve<IIisManager>();
     }
 
     public ITaskScheduler CreateTaskScheduler()
     {
-      return _container.Resolve<ITaskScheduler>();      
+      return _container.Resolve<ITaskScheduler>();
     }
 
     public IDeploymentPipeline CreateDeploymentPipeline()
