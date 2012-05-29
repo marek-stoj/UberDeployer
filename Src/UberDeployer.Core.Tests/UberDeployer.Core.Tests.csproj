@@ -47,7 +47,7 @@
       <HintPath>C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
-      <HintPath>..\..\libs\Moq\NET40\Moq.dll</HintPath>
+      <HintPath>..\..\Lib\Moq\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NAnt.Core">
       <HintPath>..\..\Lib\NAnt\NAnt.Core.dll</HintPath>
@@ -56,7 +56,7 @@
       <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\libs\NUnit\framework\nunit.framework.dll</HintPath>
+      <HintPath>..\..\Lib\NUnit\framework\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
