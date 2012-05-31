@@ -17,7 +17,7 @@ namespace UberDeployer.ConsoleCommander
       _commandDispatcher = commandDispatcher;
     }
 
-    public abstract void Run(string[] args);
+    public abstract int Run(string[] args);
 
     public virtual void DisplayCommandUsage()
     {

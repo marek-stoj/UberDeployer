@@ -2,7 +2,6 @@
 using System.Linq;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.ConsoleCommander;
-using UberDeployer.Core;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.ConsoleApp.Commands
@@ -14,12 +13,13 @@ namespace UberDeployer.ConsoleApp.Commands
     {
     }
 
-    public override void Run(string[] args)
+    public override int Run(string[] args)
     {
       if (args.Length > 1)
       {
         DisplayCommandUsage();
-        return;
+        
+        return 1;
       }
 
       string projectType = null;
@@ -61,6 +61,8 @@ namespace UberDeployer.ConsoleApp.Commands
           OutputWriter.WriteLine();
         }
       }
+
+      return 0;
     }
 
     public override void DisplayCommandUsage()

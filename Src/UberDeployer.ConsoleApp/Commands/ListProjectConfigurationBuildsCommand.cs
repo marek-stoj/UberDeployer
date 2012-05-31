@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.ConsoleCommander;
-using UberDeployer.Core;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.TeamCity;
 using UberDeployer.Core.TeamCity.Models;
@@ -17,12 +16,13 @@ namespace UberDeployer.ConsoleApp.Commands
     {
     }
 
-    public override void Run(string[] args)
+    public override int Run(string[] args)
     {
       if (args.Length != 2)
       {
         DisplayCommandUsage();
-        return;
+        
+        return 1;
       }
 
       string projectName = args[0];
@@ -36,7 +36,7 @@ namespace UberDeployer.ConsoleApp.Commands
       if (projectInfo == null)
       {
         OutputWriter.WriteLine("Project named '{0}' doesn't exist.", projectName);
-        return;
+        return 1;
       }
 
       ITeamCityClient teamCityClient =
@@ -47,13 +47,13 @@ namespace UberDeployer.ConsoleApp.Commands
 
       ProjectConfiguration projectConfiguration =
         projectDetails.ConfigurationsList.Configurations
-          .Where(pc => pc.Name == projectConfigurationName)
-          .SingleOrDefault();
+          .SingleOrDefault(pc => pc.Name == projectConfigurationName);
 
       if (projectConfiguration == null)
       {
         OutputWriter.WriteLine("Project configuration named '{0}' doesn't exist for project '{1}'.", projectConfigurationName, projectName);
-        return;
+
+        return 1;
       }
 
       ProjectConfigurationDetails projectConfigurationDetails =
@@ -67,7 +67,7 @@ namespace UberDeployer.ConsoleApp.Commands
         OutputWriter.WriteLine("{0}\t{1}", projectConfigurationBuild.Id, projectConfigurationBuild.Status);
       }
 
-      return;
+      return 0;
     }
 
     public override string CommandName

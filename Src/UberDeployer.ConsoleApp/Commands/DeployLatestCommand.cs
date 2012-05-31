@@ -22,12 +22,12 @@ namespace UberDeployer.ConsoleApp.Commands
       get { return "deploy-latest"; }
     }
 
-    public override void Run(string[] args)
+    public override int Run(string[] args)
     {
       if (args.Length != 3)
       {
         DisplayCommandUsage();
-        return;
+        return 1;
       }
 
       IProjectInfoRepository projectInfoRepository =
@@ -42,7 +42,8 @@ namespace UberDeployer.ConsoleApp.Commands
       if (projectInfo == null)
       {
         OutputWriter.WriteLine("Project named '{0}' doesn't exist.", projectName);
-        return;
+        
+        return 1;
       }
 
       ITeamCityClient teamCityClient =
@@ -63,7 +64,7 @@ namespace UberDeployer.ConsoleApp.Commands
           projectConfigurationName,
           projectName);
 
-        return;
+        return 0;
       }
 
       ProjectConfigurationDetails projectConfigurationDetails =
@@ -110,10 +111,14 @@ namespace UberDeployer.ConsoleApp.Commands
           ObjectFactory.Instance.CreateDeploymentPipeline();
 
         deploymentPipeline.StartDeployment(deploymentTask);
+
+        return 0;
       }
       catch (Exception exc)
       {
         LogMessage("Error: " + exc);
+        
+        return 1;
       }
     }
 

@@ -8,7 +8,7 @@ namespace UberDeployer.ConsoleApp
 {
   internal class Program
   {
-    private static void Main(string[] args)
+    private static int Main(string[] args)
     {
       TextWriter outputWriter = Console.Out;
 
@@ -23,14 +23,17 @@ namespace UberDeployer.ConsoleApp
         if (args.Length == 0)
         {
           commandDispatcher.DisplayAvailableCommands();
-          return;
+
+          return 1;
         }
 
-        commandDispatcher.Dispatch(args);
+        return commandDispatcher.Dispatch(args);
       }
       catch (Exception exc)
       {
         outputWriter.WriteLine(exc);
+
+        return 1;
       }
     }
   }

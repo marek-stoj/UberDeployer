@@ -1,5 +1,4 @@
-﻿using System;
-using UberDeployer.ConsoleCommander;
+﻿using UberDeployer.ConsoleCommander;
 
 namespace UberDeployer.ConsoleApp.Commands
 {
@@ -10,9 +9,9 @@ namespace UberDeployer.ConsoleApp.Commands
     {
     }
 
-    public override void Run(string[] args)
+    public override int Run(string[] args)
     {
-      Environment.Exit(0);
+      return 0;
     }
 
     public override string CommandName

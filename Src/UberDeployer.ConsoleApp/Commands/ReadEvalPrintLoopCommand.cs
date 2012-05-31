@@ -10,7 +10,7 @@ namespace UberDeployer.ConsoleApp.Commands
     {
     }
 
-    public override void Run(string[] args)
+    public override int Run(string[] args)
     {
       OutputWriter.WriteLine("UberDeployer interactive console.");
       OutputWriter.WriteLine("Type 'help' for the list of available commands.");

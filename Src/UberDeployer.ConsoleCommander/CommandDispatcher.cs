@@ -97,7 +97,7 @@ namespace UberDeployer.ConsoleCommander
       consoleCommand.DisplayCommandUsage();
     }
 
-    public void Dispatch(string[] args)
+    public int Dispatch(string[] args)
     {
       if (args == null)
       {
@@ -119,7 +119,7 @@ namespace UberDeployer.ConsoleCommander
 
         DisplayAvailableCommands();
 
-        return;
+        return 1;
       }
 
       string[] followingArgs;
@@ -134,7 +134,7 @@ namespace UberDeployer.ConsoleCommander
         followingArgs = new string[0];
       }
 
-      consoleCommand.Run(followingArgs);
+      return consoleCommand.Run(followingArgs);
     }
 
     #endregion

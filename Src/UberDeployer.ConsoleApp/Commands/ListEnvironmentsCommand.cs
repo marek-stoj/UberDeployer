@@ -11,7 +11,7 @@ namespace UberDeployer.ConsoleApp.Commands
     {
     }
 
-    public override void Run(string[] args)
+    public override int Run(string[] args)
     {
       IEnvironmentInfoRepository environmentInfoRepository =
         ObjectFactory.Instance.CreateEnvironmentInfoRepository();
@@ -20,6 +20,8 @@ namespace UberDeployer.ConsoleApp.Commands
       {
         OutputWriter.WriteLine("{0}", environmentInfo.Name);
       }
+
+      return 0;
     }
 
     public override string CommandName

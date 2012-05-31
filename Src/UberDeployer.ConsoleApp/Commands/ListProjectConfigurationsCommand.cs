@@ -13,12 +13,13 @@ namespace UberDeployer.ConsoleApp.Commands
     {
     }
 
-    public override void Run(string[] args)
+    public override int Run(string[] args)
     {
       if (args.Length != 1)
       {
         DisplayCommandUsage();
-        return;
+        
+        return 1;
       }
 
       string projectName = args[0];
@@ -31,7 +32,8 @@ namespace UberDeployer.ConsoleApp.Commands
       if (projectInfo == null)
       {
         OutputWriter.WriteLine("Project named '{0}' doesn't exist.", projectName);
-        return;
+        
+        return 1;
       }
 
       ITeamCityClient teamCityClient =
@@ -45,7 +47,7 @@ namespace UberDeployer.ConsoleApp.Commands
         OutputWriter.WriteLine(projectConfiguration.Name);
       }
 
-      return;
+      return 0;
     }
 
     public override void DisplayCommandUsage()
