@@ -38,7 +38,7 @@
     <Reference Include="NAnt.Core">
       <HintPath>..\..\Lib\NAnt\NAnt.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.ByteCode.Castle">
+    <Reference Include="NHibernate.ByteCode.Castle, Version=3.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="System" />

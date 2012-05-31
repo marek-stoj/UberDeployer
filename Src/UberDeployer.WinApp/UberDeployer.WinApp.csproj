@@ -31,7 +31,7 @@
       <HintPath>..\..\Lib\MsWebDeploy\msdeploy.exe</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\..\libs\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+      <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
