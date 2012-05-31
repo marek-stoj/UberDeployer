@@ -19,7 +19,7 @@ namespace UberDeployer.ConsoleApp.Commands
 
     public override string CommandName
     {
-      get { return "deployLatest"; }
+      get { return "deploy-latest"; }
     }
 
     public override void Run(string[] args)
