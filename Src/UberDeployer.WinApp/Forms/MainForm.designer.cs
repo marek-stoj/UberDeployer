@@ -46,7 +46,8 @@
       this.grp_projectConfigurationBuilds = new System.Windows.Forms.GroupBox();
       this.txtFilterBuilds = new System.Windows.Forms.TextBox();
       this.dgv_projectConfigurationBuilds = new UberDeployer.WinApp.CustomControls.MyDataGridView();
-      this.ProjectConfigurationBuildIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.ProjectConfigurationBuildStartDateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.ProjectConfigurationBuildStartTimeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ProjectConfigurationBuildNumberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ProjectConfigurationBuildStatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ProjectConfigurationBuildWebLinkColumn = new System.Windows.Forms.DataGridViewLinkColumn();
@@ -259,7 +260,7 @@
       this.grp_projectConfigurationBuilds.Location = new System.Drawing.Point(500, 27);
       this.grp_projectConfigurationBuilds.Name = "grp_projectConfigurationBuilds";
       this.grp_projectConfigurationBuilds.Padding = new System.Windows.Forms.Padding(10);
-      this.grp_projectConfigurationBuilds.Size = new System.Drawing.Size(236, 318);
+      this.grp_projectConfigurationBuilds.Size = new System.Drawing.Size(339, 318);
       this.grp_projectConfigurationBuilds.TabIndex = 3;
       this.grp_projectConfigurationBuilds.TabStop = false;
       this.grp_projectConfigurationBuilds.Text = "Project configuration builds";
@@ -268,7 +269,7 @@
       // 
       this.txtFilterBuilds.Location = new System.Drawing.Point(10, 23);
       this.txtFilterBuilds.Name = "txtFilterBuilds";
-      this.txtFilterBuilds.Size = new System.Drawing.Size(216, 20);
+      this.txtFilterBuilds.Size = new System.Drawing.Size(316, 20);
       this.txtFilterBuilds.TabIndex = 0;
       this.txtFilterBuilds.TextChanged += new System.EventHandler(this.txtFilterBuilds_TextChanged);
       // 
@@ -281,7 +282,8 @@
       this.dgv_projectConfigurationBuilds.BackgroundColor = System.Drawing.SystemColors.Window;
       this.dgv_projectConfigurationBuilds.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.dgv_projectConfigurationBuilds.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ProjectConfigurationBuildIdColumn,
+            this.ProjectConfigurationBuildStartDateColumn,
+            this.ProjectConfigurationBuildStartTimeColumn,
             this.ProjectConfigurationBuildNumberColumn,
             this.ProjectConfigurationBuildStatusColumn,
             this.ProjectConfigurationBuildWebLinkColumn});
@@ -291,19 +293,28 @@
       this.dgv_projectConfigurationBuilds.ReadOnly = true;
       this.dgv_projectConfigurationBuilds.RowHeadersVisible = false;
       this.dgv_projectConfigurationBuilds.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-      this.dgv_projectConfigurationBuilds.Size = new System.Drawing.Size(216, 258);
+      this.dgv_projectConfigurationBuilds.Size = new System.Drawing.Size(316, 258);
       this.dgv_projectConfigurationBuilds.TabIndex = 1;
       this.dgv_projectConfigurationBuilds.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_projectConfigurationBuilds_CellContentClick);
       this.dgv_projectConfigurationBuilds.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_projectConfigurationBuilds_CellDoubleClick);
       // 
-      // ProjectConfigurationBuildIdColumn
+      // ProjectConfigurationBuildStartDateColumn
       // 
-      this.ProjectConfigurationBuildIdColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-      this.ProjectConfigurationBuildIdColumn.DataPropertyName = "Id";
-      this.ProjectConfigurationBuildIdColumn.HeaderText = "Id";
-      this.ProjectConfigurationBuildIdColumn.Name = "ProjectConfigurationBuildIdColumn";
-      this.ProjectConfigurationBuildIdColumn.ReadOnly = true;
-      this.ProjectConfigurationBuildIdColumn.Width = 41;
+      this.ProjectConfigurationBuildStartDateColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.ProjectConfigurationBuildStartDateColumn.DataPropertyName = "StartDate";
+      this.ProjectConfigurationBuildStartDateColumn.HeaderText = "Date";
+      this.ProjectConfigurationBuildStartDateColumn.Name = "ProjectConfigurationBuildStartDateColumn";
+      this.ProjectConfigurationBuildStartDateColumn.ReadOnly = true;
+      this.ProjectConfigurationBuildStartDateColumn.Width = 55;
+      // 
+      // ProjectConfigurationBuildStartTimeColumn
+      // 
+      this.ProjectConfigurationBuildStartTimeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.ProjectConfigurationBuildStartTimeColumn.DataPropertyName = "StartTime";
+      this.ProjectConfigurationBuildStartTimeColumn.HeaderText = "Time";
+      this.ProjectConfigurationBuildStartTimeColumn.Name = "ProjectConfigurationBuildStartTimeColumn";
+      this.ProjectConfigurationBuildStartTimeColumn.ReadOnly = true;
+      this.ProjectConfigurationBuildStartTimeColumn.Width = 55;
       // 
       // ProjectConfigurationBuildNumberColumn
       // 
@@ -341,7 +352,7 @@
       this.txt_log.Name = "txt_log";
       this.txt_log.ReadOnly = true;
       this.txt_log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.txt_log.Size = new System.Drawing.Size(718, 176);
+      this.txt_log.Size = new System.Drawing.Size(821, 176);
       this.txt_log.TabIndex = 0;
       this.txt_log.WordWrap = false;
       // 
@@ -352,7 +363,7 @@
       this.grpLog.Controls.Add(this.panel1);
       this.grpLog.Location = new System.Drawing.Point(12, 405);
       this.grpLog.Name = "grpLog";
-      this.grpLog.Size = new System.Drawing.Size(724, 218);
+      this.grpLog.Size = new System.Drawing.Size(827, 218);
       this.grpLog.TabIndex = 8;
       this.grpLog.TabStop = false;
       this.grpLog.Text = "Log";
@@ -363,7 +374,7 @@
       this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel2.Location = new System.Drawing.Point(3, 39);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(718, 176);
+      this.panel2.Size = new System.Drawing.Size(821, 176);
       this.panel2.TabIndex = 8;
       // 
       // panel1
@@ -372,7 +383,7 @@
       this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
       this.panel1.Location = new System.Drawing.Point(3, 16);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(718, 23);
+      this.panel1.Size = new System.Drawing.Size(821, 23);
       this.panel1.TabIndex = 0;
       // 
       // btn_clearLog
@@ -388,7 +399,7 @@
       // btn_deploy
       // 
       this.btn_deploy.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-      this.btn_deploy.Location = new System.Drawing.Point(622, 360);
+      this.btn_deploy.Location = new System.Drawing.Point(725, 359);
       this.btn_deploy.Name = "btn_deploy";
       this.btn_deploy.Size = new System.Drawing.Size(114, 34);
       this.btn_deploy.TabIndex = 4;
@@ -401,7 +412,7 @@
       this.cbx_targetEnvironment.DisplayMember = "DisplayText";
       this.cbx_targetEnvironment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cbx_targetEnvironment.FormattingEnabled = true;
-      this.cbx_targetEnvironment.Location = new System.Drawing.Point(437, 367);
+      this.cbx_targetEnvironment.Location = new System.Drawing.Point(568, 366);
       this.cbx_targetEnvironment.Name = "cbx_targetEnvironment";
       this.cbx_targetEnvironment.Size = new System.Drawing.Size(121, 21);
       this.cbx_targetEnvironment.TabIndex = 6;
@@ -409,7 +420,7 @@
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(360, 370);
+      this.label5.Location = new System.Drawing.Point(493, 370);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(69, 13);
       this.label5.TabIndex = 5;
@@ -423,7 +434,7 @@
             this.toolsToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(747, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(851, 24);
       this.menuStrip1.TabIndex = 0;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -510,7 +521,7 @@
       // 
       // btn_showEnvironmentInfo
       // 
-      this.btn_showEnvironmentInfo.Location = new System.Drawing.Point(564, 366);
+      this.btn_showEnvironmentInfo.Location = new System.Drawing.Point(695, 365);
       this.btn_showEnvironmentInfo.Name = "btn_showEnvironmentInfo";
       this.btn_showEnvironmentInfo.Size = new System.Drawing.Size(24, 23);
       this.btn_showEnvironmentInfo.TabIndex = 7;
@@ -521,7 +532,7 @@
       // pic_indeterminateProgress
       // 
       this.pic_indeterminateProgress.Image = global::UberDeployer.WinApp.Properties.Resources.indeterminate_progress;
-      this.pic_indeterminateProgress.Location = new System.Drawing.Point(726, 4);
+      this.pic_indeterminateProgress.Location = new System.Drawing.Point(823, 5);
       this.pic_indeterminateProgress.Name = "pic_indeterminateProgress";
       this.pic_indeterminateProgress.Size = new System.Drawing.Size(16, 16);
       this.pic_indeterminateProgress.TabIndex = 9;
@@ -532,7 +543,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(747, 626);
+      this.ClientSize = new System.Drawing.Size(851, 626);
       this.Controls.Add(this.pic_indeterminateProgress);
       this.Controls.Add(this.btn_showEnvironmentInfo);
       this.Controls.Add(this.menuStrip1);
@@ -598,10 +609,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     private CustomControls.MyDataGridView dgv_projectConfigurations;
     private CustomControls.MyDataGridView dgv_projectConfigurationBuilds;
-    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildIdColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildNumberColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildStatusColumn;
-    private System.Windows.Forms.DataGridViewLinkColumn ProjectConfigurationBuildWebLinkColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationNameColumn;
     private System.Windows.Forms.DataGridViewLinkColumn ProjectConfigurationWebLinkColumn;
     private System.Windows.Forms.Button btn_openWebApp;
@@ -619,6 +626,11 @@
     private System.Windows.Forms.ToolStripMenuItem deploymentAuditToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dependenciesVisualizerToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dbVersionsDiffToolStripMenuItem;
+    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildStartDateColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildStartTimeColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildNumberColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildStatusColumn;
+    private System.Windows.Forms.DataGridViewLinkColumn ProjectConfigurationBuildWebLinkColumn;
   }
 }
 

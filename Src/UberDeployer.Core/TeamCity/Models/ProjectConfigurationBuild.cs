@@ -26,6 +26,8 @@
 
     public string Number { get; set; }
 
+    public string StartDate { get; set; }
+
     public BuildStatus Status { get; set; }
 
     public string WebUrl { get; set; }

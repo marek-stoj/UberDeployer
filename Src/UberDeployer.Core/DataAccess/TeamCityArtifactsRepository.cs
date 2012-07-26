@@ -54,9 +54,10 @@ namespace UberDeployer.Core.DataAccess
       ProjectDetails projectDetails = _teamCityClient.GetProjectDetails(project);
 
       ProjectConfiguration projectConfiguration =
-        projectDetails.ConfigurationsList.Configurations
-          .Where(pd => pd.Name == projectConfigurationName)
-          .SingleOrDefault();
+        projectDetails
+          .ConfigurationsList
+          .Configurations
+          .SingleOrDefault(pd => pd.Name == projectConfigurationName);
 
       ProjectConfigurationDetails projectConfigurationDetails =
         _teamCityClient.GetProjectConfigurationDetails(projectConfiguration);
@@ -77,7 +78,7 @@ namespace UberDeployer.Core.DataAccess
       _teamCityClient.DownloadArtifacts(projectConfigurationBuild, destinationFilePath);
     }
 
-    // TODO IMM HI: we can probably optimize this by telling TeamCity to give as the build with the specified id
+    // TODO IMM HI: we can probably optimize this by telling TeamCity to give us the build with the specified id
     private ProjectConfigurationBuild FindProjectConfigurationBuild(ProjectConfigurationDetails projectConfigurationDetails, string projectConfigurationBuildId)
     {
       const int buildsPerPage = 10;
@@ -94,9 +95,9 @@ namespace UberDeployer.Core.DataAccess
         }
 
         ProjectConfigurationBuild projectConfigurationBuild =
-          projectConfigurationBuildsList.Builds
-            .Where(pcb => pcb.Id == projectConfigurationBuildId)
-            .SingleOrDefault();
+          projectConfigurationBuildsList
+            .Builds
+            .SingleOrDefault(pcb => pcb.Id == projectConfigurationBuildId);
 
         if (projectConfigurationBuild != null)
         {
