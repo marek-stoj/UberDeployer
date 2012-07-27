@@ -583,14 +583,25 @@ namespace UberDeployer.WinApp.Forms
 
               ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
               Project project = teamCityClient.GetProjectByName(projectInfo.ArtifactsRepositoryName);
-              ProjectDetails projectDetails = teamCityClient.GetProjectDetails(project);
+              List<ProjectConfigurationInListViewModel> projectConfigurations;
 
-              List<ProjectConfigurationInListViewModel> projectConfigurations =
-                (projectDetails.ConfigurationsList != null && projectDetails.ConfigurationsList.Configurations != null)
-                  ? projectDetails.ConfigurationsList.Configurations
-                      .Select(pc => new ProjectConfigurationInListViewModel(pc))
-                      .ToList()
-                  : new List<ProjectConfigurationInListViewModel>();
+              if (project != null)
+              {
+                ProjectDetails projectDetails = teamCityClient.GetProjectDetails(project);
+
+                projectConfigurations =
+                  (projectDetails.ConfigurationsList != null && projectDetails.ConfigurationsList.Configurations != null)
+                    ? projectDetails.ConfigurationsList.Configurations
+                        .Select(pc => new ProjectConfigurationInListViewModel(pc))
+                        .ToList()
+                    : new List<ProjectConfigurationInListViewModel>();
+              }
+              else
+              {
+                LogMessage(string.Format("Project named '{0}' couldn't be found in TeamCity.", projectInfo.ArtifactsRepositoryName));
+
+                projectConfigurations = new List<ProjectConfigurationInListViewModel>();
+              }
 
               lock (_projectConfigurationsRequestsMutex)
               {
