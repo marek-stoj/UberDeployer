@@ -9,32 +9,45 @@ namespace UberDeployer.Core.Tests.Domain
   [TestFixture]
   public class EnvironmentInfoTests
   {
-    private const string Machine = "machine";
-    private const string Name = "name";
-    private const string Template = "template";
-    private static readonly List<string> Webmachines = new List<string> { "webmachine1", "webmachine2" };
-    private const string Terminalmachine = "terminalmachine";
-    private const string DatabaseMachine = "databasemachine";
-    private const string BaseDirPath = "baseDirPath";
-    private const string Webbasedir = "webbasedir";
-    private const string Scheduler = "scheduler";
-    private const string Terminal = "terminal";
+    private const string _AppServerMachine = "app_server";
+    private const string _FailoverClusterMachineName = "failover_cluster";
+    private const string _EnvironmentName = "environment";
+    private const string _ConfigurationTemplateName = "conf";
+    private static readonly List<string> _WebMachineNames = new List<string> { "web1", "web2" };
+    private const string _TerminalMachineName = "terminal_server";
+    private const string _DatabaseMachineName = "databae_server";
+    private const string _NtServicesBaseDirPath = "C:\\NtServices";
+    private const string _WebAppsBaseDirPath = "C:\\WebApps";
+    private const string _SchedulerAppsBaseDirPath = "C:\\SchedulerApps";
+    private const string _TerminalAppsBaseDirPath = "C:\\TerminalApps";
 
-    private static readonly List<EnvironmentUser> EnvironmentUsers =
+    private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
         {
           new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
         };
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_Name_null()
+    public void Test_EnvironmentInfoTests_Throws_When_Name_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new EnvironmentInfo(
-            null, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              null,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
@@ -42,10 +55,22 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentNullException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, null, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              null,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
@@ -53,94 +78,226 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.DoesNotThrow(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, "", Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              "",
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_Machine_null()
+    public void Test_EnvironmentInfoTests_Throws_When_Machine_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, Template, null, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              null,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_Webmachine_null()
+    public void Test_EnvironmentInfoTests_Throws_When_FailoverClusterMachineName_null()
+    {
+      Assert.Throws<ArgumentException>(
+        () =>
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              null,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
+    }
+
+    [Test]
+    public void Test_EnvironmentInfoTests_Throws_When_Webmachine_null()
     {
       Assert.Throws<ArgumentNullException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, Template, Machine, null, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              null,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_Terminalmachine_null()
+    public void Test_EnvironmentInfoTests_Throws_When_Terminalmachine_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, null, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              null,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_BaseDirPath_null()
+    public void Test_EnvironmentInfoTests_Throws_When_BaseDirPath_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, null, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              null,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_Webbasedir_null()
+    public void Test_EnvironmentInfoTests_Throws_When_Webbasedir_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, null, Scheduler, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              null,
+              _SchedulerAppsBaseDirPath,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_Scheduler_null()
+    public void Test_EnvironmentInfoTests_Throws_When_Scheduler_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, null, Terminal, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              null,
+              _TerminalAppsBaseDirPath,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
-    public void Test_EnvironmentInfoTests_Thows_When_Terminal_null()
+    public void Test_EnvironmentInfoTests_Throws_When_Terminal_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-        {
-          new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, null, EnvironmentUsers);
-        });
+          {
+            new EnvironmentInfo(
+              _EnvironmentName,
+              _ConfigurationTemplateName,
+              _AppServerMachine,
+              _FailoverClusterMachineName,
+              _WebMachineNames,
+              _TerminalMachineName,
+              _DatabaseMachineName,
+              _NtServicesBaseDirPath,
+              _WebAppsBaseDirPath,
+              _SchedulerAppsBaseDirPath,
+              null,
+              false,
+              _EnvironmentUsers);
+          });
     }
 
     [Test]
     public void Test_GetAppServerNetworkPath_Throws_When_path_null()
     {
-      var envInfo = new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+      var envInfo =
+        new EnvironmentInfo(
+          _EnvironmentName,
+          _ConfigurationTemplateName,
+          _AppServerMachine,
+          _FailoverClusterMachineName,
+          _WebMachineNames,
+          _TerminalMachineName,
+          _DatabaseMachineName,
+          _NtServicesBaseDirPath,
+          _WebAppsBaseDirPath,
+          _SchedulerAppsBaseDirPath,
+          _TerminalAppsBaseDirPath,
+          false,
+          _EnvironmentUsers);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(null));
@@ -150,7 +307,19 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_GetAppServerNetworkPath_Throws_When_path_startswithbackslashes()
     {
       var envInfo = new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+        _EnvironmentName,
+        _ConfigurationTemplateName,
+        _AppServerMachine,
+        _FailoverClusterMachineName,
+        _WebMachineNames,
+        _TerminalMachineName,
+        _DatabaseMachineName,
+        _NtServicesBaseDirPath,
+        _WebAppsBaseDirPath,
+        _SchedulerAppsBaseDirPath,
+        _TerminalAppsBaseDirPath,
+        false,
+        _EnvironmentUsers);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(@"\\kasjdkasdj"));
@@ -159,8 +328,21 @@ namespace UberDeployer.Core.Tests.Domain
     [Test]
     public void Test_GetAppServerNetworkPath_Throws_When_path_doesntstartwithdriveletter()
     {
-      var envInfo = new EnvironmentInfo(
-            Name, Template, Machine, Webmachines, Terminalmachine, DatabaseMachine, BaseDirPath, Webbasedir, Scheduler, Terminal, EnvironmentUsers);
+      var envInfo =
+        new EnvironmentInfo(
+          _EnvironmentName,
+          _ConfigurationTemplateName,
+          _AppServerMachine,
+          _FailoverClusterMachineName,
+          _WebMachineNames,
+          _TerminalMachineName,
+          _DatabaseMachineName,
+          _NtServicesBaseDirPath,
+          _WebAppsBaseDirPath,
+          _SchedulerAppsBaseDirPath,
+          _TerminalAppsBaseDirPath,
+          false,
+          _EnvironmentUsers);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath("qlwelqwelw"));
@@ -171,19 +353,23 @@ namespace UberDeployer.Core.Tests.Domain
     {
       var envInfo =
         new EnvironmentInfo(
-          Name,
-          Template,
-          Machine,
-          Webmachines,
-          Terminalmachine,
-          DatabaseMachine,
-          BaseDirPath,
-          Webbasedir,
-          Scheduler,
-          Terminal,
-          EnvironmentUsers);
+          _EnvironmentName,
+          _ConfigurationTemplateName,
+          _AppServerMachine,
+          _FailoverClusterMachineName,
+          _WebMachineNames,
+          _TerminalMachineName,
+          _DatabaseMachineName,
+          _NtServicesBaseDirPath,
+          _WebAppsBaseDirPath,
+          _SchedulerAppsBaseDirPath,
+          _TerminalAppsBaseDirPath,
+          false,
+          _EnvironmentUsers);
 
-      Assert.AreEqual("\\\\" + Webmachines[0] + "\\c$\\", envInfo.GetWebServerNetworkPath(Webmachines[0], "c:\\"));
+      Assert.AreEqual(
+        "\\\\" + _WebMachineNames[0] + "\\c$\\",
+        envInfo.GetWebServerNetworkPath(_WebMachineNames[0], "c:\\"));
     }
   }
 }

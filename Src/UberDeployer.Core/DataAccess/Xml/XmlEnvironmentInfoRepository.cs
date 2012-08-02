@@ -24,6 +24,8 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public string AppServerMachineName { get; set; }
 
+      public string FailoverClusterMachineName { get; set; }
+
       public List<string> WebServerMachineNames { get; set; }
 
       public string TerminalServerMachineName { get; set; }
@@ -37,6 +39,8 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string SchedulerAppsBaseDirPath { get; set; }
 
       public string TerminalAppsBaseDirPath { get; set; }
+
+      public bool ClusterNtServices { get; set; }
 
       public List<EnvironmentUserXml> EnvironmentUsers { get; set; }
     }
@@ -124,6 +128,7 @@ namespace UberDeployer.Core.DataAccess.Xml
               eiXml.Name,
               eiXml.ConfigurationTemplateName,
               eiXml.AppServerMachineName,
+              eiXml.FailoverClusterMachineName,
               eiXml.WebServerMachineNames,
               eiXml.TerminalServerMachineName,
               eiXml.DatabaseServerMachineName,
@@ -131,6 +136,7 @@ namespace UberDeployer.Core.DataAccess.Xml
               eiXml.WebAppsBaseDirPath,
               eiXml.SchedulerAppsBaseDirPath,
               eiXml.TerminalAppsBaseDirPath,
+              eiXml.ClusterNtServices,
               eiXml.EnvironmentUsers.Select(
                 eu =>
                 new EnvironmentUser(

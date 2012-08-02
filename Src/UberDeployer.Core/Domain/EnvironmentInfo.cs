@@ -17,18 +17,7 @@ namespace UberDeployer.Core.Domain
 
     #region Constructor(s)
 
-    public EnvironmentInfo(
-      string name,
-      string configurationTemplateName,
-      string appServerMachineName,
-      IEnumerable<string> webServerMachineNames,
-      string terminalServerMachineName,
-      string databaseServerMachineName,
-      string ntServicesBaseDirPath,
-      string webAppsBaseDirPath,
-      string schedulerAppsBaseDirPath,
-      string terminalAppsBaseDirPath,
-      IEnumerable<EnvironmentUser> environmentUsers)
+    public EnvironmentInfo(string name, string configurationTemplateName, string appServerMachineName, string failoverClusterMachineName, IEnumerable<string> webServerMachineNames, string terminalServerMachineName, string databaseServerMachineName, string ntServicesBaseDirPath, string webAppsBaseDirPath, string schedulerAppsBaseDirPath, string terminalAppsBaseDirPath, bool clusterNtServices, IEnumerable<EnvironmentUser> environmentUsers)
     {
       if (string.IsNullOrEmpty(name))
       {
@@ -43,6 +32,11 @@ namespace UberDeployer.Core.Domain
       if (string.IsNullOrEmpty(appServerMachineName))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "appServerMachineName");
+      }
+
+      if (failoverClusterMachineName == null)
+      {
+        throw new ArgumentNullException("failoverClusterMachineName");
       }
 
       if (webServerMachineNames == null)
@@ -88,6 +82,7 @@ namespace UberDeployer.Core.Domain
       Name = name;
       ConfigurationTemplateName = configurationTemplateName;
       AppServerMachineName = appServerMachineName;
+      FailoverClusterMachineName = failoverClusterMachineName;
       _webServerMachines = new List<string>(webServerMachineNames);
       TerminalServerMachineName = terminalServerMachineName;
       DatabaseServerMachineName = databaseServerMachineName;
@@ -95,6 +90,7 @@ namespace UberDeployer.Core.Domain
       WebAppsBaseDirPath = webAppsBaseDirPath;
       SchedulerAppsBaseDirPath = schedulerAppsBaseDirPath;
       TerminalAppsBaseDirPath = terminalAppsBaseDirPath;
+      ClusterNtServices = clusterNtServices;
 
       _environmentUsersDict = environmentUsers.ToDictionary(eu => eu.Id, eu => eu);
     }
@@ -173,6 +169,8 @@ namespace UberDeployer.Core.Domain
 
     public string AppServerMachineName { get; private set; }
 
+    public string FailoverClusterMachineName { get; private set; }
+
     // TODO IMM HI: that attribute is for UI!
     [Browsable(false)]
     public IEnumerable<string> WebServerMachineNames
@@ -191,6 +189,8 @@ namespace UberDeployer.Core.Domain
     public string SchedulerAppsBaseDirPath { get; private set; }
 
     public string TerminalAppsBaseDirPath { get; private set; }
+
+    public bool ClusterNtServices { get; private set; }
 
     // TODO IMM HI: that attribute is for UI!
     [Browsable(false)]

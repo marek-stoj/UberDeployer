@@ -193,8 +193,21 @@ namespace UberDeployer.Core.Tests.Domain
     {
       string machine = Environment.MachineName;
 
-      var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", "C:\\basedir", "C:\\basedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
+      var envInfo =
+        new EnvironmentInfo(
+          "name",
+          "templates",
+          machine,
+          "failover",
+          new[] { "webmachine" },
+          "terminalmachine",
+          "databasemachine",
+          "C:\\basedir",
+          "C:\\basedir",
+          "c:\\scheduler",
+          "terminal",
+          false,
+          _EnvironmentUsers);
 
       var projectInfo =
         new WebAppProjectInfo(
@@ -232,8 +245,22 @@ namespace UberDeployer.Core.Tests.Domain
     {
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
-      var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
+      
+      var envInfo =
+        new EnvironmentInfo(
+          "name",
+          "templates",
+          machine,
+          "failover",
+          new[] { "webmachine" },
+          "terminalmachine",
+          "databasemachine",
+          baseDirPath,
+          "webbasedir",
+          "c:\\scheduler",
+          "terminal",
+          false,
+          _EnvironmentUsers);
 
       var projectInfo =
         new WebAppProjectInfo(

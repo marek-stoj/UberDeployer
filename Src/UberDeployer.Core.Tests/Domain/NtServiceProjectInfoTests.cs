@@ -181,19 +181,34 @@ namespace UberDeployer.Core.Tests.Domain
     {
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
-      var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, new[] { "webmachine" }, "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "terminal", _EnvironmentUsers);
 
-      var projectInfo = new NtServiceProjectInfo(
-        _ProjectName,
-        _ArtifactsRepositoryName,
-        _ArtifactsRepositoryDirName,
-        _ArtifactsAreNotEnvironmentSpecific,
-        _NtServiceName,
-        _NtServiceDirName,
-        _NtServiceDisplayName,
-        _NtServiceExeName,
-        _NtServiceUserId);
+      var envInfo =
+        new EnvironmentInfo(
+          "name",
+          "templates",
+          machine,
+          "failover",
+          new[] { "webmachine" },
+          "terminalmachine",
+          "databasemachine",
+          baseDirPath,
+          "webbasedir",
+          "c:\\scheduler",
+          "terminal",
+          false,
+          _EnvironmentUsers);
+
+      var projectInfo =
+        new NtServiceProjectInfo(
+          _ProjectName,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvironmentSpecific,
+          _NtServiceName,
+          _NtServiceDirName,
+          _NtServiceDisplayName,
+          _NtServiceExeName,
+          _NtServiceUserId);
 
       var targetFolders = projectInfo.GetTargetFolders(envInfo).ToList();
 

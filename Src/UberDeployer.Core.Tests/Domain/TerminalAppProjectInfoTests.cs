@@ -161,8 +161,22 @@ namespace UberDeployer.Core.Tests.Domain
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
       string terminalmachine = "terminalmachine";
-      var envInfo = new EnvironmentInfo(
-        "name", "templates", machine, new[] { "webmachine" }, terminalmachine, "databasemachine", baseDirPath, "webbasedir", "c:\\scheduler", "c:\\terminal", _EnvironmentUsers);
+      
+      var envInfo =
+        new EnvironmentInfo(
+          "name",
+          "templates",
+          machine,
+          "failover",
+          new[] { "webmachine" },
+          terminalmachine,
+          "databasemachine",
+          baseDirPath,
+          "webbasedir",
+          "c:\\scheduler",
+          "c:\\terminal",
+          false,
+          _EnvironmentUsers);
 
       var projectInfo = new TerminalAppProjectInfo(
             _Name,

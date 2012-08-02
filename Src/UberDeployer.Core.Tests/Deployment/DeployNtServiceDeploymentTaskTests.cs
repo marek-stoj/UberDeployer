@@ -16,7 +16,17 @@ namespace UberDeployer.Core.Tests.Deployment
     private const string _BuildId = "id";
     private const string _EnvironmentName = "envName";
 
-    private static  readonly NtServiceProjectInfo _ntServiceProjectInfo = new NtServiceProjectInfo("name", "artifactsRepo", "artifactsRepoDir", false, "serviceName", "serviceDir", "serviceDisplayed", "exeName", "Sample.User");
+    private static  readonly NtServiceProjectInfo _ntServiceProjectInfo =
+      new NtServiceProjectInfo(
+        "name",
+        "artifactsRepo",
+        "artifactsRepoDir",
+        false,
+        "serviceName",
+        "serviceDir",
+        "serviceDisplayed",
+        "exeName",
+        "Sample.User");
 
     private Mock<INtServiceManager> ntServiceManager;
     private Mock<IArtifactsRepository> artifactsRepository;
@@ -72,8 +82,34 @@ namespace UberDeployer.Core.Tests.Deployment
       const string baseDirPath = "c:\\basedir";
 
       string machine = Environment.MachineName;
-      var ntServiceProjectInfo = new NtServiceProjectInfo("name", artifactsRepo, "artifactsRepoDir", false, serviceName, serviceDir, "serviceDisplayed", "exeName", "Sample.User");
-      var envInfo = new EnvironmentInfo("name", "templates", machine , new[] { "webmachine" }, "terminalmachine", "databasemachine", baseDirPath, "webbasedir", "scheduler", "terminal", _EnvironmentUsers);
+
+      var ntServiceProjectInfo =
+        new NtServiceProjectInfo(
+          "name",
+          artifactsRepo,
+          "artifactsRepoDir",
+          false,
+          serviceName,
+          serviceDir,
+          "serviceDisplayed",
+          "exeName",
+          "Sample.User");
+
+      var envInfo =
+        new EnvironmentInfo(
+          "name",
+          "templates",
+          machine,
+          "failover",
+          new[] { "webmachine" },
+          "terminalmachine",
+          "databasemachine",
+          baseDirPath,
+          "webbasedir",
+          "scheduler",
+          "terminal",
+          false,
+          _EnvironmentUsers);
 
       environmentInfoRepository
         .Setup(e => e.GetByName(envName))
