@@ -29,6 +29,7 @@
       <Name>Remote</Name>
       <ConfigurationTemplateName>Prod</ConfigurationTemplateName>
       <AppServerMachineName>REMOTE</AppServerMachineName>
+      <FailoverClusterMachineName>REMOTE_CLUSTER</FailoverClusterMachineName>
       <WebServerMachineNames>
         <string>REMOTE</string>
       </WebServerMachineNames>
@@ -38,12 +39,19 @@
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
       <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
+      <ClusterNtServices>false</ClusterNtServices>
       <EnvironmentUsers>
         <EnvironmentUserXml>
           <Id>Sample.User</Id>
           <UserName>UberDeployer</UserName>
         </EnvironmentUserXml>
       </EnvironmentUsers>
+      <ProjectToFailoverClusterGroupMappings>
+        <ProjectToFailoverClusterGroupMappingXml>
+          <ProjectName>UberDeployer.SampleNtService</ProjectName>
+          <ClusterGroupName>UD_SAMPLE</ClusterGroupName>
+        </ProjectToFailoverClusterGroupMappingXml>
+      </ProjectToFailoverClusterGroupMappings>
     </EnvironmentInfoXml>
   </EnvironmentInfos>
 
