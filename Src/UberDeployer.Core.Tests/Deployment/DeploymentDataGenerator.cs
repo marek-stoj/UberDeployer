@@ -7,11 +7,17 @@ namespace UberDeployer.Core.Tests.Deployment
   {
     public static EnvironmentInfo GetEnvironmentInfo()
     {
-      var envUsers =
+      var environmentUsers =
         new List<EnvironmentUser>()
           {
             new EnvironmentUser("id", "user_name"),
             new EnvironmentUser("id2", "user_name2")
+          };
+
+      var projectToFailoverClusterGroupMappings =
+        new List<ProjectToFailoverClusterGroupMapping>
+          {
+            new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
           };
 
       return
@@ -28,7 +34,8 @@ namespace UberDeployer.Core.Tests.Deployment
           "scheduler_apps_base_dir_path",
           "terminal_apps_base_dir_path",
           false,
-          envUsers);
+          environmentUsers,
+          projectToFailoverClusterGroupMappings);
     }
 
     public static DbProjectInfo GetDbProjectInfo(bool artifactsAreNotEnvironmentSpecific = true)

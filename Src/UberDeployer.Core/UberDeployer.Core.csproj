@@ -33,6 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FailoverClusters.ObjectModel">
+      <HintPath>..\..\Lib\FailoverClusters\FailoverClusters.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="FailoverClusters.ObjectModel.Resources">
+      <HintPath>..\..\Lib\FailoverClusters\FailoverClusters.ObjectModel.Resources.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate">
       <HintPath>..\..\Lib\NHibernate\FluentNHibernate.dll</HintPath>
     </Reference>
@@ -70,8 +76,17 @@
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="DbDiff\DbVersion.cs" />
     <Compile Include="DbDiff\DbVersionsModel.cs" />
+    <Compile Include="Deployment\CollectedCredentials.cs" />
     <Compile Include="Deployment\DeferredEnumerable.cs" />
     <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStep.cs" />
+    <Compile Include="Deployment\MoveClusterGroupToAnotherNodeDeploymentStep.cs" />
+    <Compile Include="Domain\ProjectToFailoverClusterGroupMapping.cs" />
+    <Compile Include="Domain\UI\CollectionPropertyDescriptor.cs" />
+    <Compile Include="Domain\UI\ProjectToFailoverClusterGroupMappingCollectionPropertyDescriptor.cs" />
+    <Compile Include="Domain\UI\ProjectToFailoverClusterGroupMappingsCollection.cs" />
+    <Compile Include="Domain\UI\ProjectToFailoverClusterGroupMappingCollectionConverter.cs" />
+    <Compile Include="Domain\UI\ProjectToFailoverClusterGroupMappingConverter.cs" />
+    <Compile Include="Management\FailoverCluster\IFailoverClusterManager.cs" />
     <Compile Include="Domain\UI\EnvironmentUserCollectionPropertyDescriptor.cs" />
     <Compile Include="Domain\UI\EnvironmentUserConverter.cs" />
     <Compile Include="Domain\UI\EnvironmentUsersCollection.cs" />
@@ -110,6 +125,7 @@
     <Compile Include="Domain\IisAppPoolMode.cs" />
     <Compile Include="Domain\IisAppPoolVersion.cs" />
     <Compile Include="Domain\ReadOnlyUITypeEditor.cs" />
+    <Compile Include="Management\FailoverCluster\PowerShellFailoverClusterManager.cs" />
     <Compile Include="Management\Iis\IIisManager.cs" />
     <Compile Include="DataAccess\NHibernate\Mappings\DeploymentRequestMap.cs" />
     <Compile Include="DataAccess\NHibernate\NHibernateDeploymentRequestRepository.cs" />
@@ -193,7 +209,6 @@
       <DependentUpon>PasswordPromptForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

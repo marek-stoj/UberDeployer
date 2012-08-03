@@ -43,6 +43,8 @@ namespace UberDeployer.Core.DataAccess.Xml
       public bool ClusterNtServices { get; set; }
 
       public List<EnvironmentUserXml> EnvironmentUsers { get; set; }
+
+      public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; } 
     }
 
     public class EnvironmentUserXml
@@ -50,6 +52,13 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string Id { get; set; }
 
       public string UserName { get; set; }
+    }
+
+    public class ProjectToFailoverClusterGroupMappingXml
+    {
+      public string ProjectName { get; set; }
+
+      public string ClusterGroupName { get; set; }
     }
 
     #endregion
@@ -141,7 +150,12 @@ namespace UberDeployer.Core.DataAccess.Xml
                 eu =>
                 new EnvironmentUser(
                   eu.Id,
-                  eu.UserName))))
+                  eu.UserName)),
+              eiXml.ProjectToFailoverClusterGroupMappings.Select(
+                ptfcgm =>
+                new ProjectToFailoverClusterGroupMapping(
+                  ptfcgm.ProjectName,
+                  ptfcgm.ClusterGroupName))))
           .ToDictionary(ei => ei.Name);
     }
 

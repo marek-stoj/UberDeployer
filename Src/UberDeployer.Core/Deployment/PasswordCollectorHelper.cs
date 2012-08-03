@@ -5,8 +5,28 @@ namespace UberDeployer.Core.Deployment
 {
   public static class PasswordCollectorHelper
   {
-    public static string CollectPasssword(IPasswordCollector passwordCollector, EnvironmentInfo environmentInfo, string userId, out EnvironmentUser environmentUser)
+    public static string CollectPasssword(IPasswordCollector passwordCollector, EnvironmentInfo environmentInfo, string machineName, string userId, out EnvironmentUser environmentUser)
     {
+      if (passwordCollector == null)
+      {
+        throw new ArgumentNullException("passwordCollector");
+      }
+
+      if (environmentInfo == null)
+      {
+        throw new ArgumentNullException("environmentInfo");
+      }
+
+      if (string.IsNullOrEmpty(machineName))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
+      }
+
+      if (string.IsNullOrEmpty(userId))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "userId");
+      }
+
       environmentUser = environmentInfo.GetEnvironmentUserByName(userId);
 
       if (environmentUser == null)
@@ -17,6 +37,7 @@ namespace UberDeployer.Core.Deployment
       string environmentUserPassword =
         passwordCollector.CollectPasswordForUser(
           environmentInfo.Name,
+          machineName,
           environmentUser.UserName);
 
       if (string.IsNullOrEmpty(environmentUserPassword))

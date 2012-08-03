@@ -28,6 +28,12 @@ namespace UberDeployer.Core.Tests.Domain
           new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
         };
 
+    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
+      new List<ProjectToFailoverClusterGroupMapping>
+        {
+          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+        };
+
     private readonly IisAppPoolInfo AppPoolInfo = new IisAppPoolInfo(Name, IisAppPoolVersion.V4_0, IisAppPoolMode.Classic);
 
     [Test]
@@ -207,7 +213,8 @@ namespace UberDeployer.Core.Tests.Domain
           "c:\\scheduler",
           "terminal",
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
       var projectInfo =
         new WebAppProjectInfo(
@@ -260,7 +267,8 @@ namespace UberDeployer.Core.Tests.Domain
           "c:\\scheduler",
           "terminal",
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
       var projectInfo =
         new WebAppProjectInfo(

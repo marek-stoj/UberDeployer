@@ -57,6 +57,7 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateArtifactsRepository(),
           objectFactory.CreateNtServiceManager(),
           objectFactory.CreatePasswordCollector(),
+          objectFactory.CreateFailoverClusterManager(),
           this,
           projectConfigurationName,
           projectConfigurationBuildId,

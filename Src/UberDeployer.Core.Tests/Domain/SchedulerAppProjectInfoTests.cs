@@ -31,6 +31,12 @@ namespace UberDeployer.Core.Tests.Domain
           new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
         };
 
+    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
+      new List<ProjectToFailoverClusterGroupMapping>
+        {
+          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+        };
+
     [Test]
     public void Test_SchedulerAppProjectInfoTests_Throws_When_Name_null()
     {
@@ -315,7 +321,8 @@ namespace UberDeployer.Core.Tests.Domain
           "c:\\scheduler",
           "terminal",
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
       var schedulerAppProjectInfo =
         new SchedulerAppProjectInfo(

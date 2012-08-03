@@ -10,16 +10,16 @@ namespace UberDeployer.Core.Domain.UI
   {
     #region Constructor(s)
 
-    public EnvironmentUsersCollection(IEnumerable<EnvironmentUser> environmentUsers)
+    public EnvironmentUsersCollection(IEnumerable<EnvironmentUser> items)
     {
-      if (environmentUsers == null)
+      if (items == null)
       {
-        throw new ArgumentNullException("environmentUsers");
+        throw new ArgumentNullException("items");
       }
 
-      foreach (EnvironmentUser environmentUser in environmentUsers)
+      foreach (EnvironmentUser item in items)
       {
-        List.Add(environmentUser);
+        List.Add(item);
       }
     }
 
@@ -33,10 +33,10 @@ namespace UberDeployer.Core.Domain.UI
 
       for (int i = 0; i < List.Count; i++)
       {
-        var environmentUserCollectionPropertyDescriptor =
+        var propertyDescriptor =
           new EnvironmentUserCollectionPropertyDescriptor(this, i);
         
-        propertyDescriptorCollection.Add(environmentUserCollectionPropertyDescriptor);
+        propertyDescriptorCollection.Add(propertyDescriptor);
       }
 
       return propertyDescriptorCollection;

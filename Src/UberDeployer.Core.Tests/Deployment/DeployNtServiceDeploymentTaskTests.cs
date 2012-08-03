@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.NtServices;
 
 namespace UberDeployer.Core.Tests.Deployment
@@ -28,10 +29,11 @@ namespace UberDeployer.Core.Tests.Deployment
         "exeName",
         "Sample.User");
 
-    private Mock<INtServiceManager> ntServiceManager;
-    private Mock<IArtifactsRepository> artifactsRepository;
-    private Mock<IEnvironmentInfoRepository> environmentInfoRepository;
-    private Mock<IPasswordCollector> passwordCollector;
+    private Mock<INtServiceManager> _ntServiceManager;
+    private Mock<IArtifactsRepository> _artifactsRepository;
+    private Mock<IEnvironmentInfoRepository> _environmentInfoRepository;
+    private Mock<IPasswordCollector> _passwordCollector;
+    private Mock<IFailoverClusterManager> _failoverClusterManager;
 
     private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
@@ -39,13 +41,20 @@ namespace UberDeployer.Core.Tests.Deployment
           new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
         };
 
+    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
+      new List<ProjectToFailoverClusterGroupMapping>
+        {
+          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+        };
+
     [SetUp]
     public void SetUp()
     {
-      ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict);
-      artifactsRepository = new Mock<IArtifactsRepository>(MockBehavior.Strict);
-      environmentInfoRepository = new Mock<IEnvironmentInfoRepository>(MockBehavior.Strict);
-      passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Strict);
+      _ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict);
+      _artifactsRepository = new Mock<IArtifactsRepository>(MockBehavior.Strict);
+      _environmentInfoRepository = new Mock<IEnvironmentInfoRepository>(MockBehavior.Strict);
+      _passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Strict);
+      _failoverClusterManager = new Mock<IFailoverClusterManager>(MockBehavior.Strict);
     }
 
     [Test]
@@ -55,10 +64,10 @@ namespace UberDeployer.Core.Tests.Deployment
         new CtorTester<DeployNtServiceDeploymentTask>(
           new object[]
             {
-              environmentInfoRepository.Object,
-              artifactsRepository.Object,
-              ntServiceManager.Object,
-              passwordCollector.Object,
+              _environmentInfoRepository.Object,
+              _artifactsRepository.Object,
+              _ntServiceManager.Object,
+              _passwordCollector.Object,
               _ntServiceProjectInfo,
               _ProjectName,
               _BuildId,
@@ -109,29 +118,31 @@ namespace UberDeployer.Core.Tests.Deployment
           "scheduler",
           "terminal",
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
-      environmentInfoRepository
+      _environmentInfoRepository
         .Setup(e => e.GetByName(envName))
         .Returns(envInfo);
 
-      passwordCollector
-        .Setup(pc => pc.CollectPasswordForUser(envInfo.Name, envInfo.GetEnvironmentUserByName(ntServiceProjectInfo.NtServiceUserId).UserName))
+      _passwordCollector
+        .Setup(pc => pc.CollectPasswordForUser(envInfo.Name, envInfo.AppServerMachineName, envInfo.GetEnvironmentUserByName(ntServiceProjectInfo.NtServiceUserId).UserName))
         .Returns("some password");
       
-      ntServiceManager
+      _ntServiceManager
         .Setup(n => n.DoesServiceExist(machine, serviceName))
         .Returns(false);
       
-      artifactsRepository
+      _artifactsRepository
         .Setup(a => a.GetArtifacts(artifactsRepo,projectName, buildID, It.IsAny<string>()));
 
       var deployNTService =
         new DeployNtServiceDeploymentTask(
-          environmentInfoRepository.Object,
-          artifactsRepository.Object,
-          ntServiceManager.Object,
-          passwordCollector.Object,
+          _environmentInfoRepository.Object,
+          _artifactsRepository.Object,
+          _ntServiceManager.Object,
+          _passwordCollector.Object,
+          _failoverClusterManager.Object,
           ntServiceProjectInfo,
           projectName,
           buildID,

@@ -61,6 +61,12 @@ namespace UberDeployer.Core.Deployment
       set { txt_environmentName.Text = value ?? ""; }
     }
 
+    public string MachineName
+    {
+      get { return txt_machineName.Text; }
+      set { txt_machineName.Text = value ?? ""; }
+    }
+
     public string UserName
     {
       get { return txt_userName.Text; }

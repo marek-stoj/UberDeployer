@@ -124,12 +124,12 @@ namespace UberDeployer.Core.Deployment
       EnvironmentUser environmentUser;
 
       string environmentUserPassword =
-        PasswordCollectorHelper
-          .CollectPasssword(
-            _passwordCollector,
-            environmentInfo,
-            _projectInfo.SchedulerAppUserId,
-            out environmentUser);
+        PasswordCollectorHelper.CollectPasssword(
+          _passwordCollector,
+          environmentInfo,
+          environmentInfo.AppServerMachineName,
+          _projectInfo.SchedulerAppUserId,
+          out environmentUser);
 
       if (!taskIsScheduled)
       {

@@ -8,11 +8,16 @@ namespace UberDeployer.Core.Deployment
   {
     #region IPasswordCollector members
 
-    public string CollectPasswordForUser(string environmentName, string userName)
+    public string CollectPasswordForUser(string environmentName, string machineName, string userName)
     {
       if (string.IsNullOrEmpty(environmentName))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "environmentName");
+      }
+
+      if (string.IsNullOrEmpty(machineName))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
       }
 
       if (string.IsNullOrEmpty(userName))
@@ -24,6 +29,7 @@ namespace UberDeployer.Core.Deployment
         new PasswordPromptForm
           {
             EnvironmentName = environmentName,
+            MachineName = machineName,
             UserName = userName,
           };
 

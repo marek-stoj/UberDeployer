@@ -4,6 +4,7 @@ using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
+using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Management.NtServices;
@@ -42,5 +43,7 @@ namespace UberDeployer.Core
     IDbScriptRunnerFactory CreateDbScriptRunnerFactory();
 
     IDbVersionProvider CreateDbVersionProvider();
+
+    IFailoverClusterManager CreateFailoverClusterManager();
   }
 }

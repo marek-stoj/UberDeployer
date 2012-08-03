@@ -27,6 +27,12 @@ namespace UberDeployer.Core.Tests.Domain
           new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
         };
 
+    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
+      new List<ProjectToFailoverClusterGroupMapping>
+        {
+          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+        };
+
     [Test]
     public void Test_TerminalAppProjectInfo_Thows_When_Name_null()
     {
@@ -176,7 +182,8 @@ namespace UberDeployer.Core.Tests.Domain
           "c:\\scheduler",
           "c:\\terminal",
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
       var projectInfo = new TerminalAppProjectInfo(
             _Name,

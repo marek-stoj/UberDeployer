@@ -60,7 +60,7 @@ namespace UberDeployer.Core.Deployment
 
     public override string Description
     {
-      get { return string.Format("Control NT service '{0}' on machine '{1}': '{2}'.", _serviceName, _machineName, _action); }
+      get { return string.Format("{0} NT service '{1}' on machine '{2}'.", _action, _serviceName, _machineName); }
     }
 
     #endregion

@@ -8,6 +8,7 @@ using UberDeployer.Core.Deployment.Pipeline;
 
 namespace UberDeployer.NAnt
 {
+  // TODO IMM HI: what about 'startup useLegacyV2RuntimeActivationPolicy="true"' for deploying to a cluster? (we can't use app.config here)
   [TaskName("Deploy")]
   public class DeployTask : Task
   {

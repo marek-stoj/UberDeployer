@@ -6,18 +6,18 @@ namespace UberDeployer.Core.Domain.UI
 {
   // TODO IMM HI: that's for UI!
   [ReadOnly(true)]
-  public class WebServerMachineNameCollection : MyCollectionBase
+  public class ProjectToFailoverClusterGroupMappingsCollection : MyCollectionBase
   {
     #region Constructor(s)
 
-    public WebServerMachineNameCollection(IEnumerable<string> items)
+    public ProjectToFailoverClusterGroupMappingsCollection(IEnumerable<ProjectToFailoverClusterGroupMapping> items)
     {
       if (items == null)
       {
         throw new ArgumentNullException("items");
       }
 
-      foreach (string item in items)
+      foreach (ProjectToFailoverClusterGroupMapping item in items)
       {
         List.Add(item);
       }
@@ -25,7 +25,7 @@ namespace UberDeployer.Core.Domain.UI
 
     #endregion
 
-    #region ICustomTypeDescriptor members
+    #region Overrides of MyCollectionBase
 
     public override PropertyDescriptorCollection GetProperties()
     {
@@ -34,7 +34,7 @@ namespace UberDeployer.Core.Domain.UI
       for (int i = 0; i < List.Count; i++)
       {
         var propertyDescriptor =
-          new WebServerMachineNameCollectionPropertyDescriptor(this, i);
+          new ProjectToFailoverClusterGroupMappingCollectionPropertyDescriptor(this, i);
         
         propertyDescriptorCollection.Add(propertyDescriptor);
       }
@@ -46,9 +46,9 @@ namespace UberDeployer.Core.Domain.UI
 
     #region Properties
 
-    public string this[int index]
+    public ProjectToFailoverClusterGroupMapping this[int index]
     {
-      get { return (string)List[index]; }
+      get { return (ProjectToFailoverClusterGroupMapping)List[index]; }
     }
 
     #endregion

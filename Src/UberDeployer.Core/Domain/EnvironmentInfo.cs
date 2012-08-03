@@ -14,10 +14,11 @@ namespace UberDeployer.Core.Domain
 
     private readonly List<String> _webServerMachines;
     private readonly Dictionary<string, EnvironmentUser> _environmentUsersDict;
+    private readonly Dictionary<string, ProjectToFailoverClusterGroupMapping> _projectToFailoverClusterGroupMappingsDict;
 
     #region Constructor(s)
 
-    public EnvironmentInfo(string name, string configurationTemplateName, string appServerMachineName, string failoverClusterMachineName, IEnumerable<string> webServerMachineNames, string terminalServerMachineName, string databaseServerMachineName, string ntServicesBaseDirPath, string webAppsBaseDirPath, string schedulerAppsBaseDirPath, string terminalAppsBaseDirPath, bool clusterNtServices, IEnumerable<EnvironmentUser> environmentUsers)
+    public EnvironmentInfo(string name, string configurationTemplateName, string appServerMachineName, string failoverClusterMachineName, IEnumerable<string> webServerMachineNames, string terminalServerMachineName, string databaseServerMachineName, string ntServicesBaseDirPath, string webAppsBaseDirPath, string schedulerAppsBaseDirPath, string terminalAppsBaseDirPath, bool clusterNtServices, IEnumerable<EnvironmentUser> environmentUsers, IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings)
     {
       if (string.IsNullOrEmpty(name))
       {
@@ -78,7 +79,17 @@ namespace UberDeployer.Core.Domain
       {
         throw new ArgumentNullException("environmentUsers");
       }
-      
+
+      if (clusterNtServices && string.IsNullOrEmpty(failoverClusterMachineName))
+      {
+        throw new ArgumentException("If clusterNtServices is set, failoverClusterMachineName must not be empty.", "clusterNtServices");
+      }
+
+      if (projectToFailoverClusterGroupMappings == null)
+      {
+        throw new ArgumentNullException("projectToFailoverClusterGroupMappings");
+      }
+
       Name = name;
       ConfigurationTemplateName = configurationTemplateName;
       AppServerMachineName = appServerMachineName;
@@ -93,44 +104,14 @@ namespace UberDeployer.Core.Domain
       ClusterNtServices = clusterNtServices;
 
       _environmentUsersDict = environmentUsers.ToDictionary(eu => eu.Id, eu => eu);
+      _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(ptfcgm => ptfcgm.ProjectName);
     }
 
     #endregion
 
     #region Public methods
 
-    public string GetAppServerNetworkPath(string absoluteLocalPath)
-    {
-      return GetNetworkPath(AppServerMachineName, absoluteLocalPath);
-    }
-
-    public string GetWebServerNetworkPath(string webServerMachineName, string absoluteLocalPath)
-    {
-      return GetNetworkPath(webServerMachineName, absoluteLocalPath);
-    }
-
-    public string GetTerminalServerNetworkPath(string absoluteLocalPath)
-    {
-      return GetNetworkPath(TerminalServerMachineName, absoluteLocalPath);
-    }
-
-    public EnvironmentUser GetEnvironmentUserByName(string environmentUserName)
-    {
-      EnvironmentUser environmentUser;
-
-      if (_environmentUsersDict.TryGetValue(environmentUserName, out environmentUser))
-      {
-        return environmentUser;
-      }
-
-      return null;
-    }
-
-    #endregion
-
-    #region Private helper methods
-
-    private static string GetNetworkPath(string machineName, string absoluteLocalPath)
+    public static string GetNetworkPath(string machineName, string absoluteLocalPath)
     {
       if (string.IsNullOrEmpty(absoluteLocalPath))
       {
@@ -159,6 +140,50 @@ namespace UberDeployer.Core.Domain
           absoluteLocalPath.Substring(driveLetterMatch.Length));
     }
 
+    public string GetAppServerNetworkPath(string absoluteLocalPath)
+    {
+      return GetNetworkPath(AppServerMachineName, absoluteLocalPath);
+    }
+
+    public string GetWebServerNetworkPath(string webServerMachineName, string absoluteLocalPath)
+    {
+      return GetNetworkPath(webServerMachineName, absoluteLocalPath);
+    }
+
+    public string GetTerminalServerNetworkPath(string absoluteLocalPath)
+    {
+      return GetNetworkPath(TerminalServerMachineName, absoluteLocalPath);
+    }
+
+    public EnvironmentUser GetEnvironmentUserByName(string environmentUserName)
+    {
+      EnvironmentUser environmentUser;
+
+      if (_environmentUsersDict.TryGetValue(environmentUserName, out environmentUser))
+      {
+        return environmentUser;
+      }
+
+      return null;
+    }
+
+    public string GetFailoverClusterGroupNameForProject(string projectName)
+    {
+      if (string.IsNullOrEmpty(projectName))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "projectName");
+      }
+
+      ProjectToFailoverClusterGroupMapping mapping;
+
+      if (_projectToFailoverClusterGroupMappingsDict.TryGetValue(projectName, out mapping))
+      {
+        return mapping.ClusterGroupName;
+      }
+
+      return null;
+    }
+
     #endregion
 
     #region Properties
@@ -177,7 +202,7 @@ namespace UberDeployer.Core.Domain
     {
       get { return _webServerMachines.AsReadOnly(); }
     }
-    
+
     public string TerminalServerMachineName { get; private set; }
 
     public string DatabaseServerMachineName { get; private set; }
@@ -199,6 +224,13 @@ namespace UberDeployer.Core.Domain
       get { return _environmentUsersDict.Values; }
     }
 
+    // TODO IMM HI: that attribute is for UI!
+    [Browsable(false)]
+    public IEnumerable<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings
+    {
+      get { return _projectToFailoverClusterGroupMappingsDict.Values; }
+    }
+
     // TODO IMM HI: that's for UI!
     [TypeConverter(typeof(WebServerMachineNamesCollectionConverter))]
     [Editor(typeof(ReadOnlyUITypeEditor), typeof(UITypeEditor))]
@@ -213,6 +245,14 @@ namespace UberDeployer.Core.Domain
     public EnvironmentUsersCollection EnvironmentUsersCollection
     {
       get { return new EnvironmentUsersCollection(EnvironmentUsers); }
+    }
+
+    // TODO IMM HI: that's for UI!
+    [TypeConverter(typeof(ProjectToFailoverClusterGroupMappingsCollectionConverter))]
+    [Editor(typeof(ReadOnlyUITypeEditor), typeof(UITypeEditor))]
+    public ProjectToFailoverClusterGroupMappingsCollection ProjectToFailoverClusterGroupMappingsCollection
+    {
+      get { return new ProjectToFailoverClusterGroupMappingsCollection(ProjectToFailoverClusterGroupMappings); }
     }
 
     #endregion

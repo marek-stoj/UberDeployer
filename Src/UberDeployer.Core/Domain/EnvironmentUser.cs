@@ -7,6 +7,8 @@ namespace UberDeployer.Core.Domain
   [TypeConverter(typeof(EnvironmentUserConverter))] // TODO IMM HI: that's for UI!
   public class EnvironmentUser
   {
+    #region Constructor(s)
+
     public EnvironmentUser(string id, string userName)
     {
       if (string.IsNullOrEmpty(id))
@@ -23,13 +25,23 @@ namespace UberDeployer.Core.Domain
       UserName = userName;
     }
 
+    #endregion
+
+    #region Overrides of Object
+
     public override string ToString()
     {
       return string.Format("{0}: {1}", Id, UserName);
     }
 
+    #endregion
+
+    #region Properties
+
     public string Id { get; private set; }
 
     public string UserName { get; private set; }
+
+    #endregion
   }
 }

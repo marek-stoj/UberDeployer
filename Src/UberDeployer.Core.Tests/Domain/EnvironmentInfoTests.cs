@@ -27,6 +27,12 @@ namespace UberDeployer.Core.Tests.Domain
           new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
         };
 
+    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
+      new List<ProjectToFailoverClusterGroupMapping>
+        {
+          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+        };
+
     [Test]
     public void Test_EnvironmentInfoTests_Throws_When_Name_null()
     {
@@ -46,7 +52,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -69,7 +76,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -92,7 +100,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -115,7 +124,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -138,7 +148,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -161,7 +172,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -184,7 +196,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -207,7 +220,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -230,7 +244,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -253,7 +268,8 @@ namespace UberDeployer.Core.Tests.Domain
               null,
               _TerminalAppsBaseDirPath,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -276,7 +292,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppsBaseDirPath,
               null,
               false,
-              _EnvironmentUsers);
+              _EnvironmentUsers,
+              _ProjectToFailoverClusterGroupMappings);
           });
     }
 
@@ -297,7 +314,8 @@ namespace UberDeployer.Core.Tests.Domain
           _SchedulerAppsBaseDirPath,
           _TerminalAppsBaseDirPath,
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(null));
@@ -319,7 +337,8 @@ namespace UberDeployer.Core.Tests.Domain
         _SchedulerAppsBaseDirPath,
         _TerminalAppsBaseDirPath,
         false,
-        _EnvironmentUsers);
+        _EnvironmentUsers,
+        _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(@"\\kasjdkasdj"));
@@ -342,7 +361,8 @@ namespace UberDeployer.Core.Tests.Domain
           _SchedulerAppsBaseDirPath,
           _TerminalAppsBaseDirPath,
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath("qlwelqwelw"));
@@ -365,7 +385,8 @@ namespace UberDeployer.Core.Tests.Domain
           _SchedulerAppsBaseDirPath,
           _TerminalAppsBaseDirPath,
           false,
-          _EnvironmentUsers);
+          _EnvironmentUsers,
+          _ProjectToFailoverClusterGroupMappings);
 
       Assert.AreEqual(
         "\\\\" + _WebMachineNames[0] + "\\c$\\",
