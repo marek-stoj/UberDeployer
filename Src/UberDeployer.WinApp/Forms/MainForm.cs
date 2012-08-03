@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -50,6 +51,10 @@ namespace UberDeployer.WinApp.Forms
       dgv_projectConfigurationBuilds.AutoGenerateColumns = false;
 
       grp_projectConfigurationBuilds.Text += string.Format(" (last {0})", _MaxProjectConfigurationBuildsCount);
+
+      cb_messageTypeThreshold.Items.Clear();
+      cb_messageTypeThreshold.Items.AddRange(Enum.GetValues(typeof(MessageType)).Cast<object>().ToArray());
+      cb_messageTypeThreshold.SelectedItem = MessageType.Info;
     }
 
     private void MainForm_Shown(object sender, EventArgs e)
@@ -185,9 +190,9 @@ namespace UberDeployer.WinApp.Forms
             projectDeploymentInfo.TargetEnvironmentName);
 
         deploymentTask.DiagnosticMessagePosted +=
-          (eventSender, args) => LogMessage(args.Message);
+          (eventSender, args) => LogMessage(args.Message, args.MessageType);
 
-        LogMessage(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        LogMessage(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", MessageType.Info);
         startSeparatorWasLogged = true;
 
         IDeploymentPipeline deploymentPipeline =
@@ -197,13 +202,13 @@ namespace UberDeployer.WinApp.Forms
       }
       catch (Exception exc)
       {
-        LogMessage("Error: " + exc.Message);
+        LogMessage("Error: " + exc.Message, MessageType.Error);
       }
       finally
       {
         if (startSeparatorWasLogged)
         {
-          LogMessage("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+          LogMessage("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", MessageType.Info);
         }
 
         ToggleIndeterminateProgress(false, pic_indeterminateProgress);
@@ -472,7 +477,7 @@ namespace UberDeployer.WinApp.Forms
 
     #endregion
 
-    #region Private helper methods
+    #region Private methods
 
     private static void OpenProjectTargetFolder(ProjectInfo projectInfo, EnvironmentInfo environmentInfo)
     {
@@ -508,7 +513,7 @@ namespace UberDeployer.WinApp.Forms
                 requestNumber = _projectsRequestsCounter;
               }
 
-              LogMessage("Loading projects...");
+              LogMessage("Loading projects...", MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               IProjectInfoRepository projectInfoRepository = ObjectFactory.Instance.CreateProjectInfoRepository();
@@ -551,7 +556,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage("Done loading projects.");
+              LogMessage("Done loading projects.", MessageType.Trace);
             }
           });
     }
@@ -578,7 +583,7 @@ namespace UberDeployer.WinApp.Forms
                 requestNumber = _projectConfigurationsRequestsCounter;
               }
 
-              LogMessage(string.Format("Loading project configurations for project: '{0}'...", projectInfo.Name));
+              LogMessage(string.Format("Loading project configurations for project: '{0}'...", projectInfo.Name), MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
@@ -598,7 +603,7 @@ namespace UberDeployer.WinApp.Forms
               }
               else
               {
-                LogMessage(string.Format("Project named '{0}' couldn't be found in TeamCity.", projectInfo.ArtifactsRepositoryName));
+                LogMessage(string.Format("Project named '{0}' couldn't be found in TeamCity.", projectInfo.ArtifactsRepositoryName), MessageType.Trace);
 
                 projectConfigurations = new List<ProjectConfigurationInListViewModel>();
               }
@@ -621,7 +626,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage(string.Format("Done loading project configurations for project: '{0}'.", projectInfo.Name));
+              LogMessage(string.Format("Done loading project configurations for project: '{0}'.", projectInfo.Name), MessageType.Trace);
             }
           });
     }
@@ -648,7 +653,7 @@ namespace UberDeployer.WinApp.Forms
                 requestNumber = _projectConfigurationBuildsRequestsCounter;
               }
 
-              LogMessage(string.Format("Loading project configuration builds for project configuration: '{0} ({1})'...", projectConfiguration.ProjectName, projectConfiguration.Name));
+              LogMessage(string.Format("Loading project configuration builds for project configuration: '{0} ({1})'...", projectConfiguration.ProjectName, projectConfiguration.Name), MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
@@ -684,7 +689,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage(string.Format("Done loading project configuration builds for project configuration: '{0} ({1})'.", projectConfiguration.ProjectName, projectConfiguration.Name));
+              LogMessage(string.Format("Done loading project configuration builds for project configuration: '{0} ({1})'.", projectConfiguration.ProjectName, projectConfiguration.Name), MessageType.Trace);
             }
           });
     }
@@ -697,14 +702,40 @@ namespace UberDeployer.WinApp.Forms
       deployBackgroundWorker.RunWorkerAsync(projectDeploymentInfo);
     }
 
-    private void LogMessage(string message)
+    private void LogMessage(string message, MessageType messageType = MessageType.Info)
     {
+      if (messageType < MessageTypeThreshold)
+      {
+        return;
+      }
+
       GuiUtils.BeginInvoke(
         this,
         () =>
           {
+            txt_log.SelectionStart = txt_log.Text.Length;
+            txt_log.SelectionLength = 0;
+
+            switch (messageType)
+            {
+              case MessageType.Trace:
+                txt_log.SelectionColor = Color.DimGray;
+                break;
+              case MessageType.Info:
+                txt_log.SelectionColor = Color.Blue;
+                break;
+              case MessageType.Warning:
+                txt_log.SelectionColor = Color.FromArgb(191, 79, 0);
+                break;
+              case MessageType.Error:
+                txt_log.SelectionColor = Color.DarkRed;
+                break;
+            }
+
             txt_log.AppendText(message);
             txt_log.AppendText(Environment.NewLine);
+
+            txt_log.ScrollToCaret();
           });
     }
 
@@ -717,7 +748,7 @@ namespace UberDeployer.WinApp.Forms
           {
             try
             {
-              LogMessage("Loading environments...");
+              LogMessage("Loading environments...", MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               IEnvironmentInfoRepository environmentInfoRepository = ObjectFactory.Instance.CreateEnvironmentInfoRepository();
@@ -736,7 +767,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage("Done loading environments.");
+              LogMessage("Done loading environments.", MessageType.Trace);
             }
           });
     }
@@ -818,6 +849,15 @@ namespace UberDeployer.WinApp.Forms
       }
 
       return ((EnvironmentInfoInComboBoxViewModel)cbx_targetEnvironment.SelectedItem).EnvironmentInfo;
+    }
+
+    #endregion
+
+    #region Private properties
+
+    private MessageType MessageTypeThreshold
+    {
+      get { return (MessageType)cb_messageTypeThreshold.SelectedItem; }
     }
 
     #endregion
