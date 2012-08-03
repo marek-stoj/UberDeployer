@@ -18,7 +18,7 @@ namespace UberDeployer.Core.Domain
 
     #region Constructor(s)
 
-    public EnvironmentInfo(string name, string configurationTemplateName, string appServerMachineName, string failoverClusterMachineName, IEnumerable<string> webServerMachineNames, string terminalServerMachineName, string databaseServerMachineName, string ntServicesBaseDirPath, string webAppsBaseDirPath, string schedulerAppsBaseDirPath, string terminalAppsBaseDirPath, bool clusterNtServices, IEnumerable<EnvironmentUser> environmentUsers, IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings)
+    public EnvironmentInfo(string name, string configurationTemplateName, string appServerMachineName, string failoverClusterMachineName, IEnumerable<string> webServerMachineNames, string terminalServerMachineName, string databaseServerMachineName, string ntServicesBaseDirPath, string webAppsBaseDirPath, string schedulerAppsBaseDirPath, string terminalAppsBaseDirPath, bool enableFailoverClusteringForNtServices, IEnumerable<EnvironmentUser> environmentUsers, IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings)
     {
       if (string.IsNullOrEmpty(name))
       {
@@ -80,9 +80,9 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("environmentUsers");
       }
 
-      if (clusterNtServices && string.IsNullOrEmpty(failoverClusterMachineName))
+      if (enableFailoverClusteringForNtServices && string.IsNullOrEmpty(failoverClusterMachineName))
       {
-        throw new ArgumentException("If clusterNtServices is set, failoverClusterMachineName must not be empty.", "clusterNtServices");
+        throw new ArgumentException("If enableFailoverClusteringForNtServices is set, failoverClusterMachineName must not be empty.", "enableFailoverClusteringForNtServices");
       }
 
       if (projectToFailoverClusterGroupMappings == null)
@@ -101,7 +101,7 @@ namespace UberDeployer.Core.Domain
       WebAppsBaseDirPath = webAppsBaseDirPath;
       SchedulerAppsBaseDirPath = schedulerAppsBaseDirPath;
       TerminalAppsBaseDirPath = terminalAppsBaseDirPath;
-      ClusterNtServices = clusterNtServices;
+      EnableFailoverClusteringForNtServices = enableFailoverClusteringForNtServices;
 
       _environmentUsersDict = environmentUsers.ToDictionary(eu => eu.Id, eu => eu);
       _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(ptfcgm => ptfcgm.ProjectName);
@@ -215,7 +215,7 @@ namespace UberDeployer.Core.Domain
 
     public string TerminalAppsBaseDirPath { get; private set; }
 
-    public bool ClusterNtServices { get; private set; }
+    public bool EnableFailoverClusteringForNtServices { get; private set; }
 
     // TODO IMM HI: that attribute is for UI!
     [Browsable(false)]

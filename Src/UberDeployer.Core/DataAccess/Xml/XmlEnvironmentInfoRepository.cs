@@ -40,7 +40,7 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public string TerminalAppsBaseDirPath { get; set; }
 
-      public bool ClusterNtServices { get; set; }
+      public bool EnableFailoverClusteringForNtServices { get; set; }
 
       public List<EnvironmentUserXml> EnvironmentUsers { get; set; }
 
@@ -145,7 +145,7 @@ namespace UberDeployer.Core.DataAccess.Xml
               eiXml.WebAppsBaseDirPath,
               eiXml.SchedulerAppsBaseDirPath,
               eiXml.TerminalAppsBaseDirPath,
-              eiXml.ClusterNtServices,
+              eiXml.EnableFailoverClusteringForNtServices,
               eiXml.EnvironmentUsers.Select(
                 eu =>
                 new EnvironmentUser(

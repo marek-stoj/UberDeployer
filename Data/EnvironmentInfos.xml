@@ -7,6 +7,7 @@
       <Name>Local</Name>
       <ConfigurationTemplateName>Dev</ConfigurationTemplateName>
       <AppServerMachineName>localhost</AppServerMachineName>
+      <FailoverClusterMachineName></FailoverClusterMachineName>
       <WebServerMachineNames>
         <string>localhost</string>
       </WebServerMachineNames>
@@ -16,6 +17,7 @@
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
       <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
+      <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
       <EnvironmentUsers>
         <EnvironmentUserXml>
           <Id>Sample.User</Id>
@@ -39,7 +41,7 @@
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
       <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
-      <ClusterNtServices>false</ClusterNtServices>
+      <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
       <EnvironmentUsers>
         <EnvironmentUserXml>
           <Id>Sample.User</Id>

@@ -109,7 +109,8 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(extractArtifactsDeploymentStep);
 
-      if (!environmentInfo.ClusterNtServices)
+      if (environmentInfo.EnableFailoverClusteringForNtServices
+       && !string.IsNullOrEmpty(environmentInfo.GetFailoverClusterGroupNameForProject(ProjectName)))
       {
         DoPrepareDeploymentToStandardEnvironment(
           environmentInfo,

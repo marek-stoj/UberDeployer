@@ -14,9 +14,9 @@ namespace UberDeployer.Core.Deployment
 
     public MoveClusterGroupToAnotherNodeDeploymentStep(IFailoverClusterManager failoverClusterManager, string failoverClusterMachineName, string clusterGroupName, string targetNodeName)
     {
-      if (failoverClusterMachineName == null)
+      if (failoverClusterManager == null)
       {
-        throw new ArgumentNullException("failoverClusterMachineName");
+        throw new ArgumentNullException("failoverClusterManager");
       }
 
       if (string.IsNullOrEmpty(failoverClusterMachineName))
