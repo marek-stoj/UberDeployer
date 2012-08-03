@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.NtServices;
 using UberDeployer.Core.Management.ScheduledTasks;
 
@@ -159,6 +160,7 @@ namespace UberDeployer.Core.Tests.Domain
       var taskScheduler = new Mock<ITaskScheduler>(MockBehavior.Loose);
       var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Loose);
       var passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Loose);
+      var failoverClusterManager = new Mock<IFailoverClusterManager>(MockBehavior.Loose);
 
       var projectInfo =
         new NtServiceProjectInfo(
@@ -177,6 +179,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreateNtServiceManager()).Returns(ntServiceManager.Object);
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
+      objectFactory.Setup(o => o.CreateFailoverClusterManager()).Returns(failoverClusterManager.Object);
 
       projectInfo.CreateDeploymentTask(
         objectFactory.Object, "configName", "buildID", "targetEnvironmentName");

@@ -132,7 +132,7 @@ namespace UberDeployer.Core.Tests.Domain
     [Test]
     public void Test_EnvironmentInfoTests_Throws_When_FailoverClusterMachineName_null()
     {
-      Assert.Throws<ArgumentException>(
+      Assert.Throws<ArgumentNullException>(
         () =>
           {
             new EnvironmentInfo(
