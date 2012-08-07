@@ -15,7 +15,7 @@ namespace UberDeployer.Core.Deployment
         throw new InvalidOperationException("The task has already been prepared.");
       }
 
-      PostDiagnosticMessage(string.Format("Preparing: {0}", Description));
+      PostDiagnosticMessage(string.Format("Preparing: {0}", Description), MessageType.Trace);
 
       DoPrepare();
 

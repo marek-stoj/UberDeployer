@@ -109,15 +109,27 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(extractArtifactsDeploymentStep);
 
-      if (!environmentInfo.ClusterNtServices)
+      bool deployToClusteredEnvironment = environmentInfo.EnableFailoverClusteringForNtServices;
+
+      if (deployToClusteredEnvironment)
       {
-        DoPrepareDeploymentToStandardEnvironment(
+        if (string.IsNullOrEmpty(environmentInfo.GetFailoverClusterGroupNameForProject(ProjectName)))
+        {
+          PostDiagnosticMessage(string.Format("Failover clustering for NT services is enabled for environment '{0}' but there is no cluster group mapping for project '{1}'.", environmentInfo.Name, ProjectName), MessageType.Warning);
+
+          deployToClusteredEnvironment = false;
+        }
+      }
+
+      if (deployToClusteredEnvironment)
+      {
+        DoPrepareDeploymentToClusteredEnvironment(
           environmentInfo,
           extractArtifactsDeploymentStep.BinariesDirPath);
       }
       else
       {
-        DoPrepareDeploymentToClusteredEnvironment(
+        DoPrepareDeploymentToStandardEnvironment(
           environmentInfo,
           extractArtifactsDeploymentStep.BinariesDirPath);
       }

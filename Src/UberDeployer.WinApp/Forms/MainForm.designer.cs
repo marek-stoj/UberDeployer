@@ -51,11 +51,12 @@
       this.ProjectConfigurationBuildNumberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ProjectConfigurationBuildStatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ProjectConfigurationBuildWebLinkColumn = new System.Windows.Forms.DataGridViewLinkColumn();
-      this.txt_log = new System.Windows.Forms.TextBox();
+      this.txt_log = new System.Windows.Forms.RichTextBox();
       this.grpLog = new System.Windows.Forms.GroupBox();
-      this.panel2 = new System.Windows.Forms.Panel();
-      this.panel1 = new System.Windows.Forms.Panel();
+      this.label1 = new System.Windows.Forms.Label();
+      this.cb_messageTypeThreshold = new System.Windows.Forms.ComboBox();
       this.btn_clearLog = new System.Windows.Forms.Button();
+      this.panel2 = new System.Windows.Forms.Panel();
       this.btn_deploy = new System.Windows.Forms.Button();
       this.cbx_targetEnvironment = new System.Windows.Forms.ComboBox();
       this.label5 = new System.Windows.Forms.Label();
@@ -80,7 +81,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.dgv_projectConfigurationBuilds)).BeginInit();
       this.grpLog.SuspendLayout();
       this.panel2.SuspendLayout();
-      this.panel1.SuspendLayout();
       this.menuStrip1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pic_indeterminateProgress)).BeginInit();
       this.SuspendLayout();
@@ -95,7 +95,7 @@
       this.groupBox2.Location = new System.Drawing.Point(12, 27);
       this.groupBox2.Name = "groupBox2";
       this.groupBox2.Padding = new System.Windows.Forms.Padding(10);
-      this.groupBox2.Size = new System.Drawing.Size(281, 318);
+      this.groupBox2.Size = new System.Drawing.Size(281, 305);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Deployable projects";
@@ -125,7 +125,7 @@
       this.dgv_projectInfos.ReadOnly = true;
       this.dgv_projectInfos.RowHeadersVisible = false;
       this.dgv_projectInfos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-      this.dgv_projectInfos.Size = new System.Drawing.Size(262, 231);
+      this.dgv_projectInfos.Size = new System.Drawing.Size(262, 218);
       this.dgv_projectInfos.TabIndex = 1;
       this.dgv_projectInfos.SelectionChanged += new System.EventHandler(this.dgv_projectInfos_SelectionChanged);
       // 
@@ -149,7 +149,7 @@
       // btn_openWebApp
       // 
       this.btn_openWebApp.Enabled = false;
-      this.btn_openWebApp.Location = new System.Drawing.Point(187, 287);
+      this.btn_openWebApp.Location = new System.Drawing.Point(187, 274);
       this.btn_openWebApp.Name = "btn_openWebApp";
       this.btn_openWebApp.Size = new System.Drawing.Size(85, 23);
       this.btn_openWebApp.TabIndex = 2;
@@ -160,7 +160,7 @@
       // btn_openProjectTargetFolder
       // 
       this.btn_openProjectTargetFolder.Enabled = false;
-      this.btn_openProjectTargetFolder.Location = new System.Drawing.Point(78, 287);
+      this.btn_openProjectTargetFolder.Location = new System.Drawing.Point(78, 274);
       this.btn_openProjectTargetFolder.Name = "btn_openProjectTargetFolder";
       this.btn_openProjectTargetFolder.Size = new System.Drawing.Size(103, 23);
       this.btn_openProjectTargetFolder.TabIndex = 1;
@@ -171,7 +171,7 @@
       // btn_showProjectInfo
       // 
       this.btn_showProjectInfo.Enabled = false;
-      this.btn_showProjectInfo.Location = new System.Drawing.Point(10, 287);
+      this.btn_showProjectInfo.Location = new System.Drawing.Point(10, 274);
       this.btn_showProjectInfo.Name = "btn_showProjectInfo";
       this.btn_showProjectInfo.Size = new System.Drawing.Size(62, 23);
       this.btn_showProjectInfo.TabIndex = 0;
@@ -187,7 +187,7 @@
       this.groupBox3.Location = new System.Drawing.Point(299, 27);
       this.groupBox3.Name = "groupBox3";
       this.groupBox3.Padding = new System.Windows.Forms.Padding(10);
-      this.groupBox3.Size = new System.Drawing.Size(195, 318);
+      this.groupBox3.Size = new System.Drawing.Size(195, 305);
       this.groupBox3.TabIndex = 2;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Project configurations";
@@ -195,7 +195,7 @@
       // btn_showDependencies
       // 
       this.btn_showDependencies.Enabled = false;
-      this.btn_showDependencies.Location = new System.Drawing.Point(10, 287);
+      this.btn_showDependencies.Location = new System.Drawing.Point(10, 274);
       this.btn_showDependencies.Name = "btn_showDependencies";
       this.btn_showDependencies.Size = new System.Drawing.Size(119, 23);
       this.btn_showDependencies.TabIndex = 0;
@@ -228,7 +228,7 @@
       this.dgv_projectConfigurations.ReadOnly = true;
       this.dgv_projectConfigurations.RowHeadersVisible = false;
       this.dgv_projectConfigurations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-      this.dgv_projectConfigurations.Size = new System.Drawing.Size(175, 231);
+      this.dgv_projectConfigurations.Size = new System.Drawing.Size(175, 218);
       this.dgv_projectConfigurations.TabIndex = 1;
       this.dgv_projectConfigurations.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_projectConfigurations_CellContentClick);
       this.dgv_projectConfigurations.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_projectConfigurations_CellDoubleClick);
@@ -260,7 +260,7 @@
       this.grp_projectConfigurationBuilds.Location = new System.Drawing.Point(500, 27);
       this.grp_projectConfigurationBuilds.Name = "grp_projectConfigurationBuilds";
       this.grp_projectConfigurationBuilds.Padding = new System.Windows.Forms.Padding(10);
-      this.grp_projectConfigurationBuilds.Size = new System.Drawing.Size(339, 318);
+      this.grp_projectConfigurationBuilds.Size = new System.Drawing.Size(339, 305);
       this.grp_projectConfigurationBuilds.TabIndex = 3;
       this.grp_projectConfigurationBuilds.TabStop = false;
       this.grp_projectConfigurationBuilds.Text = "Project configuration builds";
@@ -293,7 +293,7 @@
       this.dgv_projectConfigurationBuilds.ReadOnly = true;
       this.dgv_projectConfigurationBuilds.RowHeadersVisible = false;
       this.dgv_projectConfigurationBuilds.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-      this.dgv_projectConfigurationBuilds.Size = new System.Drawing.Size(316, 258);
+      this.dgv_projectConfigurationBuilds.Size = new System.Drawing.Size(316, 247);
       this.dgv_projectConfigurationBuilds.TabIndex = 1;
       this.dgv_projectConfigurationBuilds.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_projectConfigurationBuilds_CellContentClick);
       this.dgv_projectConfigurationBuilds.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_projectConfigurationBuilds_CellDoubleClick);
@@ -346,49 +346,52 @@
       // 
       // txt_log
       // 
+      this.txt_log.BorderStyle = System.Windows.Forms.BorderStyle.None;
+      this.txt_log.DetectUrls = false;
       this.txt_log.Dock = System.Windows.Forms.DockStyle.Fill;
       this.txt_log.Location = new System.Drawing.Point(0, 0);
-      this.txt_log.Multiline = true;
       this.txt_log.Name = "txt_log";
       this.txt_log.ReadOnly = true;
-      this.txt_log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.txt_log.Size = new System.Drawing.Size(821, 176);
+      this.txt_log.Size = new System.Drawing.Size(813, 231);
       this.txt_log.TabIndex = 0;
+      this.txt_log.Text = "";
       this.txt_log.WordWrap = false;
       // 
       // grpLog
       // 
       this.grpLog.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+      this.grpLog.Controls.Add(this.label1);
+      this.grpLog.Controls.Add(this.cb_messageTypeThreshold);
+      this.grpLog.Controls.Add(this.btn_clearLog);
       this.grpLog.Controls.Add(this.panel2);
-      this.grpLog.Controls.Add(this.panel1);
-      this.grpLog.Location = new System.Drawing.Point(12, 405);
+      this.grpLog.Location = new System.Drawing.Point(12, 378);
       this.grpLog.Name = "grpLog";
-      this.grpLog.Size = new System.Drawing.Size(827, 218);
+      this.grpLog.Size = new System.Drawing.Size(827, 287);
       this.grpLog.TabIndex = 8;
       this.grpLog.TabStop = false;
       this.grpLog.Text = "Log";
       // 
-      // panel2
+      // label1
       // 
-      this.panel2.Controls.Add(this.txt_log);
-      this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel2.Location = new System.Drawing.Point(3, 39);
-      this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(821, 176);
-      this.panel2.TabIndex = 8;
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(90, 24);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(57, 13);
+      this.label1.TabIndex = 10;
+      this.label1.Text = "Threshold:";
       // 
-      // panel1
+      // cb_messageTypeThreshold
       // 
-      this.panel1.Controls.Add(this.btn_clearLog);
-      this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-      this.panel1.Location = new System.Drawing.Point(3, 16);
-      this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(821, 23);
-      this.panel1.TabIndex = 0;
+      this.cb_messageTypeThreshold.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cb_messageTypeThreshold.FormattingEnabled = true;
+      this.cb_messageTypeThreshold.Location = new System.Drawing.Point(153, 20);
+      this.cb_messageTypeThreshold.Name = "cb_messageTypeThreshold";
+      this.cb_messageTypeThreshold.Size = new System.Drawing.Size(87, 21);
+      this.cb_messageTypeThreshold.TabIndex = 9;
       // 
       // btn_clearLog
       // 
-      this.btn_clearLog.Location = new System.Drawing.Point(3, 0);
+      this.btn_clearLog.Location = new System.Drawing.Point(6, 19);
       this.btn_clearLog.Name = "btn_clearLog";
       this.btn_clearLog.Size = new System.Drawing.Size(65, 23);
       this.btn_clearLog.TabIndex = 0;
@@ -396,10 +399,19 @@
       this.btn_clearLog.UseVisualStyleBackColor = true;
       this.btn_clearLog.Click += new System.EventHandler(this.btn_clearLog_Click);
       // 
+      // panel2
+      // 
+      this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.panel2.Controls.Add(this.txt_log);
+      this.panel2.Location = new System.Drawing.Point(6, 48);
+      this.panel2.Name = "panel2";
+      this.panel2.Size = new System.Drawing.Size(815, 233);
+      this.panel2.TabIndex = 8;
+      // 
       // btn_deploy
       // 
       this.btn_deploy.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-      this.btn_deploy.Location = new System.Drawing.Point(725, 359);
+      this.btn_deploy.Location = new System.Drawing.Point(725, 338);
       this.btn_deploy.Name = "btn_deploy";
       this.btn_deploy.Size = new System.Drawing.Size(114, 34);
       this.btn_deploy.TabIndex = 4;
@@ -412,7 +424,7 @@
       this.cbx_targetEnvironment.DisplayMember = "DisplayText";
       this.cbx_targetEnvironment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cbx_targetEnvironment.FormattingEnabled = true;
-      this.cbx_targetEnvironment.Location = new System.Drawing.Point(568, 366);
+      this.cbx_targetEnvironment.Location = new System.Drawing.Point(568, 346);
       this.cbx_targetEnvironment.Name = "cbx_targetEnvironment";
       this.cbx_targetEnvironment.Size = new System.Drawing.Size(121, 21);
       this.cbx_targetEnvironment.TabIndex = 6;
@@ -420,7 +432,7 @@
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(493, 370);
+      this.label5.Location = new System.Drawing.Point(493, 349);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(69, 13);
       this.label5.TabIndex = 5;
@@ -521,7 +533,7 @@
       // 
       // btn_showEnvironmentInfo
       // 
-      this.btn_showEnvironmentInfo.Location = new System.Drawing.Point(695, 365);
+      this.btn_showEnvironmentInfo.Location = new System.Drawing.Point(695, 344);
       this.btn_showEnvironmentInfo.Name = "btn_showEnvironmentInfo";
       this.btn_showEnvironmentInfo.Size = new System.Drawing.Size(24, 23);
       this.btn_showEnvironmentInfo.TabIndex = 7;
@@ -543,7 +555,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(851, 626);
+      this.ClientSize = new System.Drawing.Size(851, 677);
       this.Controls.Add(this.pic_indeterminateProgress);
       this.Controls.Add(this.btn_showEnvironmentInfo);
       this.Controls.Add(this.menuStrip1);
@@ -575,9 +587,8 @@
       this.grp_projectConfigurationBuilds.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dgv_projectConfigurationBuilds)).EndInit();
       this.grpLog.ResumeLayout(false);
+      this.grpLog.PerformLayout();
       this.panel2.ResumeLayout(false);
-      this.panel2.PerformLayout();
-      this.panel1.ResumeLayout(false);
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pic_indeterminateProgress)).EndInit();
@@ -591,7 +602,7 @@
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.GroupBox groupBox3;
     private System.Windows.Forms.GroupBox grp_projectConfigurationBuilds;
-    private System.Windows.Forms.TextBox txt_log;
+    private System.Windows.Forms.RichTextBox txt_log;
     private System.Windows.Forms.GroupBox grpLog;
     private System.Windows.Forms.Button btn_deploy;
     private System.Windows.Forms.PictureBox pic_indeterminateProgress;
@@ -601,7 +612,6 @@
     private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     private System.Windows.Forms.Panel panel2;
-    private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.Button btn_clearLog;
     private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem tsmi_reloadProjects;
@@ -631,6 +641,8 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildNumberColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn ProjectConfigurationBuildStatusColumn;
     private System.Windows.Forms.DataGridViewLinkColumn ProjectConfigurationBuildWebLinkColumn;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.ComboBox cb_messageTypeThreshold;
   }
 }
 
