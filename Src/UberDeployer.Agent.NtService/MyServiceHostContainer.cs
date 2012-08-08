@@ -111,9 +111,9 @@ namespace UberDeployer.Agent.NtService
 
       foreach (Type serviceHostType in serviceHostTypes)
       {
-        var krdServiceHost = new MyServiceHost(serviceHostType);
+        var serviceHost = new MyServiceHost(serviceHostType);
 
-        _serviceHosts.Add(krdServiceHost);
+        _serviceHosts.Add(serviceHost);
       }
     }
 
