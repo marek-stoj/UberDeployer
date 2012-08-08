@@ -1,0 +1,461 @@
+2012-08-08 07:56:45,898  INFO [5] - Application has started.|
+2012-08-08 07:56:48,709  WARN [5] - Service unavaiable; waiting (1).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0241024. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:56:50,748  WARN [5] - Service unavaiable; waiting (2).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0061006. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:56:52,785  WARN [5] - Service unavaiable; waiting (3).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0091009. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:56:54,822  WARN [5] - Service unavaiable; waiting (4).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0101010. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:56:56,859  WARN [5] - Service unavaiable; waiting (5).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0081008. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:56:58,897  WARN [5] - Service unavaiable; waiting (6).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0101010. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:00,933  WARN [5] - Service unavaiable; waiting (7).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0081008. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:02,972  WARN [5] - Service unavaiable; waiting (8).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0091009. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:05,018  WARN [5] - Service unavaiable; waiting (9).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0101010. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:07,023  WARN [5] - Service unavaiable; waiting (10).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0031003. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:09,025  WARN [5] - Service unavaiable; waiting (11).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0001000. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:11,026  WARN [5] - Service unavaiable; waiting (12).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0001000. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:13,027  WARN [5] - Service unavaiable; waiting (13).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0001000. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:15,024  WARN [5] - Service unavaiable; waiting (14).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:00.9950995. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:17,024  WARN [5] - Service unavaiable; waiting (15).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0001000. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:19,026  WARN [5] - Service unavaiable; waiting (16).|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0001000. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 07:57:19,026 ERROR [5] - Unhandled exception.|System.ServiceModel.EndpointNotFoundException: Nie mo¿na siê po³¹czyæ z net.tcp://localhost:50010/AgentService. Próba nawi¹zania po³¹czenia trwa³a 00:00:01.0001000. Kod b³êdu TCP 10061: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010.  ---> System.Net.Sockets.SocketException: Nie mo¿na nawi¹zaæ po³¹czenia, poniewa¿ komputer docelowy aktywnie go odmawia 127.0.0.1:50010
+   w System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   w System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   --- Koniec œladu stosu wyj¹tków wewnêtrznych ---
+
+Server stack trace: 
+   w System.ServiceModel.Channels.SocketConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.BufferedConnectionInitiator.Connect(Uri uri, TimeSpan timeout)
+   w System.ServiceModel.Channels.ConnectionPoolHelper.EstablishConnection(TimeSpan timeout)
+   w System.ServiceModel.Channels.ClientFramingDuplexSessionChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.OnOpen(TimeSpan timeout)
+   w System.ServiceModel.Channels.CommunicationObject.Open(TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOpenOnce.System.ServiceModel.Channels.ServiceChannel.ICallOnce.Call(ServiceChannel channel, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannel.CallOnceManager.CallOnce(TimeSpan timeout, CallOnceManager cascade)
+   w System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   w System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   w System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   w System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   w System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   w UberDeployer.Agent.Proxy.IAgentService.SayHello(String name)
+   w lambda_method(Closure , IAgentService )
+   w UberDeployer.Agent.Proxy.WcfProxy`1.DoExec[TResult](Func`2 func) w D:\Projects\UberDeployer\UberDeployer - git\Src\UberDeployer.Agent.Proxy\WcfProxy.cs:wiersz 183
+
+2012-08-08 08:05:16,686  INFO [16] - Application has started.|

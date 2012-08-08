@@ -32,3 +32,5 @@
 /Data/ApplicationConfiguration.xml
 /Data/EnvironmentInfos.xml
 /Data/ProjectInfos.xml
+bin
+obj
