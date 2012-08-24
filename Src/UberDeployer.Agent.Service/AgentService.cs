@@ -17,10 +17,6 @@ using log4net;
 
 namespace UberDeployer.Agent.Service
 {
-  // TODO IMM HI: xxx in case of exc (event validation fault) UnhandledExceptionsLoggingErrorHandler logs communication exception
-
-  // TODO IMM HI: xxx remove behavior
-  [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
   public class AgentService : IAgentService
   {
     private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

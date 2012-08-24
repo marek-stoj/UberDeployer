@@ -610,7 +610,7 @@ namespace UberDeployer.WinApp.Forms
               }
               catch (FaultException<ProjectNotFoundFault>)
               {
-                LogMessage(string.Format("Project with artifacts repository name '{0}' couldn't be found.", projectInfo.ArtifactsRepositoryName), MessageType.Trace);
+                LogMessage(string.Format("Project with artifacts repository name '{0}' couldn't be found.", projectInfo.ArtifactsRepositoryName), MessageType.Warning);
 
                 projectConfigurations = new List<ProjectConfigurationInListViewModel>();
               }

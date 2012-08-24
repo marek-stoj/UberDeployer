@@ -75,15 +75,6 @@ namespace UberDeployer.Agent.Proxy
 
     #endregion
 
-    #region IDiposable members
-
-    public void Dispose()
-    {
-      // zgodnosc ze stara wersja
-    }
-
-    #endregion
-
     #region Protected methods
 
     protected virtual TResult Exec<TResult>(Expression<Func<T, TResult>> func)
@@ -119,16 +110,7 @@ namespace UberDeployer.Agent.Proxy
           wcfProxy.ChannelFactory.Endpoint.Behaviors.Add(endpointBehavior);
         }
 
-        try
-        {
-          return func(wcfProxy.GetChannel());
-        }
-        catch (Exception)
-        {
-          wcfProxy.Abort();
-
-          throw;
-        }
+        return func(wcfProxy.GetChannel());
       }
     }
 
@@ -152,16 +134,7 @@ namespace UberDeployer.Agent.Proxy
           wcfProxy.ChannelFactory.Endpoint.Behaviors.Add(endpointBehavior);
         }
 
-        try
-        {
-          func(wcfProxy.GetChannel());
-        }
-        catch (Exception)
-        {
-          wcfProxy.Abort();
-
-          throw;
-        }
+        func(wcfProxy.GetChannel());
       }
     }
 
