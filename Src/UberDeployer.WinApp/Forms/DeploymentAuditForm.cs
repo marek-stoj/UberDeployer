@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using UberDeployer.CommonConfiguration;
-using UberDeployer.Core.Deployment.Pipeline.Modules;
+using UberDeployer.Agent.Proxy;
 using UberDeployer.WinApp.Utils;
 using UberDeployer.WinApp.ViewModels;
 
@@ -13,11 +12,15 @@ namespace UberDeployer.WinApp.Forms
   {
     private const int _MaxDeploymentRequestsCount = 100;
 
+    private readonly AgentServiceClient _agentServiceClient;
+
     #region Constructor(s)
 
     public DeploymentAuditForm()
     {
       InitializeComponent();
+
+      _agentServiceClient = new AgentServiceClient();
     }
 
     #endregion
@@ -58,6 +61,7 @@ namespace UberDeployer.WinApp.Forms
     {
       GuiUtils.BeginInvoke(this, () => dgv_deploymentRequests.DataSource = null);
 
+
       ThreadPool.QueueUserWorkItem(
         state =>
           {
@@ -65,10 +69,8 @@ namespace UberDeployer.WinApp.Forms
             {
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
-              IDeploymentRequestRepository deploymentRequestRepository = ObjectFactory.Instance.CreateDeploymentRequestRepository();
-
               IEnumerable<DeploymentRequestInListViewModel> deploymentRequests =
-                deploymentRequestRepository.GetDeploymentRequests(0, _MaxDeploymentRequestsCount)
+                _agentServiceClient.GetDeploymentRequests(0, _MaxDeploymentRequestsCount)
                   .Select(dr => new DeploymentRequestInListViewModel(dr))
                   .ToList();
 

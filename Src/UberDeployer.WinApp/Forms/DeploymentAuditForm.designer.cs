@@ -31,7 +31,7 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeploymentAuditForm));
       this.pic_indeterminateProgress = new System.Windows.Forms.PictureBox();
       this.grp_deploymentRequests = new System.Windows.Forms.GroupBox();
-      this.dgv_deploymentRequests = new UberDeployer.WinApp.CustomControls.MyDataGridView();
+      this.dgv_deploymentRequests = new CustomControls.MyDataGridView();
       this.DateRequestedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.RequesterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ProjectColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();

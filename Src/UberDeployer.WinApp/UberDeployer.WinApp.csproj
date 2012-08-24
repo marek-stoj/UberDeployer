@@ -26,15 +26,9 @@
     <OutputPath>..\..\bin\UberDeployer.WinApp\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="msdeploy, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\..\Lib\MsWebDeploy\msdeploy.exe</HintPath>
-    </Reference>
-    <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,12 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\ConfigurationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigurationForm.designer.cs">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\DbVersionsDiffForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,7 +84,9 @@
     <Compile Include="Forms\ViewProjectInfoForm.designer.cs">
       <DependentUpon>ViewProjectInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="InternalException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dapper\SqlMapper.cs" />
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\GuiUtils.cs" />
     <Compile Include="Utils\SystemUtils.cs" />
@@ -110,9 +100,6 @@
     <Compile Include="ViewModels\ProjectConfigurationBuildInListViewModel.cs" />
     <Compile Include="ViewModels\ProjectConfigurationInListViewModel.cs" />
     <Compile Include="ViewModels\ProjectInfoInListViewModel.cs" />
-    <EmbeddedResource Include="Forms\ConfigurationForm.resx">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DbVersionsDiffForm.resx">
       <DependentUpon>DbVersionsDiffForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -161,32 +148,17 @@
       <Project>{C223DA00-7413-4BEE-B4A3-272E8E02CC45}</Project>
       <Name>ProjectDepsVisualizer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
-      <Project>{1F7893B7-4540-4469-BE29-39A3BEEE2584}</Project>
-      <Name>UberDeployer.CommonConfiguration</Name>
+    <ProjectReference Include="..\UberDeployer.Agent.Proxy\UberDeployer.Agent.Proxy.csproj">
+      <Project>{20970513-4A64-420E-B814-4D8FC89698FA}</Project>
+      <Name>UberDeployer.Agent.Proxy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
-      <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
-      <Name>UberDeployer.Core</Name>
+    <ProjectReference Include="..\UberDeployer.Core.DbDiff\UberDeployer.Core.DbDiff.csproj">
+      <Project>{42554C30-1E25-4ABC-814C-A4B624713212}</Project>
+      <Name>UberDeployer.Core.DbDiff</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\indeterminate_progress.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\Data\ApplicationConfiguration.xml">
-      <Link>Data\ApplicationConfiguration.xml</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Data\EnvironmentInfos.xml">
-      <Link>Data\EnvironmentInfos.xml</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Data\ProjectInfos.xml">
-      <Link>Data\ProjectInfos.xml</Link>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

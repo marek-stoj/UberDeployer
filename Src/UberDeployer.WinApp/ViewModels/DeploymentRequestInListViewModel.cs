@@ -1,5 +1,5 @@
 using System;
-using UberDeployer.Core.Deployment.Pipeline.Modules;
+using UberDeployer.Agent.Proxy.Dto;
 
 namespace UberDeployer.WinApp.ViewModels
 {

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\UberDeployer.Agent.Proxy\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\UberDeployer.Agent.Proxy\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,9 +47,40 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
+    <Compile Include="Dto\DeploymentRequest.cs" />
+    <Compile Include="Dto\ProjectConfigurationBuildFilter.cs" />
+    <Compile Include="Dto\ProjectConfigurationFilter.cs" />
+    <Compile Include="Dto\DbProjectInfo.cs" />
+    <Compile Include="Dto\EnvironmentUser.cs" />
+    <Compile Include="Dto\IisAppPoolInfo.cs" />
+    <Compile Include="Dto\IisAppPoolMode.cs" />
+    <Compile Include="Dto\IisAppPoolVersion.cs" />
+    <Compile Include="Dto\ProjectToFailoverClusterGroupMapping.cs" />
+    <Compile Include="Dto\SchedulerAppProjectInfo.cs" />
+    <Compile Include="Dto\TeamCity\BuildsLocation.cs" />
+    <Compile Include="Dto\TeamCity\BuildStatus.cs" />
+    <Compile Include="Dto\TeamCity\Project.cs" />
+    <Compile Include="Dto\TeamCity\ProjectConfiguration.cs" />
+    <Compile Include="Dto\TeamCity\ProjectConfigurationBuild.cs" />
+    <Compile Include="Dto\TeamCity\ProjectConfigurationBuildsList.cs" />
+    <Compile Include="Dto\TeamCity\ProjectConfigurationDetails.cs" />
+    <Compile Include="Dto\TeamCity\ProjectConfigurationsList.cs" />
+    <Compile Include="Dto\TeamCity\ProjectDetails.cs" />
+    <Compile Include="Dto\TeamCity\ProjectsList.cs" />
+    <Compile Include="Dto\EnvironmentInfo.cs" />
+    <Compile Include="Dto\TerminalAppProjectInfo.cs" />
+    <Compile Include="Faults\EnvironmentNotFoundFault.cs" />
+    <Compile Include="Faults\ProjectConfigurationNotFoundFault.cs" />
     <Compile Include="IAgentService.cs" />
+    <Compile Include="Dto\MessageType.cs" />
+    <Compile Include="Dto\NtServiceProjectInfo.cs" />
+    <Compile Include="Dto\ProjectInfo.cs" />
+    <Compile Include="Faults\ProjectNotFoundFault.cs" />
+    <Compile Include="Dto\ProjectFilter.cs" />
     <Compile Include="WcfProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dto\WebAppProjectInfo.cs" />
+    <Compile Include="Dto\WebServiceProjectInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UberDeployer.Common\UberDeployer.Common.csproj">

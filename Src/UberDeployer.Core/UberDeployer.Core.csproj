@@ -78,8 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
-    <Compile Include="DbDiff\DbVersion.cs" />
-    <Compile Include="DbDiff\DbVersionsModel.cs" />
     <Compile Include="Deployment\CollectedCredentials.cs" />
     <Compile Include="Deployment\DeferredEnumerable.cs" />
     <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStep.cs" />
@@ -90,6 +88,7 @@
     <Compile Include="Domain\UI\ProjectToFailoverClusterGroupMappingsCollection.cs" />
     <Compile Include="Domain\UI\ProjectToFailoverClusterGroupMappingCollectionConverter.cs" />
     <Compile Include="Domain\UI\ProjectToFailoverClusterGroupMappingConverter.cs" />
+    <Compile Include="InternalException.cs" />
     <Compile Include="Management\FailoverCluster\IFailoverClusterManager.cs" />
     <Compile Include="Domain\UI\EnvironmentUserCollectionPropertyDescriptor.cs" />
     <Compile Include="Domain\UI\EnvironmentUserConverter.cs" />
@@ -187,7 +186,6 @@
     <Compile Include="Deployment\CopyFilesDeploymentStep.cs" />
     <Compile Include="Deployment\DeploymentTask.cs" />
     <Compile Include="Deployment\DeploymentTaskException.cs" />
-    <Compile Include="InternalException.cs" />
     <Compile Include="Domain\NtServiceProjectInfo.cs" />
     <Compile Include="Domain\ProjectInfo.cs" />
     <Compile Include="DataAccess\TeamCityArtifactsRepository.cs" />
@@ -212,6 +210,12 @@
     <EmbeddedResource Include="Deployment\PasswordPromptForm.resx">
       <DependentUpon>PasswordPromptForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UberDeployer.Core.DbDiff\UberDeployer.Core.DbDiff.csproj">
+      <Project>{42554C30-1E25-4ABC-814C-A4B624713212}</Project>
+      <Name>UberDeployer.Core.DbDiff</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

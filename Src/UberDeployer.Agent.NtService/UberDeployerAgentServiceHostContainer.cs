@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using UberDeployer.Agent.Service;
+using UberDeployer.CommonConfiguration;
 
 namespace UberDeployer.Agent.NtService
 {
   public class UberDeployerAgentServiceHostContainer : MyServiceHostContainer
   {
+    protected override void OnServiceHostsStarting()
+    {
+      Bootstraper.Bootstrap();
+
+      base.OnServiceHostsStarting();
+    }
+
     protected override string ApplicationName
     {
       get { return "UberDeployer.Agent.NtService"; }

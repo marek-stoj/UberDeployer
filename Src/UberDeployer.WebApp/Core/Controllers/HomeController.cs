@@ -8,9 +8,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     [HttpGet]
     public ActionResult Index()
     {
-      var agentServiceClient = new AgentServiceClient();
-
-      return Content(agentServiceClient.SayHello("Mark"));
+      return Content("OK!");
     }
   }
 }

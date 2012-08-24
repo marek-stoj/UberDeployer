@@ -6,19 +6,21 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using UberDeployer.CommonConfiguration;
-using UberDeployer.Core;
+using UberDeployer.Agent.Proxy;
+using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Core.DbDiff;
-using UberDeployer.Core.Domain;
-using UberDeployer.Core.DataAccess.Dapper;
+using UberDeployer.WinApp.Dapper;
 using UberDeployer.WinApp.Utils;
 
 namespace UberDeployer.WinApp.Forms
 {
+  // TODO IMM HI: move to agent service
   public partial class DbVersionsDiffForm : UberDeployerForm
   {
     private static readonly HashSet<string> _IgnoredDatabaseNames = new HashSet<string> { "MASTER", "MODEL", "MSDB", "TEMPDB", };
-    
+
+    private readonly AgentServiceClient _agentServiceClient;
+
     private DbVersionsModel _currentDbVersionsModel;
 
     #region Constructor(s)
@@ -26,6 +28,8 @@ namespace UberDeployer.WinApp.Forms
     public DbVersionsDiffForm()
     {
       InitializeComponent();
+
+      _agentServiceClient = new AgentServiceClient();
     }
 
     #endregion
@@ -105,12 +109,13 @@ namespace UberDeployer.WinApp.Forms
 
       return
         dbVersions
-          .Select(dbVersion =>
-                    {
-                      object value = ((IDictionary<string, object>)dbVersion)[versionColumnName];
+          .Select(
+            dbVersion =>
+              {
+                object value = ((IDictionary<string, object>)dbVersion)[versionColumnName];
 
-                      return value != null ? (string)value : null;
-                    })
+                return value != null ? (string)value : null;
+              })
           .ToList();
     }
 
@@ -127,7 +132,7 @@ namespace UberDeployer.WinApp.Forms
             tableName,
             columnName));
 
-      return result.Count() > 0;
+      return result.Any();
     }
 
     private static void FormatGridViewCell(DataGridViewCellFormattingEventArgs e)
@@ -152,40 +157,37 @@ namespace UberDeployer.WinApp.Forms
 
       ThreadPool.QueueUserWorkItem(
         state =>
-        {
-          try
           {
-            ToggleIndeterminateProgress(true, pic_indeterminateProgress);
+            try
+            {
+              ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
-            IEnvironmentInfoRepository environmentInfoRepository = ObjectFactory.Instance.CreateEnvironmentInfoRepository();
+              List<EnvironmentInfo> environmentInfos =
+                _agentServiceClient.GetEnvironmentInfos();
 
-            List<EnvironmentInfo> allEnvironmentInfos =
-              environmentInfoRepository.GetAll()
-                .ToList();
+              environmentInfos.Sort((ei1, ei2) => string.CompareOrdinal(ei1.Name, ei2.Name));
 
-            allEnvironmentInfos.Sort((ei1, ei2) => string.Compare(ei1.Name, ei2.Name));
+              GuiUtils.BeginInvoke(
+                this,
+                () =>
+                  {
+                    dgv_environments.DataSource =
+                      environmentInfos
+                        .Select(ei => new EnvironmentInfoRow(ei))
+                        .ToList();
 
-            GuiUtils.BeginInvoke(
-              this,
-              () =>
-                {
-                  dgv_environments.DataSource =
-                    allEnvironmentInfos
-                      .Select(ei => new EnvironmentInfoRow(ei))
-                      .ToList();
-
-                  SelectAllEnvironments();
-                });
-          }
-          catch (Exception exc)
-          {
-            HandleThreadException(exc);
-          }
-          finally
-          {
-            ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-          }
-        });
+                    SelectAllEnvironments();
+                  });
+            }
+            catch (Exception exc)
+            {
+              HandleThreadException(exc);
+            }
+            finally
+            {
+              ToggleIndeterminateProgress(false, pic_indeterminateProgress);
+            }
+          });
     }
 
     private void SelectAllEnvironments()
@@ -227,7 +229,7 @@ namespace UberDeployer.WinApp.Forms
                 throw new InternalException("At least 2 environments should've been selected.");
               }
 
-              selectedEnvironments.Sort((ei1, ei2) => string.Compare(ei1.Name, ei2.Name));
+              selectedEnvironments.Sort((ei1, ei2) => string.CompareOrdinal(ei1.Name, ei2.Name));
 
               var dbVersionsModel = new DbVersionsModel();
 
@@ -313,7 +315,7 @@ namespace UberDeployer.WinApp.Forms
                   }
                 }
 
-                string[] values = new string[selectedEnvironments.Count];
+                object[] values = new object[selectedEnvironments.Count];
                 int i = 0;
 
                 foreach (EnvironmentInfo selectedEnvironment in selectedEnvironments)
@@ -340,7 +342,7 @@ namespace UberDeployer.WinApp.Forms
                       dgv_databasesInEnvironments.Rows[i++].HeaderCell.Value = databaseName;
                     }
 
-                    dgv_databasesInEnvironments.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+                    dgv_databasesInEnvironments.RowHeadersWidth = dgv_databasesInEnvironments.Width / 2;
 
                     if (dgv_databasesInEnvironments.Rows.Count > 0)
                     {
@@ -378,7 +380,7 @@ namespace UberDeployer.WinApp.Forms
 
       foreach (string dbVersion in allSortedDbVersions)
       {
-        string[] values = new string[allSortedEnvironmentNames.Count()];
+        object[] values = new object[allSortedEnvironmentNames.Count()];
         int i = 0;
 
         foreach (string environmentName in allSortedEnvironmentNames)

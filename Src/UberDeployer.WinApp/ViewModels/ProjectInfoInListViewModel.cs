@@ -1,6 +1,5 @@
 ﻿using System;
-using UberDeployer.Core;
-using UberDeployer.Core.Domain;
+using UberDeployer.Agent.Proxy.Dto;
 
 namespace UberDeployer.WinApp.ViewModels
 {

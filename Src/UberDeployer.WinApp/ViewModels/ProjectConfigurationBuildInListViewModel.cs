@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using UberDeployer.Core.TeamCity.Models;
+using UberDeployer.Agent.Proxy.Dto.TeamCity;
 
 namespace UberDeployer.WinApp.ViewModels
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using UberDeployer.Core.Domain;
+using UberDeployer.Agent.Proxy.Dto;
 
 namespace UberDeployer.WinApp.Forms
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using UberDeployer.CommonConfiguration;
 using UberDeployer.WinApp.Forms;
 
 namespace UberDeployer.WinApp
@@ -12,8 +11,6 @@ namespace UberDeployer.WinApp
     {
       Application.ThreadException += Application_ThreadException;
       AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
-      Bootstraper.Bootstrap();
 
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);

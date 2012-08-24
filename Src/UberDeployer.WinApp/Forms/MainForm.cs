@@ -4,15 +4,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading;
 using System.Windows.Forms;
-using UberDeployer.CommonConfiguration;
-using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Deployment.Pipeline;
-using UberDeployer.Core.Deployment.Pipeline.Modules;
-using UberDeployer.Core.Domain;
-using UberDeployer.Core.TeamCity;
-using UberDeployer.Core.TeamCity.Models;
+using UberDeployer.Agent.Proxy;
+using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.Agent.Proxy.Dto.TeamCity;
+using UberDeployer.Agent.Proxy.Faults;
 using UberDeployer.WinApp.Utils;
 using UberDeployer.WinApp.ViewModels;
 
@@ -32,12 +30,16 @@ namespace UberDeployer.WinApp.Forms
     private readonly object _projectsRequestsMutex = new object();
     private readonly object _projectConfigurationsRequestsMutex = new object();
     private readonly object _projectConfigurationBuildsRequestsMutex = new object();
+    
+    private readonly IAgentService _agentServiceClient;
 
     #region Constructor(s)
 
     public MainForm()
     {
       InitializeComponent();
+
+      _agentServiceClient = new AgentServiceClient();
     }
 
     #endregion
@@ -99,7 +101,11 @@ namespace UberDeployer.WinApp.Forms
 
       ToggleProjectConfigurationContextButtonsEnabled(true);
 
-      LoadProjectConfigurationBuilds(((ProjectConfigurationInListViewModel)dgv_projectConfigurations.SelectedRows[0].DataBoundItem).ProjectConfiguration);
+      var projectConfigurationInListViewModel = (ProjectConfigurationInListViewModel)dgv_projectConfigurations.SelectedRows[0].DataBoundItem;
+      string projectName = projectConfigurationInListViewModel.ProjectName;
+      ProjectConfiguration projectConfiguration = projectConfigurationInListViewModel.ProjectConfiguration;
+
+      LoadProjectConfigurationBuilds(projectName, projectConfiguration);
     }
 
     private void dgv_projectConfigurations_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -182,23 +188,16 @@ namespace UberDeployer.WinApp.Forms
         ProjectConfiguration projectConfiguration = projectDeploymentInfo.ProjectConfiguration;
         ProjectConfigurationBuild projectConfigurationBuild = projectDeploymentInfo.ProjectConfigurationBuild;
 
-        DeploymentTask deploymentTask =
-          projectInfo.CreateDeploymentTask(
-            ObjectFactory.Instance,
-            projectConfiguration.Name,
-            projectConfigurationBuild.Id,
-            projectDeploymentInfo.TargetEnvironmentName);
-
-        deploymentTask.DiagnosticMessagePosted +=
-          (eventSender, args) => LogMessage(args.Message, args.MessageType);
-
         LogMessage(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", MessageType.Info);
         startSeparatorWasLogged = true;
 
-        IDeploymentPipeline deploymentPipeline =
-          ObjectFactory.Instance.CreateDeploymentPipeline();
-
-        deploymentPipeline.StartDeployment(deploymentTask);
+        // TODO IMM HI: xxx get log messages from service (WCF duplex?)
+        _agentServiceClient
+          .BeginDeploymentJob(
+            projectInfo.Name,
+            projectConfiguration.Name,
+            projectConfigurationBuild.Id,
+            projectDeploymentInfo.TargetEnvironmentName);
       }
       catch (Exception exc)
       {
@@ -252,13 +251,6 @@ namespace UberDeployer.WinApp.Forms
       }
 
       string targetEnvironmentName = GetSelectedEnvironment().Name;
-
-      if (targetEnvironmentName == EnforceTargetEnvironmentConstraintsModule.ProductionEnvironmentName
-       && projectConfiguration.Name != EnforceTargetEnvironmentConstraintsModule.ProductionProjectConfigurationName)
-      {
-        AppUtils.NotifyUserInvalidOperation(string.Format("Can't deploy project ('{0}') with non-production configuration ('{1}') to the production environment!", projectConfiguration.ProjectName, projectConfiguration.Name));
-        return;
-      }
 
       Deploy(new ProjectDeploymentInfo(projectInfo, projectConfiguration, projectConfigurationBuild, targetEnvironmentName));
     }
@@ -369,8 +361,9 @@ namespace UberDeployer.WinApp.Forms
     private void OpenWebApp(WebAppProjectInfo webAppProjectInfo, EnvironmentInfo environmentInfo)
     {
       List<string> targetUrls =
-        webAppProjectInfo.GetTargetUrls(environmentInfo)
-          .ToList();
+        _agentServiceClient.GetWebAppProjectTargetUrls(
+          webAppProjectInfo.Name,
+          environmentInfo.Name);
 
       if (targetUrls.Count == 1)
       {
@@ -386,11 +379,6 @@ namespace UberDeployer.WinApp.Forms
     private void reloadProjectsToolStripMenuItem_Click(object sender, EventArgs e)
     {
       LoadProjects();
-    }
-
-    private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      OpenConfigurationForm();
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -414,58 +402,67 @@ namespace UberDeployer.WinApp.Forms
 
     private void txtFilter_TextChanged(object sender, EventArgs e)
     {
-      IProjectInfoRepository projectInfoRepository = ObjectFactory.Instance.CreateProjectInfoRepository();
+      ProjectFilter projectFilter =
+        !string.IsNullOrEmpty(txtFilter.Text)
+          ? new ProjectFilter { Name = txtFilter.Text, }
+          : ProjectFilter.Empty;
 
-      IEnumerable<ProjectInfoInListViewModel> filteredProjects =
-        projectInfoRepository.GetAll()
+      List<ProjectInfo> projectInfos =
+        _agentServiceClient.GetProjectInfos(projectFilter);
+
+      List<ProjectInfoInListViewModel> projectInfoViewModels =
+        projectInfos
           .Select(p => new ProjectInfoInListViewModel(p))
-          .Where(ob => ob.Name.ToLower().Contains(txtFilter.Text.ToLower()) || ob.Type.ToLower().Contains(txtFilter.Text.ToLower()))
           .ToList();
 
-      dgv_projectInfos.DataSource = filteredProjects;
+      GuiUtils.BeginInvoke(this, () => dgv_projectInfos.DataSource = projectInfoViewModels);
     }
 
     private void txtFilterConfigs_TextChanged(object sender, EventArgs e)
     {
       ProjectInfo projectInfo = GetSelectedProjectInfo();
-      ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-      
-      Project project = teamCityClient.GetProjectByName(projectInfo.ArtifactsRepositoryName);
-      ProjectDetails projectDetails = teamCityClient.GetProjectDetails(project);
 
-      List<ProjectConfigurationInListViewModel> projectConfigurations =
-        (projectDetails.ConfigurationsList != null && projectDetails.ConfigurationsList.Configurations != null)
-          ? projectDetails.ConfigurationsList.Configurations
-              .Select(pc => new ProjectConfigurationInListViewModel(pc))
-              .Where(ob => ob.Name.ToLower().Contains(txtFilterConfigs.Text.ToLower()))
-              .ToList()
-          : new List<ProjectConfigurationInListViewModel>();
+      ProjectConfigurationFilter projectConfigurationFilter =
+        !string.IsNullOrEmpty(txtFilterConfigs.Text)
+          ? new ProjectConfigurationFilter { Name = txtFilterConfigs.Text, }
+          : ProjectConfigurationFilter.Empty;
 
-      GuiUtils.BeginInvoke(this, () => dgv_projectConfigurations.DataSource = projectConfigurations);
+      List<ProjectConfiguration> projectConfigurations =
+        _agentServiceClient.GetProjectConfigurations(
+          projectInfo.Name,
+          projectConfigurationFilter);
+
+      List<ProjectConfigurationInListViewModel> projectConfigurationViewModels =
+        projectConfigurations
+          .Select(pc => new ProjectConfigurationInListViewModel(projectInfo.Name, pc))
+          .ToList();
+
+      GuiUtils.BeginInvoke(this, () => dgv_projectConfigurations.DataSource = projectConfigurationViewModels);
     }
 
     private void txtFilterBuilds_TextChanged(object sender, EventArgs e)
     {
+      ProjectInfo projectInfo = GetSelectedProjectInfo();
       ProjectConfiguration projectConfiguration = GetSelectedProjectConfiguration();
-      ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-      
-      ProjectConfigurationDetails projectConfigurationDetails =
-        teamCityClient.GetProjectConfigurationDetails(projectConfiguration);
-      
-      ProjectConfigurationBuildsList projectConfigurationBuildsList =
-        teamCityClient.GetProjectConfigurationBuilds(projectConfigurationDetails, 0, _MaxProjectConfigurationBuildsCount);
 
-      List<ProjectConfigurationBuildInListViewModel> projectConfigurationBuilds =
-        (projectConfigurationBuildsList.Builds != null)
-          ? projectConfigurationBuildsList.Builds
-              .Select(pcb => new ProjectConfigurationBuildInListViewModel { ProjectConfigurationBuild = pcb })
-              .Where(ob => ob.Id.ToLower().Contains(txtFilterBuilds.Text.ToLower()) ||
-                           ob.Number.ToLower().Contains(txtFilterBuilds.Text.ToLower()) ||
-                           ob.Status.ToLower().Contains(txtFilterBuilds.Text.ToLower()))
-              .ToList()
-          : new List<ProjectConfigurationBuildInListViewModel>();
+      var projectConfigurationBuildFilter =
+        !string.IsNullOrEmpty(txtFilterBuilds.Text)
+          ? new ProjectConfigurationBuildFilter { Number = txtFilterBuilds.Text, }
+          : ProjectConfigurationBuildFilter.Empty;
 
-      GuiUtils.BeginInvoke(this, () => dgv_projectConfigurationBuilds.DataSource = projectConfigurationBuilds);
+      List<ProjectConfigurationBuild> projectConfigurationBuilds =
+        _agentServiceClient.GetProjectConfigurationBuilds(
+          projectInfo.Name,
+          projectConfiguration.Name,
+          _MaxProjectConfigurationBuildsCount,
+          projectConfigurationBuildFilter);
+
+      List<ProjectConfigurationBuildInListViewModel> projectConfigurationBuildViewModels =
+        projectConfigurationBuilds
+          .Select(pcb => new ProjectConfigurationBuildInListViewModel { ProjectConfigurationBuild = pcb })
+          .ToList();
+
+      GuiUtils.BeginInvoke(this, () => dgv_projectConfigurationBuilds.DataSource = projectConfigurationBuildViewModels);
     }
 
     private void dependenciesVisualizerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -479,11 +476,12 @@ namespace UberDeployer.WinApp.Forms
 
     #region Private methods
 
-    private static void OpenProjectTargetFolder(ProjectInfo projectInfo, EnvironmentInfo environmentInfo)
+    private void OpenProjectTargetFolder(ProjectInfo projectInfo, EnvironmentInfo environmentInfo)
     {
       List<string> projectTargetFolders =
-        projectInfo.GetTargetFolders(environmentInfo)
-          .ToList();
+        _agentServiceClient.GetProjectTargetFolders(
+          projectInfo.Name,
+          environmentInfo.Name);
 
       if (projectTargetFolders.Count == 1)
       {
@@ -498,7 +496,16 @@ namespace UberDeployer.WinApp.Forms
 
     private void LoadProjects()
     {
-      GuiUtils.BeginInvoke(this, () => { dgv_projectInfos.DataSource = null; });
+      GuiUtils.BeginInvoke(
+        this,
+        () =>
+          {
+            dgv_projectInfos.DataSource = null;
+
+            txtFilter.Text = "";
+            txtFilterConfigs.Text = "";
+            txtFilterBuilds.Text = "";
+          });
 
       ThreadPool.QueueUserWorkItem(
         state =>
@@ -516,10 +523,8 @@ namespace UberDeployer.WinApp.Forms
               LogMessage("Loading projects...", MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
-              IProjectInfoRepository projectInfoRepository = ObjectFactory.Instance.CreateProjectInfoRepository();
-
-              IEnumerable<ProjectInfoInListViewModel> allProjects =
-                projectInfoRepository.GetAll()
+              List<ProjectInfoInListViewModel> allProjects =
+                _agentServiceClient.GetProjectInfos(ProjectFilter.Empty)
                   .Select(p => new ProjectInfoInListViewModel(p))
                   .ToList();
 
@@ -568,7 +573,15 @@ namespace UberDeployer.WinApp.Forms
 
     private void LoadProjectConfigurations(ProjectInfo projectInfo)
     {
-      GuiUtils.BeginInvoke(this, () => dgv_projectConfigurations.DataSource = null);
+      GuiUtils.BeginInvoke(
+        this,
+        () =>
+          {
+            dgv_projectConfigurations.DataSource = null;
+
+            txtFilterConfigs.Text = "";
+            txtFilterBuilds.Text = "";
+          });
 
       ThreadPool.QueueUserWorkItem(
         state =>
@@ -586,24 +599,18 @@ namespace UberDeployer.WinApp.Forms
               LogMessage(string.Format("Loading project configurations for project: '{0}'...", projectInfo.Name), MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
-              ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-              Project project = teamCityClient.GetProjectByName(projectInfo.ArtifactsRepositoryName);
               List<ProjectConfigurationInListViewModel> projectConfigurations;
 
-              if (project != null)
+              try
               {
-                ProjectDetails projectDetails = teamCityClient.GetProjectDetails(project);
-
                 projectConfigurations =
-                  (projectDetails.ConfigurationsList != null && projectDetails.ConfigurationsList.Configurations != null)
-                    ? projectDetails.ConfigurationsList.Configurations
-                        .Select(pc => new ProjectConfigurationInListViewModel(pc))
-                        .ToList()
-                    : new List<ProjectConfigurationInListViewModel>();
+                  _agentServiceClient.GetProjectConfigurations(projectInfo.Name, ProjectConfigurationFilter.Empty)
+                    .Select(pc => new ProjectConfigurationInListViewModel(projectInfo.Name, pc))
+                    .ToList();
               }
-              else
+              catch (FaultException<ProjectNotFoundFault>)
               {
-                LogMessage(string.Format("Project named '{0}' couldn't be found in TeamCity.", projectInfo.ArtifactsRepositoryName), MessageType.Trace);
+                LogMessage(string.Format("Project with artifacts repository name '{0}' couldn't be found.", projectInfo.ArtifactsRepositoryName), MessageType.Trace);
 
                 projectConfigurations = new List<ProjectConfigurationInListViewModel>();
               }
@@ -636,9 +643,16 @@ namespace UberDeployer.WinApp.Forms
       GuiUtils.BeginInvoke(this, () => dgv_projectConfigurationBuilds.DataSource = new List<ProjectConfigurationBuildInListViewModel>());
     }
 
-    private void LoadProjectConfigurationBuilds(ProjectConfiguration projectConfiguration)
+    private void LoadProjectConfigurationBuilds(string projectName, ProjectConfiguration projectConfiguration)
     {
-      GuiUtils.BeginInvoke(this, () => dgv_projectConfigurationBuilds.DataSource = null);
+      GuiUtils.BeginInvoke(
+        this,
+        () =>
+          {
+            dgv_projectConfigurationBuilds.DataSource = null;
+
+            txtFilterBuilds.Text = "";
+          });
 
       ThreadPool.QueueUserWorkItem(
         state =>
@@ -653,23 +667,13 @@ namespace UberDeployer.WinApp.Forms
                 requestNumber = _projectConfigurationBuildsRequestsCounter;
               }
 
-              LogMessage(string.Format("Loading project configuration builds for project configuration: '{0} ({1})'...", projectConfiguration.ProjectName, projectConfiguration.Name), MessageType.Trace);
+              LogMessage(string.Format("Loading project configuration builds for project configuration: '{0} ({1})'...", projectName, projectConfiguration.Name), MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
-              ITeamCityClient teamCityClient = ObjectFactory.Instance.CreateTeamCityClient();
-
-              ProjectConfigurationDetails projectConfigurationDetails =
-                teamCityClient.GetProjectConfigurationDetails(projectConfiguration);
-
-              ProjectConfigurationBuildsList projectConfigurationBuildsList =
-                teamCityClient.GetProjectConfigurationBuilds(projectConfigurationDetails, 0, _MaxProjectConfigurationBuildsCount);
-
               List<ProjectConfigurationBuildInListViewModel> projectConfigurationBuilds =
-                projectConfigurationBuildsList.Builds != null
-                  ? projectConfigurationBuildsList.Builds
-                      .Select(pcb => new ProjectConfigurationBuildInListViewModel { ProjectConfigurationBuild = pcb })
-                      .ToList()
-                  : new List<ProjectConfigurationBuildInListViewModel>();
+                _agentServiceClient.GetProjectConfigurationBuilds(projectName, projectConfiguration.Name, _MaxProjectConfigurationBuildsCount, ProjectConfigurationBuildFilter.Empty)
+                  .Select(pcb => new ProjectConfigurationBuildInListViewModel { ProjectConfigurationBuild = pcb })
+                  .ToList();
 
               lock (_projectConfigurationBuildsRequestsMutex)
               {
@@ -704,15 +708,15 @@ namespace UberDeployer.WinApp.Forms
 
     private void LogMessage(string message, MessageType messageType = MessageType.Info)
     {
-      if (messageType < MessageTypeThreshold)
-      {
-        return;
-      }
-
       GuiUtils.BeginInvoke(
         this,
         () =>
           {
+            if (messageType < MessageTypeThreshold)
+            {
+              return;
+            }
+
             txt_log.SelectionStart = txt_log.Text.Length;
             txt_log.SelectionLength = 0;
 
@@ -751,10 +755,8 @@ namespace UberDeployer.WinApp.Forms
               LogMessage("Loading environments...", MessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
-              IEnvironmentInfoRepository environmentInfoRepository = ObjectFactory.Instance.CreateEnvironmentInfoRepository();
-
-              var allEnvironmentInfos =
-                environmentInfoRepository.GetAll()
+              List<EnvironmentInfoInComboBoxViewModel> allEnvironmentInfos =
+                _agentServiceClient.GetEnvironmentInfos()
                   .Select(ei => new EnvironmentInfoInComboBoxViewModel { EnvironmentInfo = ei })
                   .ToList();
 
@@ -770,12 +772,6 @@ namespace UberDeployer.WinApp.Forms
               LogMessage("Done loading environments.", MessageType.Trace);
             }
           });
-    }
-
-    private void OpenConfigurationForm()
-    {
-      new ConfigurationForm()
-        .ShowDialog();
     }
 
     private void OpenProjectConfigurationInBrowser(int rowIndex)

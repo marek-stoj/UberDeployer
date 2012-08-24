@@ -62,7 +62,6 @@
       this.label5 = new System.Windows.Forms.Label();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -453,32 +452,22 @@
       // fileToolStripMenuItem
       // 
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.configurationToolStripMenuItem,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
       this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
       this.fileToolStripMenuItem.Text = "&File";
       // 
-      // configurationToolStripMenuItem
-      // 
-      this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-      this.configurationToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.C)));
-      this.configurationToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-      this.configurationToolStripMenuItem.Text = "&Configuration";
-      this.configurationToolStripMenuItem.Click += new System.EventHandler(this.configurationToolStripMenuItem_Click);
-      // 
       // toolStripMenuItem1
       // 
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(210, 6);
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(130, 6);
       // 
       // exitToolStripMenuItem
       // 
       this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
       this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-      this.exitToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+      this.exitToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
       this.exitToolStripMenuItem.Text = "E&xit";
       this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
       // 
@@ -525,7 +514,6 @@
       // 
       // dbVersionsDiffToolStripMenuItem
       // 
-      this.dbVersionsDiffToolStripMenuItem.Enabled = false;
       this.dbVersionsDiffToolStripMenuItem.Name = "dbVersionsDiffToolStripMenuItem";
       this.dbVersionsDiffToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
       this.dbVersionsDiffToolStripMenuItem.Text = "Database versions diff";
@@ -615,7 +603,6 @@
     private System.Windows.Forms.Button btn_clearLog;
     private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem tsmi_reloadProjects;
-    private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     private CustomControls.MyDataGridView dgv_projectConfigurations;
     private CustomControls.MyDataGridView dgv_projectConfigurationBuilds;

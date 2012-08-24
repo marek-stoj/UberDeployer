@@ -1,7 +1,6 @@
 using System;
-using UberDeployer.Core;
-using UberDeployer.Core.Domain;
-using UberDeployer.Core.TeamCity.Models;
+using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.Agent.Proxy.Dto.TeamCity;
 
 namespace UberDeployer.WinApp
 {

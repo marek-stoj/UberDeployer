@@ -31,6 +31,8 @@ namespace UberDeployer.CommonConfiguration
 
     private static ISessionFactory _sessionFactory;
 
+    private static readonly object _mutex = new object();
+
     public static void Bootstrap()
     {
       var container = ObjectFactory.Container;
@@ -110,9 +112,11 @@ namespace UberDeployer.CommonConfiguration
               {
                 var deploymentRequestRepository = container.Resolve<IDeploymentRequestRepository>();
                 var auditingModule = new AuditingModule(deploymentRequestRepository);
+                var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
                 var deploymentPipeline = new DeploymentPipeline();
 
                 deploymentPipeline.AddModule(auditingModule);
+                deploymentPipeline.AddModule(enforceTargetEnvironmentConstraintsModule);
 
                 return deploymentPipeline;
               })
@@ -160,7 +164,13 @@ namespace UberDeployer.CommonConfiguration
 
     private static ISessionFactory SessionFactory
     {
-      get { return _sessionFactory ?? (_sessionFactory = CreateNHibernateSessionFactory()); }
+      get
+      {
+        lock (_mutex)
+        {
+          return _sessionFactory ?? (_sessionFactory = CreateNHibernateSessionFactory());
+        }
+      }
     }
   }
 }

@@ -16,8 +16,8 @@ namespace UberDeployer.Agent.NtService
           new UberDeployerAgentServiceHostContainer();
 
         serviceHostContainer.Start();
-        Console.WriteLine("Press ENTER to exit...");
-        Console.ReadLine();
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
         serviceHostContainer.Stop();
       }
       else
