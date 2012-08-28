@@ -30,6 +30,7 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     public void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DateTime dateRequested, string projectName, string targetEnvironmentName, bool finishedSuccessfully)
     {
+      // TODO IMM HI: this won't do while running inside an NT service; we have to pass the credentials through WCF
       WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
       string requesterIdentity;
 
