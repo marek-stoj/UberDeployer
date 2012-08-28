@@ -29,8 +29,5 @@
 /Src/ProjectDepsVisualizer/StyleCop.Cache
 /UberDeployer.sln.lnk
 *.user
-/Data/ApplicationConfiguration.xml
-/Data/EnvironmentInfos.xml
-/Data/ProjectInfos.xml
 bin
 obj
