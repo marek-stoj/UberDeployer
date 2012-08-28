@@ -24,6 +24,7 @@
     <nunit2>
       <formatter type="Xml" usefile="true" extension=".xml" outputdir="Tests/Results" />
       <test assemblyname="Tests\UberDeployer.Core.Tests.dll" />
+      <test assemblyname="Tests\UberDeployer.Common.Tests.dll" />
     </nunit2>
   </target>
 	
