@@ -1,6 +1,5 @@
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
-  // TODO IMM HI: that's for UI!
   public class WebServerMachineNameCollectionPropertyDescriptor : CollectionPropertyDescriptor<WebServerMachineNameCollection>
   {
     #region Constructor(s)

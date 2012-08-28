@@ -1,10 +1,7 @@
 using System;
-using System.ComponentModel;
-using UberDeployer.Core.Domain.UI;
 
 namespace UberDeployer.Core.Domain
 {
-  [TypeConverter(typeof(EnvironmentUserConverter))] // TODO IMM HI: that's for UI!
   public class EnvironmentUser
   {
     #region Constructor(s)

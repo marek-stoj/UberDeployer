@@ -2,16 +2,15 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
-  // TODO IMM HI: that's for UI!
   public class ProjectToFailoverClusterGroupMappingConverter : ExpandableObjectConverter
   {
     public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destType)
     {
-      if (destType == typeof(string) && value is ProjectToFailoverClusterGroupMapping)
+      if (destType == typeof(string) && value is ProjectToFailoverClusterGroupMappingInPropertyGridViewModel)
       {
-        var environmentUser = (ProjectToFailoverClusterGroupMapping)value;
+        var environmentUser = (ProjectToFailoverClusterGroupMappingInPropertyGridViewModel)value;
 
         return string.Format("{0}", environmentUser.ClusterGroupName);
       }

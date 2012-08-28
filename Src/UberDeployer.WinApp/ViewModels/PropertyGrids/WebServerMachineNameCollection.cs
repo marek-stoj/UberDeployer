@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
-  // TODO IMM HI: that's for UI!
   [ReadOnly(true)]
   public class WebServerMachineNameCollection : MyCollectionBase
   {

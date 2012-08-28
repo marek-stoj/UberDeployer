@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
-  // TODO IMM HI: that's for UI!
   public abstract class MyCollectionBase : CollectionBase, ICustomTypeDescriptor
   {
     public AttributeCollection GetAttributes()

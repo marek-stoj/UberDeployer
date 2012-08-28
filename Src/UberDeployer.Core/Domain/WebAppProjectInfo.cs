@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using UberDeployer.Core.Deployment;
 
 namespace UberDeployer.Core.Domain
 {
-  // TODO IMM HI: create WebServiceProjectInfo
   public class WebAppProjectInfo : ProjectInfo
   {
     public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string iisSiteName, string webAppName, string webAppDirName, IisAppPoolInfo appPoolInfo)
@@ -91,16 +89,12 @@ namespace UberDeployer.Core.Domain
           .ToList();
     }
 
-    [Category("Specific")]
     public string IisSiteName { get; private set; }
 
-    [Category("Specific")]
     public string WebAppName { get; private set; }
 
-    [Category("Specific")]
     public string WebAppDirName { get; private set; }
 
-    [Category("Specific")]
     public IisAppPoolInfo AppPool { get; private set; }
   }
 }

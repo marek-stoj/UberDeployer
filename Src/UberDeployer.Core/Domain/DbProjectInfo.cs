@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UberDeployer.Core.Deployment;
 
 namespace UberDeployer.Core.Domain
@@ -47,7 +46,6 @@ namespace UberDeployer.Core.Domain
 
     #region Properties
 
-    [Category("Specific")]
     public string DbName { get; private set; }
 
     #endregion

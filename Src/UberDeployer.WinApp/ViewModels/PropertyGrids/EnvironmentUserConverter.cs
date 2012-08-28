@@ -2,16 +2,15 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
-  // TODO IMM HI: that's for UI!
   public class EnvironmentUserConverter : ExpandableObjectConverter
   {
     public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destType)
     {
-      if (destType == typeof(string) && value is EnvironmentUser)
+      if (destType == typeof(string) && value is EnvironmentUserInPropertyGridVieModel)
       {
-        var environmentUser = (EnvironmentUser)value;
+        var environmentUser = (EnvironmentUserInPropertyGridVieModel)value;
 
         return string.Format("{0}", environmentUser.UserName);
       }

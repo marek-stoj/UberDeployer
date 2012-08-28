@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UberDeployer.Core.Deployment;
 
 namespace UberDeployer.Core.Domain
 {
-  // TODO IMM HI: get rid of System.ComponentModel attributes in ProjectInfo and all derived classes?
   public abstract class ProjectInfo
   {
     protected ProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName = null, bool artifactsAreNotEnvironmentSpecific = false)
@@ -30,22 +28,17 @@ namespace UberDeployer.Core.Domain
 
     public abstract IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo);
 
-    [Category("Common")]
     public string Name { get; private set; }
 
-    [Category("Common")]
     public virtual string Type
     {
       get { return GetType().Name.Replace("ProjectInfo", ""); }
     }
 
-    [Category("Common")]
     public string ArtifactsRepositoryName { get; private set; }
 
-    [Category("Common")]
     public string ArtifactsRepositoryDirName { get; private set; }
     
-    [Category("Common")]
     public bool ArtifactsAreEnvironmentSpecific { get; private set; }
   }
 }

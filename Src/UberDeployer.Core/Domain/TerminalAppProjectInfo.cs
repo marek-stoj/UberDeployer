@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using UberDeployer.Core.Deployment;
 
@@ -73,13 +72,10 @@ namespace UberDeployer.Core.Domain
 
     #region Properties
 
-    [Category("Specific")]
     public string TerminalAppName { get; private set; }
 
-    [Category("Specific")]
     public string TerminalAppDirName { get; private set; }
 
-    [Category("Specific")]
     public string TerminalAppExeName { get; private set; }
 
     #endregion

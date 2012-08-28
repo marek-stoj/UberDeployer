@@ -83,22 +83,17 @@ namespace UberDeployer.Core.Domain
 
     #region Properties
 
-    [Category("Specific")]
     public string NtServiceName { get; private set; }
 
-    [Category("Specific")]
     public string NtServiceDirName { get; private set; }
 
-    [Category("Specific")]
     public string NtServiceDisplayName { get; private set; }
 
-    [Category("Specific")]
     public string NtServiceExeName { get; private set; }
 
     /// <summary>
     /// A reference to a user that will be used to run the scheduled task. Users are defined in target environments.
     /// </summary>
-    [Category("Specific")]
     public string NtServiceUserId { get; private set; }
 
     #endregion

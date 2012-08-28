@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
   public abstract class CollectionPropertyDescriptor<TCollection> : PropertyDescriptor
     where TCollection : MyCollectionBase

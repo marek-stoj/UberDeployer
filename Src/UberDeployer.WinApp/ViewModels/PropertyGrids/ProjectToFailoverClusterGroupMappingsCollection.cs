@@ -2,22 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
-  // TODO IMM HI: that's for UI!
   [ReadOnly(true)]
   public class ProjectToFailoverClusterGroupMappingsCollection : MyCollectionBase
   {
     #region Constructor(s)
 
-    public ProjectToFailoverClusterGroupMappingsCollection(IEnumerable<ProjectToFailoverClusterGroupMapping> items)
+    public ProjectToFailoverClusterGroupMappingsCollection(IEnumerable<ProjectToFailoverClusterGroupMappingInPropertyGridViewModel> items)
     {
       if (items == null)
       {
         throw new ArgumentNullException("items");
       }
 
-      foreach (ProjectToFailoverClusterGroupMapping item in items)
+      foreach (ProjectToFailoverClusterGroupMappingInPropertyGridViewModel item in items)
       {
         List.Add(item);
       }
@@ -46,9 +45,9 @@ namespace UberDeployer.Core.Domain.UI
 
     #region Properties
 
-    public ProjectToFailoverClusterGroupMapping this[int index]
+    public ProjectToFailoverClusterGroupMappingInPropertyGridViewModel this[int index]
     {
-      get { return (ProjectToFailoverClusterGroupMapping)List[index]; }
+      get { return (ProjectToFailoverClusterGroupMappingInPropertyGridViewModel)List[index]; }
     }
 
     #endregion

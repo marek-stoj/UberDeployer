@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UberDeployer.Core.Deployment;
 using System.IO;
 
@@ -99,31 +98,24 @@ namespace UberDeployer.Core.Domain
 
     #region Properties
 
-    [Category("Specific")]
     public string SchedulerAppName { get; private set; }
 
-    [Category("Specific")]
     public string SchedulerAppDirName { get; private set; }
 
-    [Category("Specific")]
     public string SchedulerAppExeName { get; private set; }
 
     /// <summary>
     /// A reference to a user that will be used to run the scheduled task. Users are defined in target environments.
     /// </summary>
-    [Category("Specific")]
     public string SchedulerAppUserId { get; private set; }
 
-    [Category("Specific")]
     public int ScheduledHour { get; private set; }
 
-    [Category("Specific")]
     public int ScheduledMinute { get; private set; }
 
     /// <summary>
     /// 0 - no limit.
     /// </summary>
-    [Category("Specific")]
     public int ExecutionTimeLimitInMinutes { get; private set; }
 
     #endregion

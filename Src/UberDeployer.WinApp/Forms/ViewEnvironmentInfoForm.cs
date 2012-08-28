@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.WinApp.ViewModels;
+using UberDeployer.WinApp.ViewModels.PropertyGrids;
 
 namespace UberDeployer.WinApp.Forms
 {
@@ -25,7 +27,9 @@ namespace UberDeployer.WinApp.Forms
       }
 
       Text = "Environment: " + environmentInfo.Name;
-      environmentPropertiesPropertyGrid.SelectedObject = environmentInfo;
+
+      environmentPropertiesPropertyGrid.SelectedObject =
+        ViewModelMapper.Map<EnvironmentInfo, EnvironmentInfoInPropertyGridViewModel>(environmentInfo);
     }
 
     #endregion

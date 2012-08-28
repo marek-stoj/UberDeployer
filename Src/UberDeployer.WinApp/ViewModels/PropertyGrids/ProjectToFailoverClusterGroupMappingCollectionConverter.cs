@@ -3,9 +3,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace UberDeployer.Core.Domain.UI
+namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 {
-  // TODO IMM HI: that's for UI!
   public class ProjectToFailoverClusterGroupMappingsCollectionConverter : ExpandableObjectConverter
   {
     public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destType)
@@ -17,7 +16,7 @@ namespace UberDeployer.Core.Domain.UI
         return
           string.Join(
             ", ",
-            collection.Cast<ProjectToFailoverClusterGroupMapping>()
+            collection.Cast<ProjectToFailoverClusterGroupMappingInPropertyGridViewModel>()
               .Select(eu => eu.ProjectName)
               .ToArray());
       }

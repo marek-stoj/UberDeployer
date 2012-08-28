@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing.Design;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UberDeployer.Core.Domain.UI;
 
 namespace UberDeployer.Core.Domain
 {
@@ -196,8 +194,6 @@ namespace UberDeployer.Core.Domain
 
     public string FailoverClusterMachineName { get; private set; }
 
-    // TODO IMM HI: that attribute is for UI!
-    [Browsable(false)]
     public IEnumerable<string> WebServerMachineNames
     {
       get { return _webServerMachines.AsReadOnly(); }
@@ -217,42 +213,14 @@ namespace UberDeployer.Core.Domain
 
     public bool EnableFailoverClusteringForNtServices { get; private set; }
 
-    // TODO IMM HI: that attribute is for UI!
-    [Browsable(false)]
     public IEnumerable<EnvironmentUser> EnvironmentUsers
     {
       get { return _environmentUsersDict.Values; }
     }
 
-    // TODO IMM HI: that attribute is for UI!
-    [Browsable(false)]
     public IEnumerable<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings
     {
       get { return _projectToFailoverClusterGroupMappingsDict.Values; }
-    }
-
-    // TODO IMM HI: that's for UI!
-    [TypeConverter(typeof(WebServerMachineNamesCollectionConverter))]
-    [Editor(typeof(ReadOnlyUITypeEditor), typeof(UITypeEditor))]
-    public WebServerMachineNameCollection WebServerMachinesNameCollection
-    {
-      get { return new WebServerMachineNameCollection(WebServerMachineNames); }
-    }
-
-    // TODO IMM HI: that's for UI!
-    [TypeConverter(typeof(EnvironmentUsersCollectionConverter))]
-    [Editor(typeof(ReadOnlyUITypeEditor), typeof(UITypeEditor))]
-    public EnvironmentUsersCollection EnvironmentUsersCollection
-    {
-      get { return new EnvironmentUsersCollection(EnvironmentUsers); }
-    }
-
-    // TODO IMM HI: that's for UI!
-    [TypeConverter(typeof(ProjectToFailoverClusterGroupMappingsCollectionConverter))]
-    [Editor(typeof(ReadOnlyUITypeEditor), typeof(UITypeEditor))]
-    public ProjectToFailoverClusterGroupMappingsCollection ProjectToFailoverClusterGroupMappingsCollection
-    {
-      get { return new ProjectToFailoverClusterGroupMappingsCollection(ProjectToFailoverClusterGroupMappings); }
     }
 
     #endregion

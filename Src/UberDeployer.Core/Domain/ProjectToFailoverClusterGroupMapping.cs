@@ -1,10 +1,7 @@
 using System;
-using System.ComponentModel;
-using UberDeployer.Core.Domain.UI;
 
 namespace UberDeployer.Core.Domain
 {
-  [TypeConverter(typeof(ProjectToFailoverClusterGroupMappingConverter))] // TODO IMM HI: that's for UI!
   public class ProjectToFailoverClusterGroupMapping
   {
     #region Constructor(s)

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.WinApp.ViewModels;
+using UberDeployer.WinApp.ViewModels.PropertyGrids;
 
 namespace UberDeployer.WinApp.Forms
 {
@@ -27,7 +28,9 @@ namespace UberDeployer.WinApp.Forms
 
       Text = "Project: " + projectInfo.Name;
       lbl_projectType.Text = projectInfo.Type;
-      projectPropertiesPropertyGrid.SelectedObject = projectInfo;
+
+      projectPropertiesPropertyGrid.SelectedObject =
+        ViewModelMapper.Map<ProjectInfo, ProjectInfoInPropertyGridViewModel>(projectInfo);
     }
 
     #endregion
