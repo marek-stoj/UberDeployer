@@ -4,19 +4,19 @@ namespace UberDeployer.Core.Deployment
 {
   public class DiagnosticMessageEventArgs : EventArgs
   {
-    public DiagnosticMessageEventArgs(string message, MessageType messageType)
+    public DiagnosticMessageEventArgs(DiagnosticMessageType messageType, string message)
     {
       if (string.IsNullOrEmpty(message))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "message");
       }
 
-      Message = message;
       MessageType = messageType;
+      Message = message;
     }
 
-    public string Message { get; private set; }
+    public DiagnosticMessageType MessageType { get; private set; }
 
-    public MessageType MessageType { get; private set; }
+    public string Message { get; private set; }
   }
 }

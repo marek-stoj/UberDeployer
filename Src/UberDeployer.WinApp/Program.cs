@@ -6,6 +6,8 @@ namespace UberDeployer.WinApp
 {
   internal static class Program
   {
+    public static readonly Guid UniqueClientId = Guid.NewGuid();
+
     [STAThread]
     private static void Main()
     {

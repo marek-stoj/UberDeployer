@@ -115,7 +115,7 @@ namespace UberDeployer.Core.Deployment
       foreach (var keyToRemove in keysToRemove)
       {
         scriptsToRun.Remove(keyToRemove);
-        PostDiagnosticMessage("The following script has not been run yet: " + keyToRemove, MessageType.Warning);
+        PostDiagnosticMessage("The following script has not been run yet: " + keyToRemove, DiagnosticMessageType.Warning);
       }
     }
 

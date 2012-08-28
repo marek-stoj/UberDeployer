@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="AgentService.cs" />
     <Compile Include="DtoMapper.cs" />
+    <Compile Include="Diagnostics\InMemoryDiagnosticMessagesLogger.cs" />
+    <Compile Include="Diagnostics\IDiagnosticMessagesLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

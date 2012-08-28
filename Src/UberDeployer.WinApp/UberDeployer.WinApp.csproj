@@ -25,6 +25,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>..\..\bin\UberDeployer.WinApp\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +54,7 @@
     <Compile Include="Forms\DeploymentAuditForm.designer.cs">
       <DependentUpon>DeploymentAuditForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DiagnosticMessagesPoller.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

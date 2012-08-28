@@ -115,7 +115,7 @@ namespace UberDeployer.Core.Deployment
       {
         if (string.IsNullOrEmpty(environmentInfo.GetFailoverClusterGroupNameForProject(ProjectName)))
         {
-          PostDiagnosticMessage(string.Format("Failover clustering for NT services is enabled for environment '{0}' but there is no cluster group mapping for project '{1}'.", environmentInfo.Name, ProjectName), MessageType.Warning);
+          PostDiagnosticMessage(string.Format("Failover clustering for NT services is enabled for environment '{0}' but there is no cluster group mapping for project '{1}'.", environmentInfo.Name, ProjectName), DiagnosticMessageType.Warning);
 
           deployToClusteredEnvironment = false;
         }

@@ -15,7 +15,7 @@ namespace UberDeployer.Core.Deployment
         throw new InvalidOperationException("The task has already been prepared.");
       }
 
-      PostDiagnosticMessage(string.Format("Preparing: {0}", Description), MessageType.Trace);
+      PostDiagnosticMessage(string.Format("Preparing: {0}", Description), DiagnosticMessageType.Trace);
 
       DoPrepare();
 
@@ -48,17 +48,17 @@ namespace UberDeployer.Core.Deployment
 
     protected void PostDiagnosticMessage(string message)
     {
-      PostDiagnosticMessage(message, MessageType.Info);
+      PostDiagnosticMessage(message, DiagnosticMessageType.Info);
     }
 
-    protected void PostDiagnosticMessage(string message, MessageType messageType)
+    protected void PostDiagnosticMessage(string message, DiagnosticMessageType diagnosticMessageType)
     {
       if (string.IsNullOrEmpty(message))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "message");
       }
 
-      OnDiagnosticMessagePosted(this, new DiagnosticMessageEventArgs(message, messageType));
+      OnDiagnosticMessagePosted(this, new DiagnosticMessageEventArgs(diagnosticMessageType, message));
     }
 
     protected void OnDiagnosticMessagePosted(object sender, DiagnosticMessageEventArgs diagnosticMessageEventArgs)

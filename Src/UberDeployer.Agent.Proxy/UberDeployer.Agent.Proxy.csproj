@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
+    <Compile Include="Dto\DiagnosticMessage.cs" />
+    <Compile Include="Dto\DiagnosticMessageType.cs" />
     <Compile Include="Dto\DeploymentRequest.cs" />
     <Compile Include="Dto\ProjectConfigurationBuildFilter.cs" />
     <Compile Include="Dto\ProjectConfigurationFilter.cs" />
@@ -72,7 +74,6 @@
     <Compile Include="Faults\EnvironmentNotFoundFault.cs" />
     <Compile Include="Faults\ProjectConfigurationNotFoundFault.cs" />
     <Compile Include="IAgentService.cs" />
-    <Compile Include="Dto\MessageType.cs" />
     <Compile Include="Dto\NtServiceProjectInfo.cs" />
     <Compile Include="Dto\ProjectInfo.cs" />
     <Compile Include="Faults\ProjectNotFoundFault.cs" />

@@ -80,6 +80,7 @@
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="Deployment\CollectedCredentials.cs" />
     <Compile Include="Deployment\DeferredEnumerable.cs" />
+    <Compile Include="Deployment\DiagnosticMessage.cs" />
     <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStep.cs" />
     <Compile Include="Deployment\MoveClusterGroupToAnotherNodeDeploymentStep.cs" />
     <Compile Include="Domain\ProjectToFailoverClusterGroupMapping.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Management\Db\DbVersionProvider.cs" />
     <Compile Include="Management\Db\IDbScriptRunner.cs" />
     <Compile Include="Management\Db\IDbScriptRunnerFactory.cs" />
-    <Compile Include="Deployment\MessageType.cs" />
+    <Compile Include="Deployment\DiagnosticMessageType.cs" />
     <Compile Include="Deployment\MigrateDbDeploymentTask.cs" />
     <Compile Include="Management\Db\IDbVersionProvider.cs" />
     <Compile Include="Management\Db\MsSqlDbScriptRunnerFactory.cs" />

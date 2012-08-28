@@ -9,9 +9,9 @@ namespace UberDeployer.Agent.Proxy
   {
     #region IAgentService Members
 
-    public void BeginDeploymentJob(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public void BeginDeploymentJob(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
     {
-      Exec(@as => @as.BeginDeploymentJob(projectName, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName));
+      Exec(@as => @as.BeginDeploymentJob(uniqueClientId, projectName, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName));
     }
 
     public List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter)
@@ -47,6 +47,11 @@ namespace UberDeployer.Agent.Proxy
     public List<DeploymentRequest> GetDeploymentRequests(int startIndex, int maxCount)
     {
       return Exec(@as => @as.GetDeploymentRequests(startIndex, maxCount));
+    }
+
+    public List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId)
+    {
+      return Exec(@as => @as.GetDiagnosticMessages(uniqueClientId, lastSeenMaxMessageId));
     }
 
     #endregion

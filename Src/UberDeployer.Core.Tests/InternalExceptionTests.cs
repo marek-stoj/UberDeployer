@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using System.Linq;
 
 namespace UberDeployer.Core.Tests
 {

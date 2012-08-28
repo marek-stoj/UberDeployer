@@ -1,6 +1,6 @@
-﻿namespace UberDeployer.Agent.Proxy.Dto
+﻿namespace UberDeployer.Core.Deployment
 {
-  public enum MessageType
+  public enum DiagnosticMessageType
   {
     Trace = 1,
     Info = 2,

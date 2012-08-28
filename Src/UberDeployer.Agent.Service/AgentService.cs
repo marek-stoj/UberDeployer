@@ -6,6 +6,7 @@ using System.ServiceModel;
 using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto.TeamCity;
 using UberDeployer.Agent.Proxy.Faults;
+using UberDeployer.Agent.Service.Diagnostics;
 using UberDeployer.Common;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.Core.Deployment;
@@ -14,6 +15,10 @@ using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.TeamCity;
 using log4net;
+using DeploymentRequest = UberDeployer.Core.Deployment.Pipeline.Modules.DeploymentRequest;
+using EnvironmentInfo = UberDeployer.Core.Domain.EnvironmentInfo;
+using ProjectInfo = UberDeployer.Core.Domain.ProjectInfo;
+using WebAppProjectInfo = UberDeployer.Core.Domain.WebAppProjectInfo;
 
 namespace UberDeployer.Agent.Service
 {
@@ -24,12 +29,13 @@ namespace UberDeployer.Agent.Service
     private readonly IDeploymentPipeline _deploymentPipeline;
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IEnvironmentInfoRepository _environmentInfoRepository;
-    private readonly ITeamCityClient _teamCityClient; // TODO IMM HI: xxx abstract away?
+    private readonly ITeamCityClient _teamCityClient; // TODO IMM HI: abstract away?
     private readonly IDeploymentRequestRepository _deploymentRequestRepository;
+    private readonly IDiagnosticMessagesLogger _diagnosticMessagesLogger;
 
     #region Constructor(s)
 
-    public AgentService(IDeploymentPipeline deploymentPipeline, IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository, ITeamCityClient teamCityClient, IDeploymentRequestRepository deploymentRequestRepository)
+    public AgentService(IDeploymentPipeline deploymentPipeline, IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository, ITeamCityClient teamCityClient, IDeploymentRequestRepository deploymentRequestRepository, IDiagnosticMessagesLogger diagnosticMessagesLogger)
     {
       if (deploymentPipeline == null)
       {
@@ -56,15 +62,21 @@ namespace UberDeployer.Agent.Service
         throw new ArgumentNullException("deploymentRequestRepository");
       }
 
+      if (diagnosticMessagesLogger == null)
+      {
+        throw new ArgumentNullException("diagnosticMessagesLogger");
+      }
+
       _projectInfoRepository = projectInfoRepository;
       _environmentInfoRepository = environmentInfoRepository;
       _teamCityClient = teamCityClient;
       _deploymentPipeline = deploymentPipeline;
       _deploymentRequestRepository = deploymentRequestRepository;
+      _diagnosticMessagesLogger = diagnosticMessagesLogger;
     }
 
     public AgentService()
-      : this(ObjectFactory.Instance.CreateDeploymentPipeline(), ObjectFactory.Instance.CreateProjectInfoRepository(), ObjectFactory.Instance.CreateEnvironmentInfoRepository(), ObjectFactory.Instance.CreateTeamCityClient(), ObjectFactory.Instance.CreateDeploymentRequestRepository())
+      : this(ObjectFactory.Instance.CreateDeploymentPipeline(), ObjectFactory.Instance.CreateProjectInfoRepository(), ObjectFactory.Instance.CreateEnvironmentInfoRepository(), ObjectFactory.Instance.CreateTeamCityClient(), ObjectFactory.Instance.CreateDeploymentRequestRepository(), InMemoryDiagnosticMessagesLogger.Instance)
     {
     }
 
@@ -72,8 +84,13 @@ namespace UberDeployer.Agent.Service
 
     #region IAgentService Members
 
-    public void BeginDeploymentJob(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public void BeginDeploymentJob(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
     {
+      if (uniqueClientId == Guid.Empty)
+      {
+        throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
+      }
+
       if (string.IsNullOrEmpty(projectName))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "projectName");
@@ -112,8 +129,9 @@ namespace UberDeployer.Agent.Service
       deploymentTask.DiagnosticMessagePosted +=
         (eventSender, tmpArgs) =>
           {
-            // TODO IMM HI: xxx
             _log.DebugIfEnabled(() => string.Format("{0}: {1}", tmpArgs.MessageType, tmpArgs.Message));
+
+            _diagnosticMessagesLogger.LogMessage(uniqueClientId, tmpArgs.MessageType, tmpArgs.Message);
           };
 
       _deploymentPipeline.StartDeployment(deploymentTask);
@@ -352,6 +370,19 @@ namespace UberDeployer.Agent.Service
       return
         _deploymentRequestRepository.GetDeploymentRequests(startIndex, maxCount)
           .Select(DtoMapper.Map<DeploymentRequest, Proxy.Dto.DeploymentRequest>)
+          .ToList();
+    }
+
+    public List<Proxy.Dto.DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId)
+    {
+      if (uniqueClientId == Guid.Empty)
+      {
+        throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
+      }
+
+      return
+        _diagnosticMessagesLogger.GetMessages(uniqueClientId, lastSeenMaxMessageId)
+          .Select(DtoMapper.Map<DiagnosticMessage, Proxy.Dto.DiagnosticMessage>)
           .ToList();
     }
 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
 using System.Threading;
 using System.Windows.Forms;
@@ -31,7 +32,7 @@ namespace UberDeployer.WinApp.Forms
     private readonly object _projectConfigurationsRequestsMutex = new object();
     private readonly object _projectConfigurationBuildsRequestsMutex = new object();
     
-    private readonly IAgentService _agentServiceClient;
+    private readonly IAgentService _agentService;
 
     #region Constructor(s)
 
@@ -39,7 +40,7 @@ namespace UberDeployer.WinApp.Forms
     {
       InitializeComponent();
 
-      _agentServiceClient = new AgentServiceClient();
+      _agentService = new AgentServiceClient();
     }
 
     #endregion
@@ -55,8 +56,8 @@ namespace UberDeployer.WinApp.Forms
       grp_projectConfigurationBuilds.Text += string.Format(" (last {0})", _MaxProjectConfigurationBuildsCount);
 
       cb_messageTypeThreshold.Items.Clear();
-      cb_messageTypeThreshold.Items.AddRange(Enum.GetValues(typeof(MessageType)).Cast<object>().ToArray());
-      cb_messageTypeThreshold.SelectedItem = MessageType.Info;
+      cb_messageTypeThreshold.Items.AddRange(Enum.GetValues(typeof(DiagnosticMessageType)).Cast<object>().ToArray());
+      cb_messageTypeThreshold.SelectedItem = DiagnosticMessageType.Info;
     }
 
     private void MainForm_Shown(object sender, EventArgs e)
@@ -177,6 +178,7 @@ namespace UberDeployer.WinApp.Forms
     private void deployBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
     {
       bool startSeparatorWasLogged = false;
+      DiagnosticMessagesPoller diagnosticMessagesPoller = null;
 
       try
       {
@@ -188,12 +190,19 @@ namespace UberDeployer.WinApp.Forms
         ProjectConfiguration projectConfiguration = projectDeploymentInfo.ProjectConfiguration;
         ProjectConfigurationBuild projectConfigurationBuild = projectDeploymentInfo.ProjectConfigurationBuild;
 
-        LogMessage(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", MessageType.Info);
+        LogMessage(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", DiagnosticMessageType.Info);
         startSeparatorWasLogged = true;
 
-        // TODO IMM HI: xxx get log messages from service (WCF duplex?)
-        _agentServiceClient
+        diagnosticMessagesPoller =
+          new DiagnosticMessagesPoller(
+            _agentService,
+            dm => LogMessage(dm.Message, dm.Type));
+
+        diagnosticMessagesPoller.Start();
+
+        _agentService
           .BeginDeploymentJob(
+            Program.UniqueClientId,
             projectInfo.Name,
             projectConfiguration.Name,
             projectConfigurationBuild.Id,
@@ -201,13 +210,18 @@ namespace UberDeployer.WinApp.Forms
       }
       catch (Exception exc)
       {
-        LogMessage("Error: " + exc.Message, MessageType.Error);
+        LogMessage("Error: " + exc.Message, DiagnosticMessageType.Error);
       }
       finally
       {
+        if (diagnosticMessagesPoller != null)
+        {
+          diagnosticMessagesPoller.Stop();
+        }
+
         if (startSeparatorWasLogged)
         {
-          LogMessage("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", MessageType.Info);
+          LogMessage("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", DiagnosticMessageType.Info);
         }
 
         ToggleIndeterminateProgress(false, pic_indeterminateProgress);
@@ -361,7 +375,7 @@ namespace UberDeployer.WinApp.Forms
     private void OpenWebApp(WebAppProjectInfo webAppProjectInfo, EnvironmentInfo environmentInfo)
     {
       List<string> targetUrls =
-        _agentServiceClient.GetWebAppProjectTargetUrls(
+        _agentService.GetWebAppProjectTargetUrls(
           webAppProjectInfo.Name,
           environmentInfo.Name);
 
@@ -408,7 +422,7 @@ namespace UberDeployer.WinApp.Forms
           : ProjectFilter.Empty;
 
       List<ProjectInfo> projectInfos =
-        _agentServiceClient.GetProjectInfos(projectFilter);
+        _agentService.GetProjectInfos(projectFilter);
 
       List<ProjectInfoInListViewModel> projectInfoViewModels =
         projectInfos
@@ -428,7 +442,7 @@ namespace UberDeployer.WinApp.Forms
           : ProjectConfigurationFilter.Empty;
 
       List<ProjectConfiguration> projectConfigurations =
-        _agentServiceClient.GetProjectConfigurations(
+        _agentService.GetProjectConfigurations(
           projectInfo.Name,
           projectConfigurationFilter);
 
@@ -451,7 +465,7 @@ namespace UberDeployer.WinApp.Forms
           : ProjectConfigurationBuildFilter.Empty;
 
       List<ProjectConfigurationBuild> projectConfigurationBuilds =
-        _agentServiceClient.GetProjectConfigurationBuilds(
+        _agentService.GetProjectConfigurationBuilds(
           projectInfo.Name,
           projectConfiguration.Name,
           _MaxProjectConfigurationBuildsCount,
@@ -479,7 +493,7 @@ namespace UberDeployer.WinApp.Forms
     private void OpenProjectTargetFolder(ProjectInfo projectInfo, EnvironmentInfo environmentInfo)
     {
       List<string> projectTargetFolders =
-        _agentServiceClient.GetProjectTargetFolders(
+        _agentService.GetProjectTargetFolders(
           projectInfo.Name,
           environmentInfo.Name);
 
@@ -520,11 +534,11 @@ namespace UberDeployer.WinApp.Forms
                 requestNumber = _projectsRequestsCounter;
               }
 
-              LogMessage("Loading projects...", MessageType.Trace);
+              LogMessage("Loading projects...", DiagnosticMessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               List<ProjectInfoInListViewModel> allProjects =
-                _agentServiceClient.GetProjectInfos(ProjectFilter.Empty)
+                _agentService.GetProjectInfos(ProjectFilter.Empty)
                   .Select(p => new ProjectInfoInListViewModel(p))
                   .ToList();
 
@@ -561,7 +575,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage("Done loading projects.", MessageType.Trace);
+              LogMessage("Done loading projects.", DiagnosticMessageType.Trace);
             }
           });
     }
@@ -596,7 +610,7 @@ namespace UberDeployer.WinApp.Forms
                 requestNumber = _projectConfigurationsRequestsCounter;
               }
 
-              LogMessage(string.Format("Loading project configurations for project: '{0}'...", projectInfo.Name), MessageType.Trace);
+              LogMessage(string.Format("Loading project configurations for project: '{0}'...", projectInfo.Name), DiagnosticMessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               List<ProjectConfigurationInListViewModel> projectConfigurations;
@@ -604,13 +618,13 @@ namespace UberDeployer.WinApp.Forms
               try
               {
                 projectConfigurations =
-                  _agentServiceClient.GetProjectConfigurations(projectInfo.Name, ProjectConfigurationFilter.Empty)
+                  _agentService.GetProjectConfigurations(projectInfo.Name, ProjectConfigurationFilter.Empty)
                     .Select(pc => new ProjectConfigurationInListViewModel(projectInfo.Name, pc))
                     .ToList();
               }
               catch (FaultException<ProjectNotFoundFault>)
               {
-                LogMessage(string.Format("Project with artifacts repository name '{0}' couldn't be found.", projectInfo.ArtifactsRepositoryName), MessageType.Warning);
+                LogMessage(string.Format("Project with artifacts repository name '{0}' couldn't be found.", projectInfo.ArtifactsRepositoryName), DiagnosticMessageType.Warning);
 
                 projectConfigurations = new List<ProjectConfigurationInListViewModel>();
               }
@@ -633,7 +647,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage(string.Format("Done loading project configurations for project: '{0}'.", projectInfo.Name), MessageType.Trace);
+              LogMessage(string.Format("Done loading project configurations for project: '{0}'.", projectInfo.Name), DiagnosticMessageType.Trace);
             }
           });
     }
@@ -667,11 +681,11 @@ namespace UberDeployer.WinApp.Forms
                 requestNumber = _projectConfigurationBuildsRequestsCounter;
               }
 
-              LogMessage(string.Format("Loading project configuration builds for project configuration: '{0} ({1})'...", projectName, projectConfiguration.Name), MessageType.Trace);
+              LogMessage(string.Format("Loading project configuration builds for project configuration: '{0} ({1})'...", projectName, projectConfiguration.Name), DiagnosticMessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               List<ProjectConfigurationBuildInListViewModel> projectConfigurationBuilds =
-                _agentServiceClient.GetProjectConfigurationBuilds(projectName, projectConfiguration.Name, _MaxProjectConfigurationBuildsCount, ProjectConfigurationBuildFilter.Empty)
+                _agentService.GetProjectConfigurationBuilds(projectName, projectConfiguration.Name, _MaxProjectConfigurationBuildsCount, ProjectConfigurationBuildFilter.Empty)
                   .Select(pcb => new ProjectConfigurationBuildInListViewModel { ProjectConfigurationBuild = pcb })
                   .ToList();
 
@@ -693,7 +707,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage(string.Format("Done loading project configuration builds for project configuration: '{0} ({1})'.", projectConfiguration.ProjectName, projectConfiguration.Name), MessageType.Trace);
+              LogMessage(string.Format("Done loading project configuration builds for project configuration: '{0} ({1})'.", projectConfiguration.ProjectName, projectConfiguration.Name), DiagnosticMessageType.Trace);
             }
           });
     }
@@ -706,7 +720,7 @@ namespace UberDeployer.WinApp.Forms
       deployBackgroundWorker.RunWorkerAsync(projectDeploymentInfo);
     }
 
-    private void LogMessage(string message, MessageType messageType = MessageType.Info)
+    private void LogMessage(string message, DiagnosticMessageType messageType = DiagnosticMessageType.Info)
     {
       GuiUtils.BeginInvoke(
         this,
@@ -722,16 +736,19 @@ namespace UberDeployer.WinApp.Forms
 
             switch (messageType)
             {
-              case MessageType.Trace:
+              case DiagnosticMessageType.Trace:
                 txt_log.SelectionColor = Color.DimGray;
                 break;
-              case MessageType.Info:
+
+              case DiagnosticMessageType.Info:
                 txt_log.SelectionColor = Color.Blue;
                 break;
-              case MessageType.Warning:
+
+              case DiagnosticMessageType.Warning:
                 txt_log.SelectionColor = Color.FromArgb(191, 79, 0);
                 break;
-              case MessageType.Error:
+
+              case DiagnosticMessageType.Error:
                 txt_log.SelectionColor = Color.DarkRed;
                 break;
             }
@@ -752,11 +769,11 @@ namespace UberDeployer.WinApp.Forms
           {
             try
             {
-              LogMessage("Loading environments...", MessageType.Trace);
+              LogMessage("Loading environments...", DiagnosticMessageType.Trace);
               ToggleIndeterminateProgress(true, pic_indeterminateProgress);
 
               List<EnvironmentInfoInComboBoxViewModel> allEnvironmentInfos =
-                _agentServiceClient.GetEnvironmentInfos()
+                _agentService.GetEnvironmentInfos()
                   .Select(ei => new EnvironmentInfoInComboBoxViewModel { EnvironmentInfo = ei })
                   .ToList();
 
@@ -769,7 +786,7 @@ namespace UberDeployer.WinApp.Forms
             finally
             {
               ToggleIndeterminateProgress(false, pic_indeterminateProgress);
-              LogMessage("Done loading environments.", MessageType.Trace);
+              LogMessage("Done loading environments.", DiagnosticMessageType.Trace);
             }
           });
     }
@@ -851,9 +868,9 @@ namespace UberDeployer.WinApp.Forms
 
     #region Private properties
 
-    private MessageType MessageTypeThreshold
+    private DiagnosticMessageType MessageTypeThreshold
     {
-      get { return (MessageType)cb_messageTypeThreshold.SelectedItem; }
+      get { return (DiagnosticMessageType)cb_messageTypeThreshold.SelectedItem; }
     }
 
     #endregion

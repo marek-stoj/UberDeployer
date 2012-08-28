@@ -55,7 +55,7 @@ namespace UberDeployer.Core.Deployment
 
             _dbScriptRunner.Execute(script);
 
-            PostDiagnosticMessage("Script executed successfully: " + executedScriptName, MessageType.Info);
+            PostDiagnosticMessage("Script executed successfully: " + executedScriptName, DiagnosticMessageType.Info);
           }
         }
       }

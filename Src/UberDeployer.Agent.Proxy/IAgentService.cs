@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using UberDeployer.Agent.Proxy.Dto;
@@ -11,7 +12,7 @@ namespace UberDeployer.Agent.Proxy
   {
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
-    void BeginDeploymentJob(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
+    void BeginDeploymentJob(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
 
     [OperationContract]
     List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter);
@@ -41,5 +42,9 @@ namespace UberDeployer.Agent.Proxy
     // TODO IMM HI: separate interface?
     [OperationContract]
     List<DeploymentRequest> GetDeploymentRequests(int startIndex, int maxCount);
+
+    // TODO IMM HI: separate interface?
+    [OperationContract]
+    List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId);
   }
 }
