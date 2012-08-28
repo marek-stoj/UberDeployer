@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
@@ -23,9 +24,10 @@ namespace UberDeployer.CommonConfiguration
 {
   public class Bootstraper
   {
-    private const string ApplicationConfigPath = @"Data\ApplicationConfiguration.xml";
-    private const string ProjectInfoPath = @"Data\ProjectInfos.xml";
-    private const string EnvironmentInfoPath = @"Data\EnvironmentInfos.xml";
+    private static readonly string _BaseDirPath = AppDomain.CurrentDomain.BaseDirectory;
+    private static readonly string _ApplicationConfigPath = Path.Combine(_BaseDirPath, @"Data\ApplicationConfiguration.xml");
+    private static readonly string _ProjectInfoPath = Path.Combine(_BaseDirPath, @"Data\ProjectInfos.xml");
+    private static readonly string _EnvironmentInfoPath = Path.Combine(_BaseDirPath, @"Data\EnvironmentInfos.xml");
 
     private static readonly TimeSpan _NtServiceManagerOperationsTimeout = TimeSpan.FromMinutes(1);
 
@@ -39,13 +41,13 @@ namespace UberDeployer.CommonConfiguration
 
       container.Register(
         Component.For<IApplicationConfiguration>()
-          .UsingFactoryMethod(() => new XmlApplicationConfiguration(ApplicationConfigPath))
+          .UsingFactoryMethod(() => new XmlApplicationConfiguration(_ApplicationConfigPath))
           .LifeStyle.Singleton,
         Component.For<IProjectInfoRepository>()
-          .UsingFactoryMethod(() => new XmlProjectInfoRepository(ProjectInfoPath))
+          .UsingFactoryMethod(() => new XmlProjectInfoRepository(_ProjectInfoPath))
           .LifeStyle.Singleton,
         Component.For<IEnvironmentInfoRepository>()
-          .UsingFactoryMethod(() => new XmlEnvironmentInfoRepository(EnvironmentInfoPath))
+          .UsingFactoryMethod(() => new XmlEnvironmentInfoRepository(_EnvironmentInfoPath))
           .LifeStyle.Singleton);
 
       container.Register(

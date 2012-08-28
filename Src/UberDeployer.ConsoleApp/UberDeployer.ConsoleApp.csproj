@@ -79,15 +79,15 @@
   <ItemGroup>
     <Content Include="..\..\Data\ApplicationConfiguration.xml">
       <Link>Data\ApplicationConfiguration.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Data\EnvironmentInfos.xml">
       <Link>Data\EnvironmentInfos.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Data\ProjectInfos.xml">
       <Link>Data\ProjectInfos.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
