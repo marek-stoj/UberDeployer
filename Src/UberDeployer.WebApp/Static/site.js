@@ -8,7 +8,6 @@ var g_TargetEnvironmentCookieExpirationInDays = 365;
 
 function setAppPrefix(appPrefix) {
   g_AppPrefix = appPrefix;
-  alert(g_AppPrefix);
 }
 
 function initializeDeploymentPage() {
