@@ -47,6 +47,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Delegation, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Lib\MsWebDeploy\Microsoft.Web.Delegation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Deployment, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Lib\MsWebDeploy\Microsoft.Web.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="msdeploy, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <ExecutableExtension>.exe</ExecutableExtension>
+    </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
       <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
@@ -130,6 +141,10 @@
     </Content>
     <Content Include="..\..\data\ProjectInfos.xml">
       <Link>Data\ProjectInfos.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Lib\MsWebDeploy\msdeploy.exe">
+      <Link>msdeploy.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

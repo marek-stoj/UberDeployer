@@ -43,9 +43,7 @@ namespace UberDeployer.Core.Management.MsDeploy
         Type[] types = assembly.GetTypes();
 
         Type msDeployType =
-          types
-            .Where(t => t.Name == "MSDeploy")
-            .SingleOrDefault();
+          types.SingleOrDefault(t => t.Name == "MSDeploy");
 
         if (msDeployType != null)
         {
@@ -61,9 +59,7 @@ namespace UberDeployer.Core.Management.MsDeploy
         }
 
         Type commandLineHelperType =
-          types
-            .Where(t => t.Name == "CommandLineHelper")
-            .SingleOrDefault();
+          types.SingleOrDefault(t => t.Name == "CommandLineHelper");
 
         if (commandLineHelperType != null)
         {

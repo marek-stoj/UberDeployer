@@ -26,6 +26,7 @@ namespace UberDeployer.Core.Management.Iis
       {
         throw new ArgumentNullException("msDeploy", "Argument can't be null.");
       }
+
       _msDeploy = msDeploy;
     }
 
@@ -169,7 +170,7 @@ namespace UberDeployer.Core.Management.Iis
       }
       catch (MsDeployException e)
       {
-        if (_SiteDoesNotExistRegex.IsMatch(e.ConsoleError))
+        if (!string.IsNullOrEmpty(e.ConsoleError) && _SiteDoesNotExistRegex.IsMatch(e.ConsoleError))
         {
           return null;
         }
