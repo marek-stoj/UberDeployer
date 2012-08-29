@@ -1,8 +1,15 @@
+var g_AppPrefix = '/';
+
 var g_lastSeenMessageId = -1;
 var g_DiagnosticMessagesLoaderInterval = 500;
 
 var g_TargetEnvironmentCookieName = 'target-environment-name';
 var g_TargetEnvironmentCookieExpirationInDays = 365;
+
+function setAppPrefix(appPrefix) {
+  g_AppPrefix = appPrefix;
+  alert(g_AppPrefix);
+}
 
 function initializeDeploymentPage() {
   $('#lst-projects').change(function() {
@@ -76,7 +83,7 @@ function deploy() {
   }
 
   $.post(
-    '/Api/Deploy',
+    g_AppPrefix + 'Api/Deploy',
     {
       projectName: projectName,
       projectConfigurationName: projectConfigurationName,
@@ -89,7 +96,7 @@ function loadEnvironments(onFinishedCallback) {
   clearEnvironments();
 
   $.getJSON(
-    '/Api/GetEnvironments',
+    g_AppPrefix + 'Api/GetEnvironments',
     function(data) {
       $.each(data.environments, function(i, val) {
         var $lstEnvironments = $('#lst-environments');
@@ -111,7 +118,7 @@ function loadProjects(onFinishedCallback) {
   clearProjects();
 
   $.getJSON(
-    '/Api/GetProjects',
+    g_AppPrefix + 'Api/GetProjects',
     function(data) {
       var $lstProjects = $('#lst-projects');
 
@@ -133,7 +140,7 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
   clearProjectConfigurations();
 
   $.getJSON(
-      '/Api/GetProjectConfigurations?projectName=' + encodeURIComponent(projectName),
+      g_AppPrefix + 'Api/GetProjectConfigurations?projectName=' + encodeURIComponent(projectName),
       function(data) {
         $.each(data.projectConfigurations, function(i, val) {
           var $lstProjectConfigs = $('#lst-project-configs');
@@ -155,7 +162,7 @@ function loadProjectConfigurationBuilds(projectName, projectConfigurationName, o
   clearProjectConfigurationBuilds();
 
   $.getJSON(
-    '/Api/GetProjectConfigurationBuilds?projectName=' + encodeURIComponent(projectName) + '&projectConfigurationName=' + encodeURIComponent(projectConfigurationName),
+    g_AppPrefix + 'Api/GetProjectConfigurationBuilds?projectName=' + encodeURIComponent(projectName) + '&projectConfigurationName=' + encodeURIComponent(projectConfigurationName),
     function(data) {
       $.each(data.projectConfigurationBuilds, function(i, val) {
         var $lstProjectConfigBuilds = $('#lst-project-config-builds');
@@ -186,7 +193,7 @@ function startDiagnosticMessagesLoader() {
 
 function loadNewDiagnosticMessages() {
   $.getJSON(
-    '/Api/GetDiagnosticMessages?lastSeenMaxMessageId=' + g_lastSeenMessageId,
+    g_AppPrefix + 'Api/GetDiagnosticMessages?lastSeenMaxMessageId=' + g_lastSeenMessageId,
     function(data) {
       $.each(data.messages, function(i, val) {
         if (val.MessageId > g_lastSeenMessageId) {

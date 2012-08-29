@@ -1,5 +1,5 @@
 ﻿@using UberDeployer.WebApp.Core.Models
-@model UberDeployer.WebApp.Core.Models.BaseViewModel
+@model BaseViewModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +9,10 @@
   <script type="text/javascript" src="@Url.Content("~/Static/jquery.js")"></script>
   <script type="text/javascript" src="@Url.Content("~/Static/bootstrap/js/bootstrap.js")"></script>
   <script type="text/javascript" src="@Url.Content("~/Static/site.js")"></script>
+  
+  <script type="text/javascript">
+    setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
+  </script>
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
