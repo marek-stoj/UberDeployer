@@ -168,7 +168,7 @@ namespace UberDeployer.WebApp.Core.Controllers
         return BadRequest();
       }
 
-      _agentService.BeginDeploymentJob(
+      _agentService.DeployAsync(
         _sessionService.UniqueClientId,
         projectName,
         projectConfigurationName,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
+using System.Threading;
 using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto.TeamCity;
 using UberDeployer.Agent.Proxy.Faults;
@@ -84,7 +85,7 @@ namespace UberDeployer.Agent.Service
 
     #region IAgentService Members
 
-    public void BeginDeploymentJob(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public void Deploy(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
     {
       if (uniqueClientId == Guid.Empty)
       {
@@ -119,22 +120,56 @@ namespace UberDeployer.Agent.Service
         throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = projectName });
       }
 
-      DeploymentTask deploymentTask =
-        projectInfo.CreateDeploymentTask(
-          ObjectFactory.Instance,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName);
+      DoDeploy(uniqueClientId, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName, projectInfo);
+    }
 
-      deploymentTask.DiagnosticMessagePosted +=
-        (eventSender, tmpArgs) =>
+    public void DeployAsync(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    {
+      if (uniqueClientId == Guid.Empty)
+      {
+        throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
+      }
+
+      if (string.IsNullOrEmpty(projectName))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "projectName");
+      }
+
+      if (string.IsNullOrEmpty(projectConfigurationName))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
+      }
+
+      if (string.IsNullOrEmpty(projectConfigurationBuildId))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
+      }
+
+      if (string.IsNullOrEmpty(targetEnvironmentName))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "targetEnvironmentName");
+      }
+
+      ProjectInfo projectInfo =
+        _projectInfoRepository.GetByName(projectName);
+
+      if (projectInfo == null)
+      {
+        throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = projectName });
+      }
+
+      ThreadPool.QueueUserWorkItem(
+        state =>
           {
-            _log.DebugIfEnabled(() => string.Format("{0}: {1}", tmpArgs.MessageType, tmpArgs.Message));
-
-            _diagnosticMessagesLogger.LogMessage(uniqueClientId, tmpArgs.MessageType, tmpArgs.Message);
-          };
-
-      _deploymentPipeline.StartDeployment(deploymentTask);
+            try
+            {
+              DoDeploy(uniqueClientId, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName, projectInfo);
+            }
+            catch (Exception exc)
+            {
+              _log.ErrorIfEnabled(() => "Unhandled exception while deploying asynchronously.", exc);
+            }
+          });
     }
 
     public List<Proxy.Dto.ProjectInfo> GetProjectInfos(Proxy.Dto.ProjectFilter projectFilter)
@@ -385,6 +420,30 @@ namespace UberDeployer.Agent.Service
           .Select(DtoMapper.Map<DiagnosticMessage, Proxy.Dto.DiagnosticMessage>)
           .Where(dm => dm.Type >= minMessageType)
           .ToList();
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private void DoDeploy(Guid uniqueClientId, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectInfo projectInfo)
+    {
+      DeploymentTask deploymentTask =
+        projectInfo.CreateDeploymentTask(
+          ObjectFactory.Instance,
+          projectConfigurationName,
+          projectConfigurationBuildId,
+          targetEnvironmentName);
+
+      deploymentTask.DiagnosticMessagePosted +=
+        (eventSender, tmpArgs) =>
+          {
+            _log.DebugIfEnabled(() => string.Format("{0}: {1}", tmpArgs.MessageType, tmpArgs.Message));
+
+            _diagnosticMessagesLogger.LogMessage(uniqueClientId, tmpArgs.MessageType, tmpArgs.Message);
+          };
+
+      _deploymentPipeline.StartDeployment(deploymentTask);
     }
 
     #endregion

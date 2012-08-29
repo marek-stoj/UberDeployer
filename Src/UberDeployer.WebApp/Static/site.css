@@ -13,15 +13,18 @@ label.lst-header {
 }
 
 #lst-projects-container {
-  width: 30%;
+  width: 29%;
+  float: left;
+  margin-right: 14px;
 }
 
 #lst-project-configs-container {
-  width: 30%;
+  width: 29%;
 }
 
 #lst-project-config-builds-container {
-  width: 40%;
+  width: 39%;
+  float: right;
 }
 
 #lst-projects,

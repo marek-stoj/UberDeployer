@@ -55,3 +55,8 @@
 2012-08-29 13:30:20,280  INFO [29] - Application has started.|
 2012-08-29 13:32:16,703  INFO [24] - Application has started.|
 2012-08-29 13:34:28,197  INFO [13] - Application has started.|
+2012-08-29 13:59:22,030  INFO [24] - Application has started.|
+2012-08-29 13:59:22,980  INFO [34] - Application has started.|
+2012-08-29 13:59:34,641  INFO [27] - Application has started.|
+2012-08-29 14:00:04,177  INFO [33] - Application has started.|
+2012-08-29 14:02:40,965  INFO [34] - Application has started.|

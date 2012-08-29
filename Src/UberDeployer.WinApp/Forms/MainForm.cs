@@ -201,7 +201,7 @@ namespace UberDeployer.WinApp.Forms
         diagnosticMessagesPoller.Start();
 
         _agentService
-          .BeginDeploymentJob(
+          .Deploy(
             Program.UniqueClientId,
             projectInfo.Name,
             projectConfiguration.Name,

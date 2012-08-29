@@ -115,9 +115,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="log4net.config" />
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Deployment\Index.cshtml" />
   </ItemGroup>

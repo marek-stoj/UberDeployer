@@ -18,6 +18,26 @@
       <arg value="/p:Configuration=Release" />
       <arg value="/p:DebugType=none" />
     </exec>
+    <copy todir="bin\UberDeployer.WebApp">
+      <fileset basedir="Src\UberDeployer.WebApp">
+        <include name="**/*" />
+        <exclude name="**/*.cs" />
+        <exclude name="**/*.csproj" />
+        <exclude name="**/*.user" />
+        <exclude name="**/*.suo" />
+        <exclude name="_ReSharper.Metareads" />
+        <exclude name="_ReSharper.Metareads/**/*" />
+        <exclude name="Logs" />
+        <exclude name="Logs/**/*" />
+        <exclude name="**/Core" />
+        <exclude name="**/Core/**/*" />
+        <exclude name="**/obj" />
+        <exclude name="**/obj/**/*" />
+        <exclude name="**/Properties" />
+        <exclude name="**/Properties/**/*" />
+        <exclude name="bin/**/*.xml" />
+      </fileset>
+    </copy>
   </target>
   
   <target name="test">
