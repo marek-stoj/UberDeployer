@@ -108,7 +108,8 @@ namespace UberDeployer.WinApp.Forms
         diagnosticMessages =
           _agentService.GetDiagnosticMessages(
             Program.UniqueClientId,
-            _lastSeenMaxDiagnosticMessageId);
+            _lastSeenMaxDiagnosticMessageId,
+            DiagnosticMessageType.Trace);
 
         if (diagnosticMessages.Count > 0)
         {

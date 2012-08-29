@@ -1,0 +1,56 @@
+﻿@using UberDeployer.WebApp.Core.Models.History
+@model IndexViewModel
+@{
+  ViewBag.Title = "History | ÜberDeployer";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+  <h1>
+    History
+  </h1>
+
+  <hr />
+  
+  <table id="tbl-history" cellpadding="0" cellspacing="0" border="0">
+    <thead>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Requester</th>
+      <th>Project</th>
+      <th>Environment</th>
+      <th>Successful</th>
+    </thead>
+    <tbody>
+      @foreach (DeploymentRequestViewModel request in Model.DeploymentRequests)
+      {
+        <tr>
+          <td>
+            @request.DateRequested.ToShortDateString()
+          </td>
+          <td>
+            @request.DateRequested.ToShortTimeString()
+          </td>
+          <td>
+            @request.RequesterIdentity
+          </td>
+          <td>
+            @request.ProjectName
+          </td>
+          <td>
+            @request.TargetEnvironmentName
+          </td>
+          <td>
+            @(request.FinishedSuccessfully ? "Yes" : "No")
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  
+  <script type="text/javascript">
+    $(document).ready(function() {
+      alternateTableRows('tbl-history');
+    });
+  </script>
+
+</div>

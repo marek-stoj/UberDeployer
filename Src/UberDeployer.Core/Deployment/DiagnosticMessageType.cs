@@ -4,7 +4,7 @@
   {
     Trace = 1,
     Info = 2,
-    Warning = 3,
+    Warn = 3,
     Error = 4,
   }
 }

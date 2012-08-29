@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using UberDeployer.WebApp.Core.Models
+@model UberDeployer.WebApp.Core.Models.BaseViewModel
+<!DOCTYPE html>
 <html>
 <head>
   <title>@ViewBag.Title</title>
@@ -17,23 +19,20 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-        <a class="brand" href="@Url.Action("Index", "Home")">&Uuml;berDeployer</a>
+        <a class="brand" href="@Url.Action("Index", "Home")">ÜberDeployer</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
-            <li class="active">
-              <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+            <li class="@(Model.CurrentAppPage == AppPage.Deployment ? "active" : "")">
+              <a href="@Url.Action("Index", "Deployment")">Deployment</a>
             </li>
-            <li>
-              <a href="#">Help</a>
-            </li>
-            <li>
-              <a href="#">Contact</a>
+            <li class="@(Model.CurrentAppPage == AppPage.History ? "active" : "")">
+              <a href="@Url.Action("Index", "History")">History</a>
             </li>
           </ul>
         </div>
       </div>
     </div>
   </div>
-    @RenderBody()
-  </body>
+  @RenderBody()
+</body>
 </html>

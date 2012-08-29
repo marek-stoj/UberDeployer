@@ -49,9 +49,9 @@ namespace UberDeployer.Agent.Proxy
       return Exec(@as => @as.GetDeploymentRequests(startIndex, maxCount));
     }
 
-    public List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId)
+    public List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId, DiagnosticMessageType minMessageType)
     {
-      return Exec(@as => @as.GetDiagnosticMessages(uniqueClientId, lastSeenMaxMessageId));
+      return Exec(@as => @as.GetDiagnosticMessages(uniqueClientId, lastSeenMaxMessageId, minMessageType));
     }
 
     #endregion

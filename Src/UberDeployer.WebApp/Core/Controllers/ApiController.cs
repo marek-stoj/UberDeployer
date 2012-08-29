@@ -117,6 +117,34 @@ namespace UberDeployer.WebApp.Core.Controllers
           JsonRequestBehavior.AllowGet);
     }
 
+    [HttpGet]
+    public ActionResult GetDiagnosticMessages(long? lastSeenMaxMessageId)
+    {
+      if (!lastSeenMaxMessageId.HasValue)
+      {
+        return BadRequest();
+      }
+
+      List<DiagnosticMessageViewModel> diagnosticMessageViewModels =
+        _agentService.GetDiagnosticMessages(
+          _sessionService.UniqueClientId,
+          lastSeenMaxMessageId.Value,
+          DiagnosticMessageType.Trace)
+          .Select(
+            dm =>
+            new DiagnosticMessageViewModel
+              {
+                MessageId = dm.MessageId,
+                Message = dm.Message,
+                Type = dm.Type.ToString(),
+              }).ToList();
+
+      return
+        Json(
+          new { messages = diagnosticMessageViewModels },
+          JsonRequestBehavior.AllowGet);
+    }
+
     [HttpPost]
     public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
     {

@@ -624,7 +624,7 @@ namespace UberDeployer.WinApp.Forms
               }
               catch (FaultException<ProjectNotFoundFault>)
               {
-                LogMessage(string.Format("Project with artifacts repository name '{0}' couldn't be found.", projectInfo.ArtifactsRepositoryName), DiagnosticMessageType.Warning);
+                LogMessage(string.Format("Project with artifacts repository name '{0}' couldn't be found.", projectInfo.ArtifactsRepositoryName), DiagnosticMessageType.Warn);
 
                 projectConfigurations = new List<ProjectConfigurationInListViewModel>();
               }
@@ -744,7 +744,7 @@ namespace UberDeployer.WinApp.Forms
                 txt_log.SelectionColor = Color.Blue;
                 break;
 
-              case DiagnosticMessageType.Warning:
+              case DiagnosticMessageType.Warn:
                 txt_log.SelectionColor = Color.FromArgb(191, 79, 0);
                 break;
 

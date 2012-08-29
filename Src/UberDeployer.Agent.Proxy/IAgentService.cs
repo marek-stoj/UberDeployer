@@ -45,6 +45,6 @@ namespace UberDeployer.Agent.Proxy
 
     // TODO IMM HI: separate interface?
     [OperationContract]
-    List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId);
+    List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId, DiagnosticMessageType minMessageType);
   }
 }

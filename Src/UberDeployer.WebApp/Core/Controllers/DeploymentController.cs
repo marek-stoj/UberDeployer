@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Web.Mvc;
 using UberDeployer.Agent.Proxy;
-using UberDeployer.WebApp.Core.Models.Dashboard;
+using UberDeployer.WebApp.Core.Models.Deployment;
+using UberDeployer.WebApp.Core.Services;
 
 namespace UberDeployer.WebApp.Core.Controllers
 {
-  public class DashboardController : UberDeployerWebAppController
+  public class DeploymentController : UberDeployerWebAppController
   {
     private readonly IAgentService _agentService;
 
-    public DashboardController(IAgentService agentService)
+    public DeploymentController(IAgentService agentService)
     {
       if (agentService == null)
       {
@@ -19,7 +20,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       _agentService = agentService;
     }
 
-    public DashboardController()
+    public DeploymentController()
       : this(new AgentServiceClient())
     {
     }
@@ -28,7 +29,10 @@ namespace UberDeployer.WebApp.Core.Controllers
     public ActionResult Index()
     {
       var viewModel =
-        new IndexViewModel();
+        new IndexViewModel
+          {
+            TipOfTheDay = LifeProFuckingTips.GetTodayTip(),
+          };
 
       return View(viewModel);
     }

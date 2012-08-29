@@ -373,7 +373,7 @@ namespace UberDeployer.Agent.Service
           .ToList();
     }
 
-    public List<Proxy.Dto.DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId)
+    public List<Proxy.Dto.DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId, Proxy.Dto.DiagnosticMessageType minMessageType)
     {
       if (uniqueClientId == Guid.Empty)
       {
@@ -383,6 +383,7 @@ namespace UberDeployer.Agent.Service
       return
         _diagnosticMessagesLogger.GetMessages(uniqueClientId, lastSeenMaxMessageId)
           .Select(DtoMapper.Map<DiagnosticMessage, Proxy.Dto.DiagnosticMessage>)
+          .Where(dm => dm.Type >= minMessageType)
           .ToList();
     }
 

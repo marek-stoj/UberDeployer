@@ -21,26 +21,81 @@ label.lst-header {
 }
 
 #lst-project-config-builds-container {
-  width: 39%;
+  width: 40%;
 }
 
 #lst-projects,
 #lst-project-configs,
 #lst-project-config-builds {
-  width: 95%;
+  width: 100%;
+}
+
+#bottom-bar {
+  width: 450px;
+  margin: 0 auto;
 }
 
 #bottom-bar label {
-  float: right;
+  display: inline;
+  float: left;
   line-height: 30px;
 }
 
 #lst-environments {
-  float: right;
   margin-left: 10px;
+  float: left;
 }
 
 #btn-deploy {
-  float: right;
   margin-left: 10px;
+  float: left;
+}
+
+#txt-logs {
+  width: 97%;
+  height: 209px;
+  overflow: auto;
+  padding: 10px;
+  border: solid #ccc 1px;
+}
+
+.log-msg {
+}
+
+.log-msg-trace {
+  color: #999;
+}
+
+.log-msg-info {
+  color: #3A87AD;
+}
+
+.log-msg-warn {
+  color: #ff4500;
+}
+
+.log-msg-error {
+  color: #f00;
+}
+
+#tbl-history {
+  width: 100%;
+}
+
+#tbl-history th,
+#tbl-history td {
+  padding: 2px 5px;
+  text-align: left;
+}
+
+#tbl-history th {
+}
+
+#tbl-history tr.even td {
+  background-color: #eee;
+}
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

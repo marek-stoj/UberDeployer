@@ -66,16 +66,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Controllers\ApiController.cs" />
-    <Compile Include="Core\Models\Api\EnvironmentViewModel.cs" />
+    <Compile Include="Core\Models\History\DeploymentRequestViewModel.cs" />
+    <Compile Include="Core\Controllers\HistoryController.cs" />
     <Compile Include="Core\Controllers\HomeController.cs" />
-    <Compile Include="Core\Controllers\DashboardController.cs" />
+    <Compile Include="Core\Models\Api\DiagnosticMessageViewModel.cs" />
+    <Compile Include="Core\Models\Api\EnvironmentViewModel.cs" />
+    <Compile Include="Core\Controllers\DeploymentController.cs" />
+    <Compile Include="Core\Models\AppPage.cs" />
+    <Compile Include="Core\Models\BaseViewModel.cs" />
+    <Compile Include="Core\Models\Deployment\IndexViewModel.cs" />
+    <Compile Include="Core\Models\History\IndexViewModel.cs" />
+    <Compile Include="Core\Services\LifeProFuckingTips.cs" />
     <Compile Include="Core\Services\SessionService.cs" />
     <Compile Include="Core\Services\ISessionService.cs" />
     <Compile Include="Core\Models\Api\ProjectConfigurationBuildViewModel.cs" />
     <Compile Include="Core\Models\Api\ProjectConfigurationViewModel.cs" />
     <Compile Include="Core\Models\Api\ProjectViewModel.cs" />
     <Compile Include="Core\Controllers\UberDeployerWebAppController.cs" />
-    <Compile Include="Core\Models\Dashboard\IndexViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -111,7 +118,8 @@
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\History\Index.cshtml" />
+    <Content Include="Views\Deployment\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
