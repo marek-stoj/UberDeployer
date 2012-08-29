@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -37,6 +38,13 @@ namespace UberDeployer.WebApp
       RegisterRoutes(RouteTable.Routes);
 
       _log.InfoIfEnabled(() => "Application has started.");
+    }
+
+    protected void Application_Error()
+    {
+      Exception exception = Server.GetLastError();
+
+      // TODO IMM HI: 
     }
   }
 }

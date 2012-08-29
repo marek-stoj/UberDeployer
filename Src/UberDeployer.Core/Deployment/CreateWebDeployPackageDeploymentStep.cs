@@ -9,6 +9,7 @@ namespace UberDeployer.Core.Deployment
     private const string _WebDeployPackageFileName = "webDeployPackage.zip";
     private const string _WebDeployManifestFileName = "webDeployManifest.xml";
 
+    private readonly IMsDeploy _msDeploy;
     private readonly string _webAppBinariesDirPath;
     private readonly string _iisSiteName;
     private readonly string _webApplicationName;
@@ -18,8 +19,13 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public CreateWebDeployPackageDeploymentStep(string webAppBinariesDirPath, string iisSiteName, string webApplicationName)
+    public CreateWebDeployPackageDeploymentStep(IMsDeploy msDeploy, string webAppBinariesDirPath, string iisSiteName, string webApplicationName)
     {
+      if (msDeploy == null)
+      {
+        throw new ArgumentNullException("msDeploy");
+      }
+
       if (string.IsNullOrEmpty(webAppBinariesDirPath))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "webAppBinariesDirPath");
@@ -40,6 +46,7 @@ namespace UberDeployer.Core.Deployment
         throw new ArgumentException("Argument can't be null nor empty.", "webApplicationName");
       }
 
+      _msDeploy = msDeploy;
       _webAppBinariesDirPath = webAppBinariesDirPath;
       _iisSiteName = iisSiteName;
       _webApplicationName = webApplicationName;
@@ -60,15 +67,12 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      // TODO IMM HI: dependency
-      var msDeploy = new MsDeploy(Path.Combine(Environment.CurrentDirectory, "msdeploy.exe"));
-
       string iisAppPath = _webAppBinariesDirPath;
       string webDeployManifestFilePath = Path.Combine(_webAppBinariesParentDirPath, _WebDeployManifestFileName);
 
       try
       {
-        msDeploy.CreateIisAppManifestFile(iisAppPath, webDeployManifestFilePath);
+        _msDeploy.CreateIisAppManifestFile(iisAppPath, webDeployManifestFilePath);
 
         string paramMatchValue =
           string.Format(
@@ -92,7 +96,7 @@ namespace UberDeployer.Core.Deployment
 
         string consoleOutput;
 
-        msDeploy.Run(msDeployArgs, out consoleOutput);
+        _msDeploy.Run(msDeployArgs, out consoleOutput);
       }
       finally
       {

@@ -97,7 +97,7 @@ namespace UberDeployer.CommonConfiguration
       // TODO IMM HI: config?
       container.Register(
         Component.For<IMsDeploy>()
-          .UsingFactoryMethod(() => new MsDeploy(Path.Combine(Environment.CurrentDirectory, "msdeploy.exe")))
+          .UsingFactoryMethod(() => new MsDeploy(Path.Combine(_BaseDirPath, "msdeploy.exe")))
           .LifeStyle.Transient);
 
       // TODO IMM HI: config?

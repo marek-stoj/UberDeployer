@@ -2,8 +2,38 @@
 <html>
 <head>
   <title>@ViewBag.Title</title>
+  <link href="@Url.Content("~/Static/bootstrap/css/bootstrap.css")" rel="stylesheet" type="text/css" />
+  <link href="@Url.Content("~/Static/site.css")" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="@Url.Content("~/Static/jquery.js")"></script>
+  <script type="text/javascript" src="@Url.Content("~/Static/bootstrap/js/bootstrap.js")"></script>
+  <script type="text/javascript" src="@Url.Content("~/Static/site.js")"></script>
 </head>
 <body>
-  @RenderBody()
-</body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="@Url.Action("Index", "Home")">&Uuml;berDeployer</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active">
+              <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+            </li>
+            <li>
+              <a href="#">Help</a>
+            </li>
+            <li>
+              <a href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+    @RenderBody()
+  </body>
 </html>

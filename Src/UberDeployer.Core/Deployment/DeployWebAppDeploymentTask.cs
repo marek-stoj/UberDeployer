@@ -127,6 +127,7 @@ namespace UberDeployer.Core.Deployment
         // TODO IMM HI: add possibility to specify physical path on the target machine
         var createWebDeployPackageDeploymentStep =
           new CreateWebDeployPackageDeploymentStep(
+            _msDeploy,
             extractArtifactsDeploymentStep.BinariesDirPath,
             _projectInfo.IisSiteName,
             _projectInfo.WebAppName);

@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-using UberDeployer.Agent.Proxy;
 
 namespace UberDeployer.WebApp.Core.Controllers
 {
@@ -8,7 +7,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     [HttpGet]
     public ActionResult Index()
     {
-      return Content("OK!");
+      return RedirectToAction("Index", "Dashboard");
     }
   }
 }

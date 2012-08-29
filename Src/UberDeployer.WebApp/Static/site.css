@@ -1,0 +1,46 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+label.lst-header {
+  display: inline;
+  font-weight: bold;
+}
+
+.lst-container {
+  float: left;
+}
+
+#lst-projects-container {
+  width: 30%;
+}
+
+#lst-project-configs-container {
+  width: 30%;
+}
+
+#lst-project-config-builds-container {
+  width: 39%;
+}
+
+#lst-projects,
+#lst-project-configs,
+#lst-project-config-builds {
+  width: 95%;
+}
+
+#bottom-bar label {
+  float: right;
+  line-height: 30px;
+}
+
+#lst-environments {
+  float: right;
+  margin-left: 10px;
+}
+
+#btn-deploy {
+  float: right;
+  margin-left: 10px;
+}

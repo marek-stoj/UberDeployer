@@ -1,0 +1,55 @@
+﻿@using UberDeployer.WebApp.Core.Models.Dashboard
+@model IndexViewModel
+@{
+  ViewBag.Title = "Dashboard";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+  <h1>
+    Dashboard
+  </h1>
+
+  <p>
+    The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men.
+    Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for
+    he is truly his brother's keeper and the finder of lost children. And I will strike down upon thee with great
+    vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name
+    is the Lord when I lay My vengeance upon thee.
+  </p>
+
+  <div class="clearfix">
+    <div id="lst-projects-container" class="lst-container">
+      <label class="lst-header">Projects:</label>
+      <br />
+      <select id="lst-projects" size="10">
+      </select>
+    </div>
+
+    <div id="lst-project-configs-container" class="lst-container">
+      <label class="lst-header">Configurations:</label>
+      <br />
+      <select id="lst-project-configs" size="10">
+      </select>
+    </div>
+
+    <div id="lst-project-config-builds-container" class="lst-container">
+      <label class="lst-header">Builds:</label>
+      <br />
+      <select id="lst-project-config-builds" size="10">
+      </select>
+      </div>
+  </div>  
+
+  <div id="bottom-bar" class="clearfix">
+    <input id="btn-deploy" type="submit" name="btn-deploy" value="Deploy" class="btn"></input>
+    <select id="lst-environments">
+    </select>
+    <label>Environments:</label>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    initializeDashboard();
+  })
+</script>
