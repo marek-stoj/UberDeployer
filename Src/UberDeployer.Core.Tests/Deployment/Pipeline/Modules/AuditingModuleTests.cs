@@ -35,8 +35,6 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     [Test]
     public void OnDeploymentTaskFinished_ExpectAddDeploymnetRequest()
     {
-      DateTime dateStarted = DateTime.UtcNow;
-      DateTime dateFinished = DateTime.UtcNow;
       string projectName = "projectName";
       string targetEnvironmentName = "targetEnvironmentName";
       var deploymentRequestRepository = new Mock<IDeploymentRequestRepository>(MockBehavior.Strict);
@@ -44,8 +42,8 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      TerminalAppProjectInfo projectInfo = new TerminalAppProjectInfo("name", "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectInfo, "Production", "buildId", "prod");
+      TerminalAppProjectInfo projectInfo = new TerminalAppProjectInfo(projectName, "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
+      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectInfo, "Production", "buildId", targetEnvironmentName);
       var deploymentContext = new DeploymentContext("requester");
 
       deploymentRequestRepository
@@ -53,12 +51,8 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
           drr =>
           drr.AddDeploymentRequest(
             It.Is<DeploymentRequest>(
-              r =>
-              r.DateStarted == dateStarted
-              && r.DateFinished == dateFinished
-              && r.TargetEnvironmentName == targetEnvironmentName
-              && r.FinishedSuccessfully
-              && r.ProjectName == projectName)));
+              r => r.ProjectName == projectName
+                && r.TargetEnvironmentName == targetEnvironmentName)));
 
       Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskFinished(deploymentTask, deploymentContext));
     }
