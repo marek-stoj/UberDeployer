@@ -34,7 +34,7 @@ namespace UberDeployer.WinApp.ViewModels
 
     public string Date
     {
-      get { return _deploymentRequest.DateRequested.ToString(); }
+      get { return _deploymentRequest.DateFinished.ToString(); }
     }
 
     public string Successful

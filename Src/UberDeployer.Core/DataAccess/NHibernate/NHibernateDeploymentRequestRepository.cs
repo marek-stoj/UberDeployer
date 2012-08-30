@@ -42,7 +42,7 @@ namespace UberDeployer.Core.DataAccess.NHibernate
       {
         IQueryOver<DeploymentRequest> deploymentRequests =
           session.QueryOver<DeploymentRequest>()
-            .OrderBy(dr => dr.DateRequested).Desc
+            .OrderBy(dr => dr.DateFinished).Desc
             .ThenBy(dr => dr.Id).Asc
             .Skip(startIndex)
             .Take(maxCount);

@@ -83,6 +83,7 @@
     <Compile Include="Deployment\DiagnosticMessage.cs" />
     <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStep.cs" />
     <Compile Include="Deployment\MoveClusterGroupToAnotherNodeDeploymentStep.cs" />
+    <Compile Include="Deployment\Pipeline\DeploymentContext.cs" />
     <Compile Include="Domain\ProjectToFailoverClusterGroupMapping.cs" />
     <Compile Include="InternalException.cs" />
     <Compile Include="Management\FailoverCluster\IFailoverClusterManager.cs" />

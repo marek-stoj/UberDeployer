@@ -37,9 +37,11 @@ namespace UberDeployer.WebApp.Core.Controllers
             dr =>
             new DeploymentRequestViewModel
               {
-                DateRequested = dr.DateRequested,
+                DateFinished = dr.DateFinished,
                 RequesterIdentity = dr.RequesterIdentity,
                 ProjectName = dr.ProjectName,
+                ProjectConfigurationName = dr.ProjectConfigurationName,
+                ProjectConfigurationBuildId = dr.ProjectConfigurationBuildId,
                 TargetEnvironmentName = dr.TargetEnvironmentName,
                 FinishedSuccessfully = dr.FinishedSuccessfully,
               })

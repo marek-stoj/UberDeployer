@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 
@@ -21,20 +18,24 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     [Test]
     public void AfterAssignValueToProperties_PropertiesReturnCorrectValue()
     {
-      DateTime dateRequested = DateTime.Now;
+      DateTime dateStarted = DateTime.UtcNow;
       string requestIdentity = "identity";
       string projectName = "projectName";
       string targetEnvironmentName = "targetEnvironmentName";
-      var deploymentRequest = new DeploymentRequest
-                              {
-                                DateRequested = dateRequested,
-                                FinishedSuccessfully = true,
-                                ProjectName = projectName,
-                                RequesterIdentity = requestIdentity,
-                                TargetEnvironmentName = targetEnvironmentName
-                              };
 
-      Assert.AreEqual(dateRequested, deploymentRequest.DateRequested);
+      var deploymentRequest =
+        new DeploymentRequest
+          {
+            DateStarted = dateStarted,
+            DateFinished = dateStarted,
+            FinishedSuccessfully = true,
+            ProjectName = projectName,
+            RequesterIdentity = requestIdentity,
+            TargetEnvironmentName = targetEnvironmentName
+          };
+
+      Assert.AreEqual(dateStarted, deploymentRequest.DateStarted);
+      Assert.AreEqual(dateStarted, deploymentRequest.DateFinished);
       Assert.AreEqual(requestIdentity, deploymentRequest.RequesterIdentity);
       Assert.AreEqual(projectName, deploymentRequest.ProjectName);
       Assert.AreEqual(targetEnvironmentName, deploymentRequest.TargetEnvironmentName);

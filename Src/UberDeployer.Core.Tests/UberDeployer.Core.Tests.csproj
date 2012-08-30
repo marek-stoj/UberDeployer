@@ -82,6 +82,7 @@
     <Compile Include="Deployment\NtServiceControlDeploymentStepTests.cs" />
     <Compile Include="Deployment\CopyFilesDeploymentStepTests.cs" />
     <Compile Include="Deployment\Pipeline\DeploymentPipelineTests.cs" />
+    <Compile Include="Deployment\Pipeline\DummyDeploymentTask.cs" />
     <Compile Include="Deployment\Pipeline\Modules\AuditingModuleTests.cs" />
     <Compile Include="Deployment\Pipeline\Modules\DeploymentRequestTests.cs" />
     <Compile Include="Deployment\Pipeline\Modules\EnforceTargetEnvironmentConstraintsModuleTests.cs" />

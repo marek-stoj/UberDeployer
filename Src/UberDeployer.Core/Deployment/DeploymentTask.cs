@@ -126,6 +126,8 @@ namespace UberDeployer.Core.Deployment
 
     public abstract string ProjectConfigurationName { get; }
 
+    public abstract string ProjectConfigurationBuildId { get; }
+
     public string TargetEnvironmentName
     {
       get { return _targetEnvironmentName; }

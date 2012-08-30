@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment.Pipeline;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Tests.Deployment.Pipeline
 {
@@ -14,16 +13,19 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline
     public void AddModule_WhenModuleIsNull_ThrowsArgumentNullException()
     {
       var pipeline = new DeploymentPipeline();
-      
-      Assert.Throws<ArgumentNullException>(()=> pipeline.AddModule(null));
+
+      Assert.Throws<ArgumentNullException>(() => pipeline.AddModule(null));
     }
 
     [Test]
     public void StartDeployment_WhenDeploymentTaskIsNull_ThrowsArgumentNullException()
     {
+      var environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>(MockBehavior.Loose);
+
       var pipeline = new DeploymentPipeline();
 
-      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(null));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(null, new DeploymentContext("requester")));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(new DummyDeploymentTask(environmentInfoRepositoryFake.Object, "env"), null));
     }
   }
 }

@@ -170,6 +170,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       _agentService.DeployAsync(
         _sessionService.UniqueClientId,
+        CurrentUsername,
         projectName,
         projectConfigurationName,
         projectConfigurationBuildId,

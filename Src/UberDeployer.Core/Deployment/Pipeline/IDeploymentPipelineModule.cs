@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace UberDeployer.Core.Deployment.Pipeline
+﻿namespace UberDeployer.Core.Deployment.Pipeline
 {
   // TODO IMM HI: refactor
   public interface IDeploymentPipelineModule
   {
-    void OnDeploymentTaskStarting(DeploymentTask deploymentTask);
+    void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext);
 
-    void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DateTime dateRequested, string projectName, string targetEnvironmentName, bool finishedSuccessfully);
+    void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DeploymentContext deploymentContext);
   }
 }

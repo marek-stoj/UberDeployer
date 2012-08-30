@@ -11,11 +11,17 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     public virtual int Id { get; private set; }
 
-    public virtual DateTime DateRequested { get; set; }
+    public virtual DateTime DateStarted { get; set; }
+    
+    public virtual DateTime DateFinished { get; set; }
 
     public virtual string RequesterIdentity { get; set; }
 
     public virtual string ProjectName { get; set; }
+
+    public virtual string ProjectConfigurationName { get; set; }
+
+    public virtual string ProjectConfigurationBuildId { get; set; }
 
     public virtual string TargetEnvironmentName { get; set; }
 

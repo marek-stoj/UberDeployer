@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Web.Mvc;
 
 namespace UberDeployer.WebApp.Core.Controllers
@@ -9,6 +10,14 @@ namespace UberDeployer.WebApp.Core.Controllers
       Response.StatusCode = 400;
 
       return Content("400 - Bad Request");
+    }
+
+    protected string CurrentUsername
+    {
+      get
+      {
+        return Thread.CurrentPrincipal.Identity.Name;
+      }
     }
   }
 }

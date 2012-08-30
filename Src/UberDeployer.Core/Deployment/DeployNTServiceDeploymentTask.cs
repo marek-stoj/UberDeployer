@@ -163,6 +163,10 @@ namespace UberDeployer.Core.Deployment
       get { return _projectConfigurationName; }
     }
 
+    public override string ProjectConfigurationBuildId
+    {
+      get { return _projectConfigurationBuildId; }
+    }
     #endregion
 
     #region Private methods

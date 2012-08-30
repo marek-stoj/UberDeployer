@@ -10,7 +10,7 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     #region IDeploymentPipelineModule Members
 
-    public void OnDeploymentTaskStarting(DeploymentTask deploymentTask)
+    public void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       if (deploymentTask.TargetEnvironmentName == ProductionEnvironmentName
        && deploymentTask.ProjectConfigurationName != ProductionProjectConfigurationName)
@@ -19,7 +19,7 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
       }
     }
 
-    public void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DateTime dateRequested, string projectName, string targetEnvironmentName, bool finishedSuccessfully)
+    public void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       // do nothing
     }

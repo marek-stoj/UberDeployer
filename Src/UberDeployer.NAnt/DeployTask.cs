@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using NAnt.Core;
 using NAnt.Core.Attributes;
 using UberDeployer.CommonConfiguration;
@@ -37,7 +38,9 @@ namespace UberDeployer.NAnt
         IDeploymentPipeline deploymentPipeline =
           ObjectFactory.Instance.CreateDeploymentPipeline();
 
-        deploymentPipeline.StartDeployment(deploymentTask);
+        var deploymentContext = new DeploymentContext(RequesterIdentity);
+
+        deploymentPipeline.StartDeployment(deploymentTask, deploymentContext);
       }
       catch (Exception exc)
       {
@@ -60,5 +63,20 @@ namespace UberDeployer.NAnt
     [TaskAttribute("environment", Required = true)]
     [StringValidator(AllowEmpty = false)]
     public string Environment { get; set; }
+
+    private static string RequesterIdentity
+    {
+      get
+      {
+        var windowsIdentity = WindowsIdentity.GetCurrent();
+
+        if (windowsIdentity == null)
+        {
+          throw new InternalException("Couldn't get requester identity.");
+        }
+
+        return windowsIdentity.Name;
+      }
+    }
   }
 }

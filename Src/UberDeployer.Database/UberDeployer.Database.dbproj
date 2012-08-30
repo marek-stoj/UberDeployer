@@ -55,7 +55,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\TeamData\Microsoft.Data.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="Schema" />
+    <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
     <PropertiesFile Include="Properties\Database.sqlsettings">
@@ -72,7 +72,7 @@
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
   </ItemGroup>
   <ItemGroup>
-    <NotInBuild Include="Schema\1.0.sql">
+    <NotInBuild Include="Scripts\Schema.sql">
       <SubType>NotInBuild</SubType>
     </NotInBuild>
   </ItemGroup>

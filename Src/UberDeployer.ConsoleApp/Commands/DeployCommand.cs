@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.ConsoleCommander;
 using UberDeployer.Core.Deployment;
@@ -54,7 +55,9 @@ namespace UberDeployer.ConsoleApp.Commands
         IDeploymentPipeline deploymentPipeline =
           ObjectFactory.Instance.CreateDeploymentPipeline();
 
-        deploymentPipeline.StartDeployment(deploymentTask);
+        var deploymentContext = new DeploymentContext(RequesterIdentity);
+
+        deploymentPipeline.StartDeployment(deploymentTask, deploymentContext);
 
         return 0;
       }
@@ -79,6 +82,21 @@ namespace UberDeployer.ConsoleApp.Commands
     public override string CommandName
     {
       get { return "deploy"; }
+    }
+
+    private static string RequesterIdentity
+    {
+      get
+      {
+        var windowsIdentity = WindowsIdentity.GetCurrent();
+
+        if (windowsIdentity == null)
+        {
+          throw new InternalException("Couldn't get requester identity.");
+        }
+
+        return windowsIdentity.Name;
+      }
     }
   }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Principal;
 
 namespace UberDeployer.Core.Deployment.Pipeline.Modules
 {
@@ -23,34 +22,24 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     #region IDeploymentPipelineModule Members
 
-    public void OnDeploymentTaskStarting(DeploymentTask deploymentTask)
+    public void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       // do nothing
     }
 
-    public void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DateTime dateRequested, string projectName, string targetEnvironmentName, bool finishedSuccessfully)
+    public void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
-      // TODO IMM HI: this won't do while running inside an NT service; we have to pass the credentials through WCF
-      WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
-      string requesterIdentity;
-
-      if (windowsIdentity != null)
-      {
-        requesterIdentity = windowsIdentity.Name;
-      }
-      else
-      {
-        requesterIdentity = "(no windows identity)";
-      }
-
       var deploymentRequest =
         new DeploymentRequest
           {
-            RequesterIdentity = requesterIdentity,
-            DateRequested = dateRequested,
-            ProjectName = projectName,
-            TargetEnvironmentName = targetEnvironmentName,
-            FinishedSuccessfully = finishedSuccessfully,
+            RequesterIdentity = deploymentContext.RequesterIdentity,
+            DateStarted = deploymentContext.DateStarted,
+            DateFinished = deploymentContext.DateFinished,
+            ProjectName = deploymentTask.ProjectName,
+            ProjectConfigurationName = deploymentTask.ProjectConfigurationName,
+            ProjectConfigurationBuildId = deploymentTask.ProjectConfigurationBuildId,
+            TargetEnvironmentName = deploymentTask.TargetEnvironmentName,
+            FinishedSuccessfully = deploymentContext.FinishedSuccessfully,
           };
 
       _deploymentRequestRepository.AddDeploymentRequest(deploymentRequest);

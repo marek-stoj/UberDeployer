@@ -12,11 +12,11 @@ namespace UberDeployer.Agent.Proxy
   {
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
-    void Deploy(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
+    void Deploy(Guid uniqueClientId, string requesterIdentity, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
-    void DeployAsync(Guid uniqueClientId, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
+    void DeployAsync(Guid uniqueClientId, string requesterIdentity, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
 
     [OperationContract]
     List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter);

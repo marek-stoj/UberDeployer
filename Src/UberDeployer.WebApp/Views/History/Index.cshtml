@@ -17,6 +17,7 @@
       <th>Time</th>
       <th>Requester</th>
       <th>Project</th>
+      <th>Configuration</th>
       <th>Environment</th>
       <th>Successful</th>
     </thead>
@@ -25,16 +26,19 @@
       {
         <tr>
           <td>
-            @request.DateRequested.ToShortDateString()
+            @request.DateFinished.ToShortDateString()
           </td>
           <td>
-            @request.DateRequested.ToShortTimeString()
+            @request.DateFinished.ToShortTimeString()
           </td>
           <td>
             @request.RequesterIdentity
           </td>
           <td>
             @request.ProjectName
+          </td>
+          <td>
+            @request.ProjectConfigurationName
           </td>
           <td>
             @request.TargetEnvironmentName

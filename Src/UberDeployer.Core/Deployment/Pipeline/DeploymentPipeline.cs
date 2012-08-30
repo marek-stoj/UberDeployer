@@ -22,17 +22,23 @@ namespace UberDeployer.Core.Deployment.Pipeline
       _modules.Add(module);
     }
 
-    public void StartDeployment(DeploymentTask deploymentTask)
+    public void StartDeployment(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       if (deploymentTask == null)
       {
         throw new ArgumentNullException("deploymentTask");
       }
 
-      bool finishedSuccessfully = false;
-      DateTime utcNow = DateTime.UtcNow;
+      if (deploymentContext == null)
+      {
+        throw new ArgumentNullException("deploymentContext");
+      }
 
-      OnDeploymentTaskStarting(deploymentTask);
+      deploymentContext.DateStarted = DateTime.UtcNow;
+
+      bool finishedSuccessfully = false;
+
+      OnDeploymentTaskStarting(deploymentTask, deploymentContext);
 
       try
       {
@@ -42,28 +48,29 @@ namespace UberDeployer.Core.Deployment.Pipeline
       }
       finally
       {
+        deploymentContext.DateFinished = DateTime.UtcNow;
+        deploymentContext.FinishedSuccessfully = finishedSuccessfully;
+
+        // TODO IMM HI: catch exceptions; pass them upstream using some mechanisms like DeploymentTask.DiagnosticMessagePosted event
         OnDeploymentTaskFinished(
           deploymentTask,
-          utcNow,
-          deploymentTask.ProjectName,
-          deploymentTask.TargetEnvironmentName,
-          finishedSuccessfully);
+          deploymentContext);
       }
     }
 
-    private void OnDeploymentTaskStarting(DeploymentTask deploymentTask)
+    private void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       foreach (IDeploymentPipelineModule deploymentPipelineModule in _modules)
       {
-        deploymentPipelineModule.OnDeploymentTaskStarting(deploymentTask);
+        deploymentPipelineModule.OnDeploymentTaskStarting(deploymentTask, deploymentContext);
       }
     }
 
-    private void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DateTime dateRequested, string projectName, string targetEnvironmentName, bool finishedSuccessfully)
+    private void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       foreach (IDeploymentPipelineModule deploymentPipelineModule in _modules)
       {
-        deploymentPipelineModule.OnDeploymentTaskFinished(deploymentTask, dateRequested, projectName, targetEnvironmentName, finishedSuccessfully);
+        deploymentPipelineModule.OnDeploymentTaskFinished(deploymentTask, deploymentContext);
       }
     }
   }

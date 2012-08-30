@@ -58,6 +58,7 @@
     <Compile Include="Commands\ListProjectConfigurationsCommand.cs" />
     <Compile Include="Commands\ListEnvironmentsCommand.cs" />
     <Compile Include="Commands\ListProjectsCommand.cs" />
+    <Compile Include="InternalException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Commands\ReadEvalPrintLoopCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

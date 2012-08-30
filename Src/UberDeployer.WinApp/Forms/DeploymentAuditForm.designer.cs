@@ -31,17 +31,17 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeploymentAuditForm));
       this.pic_indeterminateProgress = new System.Windows.Forms.PictureBox();
       this.grp_deploymentRequests = new System.Windows.Forms.GroupBox();
-      this.dgv_deploymentRequests = new CustomControls.MyDataGridView();
-      this.DateRequestedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.RequesterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.ProjectColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.TargetEnvironmentNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.SuccessfulColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.dgv_deploymentRequests = new UberDeployer.WinApp.CustomControls.MyDataGridView();
       this.btn_close = new System.Windows.Forms.Button();
       this.btn_reloadDeploymentRequests = new System.Windows.Forms.Button();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.DateFinishedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.RequesterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.ProjectColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.TargetEnvironmentNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.SuccessfulColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.pic_indeterminateProgress)).BeginInit();
       this.grp_deploymentRequests.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dgv_deploymentRequests)).BeginInit();
@@ -78,7 +78,7 @@
       this.dgv_deploymentRequests.BackgroundColor = System.Drawing.SystemColors.Window;
       this.dgv_deploymentRequests.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.dgv_deploymentRequests.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DateRequestedColumn,
+            this.DateFinishedColumn,
             this.RequesterColumn,
             this.ProjectColumn,
             this.TargetEnvironmentNameColumn,
@@ -92,50 +92,6 @@
       this.dgv_deploymentRequests.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
       this.dgv_deploymentRequests.Size = new System.Drawing.Size(818, 440);
       this.dgv_deploymentRequests.TabIndex = 15;
-      // 
-      // DateRequestedColumn
-      // 
-      this.DateRequestedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-      this.DateRequestedColumn.DataPropertyName = "Date";
-      this.DateRequestedColumn.HeaderText = "Date";
-      this.DateRequestedColumn.Name = "DateRequestedColumn";
-      this.DateRequestedColumn.ReadOnly = true;
-      this.DateRequestedColumn.Width = 55;
-      // 
-      // RequesterColumn
-      // 
-      this.RequesterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-      this.RequesterColumn.DataPropertyName = "Requester";
-      this.RequesterColumn.HeaderText = "Requester";
-      this.RequesterColumn.Name = "RequesterColumn";
-      this.RequesterColumn.ReadOnly = true;
-      this.RequesterColumn.Width = 81;
-      // 
-      // ProjectColumn
-      // 
-      this.ProjectColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-      this.ProjectColumn.DataPropertyName = "Project";
-      this.ProjectColumn.HeaderText = "Project name";
-      this.ProjectColumn.Name = "ProjectColumn";
-      this.ProjectColumn.ReadOnly = true;
-      // 
-      // TargetEnvironmentNameColumn
-      // 
-      this.TargetEnvironmentNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-      this.TargetEnvironmentNameColumn.DataPropertyName = "Environment";
-      this.TargetEnvironmentNameColumn.HeaderText = "Environment";
-      this.TargetEnvironmentNameColumn.Name = "TargetEnvironmentNameColumn";
-      this.TargetEnvironmentNameColumn.ReadOnly = true;
-      this.TargetEnvironmentNameColumn.Width = 91;
-      // 
-      // SuccessfulColumn
-      // 
-      this.SuccessfulColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-      this.SuccessfulColumn.DataPropertyName = "Successful";
-      this.SuccessfulColumn.HeaderText = "Successful";
-      this.SuccessfulColumn.Name = "SuccessfulColumn";
-      this.SuccessfulColumn.ReadOnly = true;
-      this.SuccessfulColumn.Width = 84;
       // 
       // btn_close
       // 
@@ -179,9 +135,53 @@
       // 
       this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
       this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-      this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.exitToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
       this.exitToolStripMenuItem.Text = "E&xit";
       this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+      // 
+      // DateFinishedColumn
+      // 
+      this.DateFinishedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.DateFinishedColumn.DataPropertyName = "Date";
+      this.DateFinishedColumn.HeaderText = "Date";
+      this.DateFinishedColumn.Name = "DateFinishedColumn";
+      this.DateFinishedColumn.ReadOnly = true;
+      this.DateFinishedColumn.Width = 55;
+      // 
+      // RequesterColumn
+      // 
+      this.RequesterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.RequesterColumn.DataPropertyName = "Requester";
+      this.RequesterColumn.HeaderText = "Requester";
+      this.RequesterColumn.Name = "RequesterColumn";
+      this.RequesterColumn.ReadOnly = true;
+      this.RequesterColumn.Width = 81;
+      // 
+      // ProjectColumn
+      // 
+      this.ProjectColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+      this.ProjectColumn.DataPropertyName = "Project";
+      this.ProjectColumn.HeaderText = "Project name";
+      this.ProjectColumn.Name = "ProjectColumn";
+      this.ProjectColumn.ReadOnly = true;
+      // 
+      // TargetEnvironmentNameColumn
+      // 
+      this.TargetEnvironmentNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.TargetEnvironmentNameColumn.DataPropertyName = "Environment";
+      this.TargetEnvironmentNameColumn.HeaderText = "Environment";
+      this.TargetEnvironmentNameColumn.Name = "TargetEnvironmentNameColumn";
+      this.TargetEnvironmentNameColumn.ReadOnly = true;
+      this.TargetEnvironmentNameColumn.Width = 91;
+      // 
+      // SuccessfulColumn
+      // 
+      this.SuccessfulColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.SuccessfulColumn.DataPropertyName = "Successful";
+      this.SuccessfulColumn.HeaderText = "Successful";
+      this.SuccessfulColumn.Name = "SuccessfulColumn";
+      this.SuccessfulColumn.ReadOnly = true;
+      this.SuccessfulColumn.Width = 84;
       // 
       // DeploymentAuditForm
       // 
@@ -219,15 +219,15 @@
     private System.Windows.Forms.GroupBox grp_deploymentRequests;
     private CustomControls.MyDataGridView dgv_deploymentRequests;
     private System.Windows.Forms.Button btn_close;
-    private System.Windows.Forms.DataGridViewTextBoxColumn DateRequestedColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn RequesterColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn TargetEnvironmentNameColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn SuccessfulColumn;
     private System.Windows.Forms.Button btn_reloadDeploymentRequests;
     private System.Windows.Forms.MenuStrip menuStrip1;
     private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+    private System.Windows.Forms.DataGridViewTextBoxColumn DateFinishedColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn RequesterColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn ProjectColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn TargetEnvironmentNameColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn SuccessfulColumn;
   }
 }
 

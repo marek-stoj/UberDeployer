@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
+using System.Security.Principal;
 using System.ServiceModel;
 using System.Threading;
 using System.Windows.Forms;
@@ -203,6 +203,7 @@ namespace UberDeployer.WinApp.Forms
         _agentService
           .Deploy(
             Program.UniqueClientId,
+            RequesterIdentity,
             projectInfo.Name,
             projectConfiguration.Name,
             projectConfigurationBuild.Id,
@@ -867,6 +868,21 @@ namespace UberDeployer.WinApp.Forms
     #endregion
 
     #region Private properties
+
+    private static string RequesterIdentity
+    {
+      get
+      {
+        var windowsIdentity = WindowsIdentity.GetCurrent();
+
+        if (windowsIdentity == null)
+        {
+          throw new InternalException("Couldn't get requester identity.");
+        }
+
+        return windowsIdentity.Name;
+      }
+    }
 
     private DiagnosticMessageType MessageTypeThreshold
     {

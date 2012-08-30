@@ -3,13 +3,16 @@ using UberDeployer.Core.Deployment.Pipeline.Modules;
 
 namespace UberDeployer.Core.DataAccess.NHibernate.Mappings
 {
-  public class DeploymentRequestMap : ClassMap<DeploymentRequest>
+  public sealed class DeploymentRequestMap : ClassMap<DeploymentRequest>
   {
     public DeploymentRequestMap()
     {
       Id(dr => dr.Id);
 
-      Map(dr => dr.DateRequested)
+      Map(dr => dr.DateStarted)
+        .Not.Nullable();
+
+      Map(dr => dr.DateFinished)
         .Not.Nullable();
 
       Map(dr => dr.RequesterIdentity)
@@ -17,6 +20,14 @@ namespace UberDeployer.Core.DataAccess.NHibernate.Mappings
         .Not.Nullable();
 
       Map(dr => dr.ProjectName)
+        .Length(256)
+        .Not.Nullable();
+
+      Map(dr => dr.ProjectConfigurationName)
+        .Length(256)
+        .Not.Nullable();
+
+      Map(dr => dr.ProjectConfigurationBuildId)
         .Length(256)
         .Not.Nullable();
 
