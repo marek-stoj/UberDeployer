@@ -84,6 +84,7 @@
     <Compile Include="Core\Models\Api\ProjectConfigurationViewModel.cs" />
     <Compile Include="Core\Models\Api\ProjectViewModel.cs" />
     <Compile Include="Core\Controllers\UberDeployerWebAppController.cs" />
+    <Compile Include="Core\Utils\SecurityUtils.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -98,7 +99,9 @@
     <Content Include="Static\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Static\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="Static\bootstrap\js\bootstrap.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />

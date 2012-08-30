@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿using UberDeployer.WebApp.Core.Utils;
 
 namespace UberDeployer.WebApp.Core.Models
 {
@@ -6,13 +6,7 @@ namespace UberDeployer.WebApp.Core.Models
   {
     public string Username
     {
-      get
-      {
-        return
-          HttpContext.Current.User != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity != null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name)
-            ? HttpContext.Current.User.Identity.Name
-            : "?";
-      }
+      get { return SecurityUtils.CurrentUsername; }
     }
 
     public AppPage CurrentAppPage { get; set; }

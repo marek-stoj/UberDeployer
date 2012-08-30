@@ -6,6 +6,7 @@ using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.WebApp.Core.Models.Api;
 using UberDeployer.WebApp.Core.Services;
+using UberDeployer.WebApp.Core.Utils;
 
 namespace UberDeployer.WebApp.Core.Controllers
 {
@@ -170,7 +171,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       _agentService.DeployAsync(
         _sessionService.UniqueClientId,
-        CurrentUsername,
+        SecurityUtils.CurrentUsername,
         projectName,
         projectConfigurationName,
         projectConfigurationBuildId,
