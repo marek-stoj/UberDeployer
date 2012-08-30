@@ -14,11 +14,6 @@ namespace UberDeployer.Agent.NtService
       base.OnServiceHostsStarting();
     }
 
-    protected override string ApplicationName
-    {
-      get { return "UberDeployer.Agent.NtService"; }
-    }
-
     protected override IEnumerable<Type> ServiceTypes
     {
       get { yield return typeof(AgentService); }

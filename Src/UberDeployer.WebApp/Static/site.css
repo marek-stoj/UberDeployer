@@ -36,6 +36,7 @@ label.lst-header {
 #bottom-bar {
   width: 450px;
   margin: 0 auto;
+  margin-top: 18px;
 }
 
 #bottom-bar label {

@@ -1,4 +1,4 @@
-using System.Threading;
+using System.Security.Principal;
 using System.Web.Mvc;
 
 namespace UberDeployer.WebApp.Core.Controllers
@@ -16,7 +16,14 @@ namespace UberDeployer.WebApp.Core.Controllers
     {
       get
       {
-        return Thread.CurrentPrincipal.Identity.Name;
+        WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
+
+        if (windowsIdentity != null)
+        {
+          return windowsIdentity.Name;
+        }
+
+        throw new InternalException("Couldn't get current username.");
       }
     }
   }

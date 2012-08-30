@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Controllers\ApiController.cs" />
+    <Compile Include="Core\InternalException.cs" />
     <Compile Include="Core\Models\History\DeploymentRequestViewModel.cs" />
     <Compile Include="Core\Controllers\HistoryController.cs" />
     <Compile Include="Core\Controllers\HomeController.cs" />
@@ -137,7 +138,7 @@
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51076</DevelopmentServerPort>
-          <DevelopmentServerVPath>/dupa</DevelopmentServerVPath>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

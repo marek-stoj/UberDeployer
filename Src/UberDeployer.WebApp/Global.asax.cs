@@ -30,21 +30,31 @@ namespace UberDeployer.WebApp
 
     protected void Application_Start()
     {
+      GlobalContext.Properties["applicationName"] = "UberDeployer.WebApp";
       XmlConfigurator.Configure();
 
       AreaRegistration.RegisterAllAreas();
 
       RegisterGlobalFilters(GlobalFilters.Filters);
       RegisterRoutes(RouteTable.Routes);
-
+      
       _log.InfoIfEnabled(() => "Application has started.");
     }
 
     protected void Application_Error()
     {
       Exception exception = Server.GetLastError();
+      HttpException httpException = exception as HttpException;
 
-      // TODO IMM HI: 
+      if (httpException != null)
+      {
+        if (httpException.GetHttpCode() == 404)
+        {
+          return;
+        }
+      }
+
+      _log.ErrorIfEnabled(() => "Unhandled exception.", exception);
     }
   }
 }

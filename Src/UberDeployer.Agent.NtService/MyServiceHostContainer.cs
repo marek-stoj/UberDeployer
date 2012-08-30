@@ -4,7 +4,6 @@ using System.Reflection;
 using System.ServiceModel;
 using UberDeployer.Common;
 using log4net;
-using log4net.Config;
 
 namespace UberDeployer.Agent.NtService
 {
@@ -19,8 +18,6 @@ namespace UberDeployer.Agent.NtService
       _serviceHosts = new List<MyServiceHost>();
     }
 
-    protected abstract string ApplicationName { get; }
-
     protected abstract IEnumerable<Type> ServiceTypes { get; }
 
     protected IEnumerable<MyServiceHost> ServiceHosts
@@ -32,13 +29,10 @@ namespace UberDeployer.Agent.NtService
     {
       try
       {
-        GlobalContext.Properties["applicationName"] = ApplicationName;
-        XmlConfigurator.Configure();
-
         CreateServiceHosts();
         StartServiceHosts();
 
-        _log.InfoIfEnabled(() => string.Format("{0} service started.", ApplicationName));
+        _log.InfoIfEnabled(() => "NT service has started.");
       }
       catch (Exception exc)
       {
@@ -56,7 +50,7 @@ namespace UberDeployer.Agent.NtService
       {
         StopServiceHosts();
 
-        _log.InfoIfEnabled(() => string.Format("{0} service stopped.", ApplicationName));
+        _log.InfoIfEnabled(() => "NT service has stopped.");
       }
       catch (Exception exc)
       {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceProcess;
+using log4net;
 using log4net.Config;
 
 namespace UberDeployer.Agent.NtService
@@ -8,6 +9,7 @@ namespace UberDeployer.Agent.NtService
   {
     private static void Main(string[] args)
     {
+      GlobalContext.Properties["applicationName"] = "UberDeployer.Agent.NtService";
       XmlConfigurator.Configure();
 
       if (args.Length == 1 && args[0] == "/console")
