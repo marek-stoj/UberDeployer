@@ -1,4 +1,4 @@
-﻿using System.Security.Principal;
+﻿using System.Web;
 
 namespace UberDeployer.WebApp.Core.Models
 {
@@ -8,9 +8,10 @@ namespace UberDeployer.WebApp.Core.Models
     {
       get
       {
-        WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
-
-        return windowsIdentity != null ? windowsIdentity.Name : "?";
+        return
+          HttpContext.Current.User != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity != null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name)
+            ? HttpContext.Current.User.Identity.Name
+            : "?";
       }
     }
 
