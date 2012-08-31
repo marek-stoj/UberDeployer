@@ -72,7 +72,7 @@
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
   </ItemGroup>
   <ItemGroup>
-    <NotInBuild Include="Scripts\Schema.sql">
+    <NotInBuild Include="Scripts\001_Create_DeploymentRequest_table.sql">
       <SubType>NotInBuild</SubType>
     </NotInBuild>
   </ItemGroup>

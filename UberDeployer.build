@@ -38,6 +38,11 @@
         <exclude name="bin/**/*.xml" />
       </fileset>
     </copy>
+    <copy todir="bin\UberDeployer.Database\Scripts">
+      <fileset basedir="Src\UberDeployer.Database\Scripts">
+        <include name="**/*" />
+      </fileset>
+    </copy>
   </target>
   
   <target name="test">
