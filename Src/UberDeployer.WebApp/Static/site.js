@@ -88,7 +88,22 @@ function deploy() {
       projectConfigurationName: projectConfigurationName,
       projectConfigurationBuildId: projectConfigurationBuildId,
       targetEnvironmentName: targetEnvironmentName
-    });
+    },
+    function(data) {
+      if (!data.status || data.status.toLowerCase() === 'fail') {
+        var message;
+
+        if (data.errorMessage) {
+          message = data.errorMessage;
+        }
+        else {
+          message = '(no error message)';
+        }
+
+        logMessage('Error: ' + message, 'error');
+      }
+    },
+    'json');
 }
 
 function loadEnvironments(onFinishedCallback) {
@@ -199,32 +214,10 @@ function loadNewDiagnosticMessages() {
           g_lastSeenMessageId = val.MessageId;
         }
 
-        var $txtLogs = $('#txt-logs');
-        var $logMsg = $('<div></div>');
-
-        $logMsg.text('>> ' + val.Message);
-        $logMsg.addClass('log-msg');
-
-        var typeLower = val.Type.toLowerCase();
-
-        if (typeLower === 'trace') {
-          $logMsg.addClass('log-msg-trace');
-        }
-        else if (typeLower == 'info') {
-          $logMsg.addClass('log-msg-info');
-        }
-        else if (typeLower == 'warn') {
-          $logMsg.addClass('log-msg-warn');
-        }
-        else if (typeLower == 'error') {
-          $logMsg.addClass('log-msg-error');
-        }
-
-        $txtLogs.append($logMsg);
-        $txtLogs.scrollTop($txtLogs[0].scrollHeight - $txtLogs.height());
+        logMessage(val.Message, val.Type);
       });
     });
-}
+  }
 
 function getSelectedTargetEnvironmentName() {
   return $('#lst-environments').val();
@@ -312,6 +305,32 @@ function alternateTableRows(tableId) {
     .each(function() {
       $(this).addClass('even');
     });
+}
+
+function logMessage(message, type) {
+  var $txtLogs = $('#txt-logs');
+  var $logMsg = $('<div></div>');
+
+  $logMsg.text('>> ' + message);
+  $logMsg.addClass('log-msg');
+
+  var typeLower = type.toLowerCase();
+
+  if (typeLower === 'trace') {
+    $logMsg.addClass('log-msg-trace');
+  }
+  else if (typeLower == 'info') {
+    $logMsg.addClass('log-msg-info');
+  }
+  else if (typeLower == 'warn') {
+    $logMsg.addClass('log-msg-warn');
+  }
+  else if (typeLower == 'error') {
+    $logMsg.addClass('log-msg-error');
+  }
+
+  $txtLogs.append($logMsg);
+  $txtLogs.scrollTop($txtLogs[0].scrollHeight - $txtLogs.height());
 }
 
 $(document).ready(function() {

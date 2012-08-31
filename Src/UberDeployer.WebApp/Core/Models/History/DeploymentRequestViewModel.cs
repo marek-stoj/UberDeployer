@@ -4,7 +4,13 @@ namespace UberDeployer.WebApp.Core.Models.History
 {
   public class DeploymentRequestViewModel
   {
-    public DateTime DateFinished { get; set; }
+    private DateTime _dateFinished;
+
+    public DateTime DateFinished
+    {
+      get { return _dateFinished.ToLocalTime(); }
+      set { _dateFinished = value; }
+    }
 
     public string RequesterIdentity { get; set; }
 

@@ -169,15 +169,22 @@ namespace UberDeployer.WebApp.Core.Controllers
         return BadRequest();
       }
 
-      _agentService.DeployAsync(
-        _sessionService.UniqueClientId,
-        SecurityUtils.CurrentUsername,
-        projectName,
-        projectConfigurationName,
-        projectConfigurationBuildId,
-        targetEnvironmentName);
+      try
+      {
+        _agentService.DeployAsync(
+          _sessionService.UniqueClientId,
+          SecurityUtils.CurrentUsername,
+          projectName,
+          projectConfigurationName,
+          projectConfigurationBuildId,
+          targetEnvironmentName);
 
-      return Content("OK!");
+        return Json(new { status = "OK" });
+      }
+      catch (Exception exc)
+      {
+        return Json(new { status = "FAIL", errorMessage = exc.Message });
+      }
     }
   }
 }
