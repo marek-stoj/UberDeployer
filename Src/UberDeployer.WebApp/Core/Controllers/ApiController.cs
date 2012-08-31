@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using UberDeployer.Agent.Proxy;
@@ -13,9 +14,34 @@ namespace UberDeployer.WebApp.Core.Controllers
   public class ApiController : UberDeployerWebAppController
   {
     private const int _MaxProjectConfigurationBuildsCount = 10;
+    private const string _AppSettingsKey_AllowedEnvironments = "AllowedEnvironments";
+    private const string _AppSettingsKey_AllowedProjectConfigurations = "AllowedProjectConfigurations";
+
+    private static readonly ISet<string> _allowedEnvironments;
+    private static readonly ISet<string> _allowedProjectConfigurations;
 
     private readonly ISessionService _sessionService;
     private readonly IAgentService _agentService;
+
+    static ApiController()
+    {
+      string allowedEnvironmentsStr = ConfigurationManager.AppSettings[_AppSettingsKey_AllowedEnvironments];
+      
+      if (string.IsNullOrEmpty(allowedEnvironmentsStr))
+      {
+        throw new ConfigurationErrorsException(string.Format("Missing app setting. Key: {0}.", _AppSettingsKey_AllowedEnvironments));
+      }
+
+      string allowedProjectConfigurationsStr = ConfigurationManager.AppSettings[_AppSettingsKey_AllowedProjectConfigurations];
+
+      if (string.IsNullOrEmpty(allowedProjectConfigurationsStr))
+      {
+        throw new ConfigurationErrorsException(string.Format("Missing app setting. Key: {0}.", _AppSettingsKey_AllowedProjectConfigurations));
+      }
+
+      _allowedEnvironments = ParseAppSettingSet(allowedEnvironmentsStr);
+      _allowedProjectConfigurations = ParseAppSettingSet(allowedProjectConfigurationsStr);
+    }
 
     public ApiController(ISessionService sessionService, IAgentService agentService)
     {
@@ -43,6 +69,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     {
       List<EnvironmentViewModel> environmentViewModels =
         _agentService.GetEnvironmentInfos()
+          .Where(pi => _allowedEnvironments.Count == 0 || _allowedEnvironments.Contains(pi.Name))
           .Select(pi => new EnvironmentViewModel { Name = pi.Name })
           .ToList();
 
@@ -51,7 +78,6 @@ namespace UberDeployer.WebApp.Core.Controllers
           new { environments = environmentViewModels },
           JsonRequestBehavior.AllowGet);
     }
-
 
     [HttpGet]
     public ActionResult GetProjects()
@@ -77,6 +103,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       List<ProjectConfigurationViewModel> projectConfigurationViewModels =
         _agentService.GetProjectConfigurations(projectName, ProjectConfigurationFilter.Empty)
+          .Where(pc => _allowedProjectConfigurations.Count == 0 || _allowedProjectConfigurations.Contains(pc.Name))
           .Select(pc => new ProjectConfigurationViewModel { Name = pc.Name })
           .ToList();
 
@@ -185,6 +212,21 @@ namespace UberDeployer.WebApp.Core.Controllers
       {
         return Json(new { status = "FAIL", errorMessage = exc.Message });
       }
+    }
+
+    private static ISet<string> ParseAppSettingSet(string appSettingValue)
+    {
+      if (string.IsNullOrEmpty(appSettingValue))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "appSettingValue");
+      }
+
+      if (appSettingValue == "*")
+      {
+        return new HashSet<string>();
+      }
+
+      return new HashSet<string>(appSettingValue.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries));
     }
   }
 }
