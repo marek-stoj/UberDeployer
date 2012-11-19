@@ -44,7 +44,9 @@ namespace UberDeployer.Core.Management.Iis
       using (ServerManager serverManager = ServerManager.OpenRemote(machineName))
       {
         return
-          serverManager.ApplicationPools
+          serverManager
+            .ApplicationPools
+            .Where(ap => !string.IsNullOrEmpty(ap.ManagedRuntimeVersion))
             .Select(
               ap =>
               new IisAppPoolInfo(
