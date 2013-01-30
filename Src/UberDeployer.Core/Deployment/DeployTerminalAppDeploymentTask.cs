@@ -45,7 +45,7 @@ namespace UberDeployer.Core.Deployment
       _projectConfigurationBuildId = projectConfigurationBuildId;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
@@ -75,14 +75,6 @@ namespace UberDeployer.Core.Deployment
           GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
-
-      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
-      {
-        var binariesConfiguratorStep = new ConfigureBinariesStep(
-          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
-
-        AddSubTask(binariesConfiguratorStep);
-      }
 
       // copy binaries to the target machine
       string targetDirNetworkPath =
@@ -115,7 +107,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
+    #endregion
 
     #region Overrides of DeploymentTask
 
@@ -132,8 +124,7 @@ namespace UberDeployer.Core.Deployment
     public override string ProjectConfigurationBuildId
     {
       get { return _projectConfigurationBuildId; }
-    }
-
-    #endregion Overrides of DeploymentTask
+    }
+    #endregion
   }
 }

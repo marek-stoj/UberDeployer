@@ -78,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
-    <Compile Include="Deployment\Steps\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\CollectedCredentials.cs" />
     <Compile Include="Deployment\DeferredEnumerable.cs" />
     <Compile Include="Deployment\DiagnosticMessage.cs" />
@@ -205,9 +204,6 @@
       <Project>{42554C30-1E25-4ABC-814C-A4B624713212}</Project>
       <Name>UberDeployer.Core.DbDiff</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Deployment\Tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

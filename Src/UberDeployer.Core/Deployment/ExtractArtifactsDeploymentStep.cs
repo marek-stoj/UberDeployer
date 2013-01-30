@@ -66,20 +66,18 @@ namespace UberDeployer.Core.Deployment
         archiveParentPath = string.Format("{0}/", _environmentInfo.ConfigurationTemplateName);
       }
 
-      // eg. when artifacts are enviroment specific: Service/dev2/
       _archiveSubPath =
         !string.IsNullOrEmpty(_projectInfo.ArtifactsRepositoryDirName)
           ? string.Format("{0}{1}/", archiveParentPath, _projectInfo.ArtifactsRepositoryDirName)
           : archiveParentPath;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentStep
 
     protected override void DoExecute()
     {
-      // artifacts downloaded by previous executed html api (not REST!) are packed one more time in zip archive :/
       // move to separate step?
       using (var zipFile = new ZipFile(_artifactsFilePath))
       {
@@ -94,10 +92,16 @@ namespace UberDeployer.Core.Deployment
 
       string archivePath = Path.Combine(_targetArtifactsDirPath, projectArchiveFileName);
 
-      // unpacking internal zip package, true is that inside are packed artifacts with name like [Project_BuildConfigName.zip]
       using (var zipFile = new ZipFile(archivePath))
       {
-        zipFile.ExtractAll(_targetArtifactsDirPath, ExtractExistingFileAction.OverwriteSilently);
+        IEnumerable<ZipEntry> binariesArchiveEntries =
+          zipFile.Entries
+            .Where(zipEntry => zipEntry.FileName.StartsWith(_archiveSubPath));
+
+        foreach (ZipEntry zipEntry in binariesArchiveEntries)
+        {
+          zipEntry.Extract(_targetArtifactsDirPath, ExtractExistingFileAction.OverwriteSilently);
+        }
       }
     }
 
@@ -117,7 +121,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentStep
+    #endregion
 
     #region Properties
 
@@ -131,6 +135,6 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Properties
+    #endregion
   }
 }

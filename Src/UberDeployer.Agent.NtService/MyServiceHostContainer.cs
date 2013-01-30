@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.ServiceModel;
-using log4net;
 using UberDeployer.Common;
+using log4net;
 
 namespace UberDeployer.Agent.NtService
 {

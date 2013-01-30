@@ -27,6 +27,7 @@ namespace UberDeployer.Core.Deployment
       string targetEnvironmentName)
       : base(environmentInfoRepository, targetEnvironmentName)
     {
+
       if (artifactsRepository == null)
       {
         throw new ArgumentNullException("artifactsRepository");
@@ -65,7 +66,7 @@ namespace UberDeployer.Core.Deployment
       _projectConfigurationBuildId = projectConfigurationBuildId;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
@@ -131,7 +132,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
+    #endregion
 
     #region Overrides of DeploymentTask
 
@@ -148,9 +149,8 @@ namespace UberDeployer.Core.Deployment
     public override string ProjectConfigurationBuildId
     {
       get { return _projectConfigurationBuildId; }
-    }
-
-    #endregion Overrides of DeploymentTask
+    }
+    #endregion
 
     #region Private helper methods
 
@@ -167,6 +167,6 @@ namespace UberDeployer.Core.Deployment
       return scriptRunner;
     }
 
-    #endregion Private helper methods
+    #endregion
   }
 }
