@@ -78,7 +78,7 @@ namespace UberDeployer.Core.Deployment
       _failoverClusterManager = failoverClusterManager;
     }
 
-    #endregion
+    #endregion Constructor(s)
 
     #region Overrides of DeploymentTaskBase
 
@@ -108,6 +108,14 @@ namespace UberDeployer.Core.Deployment
           GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
+
+      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
+      {
+        var binariesConfiguratorStep = new ConfigureBinariesStep(
+          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
+
+        AddSubTask(binariesConfiguratorStep);
+      }
 
       bool deployToClusteredEnvironment = environmentInfo.EnableFailoverClusteringForNtServices;
 
@@ -149,7 +157,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion
+    #endregion Overrides of DeploymentTaskBase
 
     #region Overrides of DeploymentTask
 
@@ -166,8 +174,9 @@ namespace UberDeployer.Core.Deployment
     public override string ProjectConfigurationBuildId
     {
       get { return _projectConfigurationBuildId; }
-    }
-    #endregion
+    }
+
+    #endregion Overrides of DeploymentTask
 
     #region Private methods
 
@@ -175,22 +184,22 @@ namespace UberDeployer.Core.Deployment
     {
       Func<CollectedCredentials> collectCredentialsFunc =
         () =>
-          {
-            EnvironmentUser environmentUser;
+        {
+          EnvironmentUser environmentUser;
 
-            string environmentUserPassword =
-              PasswordCollectorHelper.CollectPasssword(
-                _passwordCollector,
-                environmentInfo,
-                environmentInfo.AppServerMachineName,
-                _projectInfo.NtServiceUserId,
-                out environmentUser);
+          string environmentUserPassword =
+            PasswordCollectorHelper.CollectPasssword(
+              _passwordCollector,
+              environmentInfo,
+              environmentInfo.AppServerMachineName,
+              _projectInfo.NtServiceUserId,
+              out environmentUser);
 
-            return
-              new CollectedCredentials(
-                environmentUser.UserName,
-                environmentUserPassword);
-          };
+          return
+            new CollectedCredentials(
+              environmentUser.UserName,
+              environmentUserPassword);
+        };
 
       DoPrepareCommonDeploymentSteps(
         _projectInfo.NtServiceName,
@@ -241,31 +250,31 @@ namespace UberDeployer.Core.Deployment
       Func<string, Func<CollectedCredentials>> collectCredentialsFunc =
         machineName =>
         () =>
+        {
+          // ReSharper disable AccessToModifiedClosure
+          if (cachedCollectedCredentials != null)
           {
-            // ReSharper disable AccessToModifiedClosure
-            if (cachedCollectedCredentials != null)
-            {
-              return cachedCollectedCredentials;
-            }
-            // ReSharper restore AccessToModifiedClosure
-
-            EnvironmentUser environmentUser;
-
-            string environmentUserPassword =
-              PasswordCollectorHelper.CollectPasssword(
-                _passwordCollector,
-                environmentInfo,
-                machineName,
-                _projectInfo.NtServiceUserId,
-                out environmentUser);
-
-            cachedCollectedCredentials =
-              new CollectedCredentials(
-                environmentUser.UserName,
-                environmentUserPassword);
-
             return cachedCollectedCredentials;
-          };
+          }
+          // ReSharper restore AccessToModifiedClosure
+
+          EnvironmentUser environmentUser;
+
+          string environmentUserPassword =
+            PasswordCollectorHelper.CollectPasssword(
+              _passwordCollector,
+              environmentInfo,
+              machineName,
+              _projectInfo.NtServiceUserId,
+              out environmentUser);
+
+          cachedCollectedCredentials =
+            new CollectedCredentials(
+              environmentUser.UserName,
+              environmentUserPassword);
+
+          return cachedCollectedCredentials;
+        };
 
       foreach (string possibleNodeName in possibleNodeNames)
       {
@@ -384,6 +393,6 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion
+    #endregion Private methods
   }
 }
