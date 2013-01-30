@@ -1,0 +1,462 @@
+<?xml version="1.0"?>
+<ProjectInfosXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <ProjectInfos>
+    <!-- NT services -->
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Frost</Name>
+      <ArtifactsRepositoryName>Frost.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>service</ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.Frost</NtServiceName>
+      <NtServiceDirName>Frost.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Frost</NtServiceDisplayName>
+      <NtServiceExeName>Frost.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Frost.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Seer</Name>
+      <ArtifactsRepositoryName>Seer.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>service</ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.Seer</NtServiceName>
+      <NtServiceDirName>Seer.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Seer</NtServiceDisplayName>
+      <NtServiceExeName>Seer.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Seer.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Lunetta</Name>
+      <ArtifactsRepositoryName>Lunetta.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>service</ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.Lunetta</NtServiceName>
+      <NtServiceDirName>Lunetta.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Lunetta</NtServiceDisplayName>
+      <NtServiceExeName>Lunetta.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Lunetta.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Andolin</Name>
+      <ArtifactsRepositoryName>Andolin.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>service</ArtifactsRepositoryDirName>
+      <NtServiceName>Andolin.NTService</NtServiceName>
+      <NtServiceDirName>Andolin.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Andolin</NtServiceDisplayName>
+      <NtServiceExeName>Andolin.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Andolin.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>UberDeployer.SampleNtService</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleNtService</ArtifactsRepositoryDirName>
+      <NtServiceName>UberDeployer.SampleNtService</NtServiceName>
+      <NtServiceDirName>UberDeployer.SampleNtService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.UberDeployer.SampleNtService</NtServiceDisplayName>
+      <NtServiceExeName>UberDeployerSamples.SampleNtService.exe</NtServiceExeName>
+      <NtServiceUserId>Sample.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Clarissa</Name>
+      <ArtifactsRepositoryName>Clarissa.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.Clarissa</NtServiceName>
+      <NtServiceDirName>Clarissa.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Clarissa</NtServiceDisplayName>
+      <NtServiceExeName>Clarissa.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Clarissa.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Cara</Name>
+      <ArtifactsRepositoryName>Cara.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>service</ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.Cara</NtServiceName>
+      <NtServiceDirName>Cara.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Cara</NtServiceDisplayName>
+      <NtServiceExeName>Cara.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Cara.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Calling</Name>
+      <ArtifactsRepositoryName>Calling.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.Calling</NtServiceName>
+      <NtServiceDirName>Calling.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Calling</NtServiceDisplayName>
+      <NtServiceExeName>Calling.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Calling.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Latheron</Name>
+      <ArtifactsRepositoryName>Latheron.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <NtServiceName>Latheron.NTService</NtServiceName>
+      <NtServiceDirName>Latheron.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Latheron</NtServiceDisplayName>
+      <NtServiceExeName>Latheron.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Latheron.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Chalmer</Name>
+      <ArtifactsRepositoryName>Chalmer.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Chalmer.NTService</ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.Chalmer</NtServiceName>
+      <NtServiceDirName>Chalmer.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Chalmer</NtServiceDisplayName>
+      <NtServiceExeName>Chalmer.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Chalmer.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Gars</Name>
+      <ArtifactsRepositoryName>Gars</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Gars.Service</ArtifactsRepositoryDirName>
+      <NtServiceName>KRD.GarsService</NtServiceName>
+      <NtServiceDirName>GarsService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.GarsService</NtServiceDisplayName>
+      <NtServiceExeName>Gars.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Gars.User</NtServiceUserId>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+      <Name>Tamarang</Name>
+      <ArtifactsRepositoryName>Tamarang.Service</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Tamarang.NTService</ArtifactsRepositoryDirName>
+      <NtServiceName>Tamarang.NTService</NtServiceName>
+      <NtServiceDirName>Tamarang.NTService</NtServiceDirName>
+      <NtServiceDisplayName>KRD.Tamarang</NtServiceDisplayName>
+      <NtServiceExeName>Tamarang.NTService.exe</NtServiceExeName>
+      <NtServiceUserId>Tamarang.User</NtServiceUserId>
+    </ProjectInfoXml>
+	
+    <!-- Web apps -->
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Gadi</Name>
+      <ArtifactsRepositoryName>Gadi</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Gadi</WebAppName>
+      <WebAppDirName>KRD\Gadi</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Nabbi</Name>
+      <ArtifactsRepositoryName>Nabbi</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Nabbi.Web</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Client2.0</WebAppName>
+      <WebAppDirName>KRD\Client2.0</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+	
+	<ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Nabbi_DeltaForce</Name>
+      <ArtifactsRepositoryName>Nabbi</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Nabbi.Web</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Nabbi</WebAppName>
+      <WebAppDirName>KRD\Nabbi</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>FakeVerdictWebService</Name>
+      <ArtifactsRepositoryName>Nabbi</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>FakeVerdictWebService</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>FakeVerdictWebService</WebAppName>
+      <WebAppDirName>KRD\FakeVerdictWebService</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Kahlan.Client</Name>
+      <ArtifactsRepositoryName>Kahlan.Client</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Client</WebAppName>
+      <WebAppDirName>KRD\Client</WebAppDirName>
+      <AppPool>
+        <Name>Classic .NET AppPool</Name>
+        <Version>V4_0</Version>
+        <Mode>Classic</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Downloads</Name>
+      <ArtifactsRepositoryName>Downloads</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Downloads</WebAppName>
+      <WebAppDirName>KRD\Downloads</WebAppDirName>
+      <AppPool>
+        <Name>Classic .NET AppPool</Name>
+        <Version>V2_0</Version>
+        <Mode>Classic</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>InfoService</Name>
+      <ArtifactsRepositoryName>InfoService</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Ankieta</WebAppName>
+      <WebAppDirName>KRD\Ankieta</WebAppDirName>
+      <AppPool>
+        <Name>Classic .NET AppPool</Name>
+        <Version>V2_0</Version>
+        <Mode>Classic</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>KRDClient</Name>
+      <ArtifactsRepositoryName>KRDClient</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Service</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>KRDClient</WebAppName>
+      <WebAppDirName>KRD\KRDClient</WebAppDirName>
+      <AppPool>
+        <Name>KRD</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>UberDeployer.SampleWebApp</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleWebApp</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
+      <WebAppDirName>KRD\UberDeployer.SampleWebApp</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Walcott</Name>
+      <ArtifactsRepositoryName>Walcott</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Walcott.Web</ArtifactsRepositoryDirName>
+      <IisSiteName>Walcott</IisSiteName>
+      <WebAppName>Walcott</WebAppName>
+      <WebAppDirName>KRD\Walcott</WebAppDirName>
+      <AppPool>
+        <Name>Classic .NET AppPool</Name>
+        <Version>V2_0</Version>
+        <Mode>Classic</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Simona</Name>
+      <ArtifactsRepositoryName>Simona</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Simona</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Simona</WebAppName>
+      <WebAppDirName>KRD\Simona</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Candra</Name>
+      <ArtifactsRepositoryName>Candra</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>service</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Candra</WebAppName>
+      <WebAppDirName>KRD\Candra</WebAppDirName>
+      <AppPool>
+        <Name>Candra</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Chase 1.0</Name>
+      <ArtifactsRepositoryName>Chase 1.0</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Chase1.0</WebAppName>
+      <WebAppDirName>KRD\Chase1.0</WebAppDirName>
+      <AppPool>
+        <Name>Chase</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+    
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Stone</Name>
+      <ArtifactsRepositoryName>Stone</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Stone</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Stone</WebAppName>
+      <WebAppDirName>KRD\Stone</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+    
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Stone.Container</Name>
+      <ArtifactsRepositoryName>Stone</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Stone.Container</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Stone.Container</WebAppName>
+      <WebAppDirName>KRD\Stone.Container</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>Zedd</Name>
+      <ArtifactsRepositoryName>Zedd</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Zedd</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>Zedd</WebAppName>
+      <WebAppDirName>KRD\Zedd</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+    
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+      <Name>UberDeployer.WebApp</Name>
+      <ArtifactsRepositoryName>UberDeployer</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>UberDeployer.WebApp</ArtifactsRepositoryDirName>
+      <IisSiteName>KRD</IisSiteName>
+      <WebAppName>UberDeployer.WebApp</WebAppName>
+      <WebAppDirName>KRD\UberDeployer.WebApp</WebAppDirName>
+      <AppPool>
+        <Name>ASP.NET v4.0</Name>
+        <Version>V4_0</Version>
+        <Mode>Integrated</Mode>
+      </AppPool>
+    </ProjectInfoXml>
+
+    <!-- Scheduler apps -->
+    <ProjectInfoXml xsi:type="SchedulerAppProjectInfoXml">
+      <Name>Tamarang.Processor</Name>
+      <ArtifactsRepositoryName>Nabbi</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Tamarang.Processor</ArtifactsRepositoryDirName>
+      <SchedulerAppName>KRD.Tamarang.Processor</SchedulerAppName>
+      <SchedulerAppDirName>Tamarang.Processor</SchedulerAppDirName>
+      <SchedulerAppExeName>Tamarang.Processor.exe</SchedulerAppExeName>
+      <SchedulerAppUserId>Tamarang.Processor.User</SchedulerAppUserId>
+      <ScheduledHour>1</ScheduledHour>
+      <ScheduledMinute>0</ScheduledMinute>
+      <ExecutionTimeLimitInMinutes>240</ExecutionTimeLimitInMinutes>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="SchedulerAppProjectInfoXml">
+      <Name>UberDeployer.SampleSchedulerApp</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleSchedulerApp</ArtifactsRepositoryDirName>
+      <SchedulerAppName>KRD.SampleSchedulerApp</SchedulerAppName>
+      <SchedulerAppDirName>SampleSchedulerApp</SchedulerAppDirName>
+      <SchedulerAppExeName>UberDeployerSamples.SampleSchedulerApp.exe</SchedulerAppExeName>
+      <SchedulerAppUserId>Sample.User</SchedulerAppUserId>
+      <ScheduledHour>12</ScheduledHour>
+      <ScheduledMinute>0</ScheduledMinute>
+      <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
+    </ProjectInfoXml>
+
+    <!-- Terminal apps -->
+    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml">
+      <Name>Abbot</Name>
+      <ArtifactsRepositoryName>Abbot</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <TerminalAppName>Abbot</TerminalAppName>
+      <TerminalAppDirName>Abbot</TerminalAppDirName>
+      <TerminalAppExeName>Abbot.exe</TerminalAppExeName>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml">
+      <Name>UberDeployer.SampleTerminalApp</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>SampleTerminalApp</ArtifactsRepositoryDirName>
+      <TerminalAppName>UberDeployer.SampleTerminalApp</TerminalAppName>
+      <TerminalAppDirName>UberDeployer.SampleTerminalApp</TerminalAppDirName>
+      <TerminalAppExeName>UberDeployer.SampleTerminalApp.exe</TerminalAppExeName>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml">
+      <Name>Bandu</Name>
+      <ArtifactsRepositoryName>Bandu</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <TerminalAppName>Bandu</TerminalAppName>
+      <TerminalAppDirName>Bandu</TerminalAppDirName>
+      <TerminalAppExeName>Bandu.exe</TerminalAppExeName>
+    </ProjectInfoXml>
+
+    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml">
+      <Name>CRM</Name>
+      <ArtifactsRepositoryName>CRM</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName></ArtifactsRepositoryDirName>
+      <TerminalAppName>CRM</TerminalAppName>
+      <TerminalAppDirName>CRM</TerminalAppDirName>
+      <TerminalAppExeName>CRM.exe</TerminalAppExeName>
+    </ProjectInfoXml>
+    
+    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml">
+      <Name>CheckFiveTestApp</Name>
+      <ArtifactsRepositoryName>KRDClient</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>CheckFiveTestApp</ArtifactsRepositoryDirName>
+      <TerminalAppName>CheckFiveTestApp</TerminalAppName>
+      <TerminalAppDirName>CheckFiveTestApp</TerminalAppDirName>
+      <TerminalAppExeName>CheckFiveTestApp.exe</TerminalAppExeName>
+    </ProjectInfoXml>
+
+    <!-- Db projects -->
+    <!--
+    <ProjectInfoXml xsi:type="DbProjectInfoXml">
+      <Name>NabbiDb</Name>
+      <ArtifactsRepositoryName>NabbiCms</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>DBScripts</ArtifactsRepositoryDirName>
+      <DbName>Nabbi</DbName>
+    </ProjectInfoXml>
+    -->
+  </ProjectInfos>
+
+</ProjectInfosXml>
