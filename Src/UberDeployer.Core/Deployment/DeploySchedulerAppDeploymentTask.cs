@@ -43,7 +43,7 @@ namespace UberDeployer.Core.Deployment
       {
         throw new ArgumentNullException("passwordCollector");
       }
-      
+
       if (projectInfo == null)
       {
         throw new ArgumentNullException("projectInfo");
@@ -67,7 +67,7 @@ namespace UberDeployer.Core.Deployment
       _projectConfigurationBuildId = projectConfigurationBuildId;
     }
 
-    #endregion
+    #endregion Constructor(s)
 
     #region Overrides of DeploymentTaskBase
 
@@ -97,6 +97,14 @@ namespace UberDeployer.Core.Deployment
           GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
+
+      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
+      {
+        var binariesConfiguratorStep = new ConfigureBinariesStep(
+          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
+
+        AddSubTask(binariesConfiguratorStep);
+      }
 
       // create a step for copying the binaries to the target machine
       string targetDirPath = Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
@@ -171,7 +179,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion
+    #endregion Overrides of DeploymentTaskBase
 
     #region Overrides of DeploymentTask
 
@@ -188,7 +196,8 @@ namespace UberDeployer.Core.Deployment
     public override string ProjectConfigurationBuildId
     {
       get { return _projectConfigurationBuildId; }
-    }
-    #endregion
+    }
+
+    #endregion Overrides of DeploymentTask
   }
 }
