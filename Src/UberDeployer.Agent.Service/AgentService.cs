@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
@@ -188,7 +189,7 @@ namespace UberDeployer.Agent.Service
       {
         throw new ArgumentNullException("projectFilter");
       }
-
+      
       IEnumerable<ProjectInfo> projectInfos =
         _projectInfoRepository.GetAll();
 
@@ -214,6 +215,27 @@ namespace UberDeployer.Agent.Service
         environmentInfos
           .Select(DtoMapper.Map<EnvironmentInfo, Proxy.Dto.EnvironmentInfo>)
           .ToList();
+    }
+
+    public List<string> GetWebMachinesNames(string environmentName)
+    {
+      if (string.IsNullOrEmpty(environmentName))
+      {
+        throw new ArgumentException("Environment name can't be null or empty", "environmentName");
+      }
+
+      EnvironmentInfo environmentInfo = _environmentInfoRepository.GetByName(environmentName);
+      
+      if(environmentInfo == null)
+      {
+        throw new FaultException<EnvironmentNotFoundFault>(
+          new EnvironmentNotFoundFault
+            {
+              EnvironmentName = environmentName
+            });
+      }
+      
+      return environmentInfo.WebServerMachineNames.ToList();
     }
 
     public List<ProjectConfiguration> GetProjectConfigurations(string projectName, Proxy.Dto.ProjectConfigurationFilter projectConfigurationFilter)
