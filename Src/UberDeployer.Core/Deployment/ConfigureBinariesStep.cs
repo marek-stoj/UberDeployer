@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -42,17 +38,21 @@ namespace UberDeployer.Core.Deployment
 
     private void Execute(string fileToExecute, string workingDir, string arguments)
     {
-      ProcessStartInfo processStartInfo = new ProcessStartInfo();
-      processStartInfo.FileName = fileToExecute;
-      processStartInfo.WorkingDirectory = workingDir;
-      processStartInfo.CreateNoWindow = true;
-      processStartInfo.UseShellExecute = false;
-      processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-      processStartInfo.RedirectStandardError = true;
-      processStartInfo.RedirectStandardOutput = true;
-      processStartInfo.Arguments = arguments;
+      var processStartInfo =
+        new ProcessStartInfo
+        {
+          FileName = fileToExecute,
+          WorkingDirectory = workingDir,
+          CreateNoWindow = true,
+          UseShellExecute = false,
+          WindowStyle = ProcessWindowStyle.Hidden,
+          RedirectStandardError = true,
+          RedirectStandardOutput = true,
+          Arguments = arguments,
+        };
 
-      Stopwatch stopwatch = new Stopwatch();
+      var stopwatch = new Stopwatch();
+
       stopwatch.Start();
 
       bool errorOccured = false;

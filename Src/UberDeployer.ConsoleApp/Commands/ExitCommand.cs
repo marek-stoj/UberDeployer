@@ -1,4 +1,5 @@
-﻿using UberDeployer.ConsoleCommander;
+﻿using System;
+using UberDeployer.ConsoleCommander;
 
 namespace UberDeployer.ConsoleApp.Commands
 {
@@ -11,6 +12,8 @@ namespace UberDeployer.ConsoleApp.Commands
 
     public override int Run(string[] args)
     {
+      Environment.Exit(0);
+
       return 0;
     }
 
