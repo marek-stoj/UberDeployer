@@ -22,7 +22,10 @@ namespace UberDeployer.Agent.Proxy
     List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter);
 
     [OperationContract]
-    List<EnvironmentInfo> GetEnvironmentInfos();
+    List<EnvironmentInfo> GetEnvironmentInfos();    
+
+    [OperationContract]
+    List<string> GetWebMachinesNames(string environmentName);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
@@ -49,6 +52,6 @@ namespace UberDeployer.Agent.Proxy
 
     // TODO IMM HI: separate interface?
     [OperationContract]
-    List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId, DiagnosticMessageType minMessageType);
+    List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId, DiagnosticMessageType minMessageType);    
   }
 }

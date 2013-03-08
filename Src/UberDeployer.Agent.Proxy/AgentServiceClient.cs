@@ -59,6 +59,11 @@ namespace UberDeployer.Agent.Proxy
       return Exec(@as => @as.GetDiagnosticMessages(uniqueClientId, lastSeenMaxMessageId, minMessageType));
     }
 
+    public List<string> GetWebMachinesNames(string environmentName)
+    {
+      return Exec(@as => @as.GetWebMachinesNames(environmentName));
+    }
+
     #endregion
   }
 }
