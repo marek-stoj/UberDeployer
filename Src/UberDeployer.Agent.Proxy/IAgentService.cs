@@ -25,7 +25,8 @@ namespace UberDeployer.Agent.Proxy
     List<EnvironmentInfo> GetEnvironmentInfos();    
 
     [OperationContract]
-    List<string> GetWebMachinesNames(string environmentName);
+    [FaultContract(typeof(EnvironmentNotFoundFault))]
+    List<string> GetWebMachineNames(string environmentName);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
