@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
@@ -35,18 +33,6 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<IPasswordCollector> _passwordCollector;
     private Mock<IFailoverClusterManager> _failoverClusterManager;
 
-    private static readonly List<EnvironmentUser> _EnvironmentUsers =
-      new List<EnvironmentUser>
-        {
-          new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
-        };
-
-    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
-      new List<ProjectToFailoverClusterGroupMapping>
-        {
-          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
-        };
-
     [SetUp]
     public void SetUp()
     {
@@ -77,79 +63,6 @@ namespace UberDeployer.Core.Tests.Deployment
           );
 
       ctorTester.TestAll();
-    }
-
-    // TODO IMM HI: fix
-    [Test]
-    public void Test_InstallNtServiceDeploymentStepServiceDirPathDoesntExist()
-    {
-      const string serviceName = "serviceName";
-      const string serviceDir = "serviceDir";
-      const string artifactsRepo = "artifactsRepo";
-      const string projectName = "projectName";
-      const string buildID = "id";
-      const string envName = "envName";
-      const string baseDirPath = "c:\\basedir";
-
-      string machine = Environment.MachineName;
-
-      var ntServiceProjectInfo =
-        new NtServiceProjectInfo(
-          "name",
-          artifactsRepo,
-          "artifactsRepoDir",
-          false,
-          serviceName,
-          serviceDir,
-          "serviceDisplayed",
-          "exeName",
-          "Sample.User");
-
-      var envInfo =
-        new EnvironmentInfo(
-          "name",
-          "templates",
-          machine,
-          "failover",
-          new[] { "webmachine" },
-          "terminalmachine",
-          "databasemachine",
-          baseDirPath,
-          "webbasedir",
-          "scheduler",
-          "terminal",
-          false,
-          _EnvironmentUsers,
-          _ProjectToFailoverClusterGroupMappings);
-
-      _environmentInfoRepository
-        .Setup(e => e.GetByName(envName))
-        .Returns(envInfo);
-
-      _passwordCollector
-        .Setup(pc => pc.CollectPasswordForUser(envInfo.Name, envInfo.AppServerMachineName, envInfo.GetEnvironmentUserByName(ntServiceProjectInfo.NtServiceUserId).UserName))
-        .Returns("some password");
-      
-      _ntServiceManager
-        .Setup(n => n.DoesServiceExist(machine, serviceName))
-        .Returns(false);
-      
-      _artifactsRepository
-        .Setup(a => a.GetArtifacts(artifactsRepo,projectName, buildID, It.IsAny<string>()));
-
-      var deployNTService =
-        new DeployNtServiceDeploymentTask(
-          _environmentInfoRepository.Object,
-          _artifactsRepository.Object,
-          _ntServiceManager.Object,
-          _passwordCollector.Object,
-          _failoverClusterManager.Object,
-          ntServiceProjectInfo,
-          projectName,
-          buildID,
-          envName);
-
-      Assert.Throws<DeploymentTaskException>(deployNTService.PrepareAndExecute);
     }
   }
 }
