@@ -230,7 +230,7 @@ namespace UberDeployer.Agent.Service
           .ToList();
     }
 
-    public List<string> GetWebMachinesNames(string environmentName)
+    public List<string> GetWebMachineNames(string environmentName)
     {
       if (string.IsNullOrEmpty(environmentName))
       {

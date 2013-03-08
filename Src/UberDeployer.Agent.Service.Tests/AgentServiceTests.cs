@@ -43,7 +43,7 @@ namespace UberDeployer.Agent.Service.Tests
     }
 
     [Test]
-    public void GetWebMachinesNames_fails_when_environment_does_not_exists()
+    public void GetWebMachineNames_fails_when_environment_does_not_exists()
     {
       // arrange  
       const string notExistingEnvName = "env name";
@@ -54,49 +54,49 @@ namespace UberDeployer.Agent.Service.Tests
 
       // act assert
       Assert.Throws<FaultException<EnvironmentNotFoundFault>>(
-        () => _agentService.GetWebMachinesNames(notExistingEnvName));
+        () => _agentService.GetWebMachineNames(notExistingEnvName));
     }
 
     [Test]
-    public void GetWebMachinesNames_properly_gets_machines_names()
+    public void GetWebMachineNames_properly_gets_machines_names()
     {
       // arrange  
-      var expectedWebMachinesNames = new List<string> { "machine1", "machine2" };
+      var expectedWebMachineNames = new List<string> {"machine1", "machine2"};
       const string environmentName = "env name";
 
-      var environmentInfo = GetEnvironmentInfo(environmentName, expectedWebMachinesNames);
+      var environmentInfo = GetEnvironmentInfo(environmentName, expectedWebMachineNames);
 
       _environmentInfoRepositoryFake
         .Setup(x => x.GetByName(environmentName))
         .Returns(environmentInfo);
 
       // act      
-      List<string> webMachinesNames = _agentService.GetWebMachinesNames(environmentName);
+      List<string> webMachineNames = _agentService.GetWebMachineNames(environmentName);
 
       // assert
-      Assert.AreEqual(expectedWebMachinesNames.Count, webMachinesNames.Count);
+      Assert.AreEqual(expectedWebMachineNames.Count, webMachineNames.Count);
 
-      foreach (var webMachinesName in expectedWebMachinesNames)
+      foreach (var webMachineName in expectedWebMachineNames)
       {
-        Assert.Contains(webMachinesName, webMachinesNames);
+        Assert.Contains(webMachineName, webMachineNames);
       }
     }
 
     [Test]
-    public void GetWebMachinesNames_fails_on_null_or_empty_environment_name()
+    public void GetWebMachineNames_fails_on_null_or_empty_environment_name()
     {
-      Assert.Throws<ArgumentException>(() => _agentService.GetWebMachinesNames(null));
-      Assert.Throws<ArgumentException>(() => _agentService.GetWebMachinesNames(string.Empty));
+      Assert.Throws<ArgumentException>(() => _agentService.GetWebMachineNames(null));
+      Assert.Throws<ArgumentException>(() => _agentService.GetWebMachineNames(string.Empty));
     }
 
-    private static EnvironmentInfo GetEnvironmentInfo(string environmentName, IEnumerable<string> expectedWebMachinesNames)
+    private static EnvironmentInfo GetEnvironmentInfo(string environmentName, IEnumerable<string> expectedWebMachineNames)
     {
       return new EnvironmentInfo(
         environmentName,
         "configurationTemplateName",
         "appServerMachineName",
         "failOverMachineName",
-        expectedWebMachinesNames,
+        expectedWebMachineNames, 
         "terminalServerMachineName",
         "databaseServerMachineName",
         "ntServiceDirPath",
