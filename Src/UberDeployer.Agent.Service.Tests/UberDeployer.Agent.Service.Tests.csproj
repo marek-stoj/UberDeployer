@@ -56,9 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\UberDeployer.Agent.Proxy\UberDeployer.Agent.Proxy.csproj">
       <Project>{20970513-4A64-420E-B814-4D8FC89698FA}</Project>
       <Name>UberDeployer.Agent.Proxy</Name>
