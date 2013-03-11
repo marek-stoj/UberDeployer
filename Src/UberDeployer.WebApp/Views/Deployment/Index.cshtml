@@ -4,10 +4,9 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
-  <h1>
-    Deployment
+  <h1>Deployment
   </h1>
-  
+
   <hr />
 
   <p>
@@ -18,7 +17,52 @@
 
   <hr />
 
-  <div class="clearfix">
+  <div class="container">
+    <div class="row">
+      <div class="span4">
+        <label for="lst-projects" class="lst-header">Projects:</label>
+        <br />
+        <select id="lst-projects" size="10">
+        </select>
+      </div>
+      <div class="span4">
+        <label for="lst-project-configs" class="lst-header">Configurations:</label>
+        <br />
+        <select id="lst-project-configs" size="10">
+        </select>
+      </div>
+      <div class="span4">
+        <label for="lst-project-config-builds" class="lst-header">Builds:</label>
+        <br />
+        <select id="lst-project-config-builds" size="10">
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div id="errorMsg" class="alert alert-error" hidden="hidden">
+        Oh snap!
+      </div>
+    </div>
+    <div class="row">
+      <div class="span6">
+        <label for="lst-environments" class="lst-header">Target environment:</label>
+        <select id="lst-environments" size="5">
+        </select>
+      </div>
+      <div class="span6">
+        <label for="lst-machines" class="lst-header">Target machines:</label>
+        <select id="lst-machines" size="5">
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span12">
+        <input id="btn-deploy" type="submit" name="btn-deploy" value="Deploy" class="btn btn-primary pull-right"></input>
+      </div>
+    </div>
+  </div>
+
+  @*  <div class="clearfix">
     <div id="lst-projects-container" class="lst-container">
       <label for="lst-projects" class="lst-header">Projects:</label>
       <br />
@@ -39,17 +83,32 @@
       <select id="lst-project-config-builds" size="10">
       </select>
       </div>
-  </div>  
+  </div>  *@
 
-  <hr />
+  @*  <hr />
+  <div id="errorMsg" class="alert alert-error" hidden="hidden">
+    Oh snap!
+  </div>
+  *@
+  @*  <div class="container">
+    <div class="row">
+      <label for="lst-environments">Target environment:</label>
+      <select id="lst-environments">
+      </select>
+      <select id="lst-machines">
+      </select>      
+    </div>
+  </div>*@
 
-  <div id="bottom-bar" class="clearfix">
+  @*  <div id="bottom-bar" class="clearfix">
     <label for="lst-environments">Target environment:</label>
     <select id="lst-environments">
     </select>
+    <select id="lst-machines">
+    </select>
     <input id="btn-deploy" type="submit" name="btn-deploy" value="Deploy" class="btn btn-primary"></input>
-  </div>
-  
+  </div>*@
+
   <hr />
 
   <div id="txt-logs-container">
@@ -58,7 +117,7 @@
 </div>
 
 <script type="text/javascript">
-  $(document).ready(function() {
+  $(document).ready(function () {
     initializeDeploymentPage();
   })
 </script>

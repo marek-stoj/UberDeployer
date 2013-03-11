@@ -37,6 +37,8 @@ Project("{C8D11400-126E-41CD-887F-60BD40844F9E}") = "UberDeployer.Database", "Ub
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.Agent.Service.Tests", "UberDeployer.Agent.Service.Tests\UberDeployer.Agent.Service.Tests.csproj", "{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.WebApp.Tests", "UberDeployer.WebApp.Tests\UberDeployer.WebApp.Tests.csproj", "{DA183C81-DB12-42FB-805D-5702677F056B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,5 +123,6 @@ Global
 		{9D43050A-2614-4022-A024-28FE293BB203} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
 		{115B32FE-9041-42D2-9149-8C430BC250B4} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
+		{DA183C81-DB12-42FB-805D-5702677F056B} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
 	EndGlobalSection
 EndGlobal

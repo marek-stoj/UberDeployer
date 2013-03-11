@@ -8,51 +8,8 @@ label.lst-header {
   font-weight: bold;
 }
 
-.lst-container {
-  float: left;
-}
-
-#lst-projects-container {
-  width: 29%;
-  float: left;
-  margin-right: 14px;
-}
-
-#lst-project-configs-container {
-  width: 29%;
-}
-
-#lst-project-config-builds-container {
-  width: 39%;
-  float: right;
-}
-
-#lst-projects,
-#lst-project-configs,
-#lst-project-config-builds {
+.container select {
   width: 100%;
-}
-
-#bottom-bar {
-  width: 450px;
-  margin: 0 auto;
-  margin-top: 18px;
-}
-
-#bottom-bar label {
-  display: inline;
-  float: left;
-  line-height: 30px;
-}
-
-#lst-environments {
-  margin-left: 10px;
-  float: left;
-}
-
-#btn-deploy {
-  margin-left: 10px;
-  float: left;
 }
 
 #txt-logs {
