@@ -151,12 +151,12 @@ namespace UberDeployer.Core.Management.Iis
 
       try
       {
-        string consoleOutput;
+        string stdout;
 
-        _msDeploy.Run(msDeployArgs, out consoleOutput);
+        _msDeploy.Run(msDeployArgs, out stdout);
 
         XAttribute attribute =
-          XDocument.Parse(consoleOutput)
+          XDocument.Parse(stdout)
             .Descendants("virtualDirectory")
             .Single()
             .Descendants("dirPath")
@@ -185,21 +185,21 @@ namespace UberDeployer.Core.Management.Iis
 
     #region Private helper methods
 
-    private static void HandleAppCmdExitCode(string exitCodeString, string machineName)
+    private static void HandleAppCmdExitCode(string exitCodeString, string machineName, string stdout)
     {
       if (exitCodeString == "0xB7") // app pool already exists
       {
-        throw new InvalidOperationException(string.Format("Error while running appcmd.exe. Can't create an application pool because it already exists on the target machine."));
+        throw new InvalidOperationException(string.Format("Error while running appcmd.exe. Can't create an application pool because it already exists on the target machine.\r\nStandard output:\r\n{0}", stdout));
       }
 
       if (exitCodeString == "0x32") // site doesn't exist
       {
-        throw new InvalidOperationException(string.Format("Error while running appcmd.exe. Can't set an app's application pool because the app doesn't exist on the target machine."));
+        throw new InvalidOperationException(string.Format("Error while running appcmd.exe. Can't set an app's application pool because the app doesn't exist on the target machine.\r\nStandard output:\r\n{0}", stdout));
       }
 
       if (exitCodeString != "0x0") // generic error
       {
-        throw new InternalException(string.Format("Error while running appcmd.exe. Make sure that the file '{0}' is present on the target machine ('{1}').", _RemoteAppCmdExePath, machineName));
+        throw new InternalException(string.Format("Error while running appcmd.exe.\r\nStandard output:\r\n{0}\r\nAlso make sure that the file '{1}' is present on the target machine ('{2}').", stdout, _RemoteAppCmdExePath, machineName));
       }
     }
 
@@ -246,11 +246,11 @@ namespace UberDeployer.Core.Management.Iis
             string.Format("-dest:auto,computerName=\"{0}\"", machineName),
           };
 
-      string consoleOutput;
+      string stdout;
 
-      _msDeploy.Run(msDeployArgs, out consoleOutput);
+      _msDeploy.Run(msDeployArgs, out stdout);
 
-      Match exitCodeMatch = _ExitCodeRegex.Match(consoleOutput);
+      Match exitCodeMatch = _ExitCodeRegex.Match(stdout);
       string exitCodeString = "?";
 
       if (exitCodeMatch.Success)
@@ -258,7 +258,7 @@ namespace UberDeployer.Core.Management.Iis
         exitCodeString = exitCodeMatch.Groups["ExitCode"].Value;
       }
 
-      HandleAppCmdExitCode(exitCodeString, machineName);
+      HandleAppCmdExitCode(exitCodeString, machineName, stdout);
     }
 
     #endregion
