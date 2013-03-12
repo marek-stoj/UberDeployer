@@ -9,18 +9,18 @@ namespace UberDeployer.Core.Deployment
   {
     private readonly ITaskScheduler _taskScheduler;
     private readonly string _machineName;
-    private readonly SchedulerAppProjectInfo _schedulerAppProjectInfo;
     private readonly string _executablePath;
     private readonly string _userName;
     private readonly string _password;
+
+    private SchedulerAppProjectInfo _schedulerAppProjectInfo;
 
     #region Constructor(s)
 
     // TODO IMM HI: can we update scheduler app without user name and password?
     public UpdateAppScheduleDeploymentStep(
       ITaskScheduler taskScheduler,
-      string machineName,
-      SchedulerAppProjectInfo schedulerAppProjectInfo,
+      string machineName,      
       string executablePath,
       string userName,
       string password)
@@ -33,12 +33,7 @@ namespace UberDeployer.Core.Deployment
       if (string.IsNullOrEmpty(machineName))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (schedulerAppProjectInfo == null)
-      {
-        throw new ArgumentNullException("schedulerAppProjectInfo");
-      }
+      }      
 
       if (string.IsNullOrEmpty(executablePath))
       {
@@ -61,8 +56,7 @@ namespace UberDeployer.Core.Deployment
       }
 
       _taskScheduler = taskScheduler;
-      _machineName = machineName;
-      _schedulerAppProjectInfo = schedulerAppProjectInfo;
+      _machineName = machineName;      
       _executablePath = executablePath;
       _userName = userName;
       _password = password;
@@ -74,6 +68,8 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
+      _schedulerAppProjectInfo = (SchedulerAppProjectInfo) DeploymentInfo.ProjectInfo;
+
       string taskName = _schedulerAppProjectInfo.SchedulerAppName;
       int scheduledHour = _schedulerAppProjectInfo.ScheduledHour;
       int scheduledMinute = _schedulerAppProjectInfo.ScheduledMinute;

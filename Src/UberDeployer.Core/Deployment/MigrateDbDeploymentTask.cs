@@ -6,10 +6,6 @@ namespace UberDeployer.Core.Deployment
 {
   public class MigrateDbDeploymentTask : DeploymentTask
   {
-    protected readonly string _projectConfigurationName;
-    protected readonly string _projectConfigurationBuildId;
-
-    protected readonly DbProjectInfo _projectInfo;
     protected readonly IArtifactsRepository _artifactsRepository;
     protected readonly IDbScriptRunnerFactory _dbScriptRunnerFactory;
     protected readonly IDbVersionProvider _dbVersionProvider;
@@ -20,31 +16,12 @@ namespace UberDeployer.Core.Deployment
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
       IDbScriptRunnerFactory dbScriptRunnerFactory,
-      IDbVersionProvider dbVersionProvider,
-      DbProjectInfo projectInfo,
-      string projectConfigurationName,
-      string projectConfigurationBuildId,
-      string targetEnvironmentName)
-      : base(environmentInfoRepository, targetEnvironmentName)
+      IDbVersionProvider dbVersionProvider)
+      : base(environmentInfoRepository)
     {
       if (artifactsRepository == null)
       {
         throw new ArgumentNullException("artifactsRepository");
-      }
-
-      if (projectInfo == null)
-      {
-        throw new ArgumentNullException("projectInfo");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
       }
 
       if (dbVersionProvider == null)
@@ -60,9 +37,6 @@ namespace UberDeployer.Core.Deployment
       _artifactsRepository = artifactsRepository;
       _dbScriptRunnerFactory = dbScriptRunnerFactory;
       _dbVersionProvider = dbVersionProvider;
-      _projectInfo = projectInfo;
-      _projectConfigurationName = projectConfigurationName;
-      _projectConfigurationBuildId = projectConfigurationBuildId;
     }
 
     #endregion Constructor(s)
@@ -77,9 +51,6 @@ namespace UberDeployer.Core.Deployment
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
           _artifactsRepository,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
           GetTempDirPath());
 
       AddSubTask(downloadArtifactsDeploymentStep);
@@ -88,19 +59,15 @@ namespace UberDeployer.Core.Deployment
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
           environmentInfo,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
-
+      
       AddSubTask(extractArtifactsDeploymentStep);
 
       // create a step for gathering scripts to run
       var gatherDbScriptsToRunDeploymentStep =
         new GatherDbScriptsToRunDeploymentStep(
           extractArtifactsDeploymentStep.BinariesDirPath,
-          _projectInfo.DbName,
           environmentInfo.DatabaseServerMachineName,
           environmentInfo.Name,
           _dbVersionProvider);
@@ -124,33 +91,14 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Migrate db '{0} ({1}:{2})' on '{3}'.",
-            _projectInfo.Name,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
-            _targetEnvironmentName);
+            DeploymentInfo.ProjectName,
+            DeploymentInfo.ProjectConfigurationName,
+            DeploymentInfo.ProjectConfigurationBuildId,
+            DeploymentInfo.TargetEnvironmentName);
       }
     }
 
     #endregion Overrides of DeploymentTaskBase
-
-    #region Overrides of DeploymentTask
-
-    public override string ProjectName
-    {
-      get { return _projectInfo.Name; }
-    }
-
-    public override string ProjectConfigurationName
-    {
-      get { return _projectConfigurationName; }
-    }
-
-    public override string ProjectConfigurationBuildId
-    {
-      get { return _projectConfigurationBuildId; }
-    }
-
-    #endregion Overrides of DeploymentTask
 
     #region Private helper methods
 

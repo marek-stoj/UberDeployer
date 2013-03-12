@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Ionic.Zip;
+using UberDeployer.Core.Domain;
 
 // TODO IMM HI: review
 namespace UberDeployer.Core.Deployment

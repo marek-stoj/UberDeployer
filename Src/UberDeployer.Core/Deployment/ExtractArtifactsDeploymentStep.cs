@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Ionic.Zip;
 using UberDeployer.Core.Domain;
 
@@ -9,38 +7,20 @@ namespace UberDeployer.Core.Deployment
 {
   public class ExtractArtifactsDeploymentStep : DeploymentStep
   {
-    private readonly EnvironmentInfo _environmentInfo;
-    private readonly ProjectInfo _projectInfo;
-    private readonly string _projectConfigurationName;
-    private readonly string _projectConfigurationBuildId;
+    private readonly EnvironmentInfo _environmentInfo;   
     private readonly string _artifactsFilePath;
     private readonly string _targetArtifactsDirPath;
 
-    private readonly string _archiveSubPath;
+    private string _archiveSubPath;
 
     #region Constructor(s)
 
-    public ExtractArtifactsDeploymentStep(EnvironmentInfo environmentInfo, ProjectInfo projectInfo, string projectConfigurationName, string projectConfigurationBuildId, string artifactsFilePath, string targetArtifactsDirPath)
+    public ExtractArtifactsDeploymentStep(EnvironmentInfo environmentInfo, string artifactsFilePath, string targetArtifactsDirPath)
     {
       if (environmentInfo == null)
       {
         throw new ArgumentNullException("environmentInfo");
-      }
-
-      if (projectInfo == null)
-      {
-        throw new ArgumentNullException("projectInfo");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
-      }
+      }      
 
       if (string.IsNullOrEmpty(artifactsFilePath))
       {
@@ -52,30 +32,32 @@ namespace UberDeployer.Core.Deployment
         throw new ArgumentException("Argument can't be null nor empty.", "targetArtifactsDirPath");
       }
 
-      _environmentInfo = environmentInfo;
-      _projectInfo = projectInfo;
-      _projectConfigurationName = projectConfigurationName;
-      _projectConfigurationBuildId = projectConfigurationBuildId;
+      _environmentInfo = environmentInfo;      
       _artifactsFilePath = artifactsFilePath;
-      _targetArtifactsDirPath = targetArtifactsDirPath;
+      _targetArtifactsDirPath = targetArtifactsDirPath;      
+    }
+
+    #endregion Constructor(s)
+
+    #region Overrides of DeploymentStep
+
+    protected override void DoPrepare()
+    {
+      base.DoPrepare();
 
       string archiveParentPath = string.Empty;
 
-      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
+      if (DeploymentInfo.ProjectInfo.ArtifactsAreEnvironmentSpecific)
       {
         archiveParentPath = string.Format("{0}/", _environmentInfo.ConfigurationTemplateName);
       }
 
       // eg. when artifacts are enviroment specific: Service/dev2/
       _archiveSubPath =
-        !string.IsNullOrEmpty(_projectInfo.ArtifactsRepositoryDirName)
-          ? string.Format("{0}{1}/", archiveParentPath, _projectInfo.ArtifactsRepositoryDirName)
+        !string.IsNullOrEmpty(DeploymentInfo.ProjectInfo.ArtifactsRepositoryDirName)
+          ? string.Format("{0}{1}/", archiveParentPath, DeploymentInfo.ProjectInfo.ArtifactsRepositoryDirName)
           : archiveParentPath;
     }
-
-    #endregion Constructor(s)
-
-    #region Overrides of DeploymentStep
 
     protected override void DoExecute()
     {
@@ -89,8 +71,8 @@ namespace UberDeployer.Core.Deployment
       string projectArchiveFileName =
         string.Format(
           @"{0}_{1}.zip",
-          _projectInfo.ArtifactsRepositoryName,
-          _projectConfigurationName);
+          DeploymentInfo.ProjectInfo.ArtifactsRepositoryName,
+          DeploymentInfo.ProjectConfigurationName);
 
       string archivePath = Path.Combine(_targetArtifactsDirPath, projectArchiveFileName);
 
@@ -105,12 +87,13 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
+        //TODO MARIO throw exception? when DeploymentInfo == nul
         return
           string.Format(
             "Extract artifacts of project '{0} ({1}:{2})' on environment '{3}' to '{4}' from '{5}'.'",
-            _projectInfo.Name,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
+            DeploymentInfo.ProjectName,
+            DeploymentInfo.ProjectConfigurationName,
+            DeploymentInfo.ProjectConfigurationBuildId,
             _environmentInfo.Name,
             _targetArtifactsDirPath,
             _artifactsFilePath);

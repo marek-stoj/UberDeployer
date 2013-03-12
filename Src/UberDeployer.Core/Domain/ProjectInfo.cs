@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Core.Deployment;
 
 namespace UberDeployer.Core.Domain
@@ -24,7 +25,7 @@ namespace UberDeployer.Core.Domain
       ArtifactsAreEnvironmentSpecific = !artifactsAreNotEnvironmentSpecific;
     }
 
-    public abstract DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName);
+    public abstract DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory);
 
     public abstract IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo);
 

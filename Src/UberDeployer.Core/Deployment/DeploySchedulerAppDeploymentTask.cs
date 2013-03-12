@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 
@@ -11,10 +12,8 @@ namespace UberDeployer.Core.Deployment
     private readonly IArtifactsRepository _artifactsRepository;
     private readonly ITaskScheduler _taskScheduler;
     private readonly IPasswordCollector _passwordCollector;
-    private readonly SchedulerAppProjectInfo _projectInfo;
 
-    private readonly string _projectConfigurationName;
-    private readonly string _projectConfigurationBuildId;
+    private SchedulerAppProjectInfo _projectInfo;
 
     #region Constructor(s)
 
@@ -22,12 +21,8 @@ namespace UberDeployer.Core.Deployment
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
       ITaskScheduler taskScheduler,
-      IPasswordCollector passwordCollector,
-      SchedulerAppProjectInfo projectInfo,
-      string projectConfigurationName,
-      string projectConfigurationBuildId,
-      string targetEnvironmentName)
-      : base(environmentInfoRepository, targetEnvironmentName)
+      IPasswordCollector passwordCollector)
+      : base(environmentInfoRepository)
     {
       if (artifactsRepository == null)
       {
@@ -44,27 +39,9 @@ namespace UberDeployer.Core.Deployment
         throw new ArgumentNullException("passwordCollector");
       }
 
-      if (projectInfo == null)
-      {
-        throw new ArgumentNullException("projectInfo");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
-      }
-
       _artifactsRepository = artifactsRepository;
       _taskScheduler = taskScheduler;
       _passwordCollector = passwordCollector;
-      _projectInfo = projectInfo;
-      _projectConfigurationName = projectConfigurationName;
-      _projectConfigurationBuildId = projectConfigurationBuildId;
     }
 
     #endregion Constructor(s)
@@ -75,13 +52,12 @@ namespace UberDeployer.Core.Deployment
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
+      _projectInfo = (SchedulerAppProjectInfo) DeploymentInfo.ProjectInfo;
+
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
           _artifactsRepository,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
           GetTempDirPath());
 
       AddSubTask(downloadArtifactsDeploymentStep);
@@ -90,9 +66,6 @@ namespace UberDeployer.Core.Deployment
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
           environmentInfo,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
@@ -145,8 +118,7 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(
           new ScheduleNewAppDeploymentStep(
             _taskScheduler,
-            machineName,
-            _projectInfo,
+            machineName,            
             executablePath,
             environmentUser.UserName,
             environmentUserPassword));
@@ -157,8 +129,7 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(
           new UpdateAppScheduleDeploymentStep(
             _taskScheduler,
-            machineName,
-            _projectInfo,
+            machineName,            
             executablePath,
             environmentUser.UserName,
             environmentUserPassword));
@@ -173,31 +144,12 @@ namespace UberDeployer.Core.Deployment
           string.Format(
             "Deploy scheduler app '{0} ({1}:{2})' to '{3}'.",
             _projectInfo.Name,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
-            _targetEnvironmentName);
+            DeploymentInfo.ProjectConfigurationName,
+            DeploymentInfo.ProjectConfigurationBuildId,
+            DeploymentInfo.TargetEnvironmentName);
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
-
-    #region Overrides of DeploymentTask
-
-    public override string ProjectName
-    {
-      get { return _projectInfo.Name; }
-    }
-
-    public override string ProjectConfigurationName
-    {
-      get { return _projectConfigurationName; }
-    }
-
-    public override string ProjectConfigurationBuildId
-    {
-      get { return _projectConfigurationBuildId; }
-    }
-
-    #endregion Overrides of DeploymentTask
+    #endregion Overrides of DeploymentTaskBase    
   }
 }
