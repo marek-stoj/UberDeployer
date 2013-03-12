@@ -88,7 +88,7 @@ namespace UberDeployer.Core.Management.MsDeploy
 
     #region Public methods
 
-    public void Run(string[] args, out string consoleOutput)
+    public void Run(string[] args, out string stdout)
     {
       if (args == null)
       {
@@ -144,13 +144,13 @@ namespace UberDeployer.Core.Management.MsDeploy
         // TODO IMM HI: log console output (log4net)?
         // TODO IMM HI: log console error (log4net)?
 
-        consoleOutput = consoleOutputStringBuilder.ToString();
+        stdout = consoleOutputStringBuilder.ToString();
+        
+        string stderr = consoleErrorStringBuilder.ToString();
 
-        string consoleError = consoleErrorStringBuilder.ToString();
-
-        if (!string.IsNullOrEmpty(consoleError))
+        if (!string.IsNullOrEmpty(stderr))
         {
-          throw new MsDeployException(consoleError);
+          throw new MsDeployException(stderr);
         }
       }
       finally
