@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
@@ -88,89 +87,98 @@ namespace UberDeployer.Agent.Service
 
     public void Deploy(Guid uniqueClientId, string requesterIdentity, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
     {
-      if (uniqueClientId == Guid.Empty)
+      try
       {
-        throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
-      }
+        if (uniqueClientId == Guid.Empty)
+        {
+          throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
+        }
 
-      if (string.IsNullOrEmpty(requesterIdentity))
+        if (string.IsNullOrEmpty(requesterIdentity))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "requesterIdentity");
+        }
+
+        if (string.IsNullOrEmpty(projectName))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "projectName");
+        }
+
+        if (string.IsNullOrEmpty(projectConfigurationName))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
+        }
+
+        if (string.IsNullOrEmpty(projectConfigurationBuildId))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
+        }
+
+        if (string.IsNullOrEmpty(targetEnvironmentName))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "targetEnvironmentName");
+        }
+
+        ProjectInfo projectInfo =
+          _projectInfoRepository.GetByName(projectName);
+
+        if (projectInfo == null)
+        {
+          throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = projectName });
+        }
+
+        DoDeploy(uniqueClientId, requesterIdentity, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName, projectInfo);
+      }
+      catch (Exception exc)
       {
-        throw new ArgumentException("Argument can't be null nor empty.", "requesterIdentity");
+        HandleDeploymentException(exc, uniqueClientId);
       }
-
-      if (string.IsNullOrEmpty(projectName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
-      }
-
-      if (string.IsNullOrEmpty(targetEnvironmentName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "targetEnvironmentName");
-      }
-
-      ProjectInfo projectInfo =
-        _projectInfoRepository.GetByName(projectName);
-
-      if (projectInfo == null)
-      {
-        throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = projectName });
-      }
-
-      DoDeploy(uniqueClientId, requesterIdentity, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName, projectInfo);
     }
 
     public void DeployAsync(Guid uniqueClientId, string requesterIdentity, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
     {
-      if (uniqueClientId == Guid.Empty)
+      try
       {
-        throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
-      }
+        if (uniqueClientId == Guid.Empty)
+        {
+          throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
+        }
 
-      if (string.IsNullOrEmpty(requesterIdentity))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "requesterIdentity");
-      }
+        if (string.IsNullOrEmpty(requesterIdentity))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "requesterIdentity");
+        }
 
-      if (string.IsNullOrEmpty(projectName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectName");
-      }
+        if (string.IsNullOrEmpty(projectName))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "projectName");
+        }
 
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
+        if (string.IsNullOrEmpty(projectConfigurationName))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
+        }
 
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
-      }
+        if (string.IsNullOrEmpty(projectConfigurationBuildId))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
+        }
 
-      if (string.IsNullOrEmpty(targetEnvironmentName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "targetEnvironmentName");
-      }
+        if (string.IsNullOrEmpty(targetEnvironmentName))
+        {
+          throw new ArgumentException("Argument can't be null nor empty.", "targetEnvironmentName");
+        }
 
-      ProjectInfo projectInfo =
-        _projectInfoRepository.GetByName(projectName);
+        ProjectInfo projectInfo =
+          _projectInfoRepository.GetByName(projectName);
 
-      if (projectInfo == null)
-      {
-        throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = projectName });
-      }
+        if (projectInfo == null)
+        {
+          throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = projectName });
+        }
 
-      ThreadPool.QueueUserWorkItem(
-        state =>
+        ThreadPool.QueueUserWorkItem(
+          state =>
           {
             try
             {
@@ -178,9 +186,14 @@ namespace UberDeployer.Agent.Service
             }
             catch (Exception exc)
             {
-              _log.ErrorIfEnabled(() => "Unhandled exception while deploying asynchronously.", exc);
+              HandleDeploymentException(exc, uniqueClientId);
             }
           });
+      }
+      catch (Exception exc)
+      {
+        HandleDeploymentException(exc, uniqueClientId);
+      }
     }
 
     public List<Proxy.Dto.ProjectInfo> GetProjectInfos(Proxy.Dto.ProjectFilter projectFilter)
@@ -457,6 +470,19 @@ namespace UberDeployer.Agent.Service
     #endregion
 
     #region Private methods
+
+    private void HandleDeploymentException(Exception exception, Guid uniqueClientId)
+    {
+      const string errorMessage = "Unhandled exception.";
+
+      _diagnosticMessagesLogger
+        .LogMessage(
+          uniqueClientId,
+          DiagnosticMessageType.Error,
+          string.Format("{0}{1}", errorMessage, (exception != null ? Environment.NewLine + exception : " (no exception info)")));
+
+      _log.ErrorIfEnabled(() => errorMessage, exception);
+    }
 
     private void DoDeploy(Guid uniqueClientId, string requesterIdentity, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectInfo projectInfo)
     {
