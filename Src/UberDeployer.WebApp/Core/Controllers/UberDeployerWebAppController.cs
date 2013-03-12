@@ -4,11 +4,9 @@ namespace UberDeployer.WebApp.Core.Controllers
 {
   public abstract class UberDeployerWebAppController : Controller
   {
-    protected ActionResult BadRequest()
-    {
-      Response.StatusCode = 400;
-
-      return Content("400 - Bad Request");
-    }
+    protected HttpStatusCodeResult BadRequest()
+    {      
+      return new HttpStatusCodeResult(400, "400 - Bad Request");
+    }    
   }
 }

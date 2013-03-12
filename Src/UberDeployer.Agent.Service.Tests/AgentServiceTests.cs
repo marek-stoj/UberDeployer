@@ -21,7 +21,7 @@ namespace UberDeployer.Agent.Service.Tests
     private Mock<IProjectInfoRepository> _projectInfoRepositoryFake;
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
     private Mock<ITeamCityClient> _teamCityClientFake;
-    private Mock<IDeploymentRequestRepository> _deploymentRequestRepositoryFake;    
+    private Mock<IDeploymentRequestRepository> _deploymentRequestRepositoryFake;
 
     [SetUp]
     public void SetUp()
@@ -29,7 +29,7 @@ namespace UberDeployer.Agent.Service.Tests
       _deploymentPipelineFake = new Mock<IDeploymentPipeline>();
       _diagnositcMessagesLoggerFake = new Mock<IDiagnosticMessagesLogger>();
       _projectInfoRepositoryFake = new Mock<IProjectInfoRepository>();
-      _environmentInfoRepositoryFake =new Mock<IEnvironmentInfoRepository>();
+      _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
       _teamCityClientFake = new Mock<ITeamCityClient>();
       _deploymentRequestRepositoryFake = new Mock<IDeploymentRequestRepository>();
 
@@ -47,10 +47,10 @@ namespace UberDeployer.Agent.Service.Tests
     {
       // arrange  
       const string notExistingEnvName = "env name";
-      
+
       _environmentInfoRepositoryFake
         .Setup(x => x.GetByName(notExistingEnvName))
-        .Returns((EnvironmentInfo) null);
+        .Returns((EnvironmentInfo)null);
 
       // act assert
       Assert.Throws<FaultException<EnvironmentNotFoundFault>>(
@@ -61,7 +61,7 @@ namespace UberDeployer.Agent.Service.Tests
     public void GetWebMachinesNames_properly_gets_machines_names()
     {
       // arrange  
-      var expectedWebMachinesNames = new List<string> {"machine1", "machine2"};
+      var expectedWebMachinesNames = new List<string> { "machine1", "machine2" };
       const string environmentName = "env name";
 
       var environmentInfo = GetEnvironmentInfo(environmentName, expectedWebMachinesNames);
@@ -81,7 +81,7 @@ namespace UberDeployer.Agent.Service.Tests
         Assert.Contains(webMachinesName, webMachinesNames);
       }
     }
-    
+
     [Test]
     public void GetWebMachinesNames_fails_on_null_or_empty_environment_name()
     {
@@ -94,18 +94,18 @@ namespace UberDeployer.Agent.Service.Tests
       return new EnvironmentInfo(
         environmentName,
         "configurationTemplateName",
-        "appServerMachineName", 
-        "failOverMachineName", 
-        expectedWebMachinesNames, 
+        "appServerMachineName",
+        "failOverMachineName",
+        expectedWebMachinesNames,
         "terminalServerMachineName",
-        "databaseServerMachineName", 
-        "ntServiceDirPath", 
-        "webAppsBaseDirPath", 
+        "databaseServerMachineName",
+        "ntServiceDirPath",
+        "webAppsBaseDirPath",
         "schedulerAppsBaseDirPath",
-        "terminalAppsBaseDirPath", 
-        false, 
-        new[] {new EnvironmentUser("id", "user")},
-        new[] {new ProjectToFailoverClusterGroupMapping("projectName", "groupName")});
+        "terminalAppsBaseDirPath",
+        false,
+        new[] { new EnvironmentUser("id", "user") },
+        new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") });
     }
   }
 }
