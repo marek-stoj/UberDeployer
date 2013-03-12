@@ -1,4 +1,6 @@
 ﻿using System;
+using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -7,13 +9,32 @@ namespace UberDeployer.Core.Deployment
     public event EventHandler<DiagnosticMessageEventArgs> DiagnosticMessagePosted;
 
     private bool _prepared;
+    private DeploymentInfo _deploymentInfo;
 
-    public void Prepare()
+    internal DeploymentInfo DeploymentInfo
     {
+      get {
+        if (_deploymentInfo == null)
+        {
+          throw new InvalidOperationException("The task hasn't been prepared.");
+        }
+
+        return _deploymentInfo;
+      } 
+       
+      set { _deploymentInfo = value; }
+    }
+
+    public void Prepare(DeploymentInfo deploymentInfo)
+    {
+      Guard.NotNull(deploymentInfo, "DeploymentInfo");      
+
       if (_prepared)
       {
         throw new InvalidOperationException("The task has already been prepared.");
       }
+
+      DeploymentInfo = deploymentInfo;
 
       PostDiagnosticMessage(string.Format("Preparing: {0}", Description), DiagnosticMessageType.Trace);
 
@@ -34,9 +55,9 @@ namespace UberDeployer.Core.Deployment
       DoExecute();
     }
 
-    public void PrepareAndExecute()
+    public void PrepareAndExecute(DeploymentInfo deploymentInfo)
     {
-      Prepare();
+      Prepare(deploymentInfo);
       Execute();
     }
 

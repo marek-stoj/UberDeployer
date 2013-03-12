@@ -197,7 +197,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpPost]
-    public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, List<string> targetMachines)
     {
       if (string.IsNullOrEmpty(projectName))
       {
@@ -217,17 +217,20 @@ namespace UberDeployer.WebApp.Core.Controllers
       if (string.IsNullOrEmpty(targetEnvironmentName))
       {
         return BadRequest();
-      }
+      }      
 
       try
       {
         _agentService.DeployAsync(
           _sessionService.UniqueClientId,
           SecurityUtils.CurrentUsername,
-          projectName,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName);
+          new UberDeployer.Agent.Proxy.Dto.DeploymentInfo
+            {
+              ProjectName = projectName,
+              ProjectConfigurationName = projectConfigurationName,
+              ProjectConfigurationBuildId = projectConfigurationBuildId,
+              TargetEnvironmentName = targetEnvironmentName
+            });
 
         return Json(new { status = "OK" });
       }

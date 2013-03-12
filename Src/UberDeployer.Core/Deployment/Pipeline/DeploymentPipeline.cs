@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment.Pipeline
 {
@@ -22,17 +24,10 @@ namespace UberDeployer.Core.Deployment.Pipeline
       _modules.Add(module);
     }
 
-    public void StartDeployment(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
+    public void StartDeployment(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
-      if (deploymentTask == null)
-      {
-        throw new ArgumentNullException("deploymentTask");
-      }
-
-      if (deploymentContext == null)
-      {
-        throw new ArgumentNullException("deploymentContext");
-      }
+      Guard.NotNull(deploymentTask, "deploymentTask");
+      Guard.NotNull(deploymentContext, "deploymentContext");
 
       deploymentContext.DateStarted = DateTime.UtcNow;
 
@@ -42,7 +37,7 @@ namespace UberDeployer.Core.Deployment.Pipeline
 
       try
       {
-        deploymentTask.PrepareAndExecute();
+        deploymentTask.PrepareAndExecute(deploymentInfo);
 
         finishedSuccessfully = true;
       }
