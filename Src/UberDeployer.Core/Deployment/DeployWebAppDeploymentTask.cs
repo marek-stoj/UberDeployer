@@ -55,6 +55,7 @@ namespace UberDeployer.Core.Deployment
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
       
       _webAppProjectInfo = DeploymentInfo.ProjectInfo as WebAppProjectInfo;
+
       Guard.NotNull(_webAppProjectInfo, "_webAppProjectInfo");
 
       // create a step for downloading the artifacts
@@ -87,7 +88,7 @@ namespace UberDeployer.Core.Deployment
         string webApplicationPhysicalPath =
           _iisManager.GetWebApplicationPath(
             webServerMachineName,
-            string.Format("{0}/{1}", _webAppProjectInfo.IisSiteName, _webAppProjectInfo.WebAppName));
+            string.Format("{0}/{1}", _webAppProjectInfo.WebSiteId, _webAppProjectInfo.WebAppName));
 
         if (!string.IsNullOrEmpty(webApplicationPhysicalPath))
         {
@@ -112,7 +113,7 @@ namespace UberDeployer.Core.Deployment
           new CreateWebDeployPackageDeploymentStep(
             _msDeploy,
             extractArtifactsDeploymentStep.BinariesDirPath,
-            _webAppProjectInfo.IisSiteName,
+            _webAppProjectInfo.WebSiteId,
             _webAppProjectInfo.WebAppName);
 
         AddSubTask(createWebDeployPackageDeploymentStep);
@@ -127,14 +128,14 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(deployWebDeployPackageDeploymentStep);
 
         // check if the app pool exists on the target machine
-        if (!_iisManager.AppPoolExists(webServerMachineName, _webAppProjectInfo.AppPool.Name))
+        if (!_iisManager.AppPoolExists(webServerMachineName, _webAppProjectInfo.AppPoolId.Name))
         {
           // create a step for creating a new app pool
           var createAppPoolDeploymentStep =
             new CreateAppPoolDeploymentStep(
               _iisManager,
               webServerMachineName,
-              _webAppProjectInfo.AppPool);
+              _webAppProjectInfo.AppPoolId);
 
           AddSubTask(createAppPoolDeploymentStep);
         }
@@ -144,9 +145,9 @@ namespace UberDeployer.Core.Deployment
           new SetAppPoolDeploymentStep(
             _iisManager,
             webServerMachineName,
-            _webAppProjectInfo.IisSiteName,
+            _webAppProjectInfo.WebSiteId,
             _webAppProjectInfo.WebAppName,
-            _webAppProjectInfo.AppPool);
+            _webAppProjectInfo.AppPoolId);
 
         AddSubTask(setAppPoolDeploymentStep);
       }

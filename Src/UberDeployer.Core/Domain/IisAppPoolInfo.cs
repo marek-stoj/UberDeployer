@@ -2,6 +2,7 @@
 
 namespace UberDeployer.Core.Domain
 {
+  // TODO IMM HI: xxx remove? rename?
   public class IisAppPoolInfo
   {
     #region Constructor(s)

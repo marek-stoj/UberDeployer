@@ -49,13 +49,11 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     public class WebAppProjectInfoXml : ProjectInfoXml
     {
-      public string IisSiteName { get; set; }
-      
+      // TODO IMM HI: xxx this shouldn't be here
       public string WebAppName { get; set; }
 
+      // TODO IMM HI: xxx this shouldn't be here
       public string WebAppDirName { get; set; }
-
-      public IisAppPoolInfoXml AppPool { get; set; }
     }
 
     public class IisAppPoolInfoXml
@@ -185,13 +183,8 @@ namespace UberDeployer.Core.DataAccess.Xml
             webAppProjectInfoXml.ArtifactsRepositoryName,
             webAppProjectInfoXml.ArtifactsRepositoryDirName,
             webAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
-            webAppProjectInfoXml.IisSiteName,
             webAppProjectInfoXml.WebAppName,
-            webAppProjectInfoXml.WebAppDirName,
-            new IisAppPoolInfo(
-              webAppProjectInfoXml.AppPool.Name,
-              webAppProjectInfoXml.AppPool.Version,
-              webAppProjectInfoXml.AppPool.Mode));
+            webAppProjectInfoXml.WebAppDirName);
       }
 
       var schedulerAppProjectInfoXml = projectInfoXml as SchedulerAppProjectInfoXml;
