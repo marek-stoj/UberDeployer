@@ -8,26 +8,25 @@ namespace UberDeployer.Core.Deployment
   {
     private readonly IIisManager _iisManager;
     private readonly string _machineName;
-    private readonly string _iisSiteName;
+    private readonly string _webSiteName;
     private readonly string _webAppName;
     private readonly IisAppPoolInfo _appPoolInfo;
 
-    public SetAppPoolDeploymentStep(IIisManager iisManager, string machineName, string iisSiteName, string webAppName, IisAppPoolInfo appPoolInfo)
+    public SetAppPoolDeploymentStep(IIisManager iisManager, string machineName, string webSiteName, string webAppName, IisAppPoolInfo appPoolInfo)
     {
       if (iisManager == null)
       {
         throw new ArgumentNullException("iisManager");
       }
-      
 
       if (string.IsNullOrEmpty(machineName))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "machineName");
       }
 
-      if (string.IsNullOrEmpty(iisSiteName))
+      if (string.IsNullOrEmpty(webSiteName))
       {
-        throw new ArgumentException("Argument can't be null nor empty.", "iisSiteName");
+        throw new ArgumentException("Argument can't be null nor empty.", "webSiteName");
       }
 
       if (string.IsNullOrEmpty(webAppName))
@@ -42,7 +41,7 @@ namespace UberDeployer.Core.Deployment
 
       _iisManager = iisManager;
       _machineName = machineName;
-      _iisSiteName = iisSiteName;
+      _webSiteName = webSiteName;
       _webAppName = webAppName;
       _appPoolInfo = appPoolInfo;
     }
@@ -75,7 +74,7 @@ namespace UberDeployer.Core.Deployment
 
     protected string FullWebAppName
     {
-      get { return string.Format("{0}/{1}", _iisSiteName, _webAppName); }
+      get { return string.Format("{0}/{1}", _webSiteName, _webAppName); }
     }
 
     #endregion

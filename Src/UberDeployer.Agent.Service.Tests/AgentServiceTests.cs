@@ -94,9 +94,9 @@ namespace UberDeployer.Agent.Service.Tests
       return new EnvironmentInfo(
         environmentName,
         "configurationTemplateName",
-        "appServerMachineName", 
-        "failOverMachineName", 
-        expectedWebMachineNames, 
+        "appServerMachineName",
+        "failOverMachineName",
+        expectedWebMachineNames,
         "terminalServerMachineName",
         "databaseServerMachineName",
         "ntServiceDirPath",
@@ -105,6 +105,9 @@ namespace UberDeployer.Agent.Service.Tests
         "terminalAppsBaseDirPath",
         false,
         new[] { new EnvironmentUser("id", "user") },
+        new[] { new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated), },
+        new[] { new ProjectToWebSiteMapping("projectName", "websitename"),  },
+        new[] { new ProjectToAppPoolMapping("projectName", "apppoolid"),  },
         new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") });
     }
   }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
@@ -13,7 +12,7 @@ namespace UberDeployer.Core.Deployment
   public class DeployWebAppDeploymentTask : DeploymentTask
   {
     private readonly IMsDeploy _msDeploy;
-    protected readonly IArtifactsRepository _artifactsRepository;    
+    protected readonly IArtifactsRepository _artifactsRepository;
 
     private readonly IIisManager _iisManager;
 
@@ -24,24 +23,13 @@ namespace UberDeployer.Core.Deployment
     public DeployWebAppDeploymentTask(IMsDeploy msDeploy, IEnvironmentInfoRepository environmentInfoRepository, IArtifactsRepository artifactsRepository, IIisManager iisManager)
       : base(environmentInfoRepository)
     {
-      if (msDeploy == null)
-      {
-        throw new ArgumentNullException("msDeploy");
-      }
-
-      if (artifactsRepository == null)
-      {
-        throw new ArgumentNullException("artifactsRepository");
-      }
-
-      if (iisManager == null)
-      {
-        throw new ArgumentNullException("iisManager");
-      }      
+      Guard.NotNull(msDeploy, "msDeploy");
+      Guard.NotNull(artifactsRepository, "artifactsRepository");
+      Guard.NotNull(iisManager, "iisManager");
 
       _msDeploy = msDeploy;
       _artifactsRepository = artifactsRepository;
-      _iisManager = iisManager;      
+      _iisManager = iisManager;
     }
 
     #endregion Constructor(s)
@@ -50,8 +38,8 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      WebInputParams webAppProjectInfo = (WebInputParams) DeploymentInfo.InputParams;
-      
+      WebInputParams webAppProjectInfo = (WebInputParams)DeploymentInfo.InputParams;
+
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
       if (webAppProjectInfo.WebMachines == null || !webAppProjectInfo.WebMachines.Any())
@@ -63,12 +51,15 @@ namespace UberDeployer.Core.Deployment
 
       if (invalidMachineNames.Any())
       {
-        throw new DeploymentTaskException(string.Format("Invalid web machines '{0}' have been specified.", string.Join(",", invalidMachineNames)));        
+        throw new DeploymentTaskException(string.Format("Invalid web machines '{0}' have been specified.", string.Join(",", invalidMachineNames)));
       }
 
       _webAppProjectInfo = DeploymentInfo.ProjectInfo as WebAppProjectInfo;
 
-      Guard.NotNull(_webAppProjectInfo, "_webAppProjectInfo");
+      if (_webAppProjectInfo == null)
+      {
+        throw new InvalidOperationException(string.Format("Project info must be of type '{0}'.", typeof(WebAppProjectInfo).FullName));
+      }
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
@@ -95,12 +86,15 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(binariesConfiguratorStep);
       }
 
+      string webSiteName = environmentInfo.GetWebSiteNameForProject(_webAppProjectInfo.Name);
+      IisAppPoolInfo appPoolInfo = environmentInfo.GetAppPoolInfoForProject(_webAppProjectInfo.Name);
+
       foreach (string webServerMachineName in webAppProjectInfo.WebMachines)
       {
         string webApplicationPhysicalPath =
           _iisManager.GetWebApplicationPath(
             webServerMachineName,
-            string.Format("{0}/{1}", _webAppProjectInfo.WebSiteId, _webAppProjectInfo.WebAppName));
+            string.Format("{0}/{1}", webSiteName, _webAppProjectInfo.WebAppName));
 
         if (!string.IsNullOrEmpty(webApplicationPhysicalPath))
         {
@@ -125,7 +119,7 @@ namespace UberDeployer.Core.Deployment
           new CreateWebDeployPackageDeploymentStep(
             _msDeploy,
             extractArtifactsDeploymentStep.BinariesDirPath,
-            _webAppProjectInfo.WebSiteId,
+            webSiteName,
             _webAppProjectInfo.WebAppName);
 
         AddSubTask(createWebDeployPackageDeploymentStep);
@@ -140,14 +134,14 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(deployWebDeployPackageDeploymentStep);
 
         // check if the app pool exists on the target machine
-        if (!_iisManager.AppPoolExists(webServerMachineName, _webAppProjectInfo.AppPoolId.Name))
+        if (!_iisManager.AppPoolExists(webServerMachineName, appPoolInfo.Name))
         {
           // create a step for creating a new app pool
           var createAppPoolDeploymentStep =
             new CreateAppPoolDeploymentStep(
               _iisManager,
               webServerMachineName,
-              _webAppProjectInfo.AppPoolId);
+              appPoolInfo);
 
           AddSubTask(createAppPoolDeploymentStep);
         }
@@ -157,13 +151,13 @@ namespace UberDeployer.Core.Deployment
           new SetAppPoolDeploymentStep(
             _iisManager,
             webServerMachineName,
-            _webAppProjectInfo.WebSiteId,
+            webSiteName,
             _webAppProjectInfo.WebAppName,
-            _webAppProjectInfo.AppPoolId);
+            appPoolInfo);
 
         AddSubTask(setAppPoolDeploymentStep);
       }
-    }    
+    }
 
     public override string Description
     {

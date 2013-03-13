@@ -56,15 +56,6 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string WebAppDirName { get; set; }
     }
 
-    public class IisAppPoolInfoXml
-    {
-      public string Name { get; set; }
-      
-      public IisAppPoolVersion Version { get; set; }
-      
-      public IisAppPoolMode Mode { get; set; }
-    }
-
     public class SchedulerAppProjectInfoXml : ProjectInfoXml
     {
       public string SchedulerAppName { get; set; }

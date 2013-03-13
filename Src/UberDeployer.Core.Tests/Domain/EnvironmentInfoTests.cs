@@ -23,38 +23,59 @@ namespace UberDeployer.Core.Tests.Domain
 
     private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
-        {
-          new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
-        };
+      {
+        new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
+      };
+
+    private static readonly List<IisAppPoolInfo> _AppPoolInfos =
+      new List<IisAppPoolInfo>()
+      {
+        new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
+      };
+
+    private static readonly List<ProjectToWebSiteMapping> _ProjectToWebSiteMappings =
+      new List<ProjectToWebSiteMapping>
+      {
+        new ProjectToWebSiteMapping("prj1", "website"),
+      };
+
+    private static readonly List<ProjectToAppPoolMapping> _ProjectToAppPoolMappings =
+      new List<ProjectToAppPoolMapping>
+      {
+        new ProjectToAppPoolMapping("prj1", "apppool"),
+      };
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
       new List<ProjectToFailoverClusterGroupMapping>
-        {
-          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
-        };
+      {
+        new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+      };
 
     [Test]
     public void Test_EnvironmentInfoTests_Throws_When_Name_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new EnvironmentInfo(
-              null,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            null,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -62,23 +83,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentNullException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              null,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            null,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -86,23 +110,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.DoesNotThrow(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              "",
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            "",
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -110,23 +137,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              null,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            null,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -134,23 +164,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentNullException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              null,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            null,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -158,23 +191,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentNullException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              null,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            null,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -182,23 +218,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              null,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            null,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -206,23 +245,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              null,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            null,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -230,23 +272,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              null,
-              _SchedulerAppsBaseDirPath,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            null,
+            _SchedulerAppsBaseDirPath,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -254,23 +299,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              null,
-              _TerminalAppsBaseDirPath,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            null,
+            _TerminalAppsBaseDirPath,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -278,23 +326,26 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new EnvironmentInfo(
-              _EnvironmentName,
-              _ConfigurationTemplateName,
-              _AppServerMachine,
-              _FailoverClusterMachineName,
-              _WebMachineNames,
-              _TerminalMachineName,
-              _DatabaseMachineName,
-              _NtServicesBaseDirPath,
-              _WebAppsBaseDirPath,
-              _SchedulerAppsBaseDirPath,
-              null,
-              false,
-              _EnvironmentUsers,
-              _ProjectToFailoverClusterGroupMappings);
-          });
+        {
+          new EnvironmentInfo(
+            _EnvironmentName,
+            _ConfigurationTemplateName,
+            _AppServerMachine,
+            _FailoverClusterMachineName,
+            _WebMachineNames,
+            _TerminalMachineName,
+            _DatabaseMachineName,
+            _NtServicesBaseDirPath,
+            _WebAppsBaseDirPath,
+            _SchedulerAppsBaseDirPath,
+            null,
+            false,
+            _EnvironmentUsers,
+            _AppPoolInfos,
+            _ProjectToWebSiteMappings,
+            _ProjectToAppPoolMappings,
+            _ProjectToFailoverClusterGroupMappings);
+        });
     }
 
     [Test]
@@ -315,6 +366,9 @@ namespace UberDeployer.Core.Tests.Domain
           _TerminalAppsBaseDirPath,
           false,
           _EnvironmentUsers,
+          _AppPoolInfos,
+          _ProjectToWebSiteMappings,
+          _ProjectToAppPoolMappings,
           _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
@@ -338,6 +392,9 @@ namespace UberDeployer.Core.Tests.Domain
         _TerminalAppsBaseDirPath,
         false,
         _EnvironmentUsers,
+        _AppPoolInfos,
+        _ProjectToWebSiteMappings,
+        _ProjectToAppPoolMappings,
         _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
@@ -362,6 +419,9 @@ namespace UberDeployer.Core.Tests.Domain
           _TerminalAppsBaseDirPath,
           false,
           _EnvironmentUsers,
+          _AppPoolInfos,
+          _ProjectToWebSiteMappings,
+          _ProjectToAppPoolMappings,
           _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
@@ -386,6 +446,9 @@ namespace UberDeployer.Core.Tests.Domain
           _TerminalAppsBaseDirPath,
           false,
           _EnvironmentUsers,
+          _AppPoolInfos,
+          _ProjectToWebSiteMappings,
+          _ProjectToAppPoolMappings,
           _ProjectToFailoverClusterGroupMappings);
 
       Assert.AreEqual(

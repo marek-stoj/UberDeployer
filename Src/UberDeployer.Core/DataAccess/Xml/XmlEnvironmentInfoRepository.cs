@@ -44,7 +44,13 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public List<EnvironmentUserXml> EnvironmentUsers { get; set; }
 
-      public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; } 
+      public List<AppPoolInfoXml> AppPoolInfos { get; set; }
+
+      public List<ProjectToWebSiteMappingXml> ProjectToWebSiteMappings { get; set; }
+
+      public List<ProjectToAppPoolMappingXml> ProjectToAppPoolMappings { get; set; } 
+
+      public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; }
     }
 
     public class EnvironmentUserXml
@@ -52,6 +58,29 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string Id { get; set; }
 
       public string UserName { get; set; }
+    }
+
+    public class AppPoolInfoXml
+    {
+      public string Name { get; set; }
+
+      public IisAppPoolVersion Version { get; set; }
+
+      public IisAppPoolMode Mode { get; set; }
+    }
+
+    public class ProjectToWebSiteMappingXml
+    {
+      public string ProjectName { get; set; }
+
+      public string WebSiteName { get; set; }
+    }
+
+    public class ProjectToAppPoolMappingXml
+    {
+      public string ProjectName { get; set; }
+
+      public string AppPoolId { get; set; }
     }
 
     public class ProjectToFailoverClusterGroupMappingXml
@@ -151,6 +180,22 @@ namespace UberDeployer.Core.DataAccess.Xml
                 new EnvironmentUser(
                   eu.Id,
                   eu.UserName)),
+              eiXml.AppPoolInfos.Select(
+                ap =>
+                new IisAppPoolInfo(
+                  ap.Name,
+                  ap.Version,
+                  ap.Mode)),
+              eiXml.ProjectToWebSiteMappings.Select(
+                ptwsm =>
+                new ProjectToWebSiteMapping(
+                  ptwsm.ProjectName,
+                  ptwsm.WebSiteName)),
+              eiXml.ProjectToAppPoolMappings.Select(
+                ptwsm =>
+                new ProjectToAppPoolMapping(
+                  ptwsm.ProjectName,
+                  ptwsm.AppPoolId)),
               eiXml.ProjectToFailoverClusterGroupMappings.Select(
                 ptfcgm =>
                 new ProjectToFailoverClusterGroupMapping(

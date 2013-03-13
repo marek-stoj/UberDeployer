@@ -27,6 +27,24 @@ namespace UberDeployer.Core.Tests.Domain
           new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
         };
 
+    private static readonly List<IisAppPoolInfo> _AppPoolInfos =
+      new List<IisAppPoolInfo>()
+      {
+        new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
+      };
+
+    private static readonly List<ProjectToWebSiteMapping> _ProjectToWebSiteMappings =
+      new List<ProjectToWebSiteMapping>
+      {
+        new ProjectToWebSiteMapping("prj1", "website"),
+      };
+
+    private static readonly List<ProjectToAppPoolMapping> _ProjectToAppPoolMappings =
+      new List<ProjectToAppPoolMapping>
+      {
+        new ProjectToAppPoolMapping("prj1", "apppool"),
+      };
+
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
       new List<ProjectToFailoverClusterGroupMapping>
         {
@@ -165,7 +183,7 @@ namespace UberDeployer.Core.Tests.Domain
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
       string terminalmachine = "terminalmachine";
-      
+
       var envInfo =
         new EnvironmentInfo(
           "name",
@@ -181,6 +199,9 @@ namespace UberDeployer.Core.Tests.Domain
           "c:\\terminal",
           false,
           _EnvironmentUsers,
+          _AppPoolInfos,
+          _ProjectToWebSiteMappings,
+          _ProjectToAppPoolMappings,
           _ProjectToFailoverClusterGroupMappings);
 
       var projectInfo = new TerminalAppProjectInfo(

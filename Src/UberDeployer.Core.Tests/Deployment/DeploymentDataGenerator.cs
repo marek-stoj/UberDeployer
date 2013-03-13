@@ -14,6 +14,24 @@ namespace UberDeployer.Core.Tests.Deployment
             new EnvironmentUser("id2", "user_name2")
           };
 
+      var appPoolInfos =
+        new List<IisAppPoolInfo>()
+        {
+          new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
+        };
+
+      var projectToWebSiteMappings =
+        new List<ProjectToWebSiteMapping>
+          {
+            new ProjectToWebSiteMapping("prj1", "website"),
+          };
+
+      var projectToAppPoolMappings =
+        new List<ProjectToAppPoolMapping>
+          {
+            new ProjectToAppPoolMapping("prj1", "apppool"),
+          };
+
       var projectToFailoverClusterGroupMappings =
         new List<ProjectToFailoverClusterGroupMapping>
           {
@@ -35,6 +53,9 @@ namespace UberDeployer.Core.Tests.Deployment
           "terminal_apps_base_dir_path",
           false,
           environmentUsers,
+          appPoolInfos,
+          projectToWebSiteMappings,
+          projectToAppPoolMappings,
           projectToFailoverClusterGroupMappings);
     }
 

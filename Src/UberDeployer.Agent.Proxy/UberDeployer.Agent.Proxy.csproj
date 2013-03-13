@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
+    <Compile Include="Dto\ProjectToAppPoolMapping.cs" />
+    <Compile Include="Dto\ProjectToWebSiteMapping.cs" />
     <Compile Include="Dto\DeploymentInfo.cs" />
     <Compile Include="Dto\DiagnosticMessage.cs" />
     <Compile Include="Dto\DiagnosticMessageType.cs" />

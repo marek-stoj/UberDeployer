@@ -79,6 +79,8 @@
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
+    <Compile Include="Domain\Copy of ProjectToWebSiteMapping.cs" />
+    <Compile Include="Domain\ProjectToWebSiteMapping.cs" />
     <Compile Include="Domain\InputParams.cs" />
     <Compile Include="Deployment\CollectedCredentials.cs" />
     <Compile Include="Deployment\DeferredEnumerable.cs" />

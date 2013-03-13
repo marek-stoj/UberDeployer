@@ -30,6 +30,12 @@ namespace UberDeployer.Agent.Proxy.Dto
 
     public List<EnvironmentUser> EnvironmentUsers { get; set; }
 
+    public List<IisAppPoolInfo> AppPoolInfos { get; set; }
+
+    public List<ProjectToWebSiteMapping> ProjectToWebSiteMappings { get; set; }
+
+    public List<ProjectToAppPoolMapping> ProjectToAppPoolMappings { get; set; }
+
     public List<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings { get; set; }
   }
 }
