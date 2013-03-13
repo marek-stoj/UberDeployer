@@ -9,14 +9,14 @@ namespace UberDeployer.Agent.Proxy
   {
     #region IAgentService Members
 
-    public void Deploy(Guid uniqueClientId, string requesterIdentity, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public void Deploy(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
-      Exec(@as => @as.Deploy(uniqueClientId, requesterIdentity, projectName, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName));
+      Exec(@as => @as.Deploy(uniqueClientId, requesterIdentity, deploymentInfo));
     }
 
-    public void DeployAsync(Guid uniqueClientId, string requesterIdentity, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public void DeployAsync(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
-      Exec(@as => @as.DeployAsync(uniqueClientId, requesterIdentity, projectName, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName));
+      Exec(@as => @as.DeployAsync(uniqueClientId, requesterIdentity, deploymentInfo));
     }
 
     public List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter)

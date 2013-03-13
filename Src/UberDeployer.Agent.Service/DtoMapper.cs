@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Agent.Service
 {
@@ -38,12 +39,38 @@ namespace UberDeployer.Agent.Service
       Mapper.CreateMap<Core.Deployment.DiagnosticMessage, Proxy.Dto.DiagnosticMessage>();
       Mapper.CreateMap<Core.Deployment.DiagnosticMessageType, Proxy.Dto.DiagnosticMessageType>();
 
+      Mapper.CreateMap<Proxy.Dto.DeploymentInfo, Core.Domain.DeploymentInfo>();
+
       Mapper.AssertConfigurationIsValid();
     }
 
     public static TResult Map<TInput, TResult>(TInput input)
     {
       return Mapper.Map<TInput, TResult>(input);
+    }
+
+    //TODO MARIO move to other converter?
+    public static DeploymentInfo ConvertDeploymentInfo(Proxy.Dto.DeploymentInfo deploymentInfo, ProjectInfo projectInfo)
+    {
+      InputParams inputParams;
+
+      if (projectInfo is WebAppProjectInfo)
+      {
+        inputParams = new WebInputParams { WebMachines = deploymentInfo.TargetMachines };
+      }
+      else
+      {
+        inputParams = null; //TODO MARIO create InputParams
+      }
+
+      return
+        new DeploymentInfo(
+          deploymentInfo.ProjectName,
+          deploymentInfo.ProjectConfigurationName,
+          deploymentInfo.ProjectConfigurationBuildId,
+          deploymentInfo.TargetEnvironmentName,
+          projectInfo,
+          inputParams);
     }
   }
 }

@@ -26,11 +26,7 @@ namespace UberDeployer.NAnt
 
         ProjectInfo projectInfo = projectInfoRepository.GetByName(ProjectName);
 
-        DeploymentTask deploymentTask = projectInfo.CreateDeploymentTask(
-          ObjectFactory.Instance,
-          ConfigurationName,
-          BuildId,
-          Environment);
+        DeploymentTask deploymentTask = projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
 
         deploymentTask.DiagnosticMessagePosted +=
           (eventSender, tmpArgs) => Log(Level.Info, tmpArgs.Message);
@@ -40,7 +36,15 @@ namespace UberDeployer.NAnt
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
-        deploymentPipeline.StartDeployment(deploymentTask, deploymentContext);
+        var deploymentInfo = new DeploymentInfo(
+          ProjectName,
+          ConfigurationName,
+          BuildId,
+          Environment,
+          projectInfo,
+          null); //TODO MARIO create InputParams
+
+        deploymentPipeline.StartDeployment(deploymentInfo, deploymentTask, deploymentContext);
       }
       catch (Exception exc)
       {

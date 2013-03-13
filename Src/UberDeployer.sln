@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2064EC26-1303-4A9A-B7AB-2402EB225213}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.Core", "UberDeployer.Core\UberDeployer.Core.csproj", "{FF46EF5A-C434-4B3C-9F90-5BD242238B83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.Core.Tests", "UberDeployer.Core.Tests\UberDeployer.Core.Tests.csproj", "{9D43050A-2614-4022-A024-28FE293BB203}"
@@ -12,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.CommonConfiguration", "UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj", "{1F7893B7-4540-4469-BE29-39A3BEEE2584}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.ConsoleCommander", "UberDeployer.ConsoleCommander\UberDeployer.ConsoleCommander.csproj", "{9FD59C63-52EF-40D1-8341-1ED7F24605A2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2064EC26-1303-4A9A-B7AB-2402EB225213}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.NAnt", "UberDeployer.NAnt\UberDeployer.NAnt.csproj", "{F8B00BFD-BA4F-41A6-BA31-9187759C0C75}"
 EndProject
@@ -33,9 +33,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.Core.DbDiff", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.Common.Tests", "UberDeployer.Common.Tests\UberDeployer.Common.Tests.csproj", "{115B32FE-9041-42D2-9149-8C430BC250B4}"
 EndProject
-Project("{C8D11400-126E-41CD-887F-60BD40844F9E}") = "UberDeployer.Database", "UberDeployer.Database\UberDeployer.Database.dbproj", "{67CBC824-A49E-4E9B-A947-360F3DFE65C3}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "UberDeployer.Database", "UberDeployer.Database\UberDeployer.Database.sqlproj", "{14F485F0-7957-48B2-B825-BE742FB1D815}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.Agent.Service.Tests", "UberDeployer.Agent.Service.Tests\UberDeployer.Agent.Service.Tests.csproj", "{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberDeployer.WebApp.Tests", "UberDeployer.WebApp.Tests\UberDeployer.WebApp.Tests.csproj", "{DA183C81-DB12-42FB-805D-5702677F056B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,12 +105,16 @@ Global
 		{115B32FE-9041-42D2-9149-8C430BC250B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{115B32FE-9041-42D2-9149-8C430BC250B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{115B32FE-9041-42D2-9149-8C430BC250B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67CBC824-A49E-4E9B-A947-360F3DFE65C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67CBC824-A49E-4E9B-A947-360F3DFE65C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14F485F0-7957-48B2-B825-BE742FB1D815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14F485F0-7957-48B2-B825-BE742FB1D815}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA183C81-DB12-42FB-805D-5702677F056B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,5 +123,6 @@ Global
 		{9D43050A-2614-4022-A024-28FE293BB203} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
 		{115B32FE-9041-42D2-9149-8C430BC250B4} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
 		{1D3ED7D4-B5C8-4B8B-A1D6-6D818EAA959D} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
+		{DA183C81-DB12-42FB-805D-5702677F056B} = {2064EC26-1303-4A9A-B7AB-2402EB225213}
 	EndGlobalSection
 EndGlobal

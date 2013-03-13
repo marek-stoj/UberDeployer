@@ -35,10 +35,10 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
             RequesterIdentity = deploymentContext.RequesterIdentity,
             DateStarted = deploymentContext.DateStarted,
             DateFinished = deploymentContext.DateFinished,
-            ProjectName = deploymentTask.ProjectName,
-            ProjectConfigurationName = deploymentTask.ProjectConfigurationName,
-            ProjectConfigurationBuildId = deploymentTask.ProjectConfigurationBuildId,
-            TargetEnvironmentName = deploymentTask.TargetEnvironmentName,
+            ProjectName = deploymentTask.DeploymentInfo.ProjectName,
+            ProjectConfigurationName = deploymentTask.DeploymentInfo.ProjectConfigurationName,
+            ProjectConfigurationBuildId = deploymentTask.DeploymentInfo.ProjectConfigurationBuildId,
+            TargetEnvironmentName = deploymentTask.DeploymentInfo.TargetEnvironmentName,
             FinishedSuccessfully = deploymentContext.FinishedSuccessfully,
           };
 

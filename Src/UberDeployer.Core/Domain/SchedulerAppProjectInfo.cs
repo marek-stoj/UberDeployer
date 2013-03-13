@@ -59,8 +59,8 @@ namespace UberDeployer.Core.Domain
     #endregion
 
     #region Overrides of ProjectInfo
-
-    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    
+    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {
       if (objectFactory == null)
       {
@@ -72,11 +72,7 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateEnvironmentInfoRepository(),
           objectFactory.CreateArtifactsRepository(),
           objectFactory.CreateTaskScheduler(),
-          objectFactory.CreatePasswordCollector(),
-          this,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName);
+          objectFactory.CreatePasswordCollector());
     }
 
     public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)

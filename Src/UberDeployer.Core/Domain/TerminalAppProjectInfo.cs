@@ -36,7 +36,7 @@ namespace UberDeployer.Core.Domain
 
     #region Overrides of ProjectInfo
 
-    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {
       if (objectFactory == null)
       {
@@ -46,11 +46,7 @@ namespace UberDeployer.Core.Domain
       return
         new DeployTerminalAppDeploymentTask(
           objectFactory.CreateEnvironmentInfoRepository(),
-          objectFactory.CreateArtifactsRepository(),
-          this,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName);
+          objectFactory.CreateArtifactsRepository());
     }
 
     public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
