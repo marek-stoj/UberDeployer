@@ -40,8 +40,8 @@ namespace UberDeployer.Agent.Service
     #region Constructor(s)
 
     public AgentService(
-      IDeploymentPipeline deploymentPipeline, 
-      IProjectInfoRepository projectInfoRepository, 
+      IDeploymentPipeline deploymentPipeline,
+      IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
       ITeamCityClient teamCityClient,
       IDeploymentRequestRepository deploymentRequestRepository,
@@ -64,9 +64,9 @@ namespace UberDeployer.Agent.Service
 
     public AgentService()
       : this(
-      ObjectFactory.Instance.CreateDeploymentPipeline(), 
-      ObjectFactory.Instance.CreateProjectInfoRepository(), 
-      ObjectFactory.Instance.CreateEnvironmentInfoRepository(), 
+      ObjectFactory.Instance.CreateDeploymentPipeline(),
+      ObjectFactory.Instance.CreateProjectInfoRepository(),
+      ObjectFactory.Instance.CreateEnvironmentInfoRepository(),
       ObjectFactory.Instance.CreateTeamCityClient(),
       ObjectFactory.Instance.CreateDeploymentRequestRepository(),
       InMemoryDiagnosticMessagesLogger.Instance)
@@ -98,10 +98,10 @@ namespace UberDeployer.Agent.Service
 
         if (projectInfo == null)
         {
-        throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = deploymentInfo.ProjectName });
+          throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = deploymentInfo.ProjectName });
         }
 
-        DoDeploy(uniqueClientId, requesterIdentity, projectConfigurationName, projectConfigurationBuildId, targetEnvironmentName, projectInfo);
+        DoDeploy(uniqueClientId, requesterIdentity, deploymentInfo, projectInfo);
       }
       catch (Exception exc)
       {
@@ -109,20 +109,20 @@ namespace UberDeployer.Agent.Service
       }
     }
 
-
-
     public void DeployAsync(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
-      Guard.NotNull(deploymentInfo, "DeploymentInfo");
-      Guard.NotNullNorEmpty(deploymentInfo.ProjectName, "DeploymentInfo.ProjectName");      
+      try
+      {
+        Guard.NotNull(deploymentInfo, "DeploymentInfo");
+        Guard.NotNullNorEmpty(deploymentInfo.ProjectName, "DeploymentInfo.ProjectName");
 
         ProjectInfo projectInfo =
         _projectInfoRepository.GetByName(deploymentInfo.ProjectName);
 
         if (projectInfo == null)
         {
-        throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = deploymentInfo.ProjectName });
-      }      
+          throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = deploymentInfo.ProjectName });
+        }
 
         ThreadPool.QueueUserWorkItem(
           state =>
@@ -149,7 +149,7 @@ namespace UberDeployer.Agent.Service
       {
         throw new ArgumentNullException("projectFilter");
       }
-      
+
       IEnumerable<ProjectInfo> projectInfos =
         _projectInfoRepository.GetAll();
 
@@ -185,8 +185,8 @@ namespace UberDeployer.Agent.Service
       }
 
       EnvironmentInfo environmentInfo = _environmentInfoRepository.GetByName(environmentName);
-      
-      if(environmentInfo == null)
+
+      if (environmentInfo == null)
       {
         throw new FaultException<EnvironmentNotFoundFault>(
           new EnvironmentNotFoundFault
@@ -194,7 +194,7 @@ namespace UberDeployer.Agent.Service
               EnvironmentName = environmentName
             });
       }
-      
+
       return environmentInfo.WebServerMachineNames.ToList();
     }
 
@@ -440,11 +440,11 @@ namespace UberDeployer.Agent.Service
 
       deploymentTask.DiagnosticMessagePosted +=
         (eventSender, tmpArgs) =>
-          {
-            _log.DebugIfEnabled(() => string.Format("{0}: {1}", tmpArgs.MessageType, tmpArgs.Message));
+        {
+          _log.DebugIfEnabled(() => string.Format("{0}: {1}", tmpArgs.MessageType, tmpArgs.Message));
 
-            _diagnosticMessagesLogger.LogMessage(uniqueClientId, tmpArgs.MessageType, tmpArgs.Message);
-          };
+          _diagnosticMessagesLogger.LogMessage(uniqueClientId, tmpArgs.MessageType, tmpArgs.Message);
+        };
 
       var deploymentContext =
         new DeploymentContext(requesterIdentity);
