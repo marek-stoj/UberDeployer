@@ -34,7 +34,7 @@ namespace UberDeployer.Core.Deployment
 
       _environmentInfo = environmentInfo;      
       _artifactsFilePath = artifactsFilePath;
-      _targetArtifactsDirPath = targetArtifactsDirPath;      
+      _targetArtifactsDirPath = targetArtifactsDirPath;
     }
 
     #endregion Constructor(s)
@@ -87,7 +87,6 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
-        //TODO MARIO throw exception? when DeploymentInfo == nul
         return
           string.Format(
             "Extract artifacts of project '{0} ({1}:{2})' on environment '{3}' to '{4}' from '{5}'.'",
@@ -103,16 +102,21 @@ namespace UberDeployer.Core.Deployment
     #endregion Overrides of DeploymentStep
 
     #region Properties
-
+    
     public string BinariesDirPath
     {
       get
       {
+        if (!IsPrepared)
+        {
+          throw new InvalidOperationException("Step has not been prepared yet.");
+        }
+
         return
           Path.Combine(_targetArtifactsDirPath, _archiveSubPath.Replace("/", Path.DirectorySeparatorChar.ToString()))
             .TrimEnd(Path.DirectorySeparatorChar);
       }
-    }
+    }    
 
     #endregion Properties
   }

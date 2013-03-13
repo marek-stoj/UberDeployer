@@ -57,8 +57,7 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateArtifactsRepository(),
           objectFactory.CreateNtServiceManager(),
           objectFactory.CreatePasswordCollector(),
-          objectFactory.CreateFailoverClusterManager(),
-          this);
+          objectFactory.CreateFailoverClusterManager());
     }
 
     public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)

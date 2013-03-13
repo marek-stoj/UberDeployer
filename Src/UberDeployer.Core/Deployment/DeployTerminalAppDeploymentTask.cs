@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
@@ -9,7 +10,11 @@ namespace UberDeployer.Core.Deployment
   public class DeployTerminalAppDeploymentTask : DeploymentTask
   {
     private readonly IArtifactsRepository _artifactsRepository;
-    private TerminalAppProjectInfo _projectInfo;
+    
+    private TerminalAppProjectInfo _projectInfo
+    {
+      get { return (TerminalAppProjectInfo) DeploymentInfo.ProjectInfo; }
+    }
 
     #region Constructor(s)
 
@@ -29,8 +34,7 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      EnvironmentInfo environmentInfo = GetEnvironmentInfo();
-      _projectInfo = (TerminalAppProjectInfo) DeploymentInfo.ProjectInfo;
+      EnvironmentInfo environmentInfo = GetEnvironmentInfo();    
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
@@ -70,7 +74,7 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
-          extractArtifactsDeploymentStep.BinariesDirPath,
+          new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           targetDirNetworkPath));
     }
 

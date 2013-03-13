@@ -7,6 +7,7 @@ using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
+using UberDeployer.Core.Tests.Generators;
 using UberDeployer.Core.Tests.TestUtils;
 
 namespace UberDeployer.Core.Tests.Deployment
@@ -26,7 +27,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
     private MigrateDbDeploymentTask _deploymentTask;
 
-    private Mock<DeploymentInfo> _deploymentInfoFake;
+    private DeploymentInfo _deploymentInfo;
 
     [SetUp]
     public void SetUp()
@@ -44,7 +45,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Setup(x => x.CreateDbScriptRunner(It.IsAny<string>()))
         .Returns(new Mock<IDbScriptRunner>(MockBehavior.Loose).Object);
 
-      _projectInfo = DeploymentDataGenerator.GetDbProjectInfo();
+      _projectInfo = ProjectInfoGenerator.GetDbProjectInfo();
 
       _deploymentTask = new MigrateDbDeploymentTask(
         _environmentInfoRepositoryFake.Object,
@@ -52,16 +53,14 @@ namespace UberDeployer.Core.Tests.Deployment
         _dbScriptRunnerFactoryFake.Object,
         _dbVersionProviderFake.Object);
 
-      _deploymentInfoFake = new Mock<DeploymentInfo>();
+      _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
     }
 
     [Test]
+    [TestCase("environmentInfoRepository", typeof(ArgumentNullException))]
     [TestCase("artifactsRepository", typeof(ArgumentNullException))]
     [TestCase("dbScriptRunnerFactory", typeof(ArgumentNullException))]
-    [TestCase("dbVersionProvider", typeof(ArgumentNullException))]
-    [TestCase("projectInfo", typeof(ArgumentNullException))]
-    [TestCase("projectConfigurationName", typeof(ArgumentException))]
-    [TestCase("projectConfigurationBuildId", typeof(ArgumentException))]
+    [TestCase("dbVersionProvider", typeof(ArgumentNullException))]    
     public void Constructor_fails_when_parameter_is_null(string nullParamName, Type expectedExceptionType)
     {
       Assert.Throws(
@@ -72,6 +71,8 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Description_is_not_empty()
     {
+      _deploymentTask.Prepare(_deploymentInfo);
+
       Assert.IsNotNullOrEmpty(_deploymentTask.Description);
     }    
 
@@ -79,7 +80,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoPrepare_calls_environment_info_repository()
     {
       // act
-      _deploymentTask.Prepare(_deploymentInfoFake.Object);
+      _deploymentTask.Prepare(_deploymentInfo);
 
       // assert
       _environmentInfoRepositoryFake.VerifyAll();
@@ -94,14 +95,14 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((EnvironmentInfo)null);
 
       // assert
-      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(_deploymentInfoFake.Object));
+      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(_deploymentInfo));
     }
 
     [Test]
     public void DoPrepare_calls_db_script_runner_factory()
     {
       // act
-      _deploymentTask.Prepare(_deploymentInfoFake.Object);
+      _deploymentTask.Prepare(_deploymentInfo);
 
       // assert
       _dbScriptRunnerFactoryFake.VerifyAll();
@@ -116,7 +117,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((IDbScriptRunner)null);
 
       // assert
-      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(_deploymentInfoFake.Object));
+      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(_deploymentInfo));
     }
 
     [Test]
@@ -127,7 +128,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoPrepare_adds_deployment_step(Type deploymentStepType)
     {
       // act
-      _deploymentTask.Prepare(_deploymentInfoFake.Object);
+      _deploymentTask.Prepare(_deploymentInfo);
 
       // assert
       Assert.IsNotNull(_deploymentTask.SubTasks.Any(x => x.GetType() == deploymentStepType));
@@ -147,7 +148,7 @@ namespace UberDeployer.Core.Tests.Deployment
           };
 
       // act
-      _deploymentTask.Prepare(_deploymentInfoFake.Object);
+      _deploymentTask.Prepare(_deploymentInfo);
 
       // assert
       int prevStepIndex = GetIndexOfTaskWithType(_deploymentTask.SubTasks, stepsTypesOrder[0]);
@@ -189,11 +190,7 @@ namespace UberDeployer.Core.Tests.Deployment
             { "environmentInfoRepository", _environmentInfoRepositoryFake.Object },
             { "artifactsRepository", _artifactsRepositoryFake.Object },
             { "dbScriptRunnerFactory", _dbScriptRunnerFactoryFake.Object },
-            { "dbVersionProvider", _dbVersionProviderFake.Object },
-            { "projectInfo", _projectInfo },
-            { "projectConfigurationName", _ProjectConfigurationName },
-            { "projectConfigurationBuildId", _ProjectConfigurationBuildId },
-            { "targetEnvironmentName", _TargetEnvironmentName }
+            { "dbVersionProvider", _dbVersionProviderFake.Object },            
           };
     }
 

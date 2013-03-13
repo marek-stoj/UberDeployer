@@ -27,8 +27,7 @@ namespace UberDeployer.Core.Deployment
       IArtifactsRepository artifactsRepository,
       INtServiceManager ntServiceManager,
       IPasswordCollector passwordCollector,
-      IFailoverClusterManager failoverClusterManager,
-      NtServiceProjectInfo projectInfo)
+      IFailoverClusterManager failoverClusterManager)
       : base(environmentInfoRepository)
     {
       if (artifactsRepository == null)
@@ -39,12 +38,7 @@ namespace UberDeployer.Core.Deployment
       if (ntServiceManager == null)
       {
         throw new ArgumentNullException("ntServiceManager");
-      }
-
-      if (projectInfo == null)
-      {
-        throw new ArgumentNullException("projectInfo");
-      }
+      }      
 
       if (passwordCollector == null)
       {
@@ -316,7 +310,7 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
-          artifactsBinariesDirPath,
+          new Lazy<string>(() => artifactsBinariesDirPath),
           getAppServerNetworkPathFunc(targetDirPath)));
 
       if (!serviceExists)

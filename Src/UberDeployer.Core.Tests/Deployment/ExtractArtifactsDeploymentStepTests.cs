@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.IO;
-using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Tests.Generators;
 using UberDeployer.Core.Tests.TestUtils;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
   [TestFixture]
   public class ExtractArtifactsDeploymentStepTests
-  {
-    private const string _ProjectConfigurationName = "project_configuration_name";
-    private const string _ProjectConfigurationBuildId = "project_configuration_build_id";
+  {    
     private const string _ArtifactsFilePath = @"TestData\TestArtifacts\artifacts.zip";
     private const string _TargetArtifactsDirPath = "target_artifacts_dir_path";
 
     private EnvironmentInfo _environmentInfo;
-    private ProjectInfo _projectInfo;
+    private DeploymentInfo _deploymentInfo;
 
     private readonly OrderedDictionary _ConstructorDefaultParams = GetConstructorDefaultParams();
 
@@ -29,8 +27,8 @@ namespace UberDeployer.Core.Tests.Deployment
     [SetUp]
     public void SetUp()
     {
-      _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
-      _projectInfo = DeploymentDataGenerator.GetDbProjectInfo();
+      _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();      
+      _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
 
       _deploymentStep = new ExtractArtifactsDeploymentStep(
         _environmentInfo,        
@@ -43,10 +41,7 @@ namespace UberDeployer.Core.Tests.Deployment
     #region Tests
 
     [Test]
-    [TestCase("environmentInfo", typeof(ArgumentNullException))]
-    [TestCase("projectInfo", typeof(ArgumentNullException))]
-    [TestCase("projectConfigurationName", typeof(ArgumentException))]
-    [TestCase("projectConfigurationBuildId", typeof(ArgumentException))]
+    [TestCase("environmentInfo", typeof(ArgumentNullException))]    
     [TestCase("artifactsFilePath", typeof(ArgumentException))]
     [TestCase("targetArtifactsDirPath", typeof(ArgumentException))]
     public void Constructor_fails_when_parameter_is_null(string nullArgumentName, Type exceptionType)
@@ -60,6 +55,9 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Description_is_not_empty()
     {
+      // arrange
+      _deploymentStep.Prepare(_deploymentInfo);
+
       // act, assert
       Assert.IsNotNullOrEmpty(_deploymentStep.Description);
     }
@@ -69,13 +67,15 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange
       var environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
-      var projectInfo = DeploymentDataGenerator.GetDbProjectInfo(false);
 
       _deploymentStep =
         new ExtractArtifactsDeploymentStep(
           environmentInfo,                    
           _ArtifactsFilePath,
           _TargetArtifactsDirPath);
+
+      var envSpecificDeploymentInfo = DeploymentInfoGenerator.GetNtServiceDeploymentInfo(areEnvironmentSpecific: true);
+      _deploymentStep.Prepare(envSpecificDeploymentInfo);
 
       // act, assert
       Assert.IsTrue(_deploymentStep.BinariesDirPath.Contains(environmentInfo.ConfigurationTemplateName));
@@ -86,13 +86,15 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange
       var environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
-      var projectInfo = DeploymentDataGenerator.GetDbProjectInfo(true);
 
       _deploymentStep = 
         new ExtractArtifactsDeploymentStep(
         environmentInfo,
         _ArtifactsFilePath,
         _TargetArtifactsDirPath);
+
+      var envNotSpecificDeploymentInfo = DeploymentInfoGenerator.GetNtServiceDeploymentInfo(areEnvironmentSpecific: false);
+      _deploymentStep.Prepare(envNotSpecificDeploymentInfo);
 
       // act, assert
       Assert.IsFalse(_deploymentStep.BinariesDirPath.Contains(environmentInfo.ConfigurationTemplateName));
@@ -102,16 +104,16 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoExecute_extracts_artifacts()
     {
       // arrange
-      string expectedPath = Path.Combine(_TargetArtifactsDirPath, _projectInfo.ArtifactsRepositoryDirName);
+      string expectedPath = Path.Combine(_TargetArtifactsDirPath, _deploymentInfo.ProjectInfo.ArtifactsRepositoryDirName);
       const int filesCountInArtifacts = 2;
 
       if (Directory.Exists(expectedPath))
       {
         Directory.Delete(_TargetArtifactsDirPath, true);
       }
-
+      
       // act
-      _deploymentStep.PrepareAndExecute(new Mock<DeploymentInfo>().Object);
+      _deploymentStep.PrepareAndExecute(_deploymentInfo);
 
       // assert
       Assert.True(Directory.Exists(expectedPath));
@@ -127,10 +129,7 @@ namespace UberDeployer.Core.Tests.Deployment
       OrderedDictionary defaultParams =
         new OrderedDictionary
                                  {
-                                   { "environmentInfo", DeploymentDataGenerator.GetEnvironmentInfo() },
-                                   { "projectInfo", DeploymentDataGenerator.GetDbProjectInfo() },
-                                   { "projectConfigurationName", _ProjectConfigurationName },
-                                   { "projectConfigurationBuildId", _ProjectConfigurationBuildId },
+                                   { "environmentInfo", DeploymentDataGenerator.GetEnvironmentInfo() },                                   
                                    { "artifactsFilePath", _ArtifactsFilePath },
                                    { "targetArtifactsDirPath", _TargetArtifactsDirPath }
                                  };

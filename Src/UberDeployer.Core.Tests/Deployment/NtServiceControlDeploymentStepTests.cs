@@ -4,18 +4,19 @@ using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
   [TestFixture]
   public class NtServiceControlDeploymentStepTests
   {
-    private Mock<DeploymentInfo> _deploymentInfoFake;
+    private DeploymentInfo _deploymentInfo;
 
     [SetUp]
     public void SetUp()
     {
-      _deploymentInfoFake = new Mock<DeploymentInfo>();
+      _deploymentInfo = DeploymentInfoGenerator.GetNtServiceDeploymentInfo();
     }
 
     [Test]
@@ -65,7 +66,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       ntServiceManager.Setup(k => k.StartService(machineName, serviceName));
 
-      startNTServiceStep.PrepareAndExecute(_deploymentInfoFake.Object);
+      startNTServiceStep.PrepareAndExecute(_deploymentInfo);
     }
 
     [Test]
@@ -80,8 +81,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       ntServiceManager.Setup(k => k.StopService(machineName, serviceName));
 
-      startNTServiceStep.PrepareAndExecute(_deploymentInfoFake.Object);
+      startNTServiceStep.PrepareAndExecute(_deploymentInfo);
     }
   }
-
 }

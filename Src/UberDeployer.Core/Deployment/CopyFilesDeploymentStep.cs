@@ -1,29 +1,27 @@
 using System;
 using System.IO;
 using System.Linq;
+using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Core.Deployment
 {
   public class CopyFilesDeploymentStep : DeploymentStep
   {
-    private readonly string _srcDirPath;
+    private readonly Lazy<string> _srcDirPathProvider;
     private readonly string _dstDirPath;
 
     #region Constructor(s)
 
-    public CopyFilesDeploymentStep(string srcDirPath, string dstDirPath)
+    public CopyFilesDeploymentStep(Lazy<string> srcDirPathProvider, string dstDirPath)
     {
       if (string.IsNullOrEmpty(dstDirPath))
       {
         throw new ArgumentException("Argument can't be null nor empty.", "dstDirPath");
       }
 
-      if (string.IsNullOrEmpty(srcDirPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "srcDirPath");
-      }
+      Guard.NotNull(srcDirPathProvider, "srcDirPathProvider");      
 
-      _srcDirPath = srcDirPath;
+      _srcDirPathProvider = srcDirPathProvider;
       _dstDirPath = dstDirPath;
     }
 
@@ -33,9 +31,9 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      if (!Directory.Exists(_srcDirPath))
+      if (!Directory.Exists(_srcDirPathProvider.Value))
       {
-        throw new DeploymentTaskException(string.Format("Source directory doesn't exist: '{0}'.", _srcDirPath));
+        throw new DeploymentTaskException(string.Format("Source directory doesn't exist: '{0}'.", _srcDirPathProvider));
       }
 
       if (Directory.Exists(_dstDirPath))
@@ -53,12 +51,12 @@ namespace UberDeployer.Core.Deployment
         Directory.CreateDirectory(_dstDirPath);
       }
 
-      CopyAll(_srcDirPath, _dstDirPath);
+      CopyAll(_srcDirPathProvider.Value, _dstDirPath);
     }
 
     public override string Description
     {
-      get { return string.Format("Copy files to '{0}' from '{1}'.", _dstDirPath, _srcDirPath); }
+      get { return string.Format("Copy files to '{0}' from '{1}'.", _dstDirPath, _srcDirPathProvider); }
     }
 
     #endregion

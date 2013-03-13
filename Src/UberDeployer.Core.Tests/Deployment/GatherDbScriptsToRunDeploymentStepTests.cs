@@ -8,6 +8,7 @@ using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using System.Linq;
+using UberDeployer.Core.Tests.Generators;
 using UberDeployer.Core.Tests.TestUtils;
 
 namespace UberDeployer.Core.Tests.Deployment
@@ -17,24 +18,22 @@ namespace UberDeployer.Core.Tests.Deployment
   {
     private GatherDbScriptsToRunDeploymentStep _deploymentStep;
     private const string _ScriptPath = "TestData/TestSqlScripts";
-    private const string _DatabaseName = "dbName";
     private const string _SqlServerName = "sqlServerName";
     private const string _Environment = "env";
 
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
-    private Mock<DeploymentInfo> _deploymentInfoFake;
+    private DeploymentInfo _deploymentInfo;
 
     [SetUp]
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
-      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(_ScriptPath, _DatabaseName, _SqlServerName, _dbVersionProviderFake.Object);
-      _deploymentInfoFake = new Mock<DeploymentInfo>();
+      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
+      _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
     }
 
     [Test]
-    [TestCase("scriptsDirectoryPath", typeof(ArgumentException))]
-    [TestCase("databaseName", typeof(ArgumentException))]
+    [TestCase("scriptsDirectoryPath", typeof(ArgumentNullException))]
     [TestCase("sqlServerName", typeof(ArgumentException))]
     [TestCase("environmentName", typeof(ArgumentException))]
     [TestCase("dbVersionProvider", typeof(ArgumentNullException))]
@@ -44,10 +43,12 @@ namespace UberDeployer.Core.Tests.Deployment
         expectedExceptionType,
         () => ReflectionTestTools.CreateInstance<GatherDbScriptsToRunDeploymentStep>(GetDefaultConstructorParams(), nullParamName));
     }
-
+    
     [Test]
     public void Description_is_not_empty()
-    {
+    {      
+      _deploymentStep.Prepare(_deploymentInfo);
+
       Assert.IsNotNullOrEmpty(_deploymentStep.Description);
     }
 
@@ -60,7 +61,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(new List<string>() { "1.2", "1.3" });
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
+      _deploymentStep.PrepareAndExecute(_deploymentInfo);
 
       // assert
       _dbVersionProviderFake.VerifyAll();
@@ -78,7 +79,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
+      _deploymentStep.PrepareAndExecute(_deploymentInfo);
 
       // assert
       Assert.AreEqual(1, _deploymentStep.ScriptsToRun.Count());
@@ -97,7 +98,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
+      _deploymentStep.PrepareAndExecute(_deploymentInfo);
 
       // assert
       Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == scriptOlderThanCurrent));
@@ -115,7 +116,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
+      _deploymentStep.PrepareAndExecute(_deploymentInfo);
 
       // assert
       Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == notSupportedScript));
@@ -126,8 +127,7 @@ namespace UberDeployer.Core.Tests.Deployment
       return
         new OrderedDictionary
           {
-            { "scriptsDirectoryPath", _ScriptPath },
-            { "databaseName", _DatabaseName },
+            { "scriptsDirectoryPath", new Lazy<string>(() => _ScriptPath) },
             { "sqlServerName", _SqlServerName },
             { "environmentName", _Environment },
             { "dbVersionProvider", _dbVersionProviderFake.Object }

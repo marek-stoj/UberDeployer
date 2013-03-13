@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="Core\DataAccess\Xml\XmlEnvironmentInfoRepositoryTests.cs" />
     <Compile Include="DataAccess\TeamCityArtifactsRepositoryTests.cs" />
-    <Compile Include="Deployment\DeploymentDataGenerator.cs" />
     <Compile Include="Deployment\DeployNtServiceDeploymentTaskTests.cs" />
     <Compile Include="Deployment\BackupFilesDeploymentStepTests.cs" />
     <Compile Include="Deployment\CtorTester.cs" />
@@ -96,6 +95,9 @@
     <Compile Include="Domain\NtServiceProjectInfoTests.cs" />
     <Compile Include="Domain\SchedulerAppProjectInfoTests.cs" />
     <Compile Include="Deployment\DeployWebDeployPackageDeploymentStepTests.cs" />
+    <Compile Include="Generators\DeploymentDataGenerator.cs" />
+    <Compile Include="Generators\DeploymentInfoGenerator.cs" />
+    <Compile Include="Generators\ProjectInfoGenerator.cs" />
     <Compile Include="InternalExceptionTests.cs" />
     <Compile Include="Management\Db\DbVersionProviderTests.cs" />
     <Compile Include="Management\Db\DbVersionProviderTestUtils.cs" />

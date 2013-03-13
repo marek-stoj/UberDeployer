@@ -3,26 +3,13 @@ using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using System.IO;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
   [TestFixture]
   public class CopyFilesDeploymentStepTests
   {
-    private DeploymentInfo _deploymentInfo;
-
-    [TestFixtureSetUp]
-    public void SetUp()
-    {
-      _deploymentInfo = new DeploymentInfo(
-        "project name",
-        "configuration name",
-        "build id",
-        "target environment",
-        null,
-        null);
-    }
-
     [Test]
     public void Test_copying_all_files()
     {
@@ -31,9 +18,9 @@ namespace UberDeployer.Core.Tests.Deployment
 
       try
       {
-        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(srcDirPath, dstDirPath);
+        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(new Lazy<string>(() =>srcDirPath), dstDirPath);
 
-        copyFilesDeploymentStep.PrepareAndExecute(_deploymentInfo);
+        copyFilesDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
 
         Assert.IsTrue(Directory.Exists(dstDirPath));
 
@@ -60,9 +47,9 @@ namespace UberDeployer.Core.Tests.Deployment
       {
         Directory.CreateDirectory(dstDirPath);
 
-        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(srcDirPath, dstDirPath);
+        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(new Lazy<string>(() =>srcDirPath), dstDirPath);
 
-        copyFilesDeploymentStep.PrepareAndExecute(_deploymentInfo);
+        copyFilesDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
 
         Assert.IsTrue(Directory.Exists(dstDirPath));
 
@@ -88,9 +75,9 @@ namespace UberDeployer.Core.Tests.Deployment
 
       try
       {
-        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(srcDirPath, dstDirPath);
+        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(new Lazy<string>(() => srcDirPath), dstDirPath);
 
-        Assert.Throws<DeploymentTaskException>(() => copyFilesDeploymentStep.PrepareAndExecute(_deploymentInfo));
+        Assert.Throws<DeploymentTaskException>(() => copyFilesDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetNtServiceDeploymentInfo()));
       }
       finally
       {
@@ -106,7 +93,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       const string dstDirPath = "TestData\\TestDstDir";
 
-      Assert.Throws<ArgumentException>(() => { new CopyFilesDeploymentStep(null, dstDirPath); });
+      Assert.Throws<ArgumentNullException>(() => { new CopyFilesDeploymentStep(null, dstDirPath); });
     }
 
     [Test]
@@ -114,8 +101,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       const string srcDirPath = "TestData\\aoisdiasyd";
 
-      Assert.Throws<ArgumentException>(() => { new CopyFilesDeploymentStep(srcDirPath, null); });
+      Assert.Throws<ArgumentException>(() => { new CopyFilesDeploymentStep(new Lazy<string>(() => srcDirPath), null); });
     }
   }
-
 }

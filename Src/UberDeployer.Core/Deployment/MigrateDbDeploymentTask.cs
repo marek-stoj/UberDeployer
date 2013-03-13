@@ -64,10 +64,12 @@ namespace UberDeployer.Core.Deployment
       
       AddSubTask(extractArtifactsDeploymentStep);
 
+      //var bin = new Func<ExtractArtifactsDeploymentStep, string>(e => e.BinariesDirPath);
+
       // create a step for gathering scripts to run
       var gatherDbScriptsToRunDeploymentStep =
         new GatherDbScriptsToRunDeploymentStep(
-          extractArtifactsDeploymentStep.BinariesDirPath,
+          new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           environmentInfo.DatabaseServerMachineName,
           environmentInfo.Name,
           _dbVersionProvider);

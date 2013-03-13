@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Domain.InputParameters;
 
 namespace UberDeployer.Agent.Service
 {
@@ -56,7 +57,7 @@ namespace UberDeployer.Agent.Service
 
       if (projectInfo is WebAppProjectInfo)
       {
-        inputParams = new WebInputParams { WebMachines = deploymentInfo.TargetMachines };
+        inputParams = new WebAppInputParams { WebMachines = deploymentInfo.TargetMachines };
       }
       else
       {

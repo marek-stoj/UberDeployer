@@ -54,11 +54,7 @@ namespace UberDeployer.Core.Tests.Deployment
               _artifactsRepository.Object,
               _ntServiceManager.Object,
               _passwordCollector.Object,
-              _failoverClusterManager.Object,
-              _ntServiceProjectInfo,
-              _ProjectName,
-              _BuildId,
-              _EnvironmentName,
+              _failoverClusterManager.Object              
             }
           );
 

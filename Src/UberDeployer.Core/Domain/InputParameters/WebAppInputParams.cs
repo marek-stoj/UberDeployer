@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace UberDeployer.Core.Domain
+namespace UberDeployer.Core.Domain.InputParameters
 {
-  public class WebInputParams : InputParams
+  public class WebAppInputParams : InputParams
   {
     public List<string> WebMachines { get; set; }
   }

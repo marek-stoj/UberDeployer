@@ -8,28 +8,28 @@ namespace UberDeployer.Core.Deployment
   {
     public event EventHandler<DiagnosticMessageEventArgs> DiagnosticMessagePosted;
 
-    private bool _prepared;
     private DeploymentInfo _deploymentInfo;
 
     internal DeploymentInfo DeploymentInfo
     {
-      get {
+      get
+      {
         if (_deploymentInfo == null)
         {
           throw new InvalidOperationException("The task hasn't been prepared.");
         }
 
         return _deploymentInfo;
-      } 
-       
-      set { _deploymentInfo = value; }
+      }
+
+      private set { _deploymentInfo = value; }
     }
 
     public void Prepare(DeploymentInfo deploymentInfo)
     {
-      Guard.NotNull(deploymentInfo, "DeploymentInfo");      
+      Guard.NotNull(deploymentInfo, "DeploymentInfo");
 
-      if (_prepared)
+      if (IsPrepared)
       {
         throw new InvalidOperationException("The task has already been prepared.");
       }
@@ -40,12 +40,12 @@ namespace UberDeployer.Core.Deployment
 
       DoPrepare();
 
-      _prepared = true;
+      IsPrepared = true;
     }
 
     public void Execute()
     {
-      if (!_prepared)
+      if (!IsPrepared)
       {
         throw new InvalidOperationException("The task has to be prepared before it can be executed.");
       }
@@ -91,5 +91,7 @@ namespace UberDeployer.Core.Deployment
         eventHandler(sender, diagnosticMessageEventArgs);
       }
     }
+
+    protected bool IsPrepared { get; private set; }
   }
 }

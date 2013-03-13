@@ -5,6 +5,7 @@ using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 {
@@ -35,14 +36,14 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     [Test]
     public void OnDeploymentTaskFinished_ExpectAddDeploymnetRequest()
     {
-      string projectName = "projectName";
-      string targetEnvironmentName = "targetEnvironmentName";
+      DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
+
       var deploymentRequestRepository = new Mock<IDeploymentRequestRepository>(MockBehavior.Strict);
       var auditingModule = new AuditingModule(deploymentRequestRepository.Object);
 
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      TerminalAppProjectInfo projectInfo = new TerminalAppProjectInfo(projectName, "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
+
       var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
 
@@ -51,8 +52,14 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
           drr =>
           drr.AddDeploymentRequest(
             It.Is<DeploymentRequest>(
-              r => r.ProjectName == projectName
-                && r.TargetEnvironmentName == targetEnvironmentName)));
+              r => r.ProjectName == deploymentInfo.ProjectName
+                && r.TargetEnvironmentName == deploymentInfo.TargetEnvironmentName)));
+
+      environmentInfoRepository
+        .Setup(x => x.GetByName(deploymentInfo.TargetEnvironmentName))
+        .Returns(DeploymentDataGenerator.GetEnvironmentInfo());
+
+      deploymentTask.Prepare(deploymentInfo);
 
       Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskFinished(deploymentTask, deploymentContext));
     }

@@ -92,7 +92,7 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
-          extractArtifactsDeploymentStep.BinariesDirPath,
+          new Lazy<string>(() =>extractArtifactsDeploymentStep.BinariesDirPath),
           environmentInfo.GetAppServerNetworkPath(targetDirPath)));
 
       // determine if the task should be scheduled anew or if its schedule should be updated

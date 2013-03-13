@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.MsDeploy;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -56,7 +57,7 @@ namespace UberDeployer.Core.Tests.Deployment
       string outString;
       _msDeploy.Setup(mD => mD.Run(It.IsAny<string[]>(), out outString));
 
-      deployWebDeployPackageDeploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
+      deployWebDeployPackageDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetWebAppDeploymentInfo());
     }
   }
 }

@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment.Pipeline
 {
@@ -24,11 +25,11 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline
 
       var pipeline = new DeploymentPipeline();
 
-      var deploymentInfoFake = new Mock<DeploymentInfo>();
+      var deploymentInfo = DeploymentInfoGenerator.GetNtServiceDeploymentInfo();
 
       Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(null, new DummyDeploymentTask(environmentInfoRepositoryFake.Object), new DeploymentContext("requester")));
-      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfoFake.Object, null, new DeploymentContext("requester")));
-      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfoFake.Object, new DummyDeploymentTask(environmentInfoRepositoryFake.Object), null));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfo, null, new DeploymentContext("requester")));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfo, new DummyDeploymentTask(environmentInfoRepositoryFake.Object), null));
     }
   }
 }

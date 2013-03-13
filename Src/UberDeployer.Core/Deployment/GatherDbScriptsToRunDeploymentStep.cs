@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.DbDiff;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
@@ -10,7 +11,7 @@ namespace UberDeployer.Core.Deployment
 {
   public class GatherDbScriptsToRunDeploymentStep : DeploymentStep
   {
-    private readonly string _scriptsDirectoryPath;
+    private readonly Lazy<string> _scriptsDirectoryPathProvider;
     private readonly string _sqlServerName;
     private readonly string _environmentName;
     private readonly IDbVersionProvider _dbVersionProvider;
@@ -20,29 +21,14 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public GatherDbScriptsToRunDeploymentStep(string scriptsDirectoryPath, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
+    public GatherDbScriptsToRunDeploymentStep(Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
     {
-      if (string.IsNullOrEmpty(scriptsDirectoryPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "scriptsDirectoryPath");
-      }
-
-      if (string.IsNullOrEmpty(sqlServerName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "sqlServerName");
-      }
-
-      if (string.IsNullOrEmpty(environmentName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "environmentName");
-      }
-
-      if (dbVersionProvider == null)
-      {
-        throw new ArgumentNullException("dbVersionProvider");
-      }
-
-      _scriptsDirectoryPath = scriptsDirectoryPath;
+      Guard.NotNull(scriptsDirectoryPathProvider, "scriptsDirectoryPathProvider");
+      Guard.NotNullNorEmpty(sqlServerName, "sqlServerName");
+      Guard.NotNullNorEmpty(environmentName, "environmentName");
+      Guard.NotNull(dbVersionProvider, "dbVersionProvider");
+      
+      _scriptsDirectoryPathProvider = scriptsDirectoryPathProvider;
       _sqlServerName = sqlServerName;
       _environmentName = environmentName;
       _dbVersionProvider = dbVersionProvider;
@@ -76,7 +62,7 @@ namespace UberDeployer.Core.Deployment
 
       // collect scripts that weren't executed on database
       Dictionary<DbVersion, string> scriptsToRunDict =
-        (from filePath in Directory.GetFiles(_scriptsDirectoryPath, "*.sql")
+        (from filePath in Directory.GetFiles(_scriptsDirectoryPathProvider.Value, "*.sql")
          let dbVersion = DbVersion.FromString(Path.GetFileNameWithoutExtension(filePath))
          where !dbVersionsSet.Contains(dbVersion)
          select new { dbVersion, filePath })
@@ -123,8 +109,8 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Gather db scripts from '{0}' to run on database '{1}'.",
-            _scriptsDirectoryPath,
-            _dbProjectInfo.DbName);
+            _scriptsDirectoryPathProvider,
+            ((DbProjectInfo)DeploymentInfo.ProjectInfo).DbName);
       }
     }
 

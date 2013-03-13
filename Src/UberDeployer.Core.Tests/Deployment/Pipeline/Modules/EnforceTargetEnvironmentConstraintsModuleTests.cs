@@ -5,6 +5,7 @@ using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 {
@@ -33,6 +34,14 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       TerminalAppProjectInfo projectInfo = new TerminalAppProjectInfo("name", "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
       var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
+
+      DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
+
+      environmentInfoRepository
+        .Setup(x => x.GetByName(It.IsAny<string>()))
+        .Returns(DeploymentDataGenerator.GetEnvironmentInfo());
+
+      deploymentTask.Prepare(deploymentInfo);      
 
       Assert.DoesNotThrow(() => enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentTask, deploymentContext));
     }

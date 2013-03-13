@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Core.Deployment;
 
 namespace UberDeployer.Core.Domain

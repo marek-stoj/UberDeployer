@@ -1,5 +1,6 @@
 ﻿using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain.InputParameters;
 
 namespace UberDeployer.Core.Domain
 {
@@ -28,11 +29,11 @@ namespace UberDeployer.Core.Domain
       InputParams = inputParams;
     }
 
-    public string ProjectName { get; set; }
-    public string ProjectConfigurationName { get; set; }
-    public string ProjectConfigurationBuildId { get; set; }
-    public string TargetEnvironmentName { get; set; }    
-    public ProjectInfo ProjectInfo { get; set; }
-    public InputParams InputParams { get; set; }
+    public string ProjectName { get; private set; }
+    public string ProjectConfigurationName { get; private set; }
+    public string ProjectConfigurationBuildId { get; private set; }
+    public string TargetEnvironmentName { get; private set; }    
+    public ProjectInfo ProjectInfo { get; private set; }
+    public InputParams InputParams { get; private set; }
   }
 }
