@@ -159,7 +159,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       try
       {
         return Json(
-          _agentService.GetWebMachinesNames(envName),
+          _agentService.GetWebMachineNames(envName),
           JsonRequestBehavior.AllowGet);
       }
       catch (FaultException<EnvironmentNotFoundFault>)
