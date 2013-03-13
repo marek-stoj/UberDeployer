@@ -26,7 +26,7 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
       TerminalAppProjectInfo projectInfo = new TerminalAppProjectInfo("name", "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectInfo, "Production", "buildId", "prod");
+      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
 
       Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskStarting(deploymentTask, deploymentContext));
@@ -43,7 +43,7 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
       TerminalAppProjectInfo projectInfo = new TerminalAppProjectInfo(projectName, "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectInfo, "Production", "buildId", targetEnvironmentName);
+      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
 
       deploymentRequestRepository

@@ -5,6 +5,7 @@ using System.IO;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using System.Linq;
 using UberDeployer.Core.Tests.TestUtils;
@@ -21,12 +22,14 @@ namespace UberDeployer.Core.Tests.Deployment
     private const string _Environment = "env";
 
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
+    private Mock<DeploymentInfo> _deploymentInfoFake;
 
     [SetUp]
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
       _deploymentStep = new GatherDbScriptsToRunDeploymentStep(_ScriptPath, _DatabaseName, _SqlServerName, _dbVersionProviderFake.Object);
+      _deploymentInfoFake = new Mock<DeploymentInfo>();
     }
 
     [Test]
@@ -57,7 +60,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(new List<string>() { "1.2", "1.3" });
 
       // act
-      _deploymentStep.PrepareAndExecute();
+      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
 
       // assert
       _dbVersionProviderFake.VerifyAll();
@@ -75,7 +78,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute();
+      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
 
       // assert
       Assert.AreEqual(1, _deploymentStep.ScriptsToRun.Count());
@@ -94,7 +97,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute();
+      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
 
       // assert
       Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == scriptOlderThanCurrent));
@@ -112,7 +115,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute();
+      _deploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
 
       // assert
       Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == notSupportedScript));

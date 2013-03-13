@@ -148,7 +148,7 @@ namespace UberDeployer.Core.Tests.Domain
           _NtServiceUserId);
 
       Assert.Throws<ArgumentNullException>(
-        () => projectInfo.CreateDeploymentTask(null, "configName", "buildID", "targetEnvironmentName"));
+        () => projectInfo.CreateDeploymentTask(null));
     }
 
     [Test]
@@ -181,8 +181,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
       objectFactory.Setup(o => o.CreateFailoverClusterManager()).Returns(failoverClusterManager.Object);
 
-      projectInfo.CreateDeploymentTask(
-        objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
+      projectInfo.CreateDeploymentTask(objectFactory.Object);
     }
 
     [Test]

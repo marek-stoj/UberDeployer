@@ -159,8 +159,7 @@ namespace UberDeployer.Core.Tests.Domain
           AppPoolInfo);
 
       Assert.Throws<ArgumentNullException>(
-        () => projectInfo.CreateDeploymentTask(
-          null, "configName", "buildID", "targetEnvironmentName"));
+        () => projectInfo.CreateDeploymentTask(null));
     }
 
     [Test]
@@ -190,8 +189,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateIMsDeploy()).Returns(imsDeploy.Object);
       objectFactory.Setup(o => o.CreateIIisManager()).Returns(iisManager.Object);
 
-      projectInfo.CreateDeploymentTask(
-        objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
+      projectInfo.CreateDeploymentTask(objectFactory.Object);
     }
 
     [Test]

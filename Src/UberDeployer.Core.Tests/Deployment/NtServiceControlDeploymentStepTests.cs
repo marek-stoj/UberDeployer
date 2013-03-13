@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
 
 namespace UberDeployer.Core.Tests.Deployment
@@ -9,6 +10,14 @@ namespace UberDeployer.Core.Tests.Deployment
   [TestFixture]
   public class NtServiceControlDeploymentStepTests
   {
+    private Mock<DeploymentInfo> _deploymentInfoFake;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _deploymentInfoFake = new Mock<DeploymentInfo>();
+    }
+
     [Test]
     public void Test_StartNtServiceDeploymentStep_Thows_When_Service_null()
     {
@@ -56,7 +65,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       ntServiceManager.Setup(k => k.StartService(machineName, serviceName));
 
-      startNTServiceStep.PrepareAndExecute();
+      startNTServiceStep.PrepareAndExecute(_deploymentInfoFake.Object);
     }
 
     [Test]
@@ -71,7 +80,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       ntServiceManager.Setup(k => k.StopService(machineName, serviceName));
 
-      startNTServiceStep.PrepareAndExecute();
+      startNTServiceStep.PrepareAndExecute(_deploymentInfoFake.Object);
     }
   }
 
