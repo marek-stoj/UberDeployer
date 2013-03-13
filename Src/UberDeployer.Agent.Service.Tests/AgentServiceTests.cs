@@ -94,13 +94,8 @@ namespace UberDeployer.Agent.Service.Tests
       return new EnvironmentInfo(
         environmentName,
         "configurationTemplateName",
-<<<<<<< HEAD
         "appServerMachineName", 
         "failOverMachineName", 
-=======
-        "appServerMachineName",
-        "failOverMachineName",
->>>>>>> 107e384827bb84e9173d9f36fdc6da21e4522525
         expectedWebMachineNames, 
         "terminalServerMachineName",
         "databaseServerMachineName",
