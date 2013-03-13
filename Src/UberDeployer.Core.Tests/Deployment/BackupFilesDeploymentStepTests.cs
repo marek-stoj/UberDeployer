@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -13,6 +15,8 @@ namespace UberDeployer.Core.Tests.Deployment
     private const string DstSubDir = "TestDstDir";
     private string _dstDir;
 
+    private Mock<DeploymentInfo> _deploymentInfoFake;
+
     [SetUp]
     public void SetUp()
     {
@@ -20,6 +24,8 @@ namespace UberDeployer.Core.Tests.Deployment
       _dstDir = string.Format("{0}{1}{2}", _workingDir, Path.DirectorySeparatorChar, DstSubDir);
       
       Directory.CreateDirectory(_dstDir);
+
+      _deploymentInfoFake = new Mock<DeploymentInfo>();
     }
 
     [TearDown]
@@ -40,7 +46,7 @@ namespace UberDeployer.Core.Tests.Deployment
       Assert.Throws<InvalidOperationException>(
         () =>
           new BackupFilesDeploymentStep(Path.Combine(_workingDir, "28947289374298"))
-            .Execute(TODO));
+            .Execute());
     }
 
     [Test]
@@ -49,8 +55,8 @@ namespace UberDeployer.Core.Tests.Deployment
       string zippedBackupFileName = Path.Combine(Environment.CurrentDirectory, string.Format("{0}\\{1}.bak.000.zip", _workingDir, DstSubDir));
       var backupFilesDeploymentStep = new BackupFilesDeploymentStep(_dstDir);
 
-      backupFilesDeploymentStep.Prepare(TODO, TODO);
-      backupFilesDeploymentStep.Execute(TODO);
+      backupFilesDeploymentStep.Prepare(_deploymentInfoFake.Object);
+      backupFilesDeploymentStep.Execute();
 
       var fileInfo = new FileInfo(zippedBackupFileName);
 
@@ -63,9 +69,9 @@ namespace UberDeployer.Core.Tests.Deployment
       string zippedBackupFileName = Path.Combine(Environment.CurrentDirectory, string.Format("{0}\\{1}.bak.000.zip", _workingDir, DstSubDir));
       var backupFilesDeploymentStep = new BackupFilesDeploymentStep(_dstDir);
 
-      backupFilesDeploymentStep.Prepare(TODO, TODO);
-      backupFilesDeploymentStep.Execute(TODO);
-      backupFilesDeploymentStep.Execute(TODO);
+      backupFilesDeploymentStep.Prepare(_deploymentInfoFake.Object);
+      backupFilesDeploymentStep.Execute();
+      backupFilesDeploymentStep.Execute();
 
       var fileInfo = new FileInfo(zippedBackupFileName);
 
@@ -78,11 +84,11 @@ namespace UberDeployer.Core.Tests.Deployment
       const int maxBackupCount = 4;
       var backupFilesDeploymentStep = new BackupFilesDeploymentStep(_dstDir, maxBackupCount);
 
-      backupFilesDeploymentStep.Prepare(TODO, TODO);
+      backupFilesDeploymentStep.Prepare(_deploymentInfoFake.Object);
 
       for (int i = 0; i < maxBackupCount + 1; i++)
       {
-        backupFilesDeploymentStep.Execute(TODO);
+        backupFilesDeploymentStep.Execute();
 
         Thread.Sleep(50);
       }

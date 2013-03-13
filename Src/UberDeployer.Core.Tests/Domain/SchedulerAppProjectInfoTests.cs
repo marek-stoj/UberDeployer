@@ -265,8 +265,7 @@ namespace UberDeployer.Core.Tests.Domain
           _ExecutionTimeLimitInMinutes);
 
       Assert.Throws<ArgumentNullException>(
-        () => schedulerAppProjectInfo.CreateDeploymentTask(
-          null, "configName", "buildID", "targetEnvironmentName"));
+        () => schedulerAppProjectInfo.CreateDeploymentTask(null));
     }
 
     [Test]
@@ -297,8 +296,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
 
-      schedulerAppProjectInfo.CreateDeploymentTask(
-        objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
+      schedulerAppProjectInfo.CreateDeploymentTask(objectFactory.Object);
     }
 
     [Test]

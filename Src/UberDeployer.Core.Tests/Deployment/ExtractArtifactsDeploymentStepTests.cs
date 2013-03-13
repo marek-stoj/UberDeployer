@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.IO;
+using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
@@ -32,10 +33,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _projectInfo = DeploymentDataGenerator.GetDbProjectInfo();
 
       _deploymentStep = new ExtractArtifactsDeploymentStep(
-        _environmentInfo,
-        _projectInfo,
-        _ProjectConfigurationName,
-        _ProjectConfigurationBuildId,
+        _environmentInfo,        
         _ArtifactsFilePath,
         _TargetArtifactsDirPath);
     }
@@ -75,10 +73,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       _deploymentStep =
         new ExtractArtifactsDeploymentStep(
-          environmentInfo,
-          projectInfo,
-          _ProjectConfigurationName,
-          _ProjectConfigurationBuildId,
+          environmentInfo,                    
           _ArtifactsFilePath,
           _TargetArtifactsDirPath);
 
@@ -96,9 +91,6 @@ namespace UberDeployer.Core.Tests.Deployment
       _deploymentStep = 
         new ExtractArtifactsDeploymentStep(
         environmentInfo,
-        projectInfo,
-        _ProjectConfigurationName,
-        _ProjectConfigurationBuildId,
         _ArtifactsFilePath,
         _TargetArtifactsDirPath);
 
@@ -119,7 +111,7 @@ namespace UberDeployer.Core.Tests.Deployment
       }
 
       // act
-      _deploymentStep.PrepareAndExecute();
+      _deploymentStep.PrepareAndExecute(new Mock<DeploymentInfo>().Object);
 
       // assert
       Assert.True(Directory.Exists(expectedPath));

@@ -34,7 +34,7 @@ namespace UberDeployer.WebApp.Tests
       const string envName = "envName";
       var expectedMachineNames = new List<string> {"name1", "name2"};
 
-      _agentService.Setup(x => x.GetWebMachinesNames(envName)).Returns(expectedMachineNames);
+      _agentService.Setup(x => x.GetWebMachineNames(envName)).Returns(expectedMachineNames);
 
       // act
       var machineNamesJson = _apiController.GetWebMachineNames(envName) as JsonResult;
@@ -77,7 +77,7 @@ namespace UberDeployer.WebApp.Tests
               EnvironmentName = environmentName
             });
 
-      _agentService.Setup(x => x.GetWebMachinesNames(environmentName)).Throws(faultException);
+      _agentService.Setup(x => x.GetWebMachineNames(environmentName)).Throws(faultException);
 
       // act
       var httpStatusCodeResult = _apiController.GetWebMachineNames(string.Empty) as HttpStatusCodeResult;

@@ -130,8 +130,7 @@ namespace UberDeployer.Core.Tests.Domain
             _TerminalAppDirName,
             _TerminalAppExeName);
 
-      Assert.Throws<ArgumentNullException>(()=>projectInfo.CreateDeploymentTask(
-          null, "configName", "buildID", "targetEnvironmentName"));
+      Assert.Throws<ArgumentNullException>(()=>projectInfo.CreateDeploymentTask(null));
     }
 
     [Test]
@@ -157,8 +156,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreateNtServiceManager()).Returns(ntServiceManager.Object);
 
-      projectInfo.CreateDeploymentTask(
-          objectFactory.Object, "configName", "buildID", "targetEnvironmentName");
+      projectInfo.CreateDeploymentTask(objectFactory.Object);
     }
 
     [Test]

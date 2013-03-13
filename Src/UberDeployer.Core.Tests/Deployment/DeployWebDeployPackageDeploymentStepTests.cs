@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Tests.Deployment
@@ -10,6 +11,8 @@ namespace UberDeployer.Core.Tests.Deployment
   {
     private MockRepository _mockRepository;
     private Mock<IMsDeploy> _msDeploy;
+    private Mock<DeploymentInfo> _deploymentInfoFake;
+
     private const string _WebServerMachineName = "machine_name";
     private const string _PackageFilePath = "/path";
 
@@ -18,6 +21,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       _mockRepository = new MockRepository(MockBehavior.Strict);
       _msDeploy = _mockRepository.Create<IMsDeploy>();
+      _deploymentInfoFake = new Mock<DeploymentInfo>();
     }
 
     [TearDown]
@@ -52,7 +56,7 @@ namespace UberDeployer.Core.Tests.Deployment
       string outString;
       _msDeploy.Setup(mD => mD.Run(It.IsAny<string[]>(), out outString));
 
-      deployWebDeployPackageDeploymentStep.PrepareAndExecute();
+      deployWebDeployPackageDeploymentStep.PrepareAndExecute(_deploymentInfoFake.Object);
     }
   }
 }
