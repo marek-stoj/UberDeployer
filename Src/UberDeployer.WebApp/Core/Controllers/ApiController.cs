@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.ServiceModel;
 using System.Web.Mvc;
 using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.Agent.Proxy.Faults;
 using UberDeployer.WebApp.Core.Models.Api;
 using UberDeployer.WebApp.Core.Services;
 using UberDeployer.WebApp.Core.Utils;
@@ -26,7 +28,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     static ApiController()
     {
       string allowedEnvironmentsStr = ConfigurationManager.AppSettings[_AppSettingsKey_AllowedEnvironments];
-      
+
       if (string.IsNullOrEmpty(allowedEnvironmentsStr))
       {
         throw new ConfigurationErrorsException(string.Format("Missing app setting. Key: {0}.", _AppSettingsKey_AllowedEnvironments));
@@ -84,7 +86,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     {
       List<ProjectViewModel> projectViewModels =
         _agentService.GetProjectInfos(ProjectFilter.Empty)
-          .Select(pi => new ProjectViewModel { Name = pi.Name })
+          .Select(pi => new ProjectViewModel { Name = pi.Name, Type = pi.Type })
           .ToList();
 
       return
@@ -114,7 +116,8 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpGet]
-    public ActionResult GetProjectConfigurationBuilds(string projectName, string projectConfigurationName)
+    public ActionResult
+      GetProjectConfigurationBuilds(string projectName, string projectConfigurationName)
     {
       if (string.IsNullOrEmpty(projectName))
       {
@@ -146,6 +149,26 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpGet]
+    public ActionResult GetWebMachineNames(string envName)
+    {
+      if (string.IsNullOrWhiteSpace(envName))
+      {
+        return BadRequest();
+      }
+
+      try
+      {
+        return Json(
+          _agentService.GetWebMachineNames(envName),
+          JsonRequestBehavior.AllowGet);
+      }
+      catch (FaultException<EnvironmentNotFoundFault>)
+      {
+        return BadRequest();
+      }      
+    }
+
+    [HttpGet]
     public ActionResult GetDiagnosticMessages(long? lastSeenMaxMessageId)
     {
       if (!lastSeenMaxMessageId.HasValue)
@@ -174,7 +197,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpPost]
-    public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, List<string> targetMachines)
     {
       if (string.IsNullOrEmpty(projectName))
       {
@@ -194,17 +217,20 @@ namespace UberDeployer.WebApp.Core.Controllers
       if (string.IsNullOrEmpty(targetEnvironmentName))
       {
         return BadRequest();
-      }
+      }      
 
       try
       {
         _agentService.DeployAsync(
           _sessionService.UniqueClientId,
           SecurityUtils.CurrentUsername,
-          projectName,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName);
+          new UberDeployer.Agent.Proxy.Dto.DeploymentInfo
+            {
+              ProjectName = projectName,
+              ProjectConfigurationName = projectConfigurationName,
+              ProjectConfigurationBuildId = projectConfigurationBuildId,
+              TargetEnvironmentName = targetEnvironmentName
+            });
 
         return Json(new { status = "OK" });
       }

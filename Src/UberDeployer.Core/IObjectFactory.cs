@@ -44,6 +44,6 @@ namespace UberDeployer.Core
 
     IDbVersionProvider CreateDbVersionProvider();
 
-    IFailoverClusterManager CreateFailoverClusterManager();
+    IFailoverClusterManager CreateFailoverClusterManager();       
   }
 }

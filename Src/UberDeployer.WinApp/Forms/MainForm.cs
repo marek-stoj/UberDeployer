@@ -186,9 +186,13 @@ namespace UberDeployer.WinApp.Forms
 
         var projectDeploymentInfo = (ProjectDeploymentInfo)e.Argument;
 
-        ProjectInfo projectInfo = projectDeploymentInfo.ProjectInfo;
-        ProjectConfiguration projectConfiguration = projectDeploymentInfo.ProjectConfiguration;
-        ProjectConfigurationBuild projectConfigurationBuild = projectDeploymentInfo.ProjectConfigurationBuild;
+        var deploymentInfo = new DeploymentInfo
+          {
+            ProjectName = projectDeploymentInfo.ProjectInfo.Name,
+            ProjectConfigurationName = projectDeploymentInfo.ProjectConfiguration.Name,
+            ProjectConfigurationBuildId = projectDeploymentInfo.ProjectConfigurationBuild.Id,
+            TargetEnvironmentName = projectDeploymentInfo.TargetEnvironmentName
+          };
 
         LogMessage(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", DiagnosticMessageType.Info);
         startSeparatorWasLogged = true;
@@ -204,10 +208,7 @@ namespace UberDeployer.WinApp.Forms
           .Deploy(
             Program.UniqueClientId,
             RequesterIdentity,
-            projectInfo.Name,
-            projectConfiguration.Name,
-            projectConfigurationBuild.Id,
-            projectDeploymentInfo.TargetEnvironmentName);
+            deploymentInfo);
       }
       catch (Exception exc)
       {

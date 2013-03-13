@@ -99,11 +99,15 @@ namespace UberDeployer.ConsoleApp.Commands
       try
       {
         DeploymentTask deploymentTask =
-          projectInfo.CreateDeploymentTask(
-            ObjectFactory.Instance,
-            projectConfigurationName,
-            projectConfigurationBuildId,
-            targetEnvironmentName);
+          projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
+        
+        var deploymentInfo = new DeploymentInfo(
+          projectName,
+          projectConfigurationName,
+          projectConfigurationBuildId,
+          targetEnvironmentName,
+          projectInfo,
+          null); //TODO MARIO create InputParams
 
         deploymentTask.DiagnosticMessagePosted +=
           (eventSender, tmpArgs) => LogMessage(tmpArgs.Message);
@@ -113,7 +117,7 @@ namespace UberDeployer.ConsoleApp.Commands
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
-        deploymentPipeline.StartDeployment(deploymentTask, deploymentContext);
+        deploymentPipeline.StartDeployment(deploymentInfo, deploymentTask, deploymentContext);
 
         return 0;
       }

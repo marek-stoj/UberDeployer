@@ -79,12 +79,15 @@
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
+    <Compile Include="Domain\InputParams.cs" />
     <Compile Include="Deployment\CollectedCredentials.cs" />
     <Compile Include="Deployment\DeferredEnumerable.cs" />
     <Compile Include="Deployment\DiagnosticMessage.cs" />
     <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStep.cs" />
     <Compile Include="Deployment\MoveClusterGroupToAnotherNodeDeploymentStep.cs" />
     <Compile Include="Deployment\Pipeline\DeploymentContext.cs" />
+    <Compile Include="Domain\WebInputParams.cs" />
+    <Compile Include="Domain\DeploymentInfo.cs" />
     <Compile Include="Domain\ProjectToFailoverClusterGroupMapping.cs" />
     <Compile Include="InternalException.cs" />
     <Compile Include="Management\FailoverCluster\IFailoverClusterManager.cs" />
@@ -201,6 +204,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UberDeployer.Agent.Proxy\UberDeployer.Agent.Proxy.csproj">
+      <Project>{20970513-4A64-420E-B814-4D8FC89698FA}</Project>
+      <Name>UberDeployer.Agent.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Common\UberDeployer.Common.csproj">
+      <Project>{256FF6D7-F1B8-43E7-97CA-7A63455C0BE6}</Project>
+      <Name>UberDeployer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UberDeployer.Core.DbDiff\UberDeployer.Core.DbDiff.csproj">
       <Project>{42554C30-1E25-4ABC-814C-A4B624713212}</Project>
       <Name>UberDeployer.Core.DbDiff</Name>

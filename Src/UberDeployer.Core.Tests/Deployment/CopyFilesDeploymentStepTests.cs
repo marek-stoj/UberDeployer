@@ -2,12 +2,27 @@
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using System.IO;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
   [TestFixture]
   public class CopyFilesDeploymentStepTests
   {
+    private DeploymentInfo _deploymentInfo;
+
+    [TestFixtureSetUp]
+    public void SetUp()
+    {
+      _deploymentInfo = new DeploymentInfo(
+        "project name",
+        "configuration name",
+        "build id",
+        "target environment",
+        null,
+        null);
+    }
+
     [Test]
     public void Test_copying_all_files()
     {
@@ -18,7 +33,7 @@ namespace UberDeployer.Core.Tests.Deployment
       {
         var copyFilesDeploymentStep = new CopyFilesDeploymentStep(srcDirPath, dstDirPath);
 
-        copyFilesDeploymentStep.PrepareAndExecute();
+        copyFilesDeploymentStep.PrepareAndExecute(_deploymentInfo);
 
         Assert.IsTrue(Directory.Exists(dstDirPath));
 
@@ -47,7 +62,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
         var copyFilesDeploymentStep = new CopyFilesDeploymentStep(srcDirPath, dstDirPath);
 
-        copyFilesDeploymentStep.PrepareAndExecute();
+        copyFilesDeploymentStep.PrepareAndExecute(_deploymentInfo);
 
         Assert.IsTrue(Directory.Exists(dstDirPath));
 
@@ -75,7 +90,7 @@ namespace UberDeployer.Core.Tests.Deployment
       {
         var copyFilesDeploymentStep = new CopyFilesDeploymentStep(srcDirPath, dstDirPath);
 
-        Assert.Throws<DeploymentTaskException>(copyFilesDeploymentStep.PrepareAndExecute);
+        Assert.Throws<DeploymentTaskException>(() => copyFilesDeploymentStep.PrepareAndExecute(_deploymentInfo));
       }
       finally
       {

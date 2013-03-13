@@ -91,7 +91,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoPrepare_calls_environment_info_repository()
     {
       // act
-      _deploymentTask.Prepare();
+      _deploymentTask.Prepare(TODO, TODO);
 
       // assert
       _environmentInfoRepositoryFake.VerifyAll();
@@ -106,14 +106,14 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((EnvironmentInfo)null);
 
       // assert
-      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare());
+      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(TODO, TODO));
     }
 
     [Test]
     public void DoPrepare_calls_db_script_runner_factory()
     {
       // act
-      _deploymentTask.Prepare();
+      _deploymentTask.Prepare(TODO, TODO);
 
       // assert
       _dbScriptRunnerFactoryFake.VerifyAll();
@@ -128,7 +128,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((IDbScriptRunner)null);
 
       // assert
-      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare());
+      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(TODO, TODO));
     }
 
     [Test]
@@ -139,7 +139,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoPrepare_adds_deployment_step(Type deploymentStepType)
     {
       // act
-      _deploymentTask.Prepare();
+      _deploymentTask.Prepare(TODO, TODO);
 
       // assert
       Assert.IsNotNull(_deploymentTask.SubTasks.Any(x => x.GetType() == deploymentStepType));
@@ -159,7 +159,7 @@ namespace UberDeployer.Core.Tests.Deployment
           };
 
       // act
-      _deploymentTask.Prepare();
+      _deploymentTask.Prepare(TODO, TODO);
 
       // assert
       int prevStepIndex = GetIndexOfTaskWithType(_deploymentTask.SubTasks, stepsTypesOrder[0]);

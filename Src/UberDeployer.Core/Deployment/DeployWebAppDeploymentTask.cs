@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.MsDeploy;
@@ -10,12 +11,11 @@ namespace UberDeployer.Core.Deployment
   public class DeployWebAppDeploymentTask : DeploymentTask
   {
     private readonly IMsDeploy _msDeploy;
-    protected readonly IArtifactsRepository _artifactsRepository;
-    protected readonly WebAppProjectInfo _projectInfo;
-    protected readonly string _projectConfigurationName;
-    protected readonly string _projectConfigurationBuildId;
+    protected readonly IArtifactsRepository _artifactsRepository;    
 
     private readonly IIisManager _iisManager;
+
+    private WebAppProjectInfo _webAppProjectInfo;
 
     #region Constructor(s)
 
@@ -23,12 +23,8 @@ namespace UberDeployer.Core.Deployment
       IMsDeploy msDeploy,
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
-      IIisManager iisManager,
-      WebAppProjectInfo projectInfo,
-      string projectConfigurationName,
-      string projectConfigurationBuildId,
-      string targetEnvironmentName)
-      : base(environmentInfoRepository, targetEnvironmentName)
+      IIisManager iisManager)
+      : base(environmentInfoRepository)
     {
       if (msDeploy == null)
       {
@@ -43,29 +39,11 @@ namespace UberDeployer.Core.Deployment
       if (iisManager == null)
       {
         throw new ArgumentNullException("iisManager");
-      }
-
-      if (projectInfo == null)
-      {
-        throw new ArgumentNullException("projectInfo");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
-      }
+      }      
 
       _msDeploy = msDeploy;
       _artifactsRepository = artifactsRepository;
-      _iisManager = iisManager;
-      _projectInfo = projectInfo;
-      _projectConfigurationName = projectConfigurationName;
-      _projectConfigurationBuildId = projectConfigurationBuildId;
+      _iisManager = iisManager;      
     }
 
     #endregion Constructor(s)
@@ -75,14 +53,14 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      
+      _webAppProjectInfo = DeploymentInfo.ProjectInfo as WebAppProjectInfo;
+      Guard.NotNull(_webAppProjectInfo, "_webAppProjectInfo");
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
           _artifactsRepository,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
           GetTempDirPath());
 
       AddSubTask(downloadArtifactsDeploymentStep);
@@ -91,15 +69,12 @@ namespace UberDeployer.Core.Deployment
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
           environmentInfo,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
 
-      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
+      if (DeploymentInfo.ProjectInfo.ArtifactsAreEnvironmentSpecific)
       {
         var binariesConfiguratorStep = new ConfigureBinariesStep(
           environmentInfo.ConfigurationTemplateName, GetTempDirPath());
@@ -112,7 +87,7 @@ namespace UberDeployer.Core.Deployment
         string webApplicationPhysicalPath =
           _iisManager.GetWebApplicationPath(
             webServerMachineName,
-            string.Format("{0}/{1}", _projectInfo.IisSiteName, _projectInfo.WebAppName));
+            string.Format("{0}/{1}", _webAppProjectInfo.IisSiteName, _webAppProjectInfo.WebAppName));
 
         if (!string.IsNullOrEmpty(webApplicationPhysicalPath))
         {
@@ -137,8 +112,8 @@ namespace UberDeployer.Core.Deployment
           new CreateWebDeployPackageDeploymentStep(
             _msDeploy,
             extractArtifactsDeploymentStep.BinariesDirPath,
-            _projectInfo.IisSiteName,
-            _projectInfo.WebAppName);
+            _webAppProjectInfo.IisSiteName,
+            _webAppProjectInfo.WebAppName);
 
         AddSubTask(createWebDeployPackageDeploymentStep);
 
@@ -152,14 +127,14 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(deployWebDeployPackageDeploymentStep);
 
         // check if the app pool exists on the target machine
-        if (!_iisManager.AppPoolExists(webServerMachineName, _projectInfo.AppPool.Name))
+        if (!_iisManager.AppPoolExists(webServerMachineName, _webAppProjectInfo.AppPool.Name))
         {
           // create a step for creating a new app pool
           var createAppPoolDeploymentStep =
             new CreateAppPoolDeploymentStep(
               _iisManager,
               webServerMachineName,
-              _projectInfo.AppPool);
+              _webAppProjectInfo.AppPool);
 
           AddSubTask(createAppPoolDeploymentStep);
         }
@@ -169,13 +144,13 @@ namespace UberDeployer.Core.Deployment
           new SetAppPoolDeploymentStep(
             _iisManager,
             webServerMachineName,
-            _projectInfo.IisSiteName,
-            _projectInfo.WebAppName,
-            _projectInfo.AppPool);
+            _webAppProjectInfo.IisSiteName,
+            _webAppProjectInfo.WebAppName,
+            _webAppProjectInfo.AppPool);
 
         AddSubTask(setAppPoolDeploymentStep);
       }
-    }
+    }    
 
     public override string Description
     {
@@ -184,32 +159,13 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Deploy web app '{0} ({1}:{2})' to '{3}'.",
-            _projectInfo.Name,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
-            _targetEnvironmentName);
+            _webAppProjectInfo.Name,
+            DeploymentInfo.ProjectConfigurationName,
+            DeploymentInfo.ProjectConfigurationBuildId,
+            DeploymentInfo.TargetEnvironmentName);
       }
     }
 
     #endregion Overrides of DeploymentTaskBase
-
-    #region Overrides of DeploymentTask
-
-    public override string ProjectName
-    {
-      get { return _projectInfo.Name; }
-    }
-
-    public override string ProjectConfigurationName
-    {
-      get { return _projectConfigurationName; }
-    }
-
-    public override string ProjectConfigurationBuildId
-    {
-      get { return _projectConfigurationBuildId; }
-    }
-
-    #endregion Overrides of DeploymentTask
   }
 }

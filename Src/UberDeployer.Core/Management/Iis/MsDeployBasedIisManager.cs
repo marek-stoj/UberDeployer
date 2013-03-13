@@ -238,7 +238,6 @@ namespace UberDeployer.Core.Management.Iis
 
     private void RunAppCmd(string machineName, string appCmdArgs)
     {
-
       var msDeployArgs =
         new[]
           {

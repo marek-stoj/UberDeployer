@@ -12,10 +12,13 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     public void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
-      if (deploymentTask.TargetEnvironmentName == ProductionEnvironmentName
-       && deploymentTask.ProjectConfigurationName != ProductionProjectConfigurationName)
+      if (deploymentTask.DeploymentInfo.TargetEnvironmentName == ProductionEnvironmentName
+       && deploymentTask.DeploymentInfo.ProjectConfigurationName != ProductionProjectConfigurationName)
       {
-        throw new InvalidOperationException(string.Format("Can't deploy project ('{0}') with non-production configuration ('{1}') to the production environment!", deploymentTask.ProjectName, deploymentTask.ProjectConfigurationName));
+        throw new InvalidOperationException(string.Format(
+          "Can't deploy project ('{0}') with non-production configuration ('{1}') to the production environment!", 
+          deploymentTask.DeploymentInfo.ProjectName, 
+          deploymentTask.DeploymentInfo.ProjectConfigurationName));
       }
     }
 

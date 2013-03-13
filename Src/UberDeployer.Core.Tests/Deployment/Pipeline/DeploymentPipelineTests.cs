@@ -24,8 +24,11 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline
 
       var pipeline = new DeploymentPipeline();
 
-      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(null, new DeploymentContext("requester")));
-      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(new DummyDeploymentTask(environmentInfoRepositoryFake.Object, "env"), null));
+      var deploymentInfoFake = new Mock<DeploymentInfo>();
+
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(null, new DummyDeploymentTask(environmentInfoRepositoryFake.Object), new DeploymentContext("requester")));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfoFake.Object, null, new DeploymentContext("requester")));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfoFake.Object, new DummyDeploymentTask(environmentInfoRepositoryFake.Object), null));
     }
   }
 }

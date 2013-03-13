@@ -36,3 +36,4 @@ Logs
 /Src/*.suo
 /Src/*.DotSettings
 /*.lnk
+/Src/UberDeployer.sln.ide/graph/UberDeployer.sln.ide

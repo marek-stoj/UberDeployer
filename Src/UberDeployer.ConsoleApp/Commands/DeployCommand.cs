@@ -26,11 +26,11 @@ namespace UberDeployer.ConsoleApp.Commands
 
       IProjectInfoRepository projectInfoRepository =
         ObjectFactory.Instance.CreateProjectInfoRepository();
-
+      
       string projectName = args[0];
       string projectConfigurationName = args[1];
       string projectConfigurationBuildId = args[2];
-      string targetEnvironmentName = args[3];
+      string targetEnvironmentName = args[3];      
 
       ProjectInfo projectInfo = projectInfoRepository.GetByName(projectName);
 
@@ -40,14 +40,18 @@ namespace UberDeployer.ConsoleApp.Commands
         return 1;
       }
 
+      var deploymentInfo = new DeploymentInfo(
+        projectName, 
+        projectConfigurationName,
+        projectConfigurationBuildId,
+        targetEnvironmentName,
+        projectInfo,
+        null); //TODO MARIO create InputParams
+
       try
       {
         DeploymentTask deploymentTask =
-          projectInfo.CreateDeploymentTask(
-            ObjectFactory.Instance,
-            projectConfigurationName,
-            projectConfigurationBuildId,
-            targetEnvironmentName);
+          projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
 
         deploymentTask.DiagnosticMessagePosted +=
           (eventSender, tmpArgs) => LogMessage(tmpArgs.Message);
@@ -57,7 +61,7 @@ namespace UberDeployer.ConsoleApp.Commands
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
-        deploymentPipeline.StartDeployment(deploymentTask, deploymentContext);
+        deploymentPipeline.StartDeployment(deploymentInfo, deploymentTask, deploymentContext);
 
         return 0;
       }

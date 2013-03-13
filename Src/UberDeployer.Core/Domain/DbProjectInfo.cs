@@ -18,7 +18,7 @@ namespace UberDeployer.Core.Domain
 
     #region Overrides of ProjectInfo
 
-    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {
       if (objectFactory == null)
       {
@@ -30,11 +30,7 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateEnvironmentInfoRepository(),
           objectFactory.CreateArtifactsRepository(),
           objectFactory.CreateDbScriptRunnerFactory(),
-          objectFactory.CreateDbVersionProvider(),
-          this,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName);
+          objectFactory.CreateDbVersionProvider());
     }
 
     public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)

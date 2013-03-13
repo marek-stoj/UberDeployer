@@ -26,7 +26,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
-      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(_ScriptPath, _DatabaseName, _SqlServerName, _Environment, _dbVersionProviderFake.Object);
+      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(_ScriptPath, _DatabaseName, _SqlServerName, _dbVersionProviderFake.Object);
     }
 
     [Test]

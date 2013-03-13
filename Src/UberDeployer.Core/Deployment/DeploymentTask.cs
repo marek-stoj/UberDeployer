@@ -8,8 +8,7 @@ namespace UberDeployer.Core.Deployment
 {
   public abstract class DeploymentTask : DeploymentTaskBase
   {
-    protected readonly IEnvironmentInfoRepository _environmentInfoRepository;
-    protected readonly string _targetEnvironmentName;
+    protected readonly IEnvironmentInfoRepository _environmentInfoRepository;    
 
     private readonly List<DeploymentTaskBase> _subTasks;
 
@@ -17,20 +16,14 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    protected DeploymentTask(IEnvironmentInfoRepository environmentInfoRepository, string targetEnvironmentName)
+    protected DeploymentTask(IEnvironmentInfoRepository environmentInfoRepository)
     {
       if (environmentInfoRepository == null)
       {
         throw new ArgumentNullException("environmentInfoRepository");
-      }
+      }    
 
-      if (string.IsNullOrEmpty(targetEnvironmentName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "targetEnvironmentName");
-      }
-
-      _environmentInfoRepository = environmentInfoRepository;
-      _targetEnvironmentName = targetEnvironmentName;
+      _environmentInfoRepository = environmentInfoRepository;   
 
       _subTasks = new List<DeploymentTaskBase>();
     }
@@ -45,7 +38,7 @@ namespace UberDeployer.Core.Deployment
       {
         foreach (DeploymentTaskBase subTask in _subTasks)
         {
-          subTask.Prepare();
+          subTask.Prepare(DeploymentInfo);
           subTask.Execute();
         }
 
@@ -81,11 +74,11 @@ namespace UberDeployer.Core.Deployment
 
     protected EnvironmentInfo GetEnvironmentInfo()
     {
-      EnvironmentInfo environmentInfo = _environmentInfoRepository.GetByName(_targetEnvironmentName);
+      EnvironmentInfo environmentInfo = _environmentInfoRepository.GetByName(DeploymentInfo.TargetEnvironmentName);
 
       if (environmentInfo == null)
       {
-        throw new DeploymentTaskException(string.Format("Environment named '{0}' doesn't exist.", _targetEnvironmentName));
+        throw new DeploymentTaskException(string.Format("Environment named '{0}' doesn't exist.", DeploymentInfo.TargetEnvironmentName));
       }
 
       return environmentInfo;
@@ -120,18 +113,6 @@ namespace UberDeployer.Core.Deployment
     #endregion
 
     #region Properties
-
-    // TODO IMM HI: refactor?
-    public abstract string ProjectName { get; }
-
-    public abstract string ProjectConfigurationName { get; }
-
-    public abstract string ProjectConfigurationBuildId { get; }
-
-    public string TargetEnvironmentName
-    {
-      get { return _targetEnvironmentName; }
-    }
 
     public IEnumerable<DeploymentTaskBase> SubTasks
     {

@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
@@ -9,40 +9,18 @@ namespace UberDeployer.Core.Deployment
   public class DeployTerminalAppDeploymentTask : DeploymentTask
   {
     private readonly IArtifactsRepository _artifactsRepository;
-    private readonly TerminalAppProjectInfo _projectInfo;
-
-    private readonly string _projectConfigurationName;
-    private readonly string _projectConfigurationBuildId;
+    private TerminalAppProjectInfo _projectInfo;
 
     #region Constructor(s)
 
-    public DeployTerminalAppDeploymentTask(IEnvironmentInfoRepository environmentInfoRepository, IArtifactsRepository artifactsRepository, TerminalAppProjectInfo projectInfo, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
-      : base(environmentInfoRepository, targetEnvironmentName)
+    public DeployTerminalAppDeploymentTask(
+      IEnvironmentInfoRepository environmentInfoRepository, 
+      IArtifactsRepository artifactsRepository)
+      : base(environmentInfoRepository)
     {
-      if (artifactsRepository == null)
-      {
-        throw new ArgumentNullException("artifactsRepository");
-      }
-
-      if (projectInfo == null)
-      {
-        throw new ArgumentNullException("projectInfo");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
-      }
+      Guard.NotNull(artifactsRepository, "artifactsRepository");      
 
       _artifactsRepository = artifactsRepository;
-      _projectInfo = projectInfo;
-      _projectConfigurationName = projectConfigurationName;
-      _projectConfigurationBuildId = projectConfigurationBuildId;
     }
 
     #endregion Constructor(s)
@@ -52,14 +30,12 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      _projectInfo = (TerminalAppProjectInfo) DeploymentInfo.ProjectInfo;
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
-          _artifactsRepository,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
+          _artifactsRepository,          
           GetTempDirPath());
 
       AddSubTask(downloadArtifactsDeploymentStep);
@@ -67,10 +43,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for extracting the artifacts
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
-          environmentInfo,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
+          environmentInfo,          
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
@@ -109,31 +82,12 @@ namespace UberDeployer.Core.Deployment
           string.Format(
             "Deploy terminal app '{0} ({1}:{2})' to '{3}'.",
             _projectInfo.Name,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
-            _targetEnvironmentName);
+            DeploymentInfo.ProjectConfigurationName,
+            DeploymentInfo.ProjectConfigurationBuildId,
+            DeploymentInfo.TargetEnvironmentName);
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
-
-    #region Overrides of DeploymentTask
-
-    public override string ProjectName
-    {
-      get { return _projectInfo.Name; }
-    }
-
-    public override string ProjectConfigurationName
-    {
-      get { return _projectConfigurationName; }
-    }
-
-    public override string ProjectConfigurationBuildId
-    {
-      get { return _projectConfigurationBuildId; }
-    }
-
-    #endregion Overrides of DeploymentTask
+    #endregion Overrides of DeploymentTaskBase    
   }
 }

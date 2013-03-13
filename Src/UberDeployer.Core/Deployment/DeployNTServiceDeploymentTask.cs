@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.NtServices;
@@ -12,13 +13,12 @@ namespace UberDeployer.Core.Deployment
   public class DeployNtServiceDeploymentTask : DeploymentTask
   {
     private readonly IArtifactsRepository _artifactsRepository;
-    private readonly NtServiceProjectInfo _projectInfo;
 
-    private readonly string _projectConfigurationName;
-    private readonly string _projectConfigurationBuildId;
     private readonly INtServiceManager _ntServiceManager;
     private readonly IPasswordCollector _passwordCollector;
     private readonly IFailoverClusterManager _failoverClusterManager;
+
+    private NtServiceProjectInfo _ntServiceProjectInfo;
 
     #region Constructor(s)
 
@@ -28,11 +28,8 @@ namespace UberDeployer.Core.Deployment
       INtServiceManager ntServiceManager,
       IPasswordCollector passwordCollector,
       IFailoverClusterManager failoverClusterManager,
-      NtServiceProjectInfo projectInfo,
-      string projectConfigurationName,
-      string projectConfigurationBuildId,
-      string targetEnvironmentName)
-      : base(environmentInfoRepository, targetEnvironmentName)
+      NtServiceProjectInfo projectInfo)
+      : base(environmentInfoRepository)
     {
       if (artifactsRepository == null)
       {
@@ -49,16 +46,6 @@ namespace UberDeployer.Core.Deployment
         throw new ArgumentNullException("projectInfo");
       }
 
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
-      }
-
       if (passwordCollector == null)
       {
         throw new ArgumentNullException("passwordCollector");
@@ -70,9 +57,6 @@ namespace UberDeployer.Core.Deployment
       }
 
       _artifactsRepository = artifactsRepository;
-      _projectInfo = projectInfo;
-      _projectConfigurationName = projectConfigurationName;
-      _projectConfigurationBuildId = projectConfigurationBuildId;
       _ntServiceManager = ntServiceManager;
       _passwordCollector = passwordCollector;
       _failoverClusterManager = failoverClusterManager;
@@ -85,14 +69,14 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      _ntServiceProjectInfo = DeploymentInfo.ProjectInfo as NtServiceProjectInfo;
+
+      Guard.NotNull(_ntServiceProjectInfo, "_ntServiceProjectInfo");
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
           _artifactsRepository,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
           GetTempDirPath());
 
       AddSubTask(downloadArtifactsDeploymentStep);
@@ -100,16 +84,13 @@ namespace UberDeployer.Core.Deployment
       // create a step for extracting the artifacts
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
-          environmentInfo,
-          _projectInfo,
-          _projectConfigurationName,
-          _projectConfigurationBuildId,
+          environmentInfo,          
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
 
-      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
+      if (DeploymentInfo.ProjectInfo.ArtifactsAreEnvironmentSpecific)
       {
         var binariesConfiguratorStep = new ConfigureBinariesStep(
           environmentInfo.ConfigurationTemplateName, GetTempDirPath());
@@ -121,9 +102,9 @@ namespace UberDeployer.Core.Deployment
 
       if (deployToClusteredEnvironment)
       {
-        if (string.IsNullOrEmpty(environmentInfo.GetFailoverClusterGroupNameForProject(ProjectName)))
+        if (string.IsNullOrEmpty(environmentInfo.GetFailoverClusterGroupNameForProject(DeploymentInfo.ProjectName)))
         {
-          PostDiagnosticMessage(string.Format("Failover clustering for NT services is enabled for environment '{0}' but there is no cluster group mapping for project '{1}'.", environmentInfo.Name, ProjectName), DiagnosticMessageType.Warn);
+          PostDiagnosticMessage(string.Format("Failover clustering for NT services is enabled for environment '{0}' but there is no cluster group mapping for project '{1}'.", environmentInfo.Name, DeploymentInfo.ProjectName), DiagnosticMessageType.Warn);
 
           deployToClusteredEnvironment = false;
         }
@@ -150,33 +131,14 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Deploy NT service '{0} ({1}:{2})' to '{3}'.",
-            _projectInfo.Name,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
-            _targetEnvironmentName);
+            DeploymentInfo.ProjectInfo.Name,
+            DeploymentInfo.ProjectConfigurationName,
+            DeploymentInfo.ProjectConfigurationBuildId,
+            DeploymentInfo.TargetEnvironmentName);
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
-
-    #region Overrides of DeploymentTask
-
-    public override string ProjectName
-    {
-      get { return _projectInfo.Name; }
-    }
-
-    public override string ProjectConfigurationName
-    {
-      get { return _projectConfigurationName; }
-    }
-
-    public override string ProjectConfigurationBuildId
-    {
-      get { return _projectConfigurationBuildId; }
-    }
-
-    #endregion Overrides of DeploymentTask
+    #endregion Overrides of DeploymentTaskBase    
 
     #region Private methods
 
@@ -185,14 +147,14 @@ namespace UberDeployer.Core.Deployment
       Func<CollectedCredentials> collectCredentialsFunc =
         () =>
         {
-          EnvironmentUser environmentUser;
+          EnvironmentUser environmentUser;                    
 
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(
               _passwordCollector,
               environmentInfo,
               environmentInfo.AppServerMachineName,
-              _projectInfo.NtServiceUserId,
+              _ntServiceProjectInfo.NtServiceUserId,
               out environmentUser);
 
           return
@@ -202,7 +164,7 @@ namespace UberDeployer.Core.Deployment
         };
 
       DoPrepareCommonDeploymentSteps(
-        _projectInfo.NtServiceName,
+        _ntServiceProjectInfo.NtServiceName,
         environmentInfo.AppServerMachineName,
         environmentInfo.NtServicesBaseDirPath,
         environmentInfo.GetAppServerNetworkPath,
@@ -213,11 +175,11 @@ namespace UberDeployer.Core.Deployment
 
     private void DoPrepareDeploymentToClusteredEnvironment(EnvironmentInfo environmentInfo, string artifactsBinariesDirPath)
     {
-      string clusterGroupName = environmentInfo.GetFailoverClusterGroupNameForProject(_projectInfo.Name);
+      string clusterGroupName = environmentInfo.GetFailoverClusterGroupNameForProject(DeploymentInfo.ProjectName);
 
       if (string.IsNullOrEmpty(clusterGroupName))
       {
-        throw new InvalidOperationException(string.Format("There is no cluster group defined for project '{0}' in environment '{1}'.", _projectInfo.Name, environmentInfo.Name));
+        throw new InvalidOperationException(string.Format("There is no cluster group defined for project '{0}' in environment '{1}'.", DeploymentInfo.ProjectName, environmentInfo.Name));
       }
 
       string failoverClusterMachineName = environmentInfo.FailoverClusterMachineName;
@@ -265,7 +227,7 @@ namespace UberDeployer.Core.Deployment
               _passwordCollector,
               environmentInfo,
               machineName,
-              _projectInfo.NtServiceUserId,
+              _ntServiceProjectInfo.NtServiceUserId,
               out environmentUser);
 
           cachedCollectedCredentials =
@@ -286,7 +248,7 @@ namespace UberDeployer.Core.Deployment
         }
 
         DoPrepareCommonDeploymentSteps(
-          _projectInfo.NtServiceName,
+          _ntServiceProjectInfo.NtServiceName,
           machineName,
           environmentInfo.NtServicesBaseDirPath,
           absoluteLocalPath => EnvironmentInfo.GetNetworkPath(machineName, absoluteLocalPath),
@@ -315,7 +277,7 @@ namespace UberDeployer.Core.Deployment
       string previousMachineName = currentNodeName;
 
       DoPrepareCommonDeploymentSteps(
-        _projectInfo.NtServiceName,
+        _ntServiceProjectInfo.NtServiceName,
         previousMachineName,
         environmentInfo.NtServicesBaseDirPath,
         absoluteLocalPath => EnvironmentInfo.GetNetworkPath(previousMachineName, absoluteLocalPath),
@@ -338,11 +300,11 @@ namespace UberDeployer.Core.Deployment
           new StopNtServiceDeploymentStep(
             _ntServiceManager,
             appServerMachineName,
-            _projectInfo.NtServiceName));
+            _ntServiceProjectInfo.NtServiceName));
       }
 
       // create a step for copying the binaries to the target machine
-      string targetDirPath = Path.Combine(ntServicesBaseDirPath, _projectInfo.NtServiceDirName);
+      string targetDirPath = Path.Combine(ntServicesBaseDirPath, _ntServiceProjectInfo.NtServiceDirName);
 
       // create a backup step if needed
       string targetDirNetworkPath = getAppServerNetworkPathFunc(targetDirPath);
@@ -363,15 +325,15 @@ namespace UberDeployer.Core.Deployment
         CollectedCredentials collectedCredentials = collectCredentialsFunc();
 
         // create a step for installing the service,
-        string serviceExecutablePath = Path.Combine(targetDirPath, _projectInfo.NtServiceExeName);
+        string serviceExecutablePath = Path.Combine(targetDirPath, _ntServiceProjectInfo.NtServiceExeName);
 
         var ntServiceDescriptor =
           new NtServiceDescriptor(
-            _projectInfo.NtServiceName,
+            _ntServiceProjectInfo.NtServiceName,
             serviceExecutablePath,
             ServiceAccount.NetworkService,
             ServiceStartMode.Automatic,
-            _projectInfo.NtServiceDisplayName,
+            _ntServiceProjectInfo.NtServiceDisplayName,
             collectedCredentials.UserName,
             collectedCredentials.Password);
 
@@ -389,7 +351,7 @@ namespace UberDeployer.Core.Deployment
           new StartNtServiceDeploymentStep(
             _ntServiceManager,
             appServerMachineName,
-            _projectInfo.NtServiceName));
+            _ntServiceProjectInfo.NtServiceName));
       }
     }
 

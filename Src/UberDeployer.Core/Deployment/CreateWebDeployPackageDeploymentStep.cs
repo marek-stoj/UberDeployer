@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Deployment

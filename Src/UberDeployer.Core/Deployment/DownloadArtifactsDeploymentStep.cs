@@ -7,35 +7,17 @@ namespace UberDeployer.Core.Deployment
   public class DownloadArtifactsDeploymentStep : DeploymentStep
   {
     private readonly IArtifactsRepository _artifactsRepository;
-    private readonly ProjectInfo _projectInfo;
-    private readonly string _projectConfigurationName;
-    private readonly string _projectConfigurationBuildId;
     private readonly string _targetDirPath;
     
     private readonly string _artifactsFilePath;
 
     #region Constructor(s)
 
-    public DownloadArtifactsDeploymentStep(IArtifactsRepository artifactsRepository, ProjectInfo projectInfo, string projectConfigurationName, string projectConfigurationBuildId, string targetDirPath)
+    public DownloadArtifactsDeploymentStep(IArtifactsRepository artifactsRepository, string targetDirPath)
     {
       if (artifactsRepository == null)
       {
         throw new ArgumentNullException("artifactsRepository");
-      }
-
-      if (projectInfo == null)
-      {
-        throw new ArgumentNullException("projectInfo");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationName");
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "projectConfigurationBuildId");
       }
 
       if (string.IsNullOrEmpty(targetDirPath))
@@ -44,9 +26,6 @@ namespace UberDeployer.Core.Deployment
       }
 
       _artifactsRepository = artifactsRepository;
-      _projectInfo = projectInfo;
-      _projectConfigurationName = projectConfigurationName;
-      _projectConfigurationBuildId = projectConfigurationBuildId;
       _targetDirPath = targetDirPath;
 
       _artifactsFilePath = Path.Combine(_targetDirPath, "artifacts.zip");
@@ -59,9 +38,9 @@ namespace UberDeployer.Core.Deployment
     protected override void DoExecute()
     {
       _artifactsRepository.GetArtifacts(
-        _projectInfo.ArtifactsRepositoryName,
-        _projectConfigurationName,
-        _projectConfigurationBuildId,
+        DeploymentInfo.ProjectInfo.ArtifactsRepositoryName,
+        DeploymentInfo.ProjectConfigurationName,
+        DeploymentInfo.ProjectConfigurationBuildId,
         _artifactsFilePath);
     }
 
@@ -72,9 +51,9 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Download artifacts of project '{0} ({1}:{2})' to '{3}'.'",
-            _projectInfo.Name,
-            _projectConfigurationName,
-            _projectConfigurationBuildId,
+            DeploymentInfo.ProjectName,
+            DeploymentInfo.ProjectConfigurationName,
+            DeploymentInfo.ProjectConfigurationBuildId,
             _targetDirPath);
       }
     }

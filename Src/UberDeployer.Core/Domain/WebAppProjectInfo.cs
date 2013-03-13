@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
 
 namespace UberDeployer.Core.Domain
@@ -37,23 +39,16 @@ namespace UberDeployer.Core.Domain
       AppPool = appPoolInfo;
     }
 
-    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName)
+    public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {
-      if (objectFactory == null)
-      {
-        throw new ArgumentNullException("objectFactory");
-      }
+      Guard.NotNull(objectFactory, "objectFactory");      
 
       return
         new DeployWebAppDeploymentTask(
           objectFactory.CreateIMsDeploy(),
           objectFactory.CreateEnvironmentInfoRepository(),
           objectFactory.CreateArtifactsRepository(),
-          objectFactory.CreateIIisManager(),
-          this,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName);
+          objectFactory.CreateIIisManager());
     }
 
     public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
