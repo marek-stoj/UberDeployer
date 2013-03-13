@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
-using UberDeployer.Core.Domain.InputParameters;
 using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment

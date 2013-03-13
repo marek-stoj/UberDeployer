@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Domain.Input;
 using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.MsDeploy;
 
@@ -38,7 +39,7 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      WebInputParams webAppProjectInfo = (WebInputParams)DeploymentInfo.InputParams;
+      WebAppInputParams webAppProjectInfo = (WebAppInputParams)DeploymentInfo.InputParams;
 
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 

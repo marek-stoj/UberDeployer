@@ -27,13 +27,8 @@ namespace UberDeployer.Core.Tests.Generators
           "artifactsRepositoryName",
           "artifactsRepositoryDirName",
           true,
-          "iisSiteName",
           "webAppName",
-          "webAppDirName",
-          new IisAppPoolInfo(
-            "name",
-            new IisAppPoolVersion(),
-            IisAppPoolMode.Classic));
+          "webAppDirName");
     }
 
     public static WebServiceProjectInfo GetWebServiceProjectInfo()
@@ -44,13 +39,8 @@ namespace UberDeployer.Core.Tests.Generators
           "artifactsRepositoryName",
           "artifactsRepositoryDirName",
           true,
-          "iisSiteName",
           "webAppName",
-          "webAppDirName",
-          new IisAppPoolInfo(
-            "name",
-            new IisAppPoolVersion(),
-            IisAppPoolMode.Classic));
+          "webAppDirName");
     }
 
     public static DbProjectInfo GetDbProjectInfo(bool areEnvironmentSpecific = false)

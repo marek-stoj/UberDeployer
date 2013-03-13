@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using UberDeployer.Core.Domain;
-using UberDeployer.Core.Domain.InputParameters;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Agent.Service
 {
@@ -51,11 +50,11 @@ namespace UberDeployer.Agent.Service
     }
 
     //TODO MARIO move to other converter?
-    public static DeploymentInfo ConvertDeploymentInfo(Proxy.Dto.DeploymentInfo deploymentInfo, ProjectInfo projectInfo)
+    public static Core.Domain.DeploymentInfo ConvertDeploymentInfo(Proxy.Dto.DeploymentInfo deploymentInfo, Core.Domain.ProjectInfo projectInfo)
     {
       InputParams inputParams;
 
-      if (projectInfo is WebAppProjectInfo)
+      if (projectInfo is Core.Domain.WebAppProjectInfo)
       {
         inputParams = new WebAppInputParams { WebMachines = deploymentInfo.TargetMachines };
       }
@@ -65,7 +64,7 @@ namespace UberDeployer.Agent.Service
       }
 
       return
-        new DeploymentInfo(
+        new Core.Domain.DeploymentInfo(
           deploymentInfo.ProjectName,
           deploymentInfo.ProjectConfigurationName,
           deploymentInfo.ProjectConfigurationBuildId,

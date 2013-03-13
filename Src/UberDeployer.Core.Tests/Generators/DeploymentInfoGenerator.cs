@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UberDeployer.Core.Domain;
-using UberDeployer.Core.Domain.InputParameters;
+﻿using UberDeployer.Core.Domain;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Tests.Generators
 {

@@ -1,6 +1,6 @@
 ﻿using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Domain.InputParameters;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
