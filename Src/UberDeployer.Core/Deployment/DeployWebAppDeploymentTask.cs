@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Iis;
@@ -19,11 +21,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public DeployWebAppDeploymentTask(
-      IMsDeploy msDeploy,
-      IEnvironmentInfoRepository environmentInfoRepository,
-      IArtifactsRepository artifactsRepository,
-      IIisManager iisManager)
+    public DeployWebAppDeploymentTask(IMsDeploy msDeploy, IEnvironmentInfoRepository environmentInfoRepository, IArtifactsRepository artifactsRepository, IIisManager iisManager)
       : base(environmentInfoRepository)
     {
       if (msDeploy == null)
@@ -52,8 +50,22 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      WebInputParams webAppProjectInfo = (WebInputParams) DeploymentInfo.InputParams;
       
+      EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+
+      if (webAppProjectInfo.WebMachines == null || !webAppProjectInfo.WebMachines.Any())
+      {
+        throw new DeploymentTaskException(string.Format("No web machine for '{0}' has been specified.", DeploymentInfo.TargetEnvironmentName));
+      }
+
+      string[] invalidMachineNames = webAppProjectInfo.WebMachines.Except(environmentInfo.WebServerMachineNames).ToArray();
+
+      if (invalidMachineNames.Any())
+      {
+        throw new DeploymentTaskException(string.Format("Invalid web machines '{0}' have been specified.", string.Join(",", invalidMachineNames)));        
+      }
+
       _webAppProjectInfo = DeploymentInfo.ProjectInfo as WebAppProjectInfo;
       Guard.NotNull(_webAppProjectInfo, "_webAppProjectInfo");
 
@@ -82,7 +94,7 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(binariesConfiguratorStep);
       }
 
-      foreach (string webServerMachineName in environmentInfo.WebServerMachineNames)
+      foreach (string webServerMachineName in webAppProjectInfo.WebMachines)
       {
         string webApplicationPhysicalPath =
           _iisManager.GetWebApplicationPath(

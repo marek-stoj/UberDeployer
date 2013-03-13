@@ -224,12 +224,13 @@ namespace UberDeployer.WebApp.Core.Controllers
         _agentService.DeployAsync(
           _sessionService.UniqueClientId,
           SecurityUtils.CurrentUsername,
-          new UberDeployer.Agent.Proxy.Dto.DeploymentInfo
+          new DeploymentInfo
             {
               ProjectName = projectName,
               ProjectConfigurationName = projectConfigurationName,
               ProjectConfigurationBuildId = projectConfigurationBuildId,
-              TargetEnvironmentName = targetEnvironmentName
+              TargetEnvironmentName = targetEnvironmentName,
+              TargetMachines = targetMachines
             });
 
         return Json(new { status = "OK" });
