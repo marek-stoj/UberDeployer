@@ -8,6 +8,12 @@ var g_TargetEnvironmentCookieExpirationInDays = 365;
 
 var g_ProjectList = [];
 
+$.ajaxSetup({
+  'error' : function(error) {
+    domHelper.showError(error);
+  }
+});
+
 function setAppPrefix(appPrefix) {
   g_AppPrefix = appPrefix;
 }
@@ -166,9 +172,7 @@ function loadEnvironments(onFinishedCallback) {
 
 function loadWebMachinesList() {
   var $lstEnvironments = domHelper.getEnvironmentsElement();
-
-  domHelper.hideError();
-
+  
   var $lstMachines = domHelper.getMachinesElement();
 
   $lstMachines.empty();
@@ -183,21 +187,16 @@ function loadWebMachinesList() {
   $.getJSON(
     g_AppPrefix + 'Api/GetWebMachineNames',
     { envName: $lstEnvironments.val() },
-    function (machines) {
+    function(machines) {
       $lstMachines.removeAttr('disabled');
 
-      $.each(machines, function (i, val) {
+      $.each(machines, function(i, val) {
         $lstMachines.append(
           $('<option></option>')
             .attr('value', val)
             .attr('selected', 'selected')
             .text(val));
       });
-    })
-    .error(function(error) {
-      domHelper.showError(error);
-    })
-    .complete(function() {
     });
 }
 
@@ -314,10 +313,7 @@ domHelper.getSelectedMachines = function() {
 domHelper.showError = function(error) {
   $('#errorMsg').html('<strong>Error</strong>, Status Code:' + error.status + ' ' + error.statusText + ' ' + error.responseText);
   $('#errorMsg').show();
-};
-
-domHelper.hideError = function() {
-  $('#errorMsg').hide();
+  $('#main-container').hide();
 };
 
 function getSelectedTargetEnvironmentName() {
