@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
@@ -17,6 +18,11 @@ namespace UberDeployer.Core.Domain
     #endregion
 
     #region Overrides of ProjectInfo
+
+    public override InputParams CreateEmptyInputParams()
+    {
+      return new DbInputParams();
+    }
 
     public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {

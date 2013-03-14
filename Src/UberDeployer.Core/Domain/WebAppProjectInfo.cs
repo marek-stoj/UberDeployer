@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
   public class WebAppProjectInfo : ProjectInfo
   {
+    #region Ctor(s)
+
     public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string webAppName, string webAppDirName)
       : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
@@ -17,6 +20,15 @@ namespace UberDeployer.Core.Domain
 
       WebAppName = webAppName;
       WebAppDirName = webAppDirName;
+    }
+
+    #endregion
+
+    #region Overrides of ProjectInfo
+
+    public override InputParams CreateEmptyInputParams()
+    {
+      return new WebAppInputParams();
     }
 
     public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
@@ -64,8 +76,14 @@ namespace UberDeployer.Core.Domain
           .ToList();
     }
 
+    #endregion
+
+    #region Properties
+
     public string WebAppName { get; private set; }
 
     public string WebAppDirName { get; private set; }
+    
+    #endregion
   }
 }

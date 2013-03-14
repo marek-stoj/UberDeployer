@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
@@ -23,6 +24,8 @@ namespace UberDeployer.Core.Domain
       ArtifactsRepositoryDirName = artifactsRepositoryDirName;
       ArtifactsAreEnvironmentSpecific = !artifactsAreNotEnvironmentSpecific;
     }
+
+    public abstract InputParams CreateEmptyInputParams();
 
     public abstract DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory);
 

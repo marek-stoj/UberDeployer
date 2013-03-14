@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
@@ -43,6 +43,11 @@ namespace UberDeployer.Core.Domain
     #endregion
 
     #region Overrides of ProjectInfo
+
+    public override InputParams CreateEmptyInputParams()
+    {
+      return new NtServiceInputParams();
+    }
 
     public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {

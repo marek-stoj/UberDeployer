@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
 using System.IO;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
@@ -12,25 +14,10 @@ namespace UberDeployer.Core.Domain
     public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string schedulerAppName, string schedulerAppDirName, string schedulerAppExeName, string schedulerAppUserId, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
       : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
-      if (string.IsNullOrEmpty(schedulerAppName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "schedulerAppName");
-      }
-
-      if (string.IsNullOrEmpty(schedulerAppDirName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "schedulerAppDirName");
-      }
-
-      if (string.IsNullOrEmpty(schedulerAppExeName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "schedulerAppExeName");
-      }
-
-      if (schedulerAppUserId == null)
-      {
-        throw new ArgumentNullException("schedulerAppUserId");
-      }
+      Guard.NotNullNorEmpty(schedulerAppName, "schedulerAppName");
+      Guard.NotNullNorEmpty(schedulerAppDirName, "schedulerAppDirName");
+      Guard.NotNullNorEmpty(schedulerAppExeName, "schedulerAppExeName");
+      Guard.NotNull(schedulerAppUserId, "schedulerAppUserId");
       
       if (scheduledHour < 0 || scheduledHour > 23)
       {
@@ -59,7 +46,12 @@ namespace UberDeployer.Core.Domain
     #endregion
 
     #region Overrides of ProjectInfo
-    
+
+    public override InputParams CreateEmptyInputParams()
+    {
+      return new SchedulerAppInputParams();
+    }
+
     public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {
       if (objectFactory == null)

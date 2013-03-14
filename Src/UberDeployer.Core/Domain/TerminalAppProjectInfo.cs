@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
@@ -12,20 +14,9 @@ namespace UberDeployer.Core.Domain
     public TerminalAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string terminalAppName, string terminalAppDirName, string terminalAppExeName)
       : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
-      if (string.IsNullOrEmpty(terminalAppName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "terminalAppName");
-      }
-
-      if (string.IsNullOrEmpty(terminalAppDirName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "terminalAppDirName");
-      }
-
-      if (string.IsNullOrEmpty(terminalAppExeName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "terminalAppExeName");
-      }
+      Guard.NotNullNorEmpty(terminalAppName, "terminalAppName");
+      Guard.NotNullNorEmpty(terminalAppDirName, "terminalAppDirName");
+      Guard.NotNullNorEmpty(terminalAppExeName, "terminalAppExeName");
 
       TerminalAppName = terminalAppName;
       TerminalAppDirName = terminalAppDirName;
@@ -35,6 +26,11 @@ namespace UberDeployer.Core.Domain
     #endregion
 
     #region Overrides of ProjectInfo
+
+    public override InputParams CreateEmptyInputParams()
+    {
+      return new TerminalAppInputParams();
+    }
 
     public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {

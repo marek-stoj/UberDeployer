@@ -40,13 +40,14 @@ namespace UberDeployer.ConsoleApp.Commands
         return 1;
       }
 
-      var deploymentInfo = new DeploymentInfo(
-        projectName, 
-        projectConfigurationName,
-        projectConfigurationBuildId,
-        targetEnvironmentName,
-        projectInfo,
-        null); //TODO MARIO create InputParams
+      var deploymentInfo =
+        new DeploymentInfo(
+          projectName,
+          projectConfigurationName,
+          projectConfigurationBuildId,
+          targetEnvironmentName,
+          projectInfo,
+          projectInfo.CreateEmptyInputParams());
 
       try
       {
