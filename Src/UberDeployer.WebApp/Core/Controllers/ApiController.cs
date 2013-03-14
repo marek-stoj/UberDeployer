@@ -340,7 +340,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       ProjectInfo projectInfo =
         _agentService.GetProjectInfos(
           new ProjectFilter { Name = projectName })
-          .SingleOrDefault();
+          .SingleOrDefault(pi => pi.Name == projectName);
 
       if (projectInfo == null)
       {
