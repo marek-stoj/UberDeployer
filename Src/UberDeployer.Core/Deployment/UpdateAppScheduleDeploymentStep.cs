@@ -13,8 +13,6 @@ namespace UberDeployer.Core.Deployment
     private readonly string _userName;
     private readonly string _password;
 
-    private SchedulerAppProjectInfo _schedulerAppProjectInfo;
-
     #region Constructor(s)
 
     // TODO IMM HI: can we update scheduler app without user name and password?
@@ -68,12 +66,11 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      _schedulerAppProjectInfo = (SchedulerAppProjectInfo) DeploymentInfo.ProjectInfo;
-
-      string taskName = _schedulerAppProjectInfo.SchedulerAppName;
-      int scheduledHour = _schedulerAppProjectInfo.ScheduledHour;
-      int scheduledMinute = _schedulerAppProjectInfo.ScheduledMinute;
-      int executionTimeLimitInMinutes = _schedulerAppProjectInfo.ExecutionTimeLimitInMinutes;
+      var schedulerAppProjectInfo = (SchedulerAppProjectInfo) DeploymentInfo.ProjectInfo;
+      string taskName = schedulerAppProjectInfo.SchedulerAppName;
+      int scheduledHour = schedulerAppProjectInfo.ScheduledHour;
+      int scheduledMinute = schedulerAppProjectInfo.ScheduledMinute;
+      int executionTimeLimitInMinutes = schedulerAppProjectInfo.ExecutionTimeLimitInMinutes;
 
       var scheduledTaskSpecification =
         new ScheduledTaskSpecification(
@@ -94,14 +91,16 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
+        var schedulerAppProjectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
+
         return
           string.Format(
           "Update schedule of app named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes.",
-          _schedulerAppProjectInfo.Name,
+          schedulerAppProjectInfo.Name,
           _machineName,
-          _schedulerAppProjectInfo.ScheduledHour.ToString().PadLeft(2, '0'),
-          _schedulerAppProjectInfo.ScheduledMinute.ToString().PadLeft(2, '0'),
-          _schedulerAppProjectInfo.ExecutionTimeLimitInMinutes);
+          schedulerAppProjectInfo.ScheduledHour.ToString().PadLeft(2, '0'),
+          schedulerAppProjectInfo.ScheduledMinute.ToString().PadLeft(2, '0'),
+          schedulerAppProjectInfo.ExecutionTimeLimitInMinutes);
       }
     }
 

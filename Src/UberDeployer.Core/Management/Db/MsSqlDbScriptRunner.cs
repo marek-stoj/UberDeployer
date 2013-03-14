@@ -24,7 +24,7 @@ namespace UberDeployer.Core.Management.Db
       _databaseServer = databaseServer;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region IDbScriptRunner Members
 

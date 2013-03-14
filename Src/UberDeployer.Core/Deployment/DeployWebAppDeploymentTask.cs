@@ -37,7 +37,7 @@ namespace UberDeployer.Core.Deployment
       _iisManager = iisManager;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
@@ -185,6 +185,6 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
+    #endregion
   }
 }

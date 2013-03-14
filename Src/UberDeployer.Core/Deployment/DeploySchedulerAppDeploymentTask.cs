@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 
@@ -44,7 +43,7 @@ namespace UberDeployer.Core.Deployment
       _passwordCollector = passwordCollector;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
@@ -52,7 +51,7 @@ namespace UberDeployer.Core.Deployment
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
-      _projectInfo = (SchedulerAppProjectInfo) DeploymentInfo.ProjectInfo;
+      _projectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
@@ -92,7 +91,7 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
-          new Lazy<string>(() =>extractArtifactsDeploymentStep.BinariesDirPath),
+          new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           environmentInfo.GetAppServerNetworkPath(targetDirPath)));
 
       // determine if the task should be scheduled anew or if its schedule should be updated
@@ -118,7 +117,7 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(
           new ScheduleNewAppDeploymentStep(
             _taskScheduler,
-            machineName,            
+            machineName,
             executablePath,
             environmentUser.UserName,
             environmentUserPassword));
@@ -129,7 +128,7 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(
           new UpdateAppScheduleDeploymentStep(
             _taskScheduler,
-            machineName,            
+            machineName,
             executablePath,
             environmentUser.UserName,
             environmentUserPassword));
@@ -143,13 +142,13 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Deploy scheduler app '{0} ({1}:{2})' to '{3}'.",
-            _projectInfo.Name,
+            DeploymentInfo.ProjectName,
             DeploymentInfo.ProjectConfigurationName,
             DeploymentInfo.ProjectConfigurationBuildId,
             DeploymentInfo.TargetEnvironmentName);
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase    
+    #endregion
   }
 }

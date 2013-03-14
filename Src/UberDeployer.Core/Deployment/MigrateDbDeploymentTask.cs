@@ -39,7 +39,7 @@ namespace UberDeployer.Core.Deployment
       _dbVersionProvider = dbVersionProvider;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
@@ -100,7 +100,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
+    #endregion
 
     #region Private helper methods
 

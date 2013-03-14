@@ -56,7 +56,7 @@ namespace UberDeployer.Core.Deployment
       _failoverClusterManager = failoverClusterManager;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
@@ -108,13 +108,13 @@ namespace UberDeployer.Core.Deployment
       {
         DoPrepareDeploymentToClusteredEnvironment(
           environmentInfo,
-          extractArtifactsDeploymentStep.BinariesDirPath);
+          new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath));
       }
       else
       {
         DoPrepareDeploymentToStandardEnvironment(
           environmentInfo,
-          extractArtifactsDeploymentStep.BinariesDirPath);
+          new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath));
       }
     }
 
@@ -132,11 +132,11 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase    
+    #endregion
 
     #region Private methods
 
-    private void DoPrepareDeploymentToStandardEnvironment(EnvironmentInfo environmentInfo, string artifactsBinariesDirPath)
+    private void DoPrepareDeploymentToStandardEnvironment(EnvironmentInfo environmentInfo, Lazy<string> artifactsBinariesDirPathProvider)
     {
       Func<CollectedCredentials> collectCredentialsFunc =
         () =>
@@ -162,12 +162,12 @@ namespace UberDeployer.Core.Deployment
         environmentInfo.AppServerMachineName,
         environmentInfo.NtServicesBaseDirPath,
         environmentInfo.GetAppServerNetworkPath,
-        artifactsBinariesDirPath,
+        artifactsBinariesDirPathProvider,
         collectCredentialsFunc,
         true);
     }
 
-    private void DoPrepareDeploymentToClusteredEnvironment(EnvironmentInfo environmentInfo, string artifactsBinariesDirPath)
+    private void DoPrepareDeploymentToClusteredEnvironment(EnvironmentInfo environmentInfo, Lazy<string> artifactsBinariesDirPathProvider)
     {
       string clusterGroupName = environmentInfo.GetFailoverClusterGroupNameForProject(DeploymentInfo.ProjectName);
 
@@ -246,7 +246,7 @@ namespace UberDeployer.Core.Deployment
           machineName,
           environmentInfo.NtServicesBaseDirPath,
           absoluteLocalPath => EnvironmentInfo.GetNetworkPath(machineName, absoluteLocalPath),
-          artifactsBinariesDirPath,
+          artifactsBinariesDirPathProvider,
           collectCredentialsFunc(machineName),
           false);
       }
@@ -275,12 +275,12 @@ namespace UberDeployer.Core.Deployment
         previousMachineName,
         environmentInfo.NtServicesBaseDirPath,
         absoluteLocalPath => EnvironmentInfo.GetNetworkPath(previousMachineName, absoluteLocalPath),
-        artifactsBinariesDirPath,
+        artifactsBinariesDirPathProvider,
         collectCredentialsFunc(previousMachineName),
         false);
     }
 
-    private void DoPrepareCommonDeploymentSteps(string ntServiceName, string appServerMachineName, string ntServicesBaseDirPath, Func<string, string> getAppServerNetworkPathFunc, string artifactsBinariesDirPath, Func<CollectedCredentials> collectCredentialsFunc, bool startServiceAfterDeployment)
+    private void DoPrepareCommonDeploymentSteps(string ntServiceName, string appServerMachineName, string ntServicesBaseDirPath, Func<string, string> getAppServerNetworkPathFunc, Lazy<string> artifactsBinariesDirPathProvider, Func<CollectedCredentials> collectCredentialsFunc, bool startServiceAfterDeployment)
     {
       // check if the service is present on the target machine
       bool serviceExists =
@@ -310,7 +310,7 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
-          new Lazy<string>(() => artifactsBinariesDirPath),
+          artifactsBinariesDirPathProvider,
           getAppServerNetworkPathFunc(targetDirPath)));
 
       if (!serviceExists)
@@ -349,6 +349,6 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Private methods
+    #endregion
   }
 }

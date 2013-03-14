@@ -28,7 +28,7 @@ namespace UberDeployer.Core.Deployment
       _artifactsRepository = artifactsRepository;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
@@ -92,6 +92,6 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
+    #endregion
   }
 }

@@ -13,8 +13,6 @@ namespace UberDeployer.Core.Deployment
     private readonly string _userName;
     private readonly string _password;
 
-    private SchedulerAppProjectInfo _schedulerAppProjectInfo;
-
     #region Constructor(s)
 
     public ScheduleNewAppDeploymentStep(
@@ -38,7 +36,7 @@ namespace UberDeployer.Core.Deployment
       {
         throw new ArgumentException("Argument can't be null nor empty.", "executablePath");
       }
-      
+
       if (!Path.IsPathRooted(executablePath))
       {
         throw new ArgumentException(string.Format("Executable path ('{0}') is not an absolute path.", executablePath), "executablePath");
@@ -55,7 +53,7 @@ namespace UberDeployer.Core.Deployment
       }
 
       _taskScheduler = taskScheduler;
-      _machineName = machineName;      
+      _machineName = machineName;
       _executablePath = executablePath;
       _userName = userName;
       _password = password;
@@ -67,12 +65,11 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      _schedulerAppProjectInfo = (SchedulerAppProjectInfo) DeploymentInfo.ProjectInfo;
-
-      string taskName = _schedulerAppProjectInfo.SchedulerAppName;
-      int scheduledHour = _schedulerAppProjectInfo.ScheduledHour;
-      int scheduledMinute = _schedulerAppProjectInfo.ScheduledMinute;
-      int executionTimeLimitInMinutes = _schedulerAppProjectInfo.ExecutionTimeLimitInMinutes;
+      var schedulerAppProjectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
+      string taskName = schedulerAppProjectInfo.SchedulerAppName;
+      int scheduledHour = schedulerAppProjectInfo.ScheduledHour;
+      int scheduledMinute = schedulerAppProjectInfo.ScheduledMinute;
+      int executionTimeLimitInMinutes = schedulerAppProjectInfo.ExecutionTimeLimitInMinutes;
 
       var scheduledTaskSpecification =
         new ScheduledTaskSpecification(
@@ -94,15 +91,17 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
+        var schedulerAppProjectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
+
         return
           string.Format(
-          "Schedule new app named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes under user named '{5}'.",
-          _schedulerAppProjectInfo.Name,
-          _machineName,
-          _schedulerAppProjectInfo.ScheduledHour.ToString().PadLeft(2, '0'),
-          _schedulerAppProjectInfo.ScheduledMinute.ToString().PadLeft(2, '0'),
-          _schedulerAppProjectInfo.ExecutionTimeLimitInMinutes,
-          _userName);
+            "Schedule new app named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes under user named '{5}'.",
+            schedulerAppProjectInfo.Name,
+            _machineName,
+            schedulerAppProjectInfo.ScheduledHour.ToString().PadLeft(2, '0'),
+            schedulerAppProjectInfo.ScheduledMinute.ToString().PadLeft(2, '0'),
+            schedulerAppProjectInfo.ExecutionTimeLimitInMinutes,
+            _userName);
       }
     }
 

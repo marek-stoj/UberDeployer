@@ -37,7 +37,7 @@ namespace UberDeployer.Core.Deployment
       _targetArtifactsDirPath = targetArtifactsDirPath;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentStep
 
@@ -99,7 +99,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentStep
+    #endregion
 
     #region Properties
     
@@ -118,6 +118,6 @@ namespace UberDeployer.Core.Deployment
       }
     }    
 
-    #endregion Properties
+    #endregion
   }
 }
