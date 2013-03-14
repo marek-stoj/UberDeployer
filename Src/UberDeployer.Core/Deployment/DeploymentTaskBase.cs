@@ -10,21 +10,6 @@ namespace UberDeployer.Core.Deployment
 
     private DeploymentInfo _deploymentInfo;
 
-    internal DeploymentInfo DeploymentInfo
-    {
-      get
-      {
-        if (_deploymentInfo == null)
-        {
-          throw new InvalidOperationException("The task hasn't been prepared.");
-        }
-
-        return _deploymentInfo;
-      }
-
-      private set { _deploymentInfo = value; }
-    }
-
     public void Prepare(DeploymentInfo deploymentInfo)
     {
       Guard.NotNull(deploymentInfo, "DeploymentInfo");
@@ -93,5 +78,20 @@ namespace UberDeployer.Core.Deployment
     }
 
     protected bool IsPrepared { get; private set; }
+
+    protected DeploymentInfo DeploymentInfo
+    {
+      get
+      {
+        if (_deploymentInfo == null)
+        {
+          throw new InvalidOperationException("The task hasn't been prepared.");
+        }
+
+        return _deploymentInfo;
+      }
+
+      private set { _deploymentInfo = value; }
+    }
   }
 }

@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using UberDeployer.Core.Domain.Input;
+﻿using System;
+using AutoMapper;
+using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Agent.Service
 {
@@ -28,6 +29,8 @@ namespace UberDeployer.Agent.Service
 
       Mapper.CreateMap<Core.Domain.EnvironmentUser, Proxy.Dto.EnvironmentUser>();
 
+      Mapper.CreateMap<Core.Domain.ProjectToWebSiteMapping, Proxy.Dto.ProjectToWebSiteMapping>();
+      Mapper.CreateMap<Core.Domain.ProjectToAppPoolMapping, Proxy.Dto.ProjectToAppPoolMapping>();
       Mapper.CreateMap<Core.Domain.ProjectToFailoverClusterGroupMapping, Proxy.Dto.ProjectToFailoverClusterGroupMapping>();
 
       Mapper.CreateMap<Core.TeamCity.Models.ProjectConfiguration, Proxy.Dto.TeamCity.ProjectConfiguration>();
@@ -38,8 +41,6 @@ namespace UberDeployer.Agent.Service
 
       Mapper.CreateMap<Core.Deployment.DiagnosticMessage, Proxy.Dto.DiagnosticMessage>();
       Mapper.CreateMap<Core.Deployment.DiagnosticMessageType, Proxy.Dto.DiagnosticMessageType>();
-
-      Mapper.CreateMap<Proxy.Dto.DeploymentInfo, Core.Domain.DeploymentInfo>();
 
       Mapper.AssertConfigurationIsValid();
     }
@@ -52,16 +53,7 @@ namespace UberDeployer.Agent.Service
     //TODO MARIO move to other converter?
     public static Core.Domain.DeploymentInfo ConvertDeploymentInfo(Proxy.Dto.DeploymentInfo deploymentInfo, Core.Domain.ProjectInfo projectInfo)
     {
-      InputParams inputParams;
-
-      if (projectInfo is Core.Domain.WebAppProjectInfo)
-      {
-        inputParams = new WebAppInputParams { WebMachines = deploymentInfo.TargetMachines };
-      }
-      else
-      {
-        inputParams = null; //TODO MARIO create InputParams
-      }
+      Core.Domain.Input.InputParams inputParams = ConvertInputParams(deploymentInfo.InputParams);
 
       return
         new Core.Domain.DeploymentInfo(
@@ -71,6 +63,57 @@ namespace UberDeployer.Agent.Service
           deploymentInfo.TargetEnvironmentName,
           projectInfo,
           inputParams);
+    }
+
+    private static Core.Domain.Input.InputParams ConvertInputParams(Proxy.Dto.Input.InputParams inputParams)
+    {
+      Guard.NotNull(inputParams, "inputParams");
+
+      var dbInputParams = inputParams as Proxy.Dto.Input.DbInputParams;
+
+      if (dbInputParams != null)
+      {
+        return new Core.Domain.Input.DbInputParams();
+      }
+
+      var ntServiceInputParams = inputParams as Proxy.Dto.Input.NtServiceInputParams;
+
+      if (ntServiceInputParams != null)
+      {
+        return new Core.Domain.Input.NtServiceInputParams();
+      }
+
+      var schedulerAppInputParams = inputParams as Proxy.Dto.Input.SchedulerAppInputParams;
+
+      if (schedulerAppInputParams != null)
+      {
+        return new Core.Domain.Input.SchedulerAppInputParams();
+      }
+
+      var terminalAppInputParams = inputParams as Proxy.Dto.Input.TerminalAppInputParams;
+
+      if (terminalAppInputParams != null)
+      {
+        return new Core.Domain.Input.TerminalAppInputParams();
+      }
+
+      var webAppInputParams = inputParams as Proxy.Dto.Input.WebAppInputParams;
+
+      if (webAppInputParams != null)
+      {
+        return
+          new Core.Domain.Input.WebAppInputParams(
+            webAppInputParams.OnlyIncludedWebMachines);
+      }
+
+      var webServiceInputParams = inputParams as Proxy.Dto.Input.WebServiceInputParams;
+
+      if (webServiceInputParams != null)
+      {
+        return new Core.Domain.Input.WebServiceInputParams();
+      }
+
+      throw new NotSupportedException(string.Format("Unknown input params type: '{0}'.", inputParams.GetType().FullName));
     }
   }
 }

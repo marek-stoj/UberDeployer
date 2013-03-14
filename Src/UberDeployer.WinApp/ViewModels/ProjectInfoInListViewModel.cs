@@ -23,7 +23,7 @@ namespace UberDeployer.WinApp.ViewModels
       get { return ProjectInfo.Name; }
     }
 
-    public string Type
+    public ProjectType Type
     {
       get { return ProjectInfo.Type; }
     }

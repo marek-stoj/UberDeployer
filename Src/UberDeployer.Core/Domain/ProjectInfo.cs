@@ -25,6 +25,8 @@ namespace UberDeployer.Core.Domain
       ArtifactsAreEnvironmentSpecific = !artifactsAreNotEnvironmentSpecific;
     }
 
+    public abstract ProjectType Type { get; }
+
     public abstract InputParams CreateEmptyInputParams();
 
     public abstract DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory);
@@ -32,11 +34,6 @@ namespace UberDeployer.Core.Domain
     public abstract IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo);
 
     public string Name { get; private set; }
-
-    public virtual string Type
-    {
-      get { return GetType().Name.Replace("ProjectInfo", ""); }
-    }
 
     public string ArtifactsRepositoryName { get; private set; }
 

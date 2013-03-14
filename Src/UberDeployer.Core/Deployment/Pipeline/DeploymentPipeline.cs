@@ -33,7 +33,7 @@ namespace UberDeployer.Core.Deployment.Pipeline
 
       bool finishedSuccessfully = false;
 
-      OnDeploymentTaskStarting(deploymentTask, deploymentContext);
+      OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext);
 
       try
       {
@@ -47,25 +47,23 @@ namespace UberDeployer.Core.Deployment.Pipeline
         deploymentContext.FinishedSuccessfully = finishedSuccessfully;
 
         // TODO IMM HI: catch exceptions; pass them upstream using some mechanisms like DeploymentTask.DiagnosticMessagePosted event
-        OnDeploymentTaskFinished(
-          deploymentTask,
-          deploymentContext);
+        OnDeploymentTaskFinished(deploymentInfo, deploymentTask, deploymentContext);
       }
     }
 
-    private void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
+    private void OnDeploymentTaskStarting(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       foreach (IDeploymentPipelineModule deploymentPipelineModule in _modules)
       {
-        deploymentPipelineModule.OnDeploymentTaskStarting(deploymentTask, deploymentContext);
+        deploymentPipelineModule.OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext);
       }
     }
 
-    private void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
+    private void OnDeploymentTaskFinished(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       foreach (IDeploymentPipelineModule deploymentPipelineModule in _modules)
       {
-        deploymentPipelineModule.OnDeploymentTaskFinished(deploymentTask, deploymentContext);
+        deploymentPipelineModule.OnDeploymentTaskFinished(deploymentInfo, deploymentTask, deploymentContext);
       }
     }
   }

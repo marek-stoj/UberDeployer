@@ -29,10 +29,15 @@ namespace UberDeployer.Core.Domain
     }
 
     public string ProjectName { get; private set; }
+
     public string ProjectConfigurationName { get; private set; }
+
     public string ProjectConfigurationBuildId { get; private set; }
+
     public string TargetEnvironmentName { get; private set; }    
+
     public ProjectInfo ProjectInfo { get; private set; }
+
     public InputParams InputParams { get; private set; }
   }
 }

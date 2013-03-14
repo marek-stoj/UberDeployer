@@ -13,11 +13,13 @@ function setAppPrefix(appPrefix) {
 }
 
 var APP_TYPES = {
-  TermialApp: "TerminalApp",
-  NtService: "NtService",
-  WebApp: "WebApp",
-  SchedulerApp: "SchedulerApp",
-  Db: "Db"
+  NotSet: 0,
+  Db: 1,
+  NtService: 2,
+  SchedulerApp: 3,
+  TerminalApp: 4,
+  WebApp: 5,
+  WebService: 6
 };
 
 function Project(name, type) {
@@ -120,7 +122,8 @@ function deploy() {
       projectName: projectName,
       projectConfigurationName: projectConfigurationName,
       projectConfigurationBuildId: projectConfigurationBuildId,
-      targetEnvironmentName: targetEnvironmentName,      
+      targetEnvironmentName: targetEnvironmentName,
+      projectType: g_ProjectList[projectName].type,
       targetMachines: targetMachines
     },
     traditional: true,
@@ -163,10 +166,11 @@ function loadEnvironments(onFinishedCallback) {
 
 function loadWebMachinesList() {
   var $lstEnvironments = domHelper.getEnvironmentsElement();
-  
+
   domHelper.hideError();
 
   var $lstMachines = domHelper.getMachinesElement();
+
   $lstMachines.empty();
 
   var selectedProject = domHelper.getProjectsElement().val();
@@ -175,25 +179,22 @@ function loadWebMachinesList() {
     $lstMachines.attr('disabled', 'disabled');
     return;
   }
-  
+
   $.getJSON(
     g_AppPrefix + 'Api/GetWebMachineNames',
     { envName: $lstEnvironments.val() },
-      
     function (machines) {
-
       $lstMachines.removeAttr('disabled');
-        
+
       $.each(machines, function (i, val) {
-          
-        $lstMachines.append(            
+        $lstMachines.append(
           $('<option></option>')
             .attr('value', val)
             .attr('selected', 'selected')
             .text(val));
       });
     })
-    .error(function (error) {
+    .error(function(error) {
       domHelper.showError(error);
     })
     .complete(function() {
@@ -207,11 +208,10 @@ function loadProjects(onFinishedCallback) {
     g_AppPrefix + 'Api/GetProjects',
     function(data) {
       g_ProjectList = [];
-      
-      $.each(data.projects, function (i, val) {
 
+      $.each(data.projects, function(i, val) {
         g_ProjectList[val.Name] = new Project(val.Name, val.Type);
-        
+
         domHelper.getProjectsElement()
           .append(
             $('<option></option>')

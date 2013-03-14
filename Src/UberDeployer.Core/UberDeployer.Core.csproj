@@ -96,6 +96,7 @@
     <Compile Include="Domain\DeploymentInfo.cs" />
     <Compile Include="Domain\Input\WebServiceInputParams.cs" />
     <Compile Include="Domain\ProjectToFailoverClusterGroupMapping.cs" />
+    <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="InternalException.cs" />
     <Compile Include="Management\FailoverCluster\IFailoverClusterManager.cs" />
     <Compile Include="Management\Db\DbScriptRunnerException.cs" />

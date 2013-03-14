@@ -27,6 +27,11 @@ namespace UberDeployer.Core.Domain
 
     #region Overrides of ProjectInfo
 
+    public override ProjectType Type
+    {
+      get { return ProjectType.TerminalApp; }
+    }
+
     public override InputParams CreateEmptyInputParams()
     {
       return new TerminalAppInputParams();

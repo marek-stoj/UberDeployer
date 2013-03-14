@@ -10,20 +10,20 @@ namespace UberDeployer.Core.Deployment
   public class DeployTerminalAppDeploymentTask : DeploymentTask
   {
     private readonly IArtifactsRepository _artifactsRepository;
-    
+
     private TerminalAppProjectInfo _projectInfo
     {
-      get { return (TerminalAppProjectInfo) DeploymentInfo.ProjectInfo; }
+      get { return (TerminalAppProjectInfo)DeploymentInfo.ProjectInfo; }
     }
 
     #region Constructor(s)
 
     public DeployTerminalAppDeploymentTask(
-      IEnvironmentInfoRepository environmentInfoRepository, 
+      IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository)
       : base(environmentInfoRepository)
     {
-      Guard.NotNull(artifactsRepository, "artifactsRepository");      
+      Guard.NotNull(artifactsRepository, "artifactsRepository");
 
       _artifactsRepository = artifactsRepository;
     }
@@ -34,12 +34,12 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      EnvironmentInfo environmentInfo = GetEnvironmentInfo();    
+      EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
-          _artifactsRepository,          
+          _artifactsRepository,
           GetTempDirPath());
 
       AddSubTask(downloadArtifactsDeploymentStep);
@@ -47,7 +47,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for extracting the artifacts
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
-          environmentInfo,          
+          environmentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
@@ -92,6 +92,6 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase    
+    #endregion Overrides of DeploymentTaskBase
   }
 }

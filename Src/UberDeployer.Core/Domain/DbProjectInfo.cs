@@ -19,6 +19,11 @@ namespace UberDeployer.Core.Domain
 
     #region Overrides of ProjectInfo
 
+    public override ProjectType Type
+    {
+      get { return ProjectType.Db; }
+    }
+
     public override InputParams CreateEmptyInputParams()
     {
       return new DbInputParams();

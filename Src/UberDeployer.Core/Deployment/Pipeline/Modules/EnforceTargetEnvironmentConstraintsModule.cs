@@ -1,4 +1,5 @@
 ﻿using System;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment.Pipeline.Modules
 {
@@ -10,19 +11,19 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     #region IDeploymentPipelineModule Members
 
-    public void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
+    public void OnDeploymentTaskStarting(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
-      if (deploymentTask.DeploymentInfo.TargetEnvironmentName == ProductionEnvironmentName
-       && deploymentTask.DeploymentInfo.ProjectConfigurationName != ProductionProjectConfigurationName)
+      if (deploymentInfo.TargetEnvironmentName == ProductionEnvironmentName
+       && deploymentInfo.ProjectConfigurationName != ProductionProjectConfigurationName)
       {
         throw new InvalidOperationException(string.Format(
           "Can't deploy project ('{0}') with non-production configuration ('{1}') to the production environment!", 
-          deploymentTask.DeploymentInfo.ProjectName, 
-          deploymentTask.DeploymentInfo.ProjectConfigurationName));
+          deploymentInfo.ProjectName, 
+          deploymentInfo.ProjectConfigurationName));
       }
     }
 
-    public void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
+    public void OnDeploymentTaskFinished(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       // do nothing
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.ConsoleCommander;
@@ -22,17 +23,17 @@ namespace UberDeployer.ConsoleApp.Commands
         return 1;
       }
 
-      string projectType = null;
+      ProjectType? projectType = null;
 
       if (args.Length == 1)
       {
-        projectType = args[0];
+        projectType = (ProjectType)Enum.Parse(typeof(ProjectType), args[0], true);
       }
 
       IProjectInfoRepository projectInfoRepository =
         ObjectFactory.Instance.CreateProjectInfoRepository();
 
-      IEnumerable<IGrouping<string, ProjectInfo>> projectsByType =
+      IEnumerable<IGrouping<ProjectType, ProjectInfo>> projectsByType =
         projectInfoRepository.GetAll()
           .GroupBy(pi => pi.Type)
           .OrderBy(infos => infos.Key);
@@ -40,11 +41,11 @@ namespace UberDeployer.ConsoleApp.Commands
       int count = projectsByType.Count();
       int index = 0;
 
-      foreach (IGrouping<string, ProjectInfo> projectGrouping in projectsByType)
+      foreach (IGrouping<ProjectType, ProjectInfo> projectGrouping in projectsByType)
       {
-        string currentProjecType = projectGrouping.Key;
+        ProjectType currentProjecType = projectGrouping.Key;
 
-        if (string.IsNullOrEmpty(projectType) || currentProjecType.ToUpper() == projectType.ToUpper())
+        if (!projectType.HasValue || currentProjecType == projectType.Value)
         {
           OutputWriter.WriteLine("{0}:", currentProjecType);
 
@@ -56,7 +57,7 @@ namespace UberDeployer.ConsoleApp.Commands
 
         index++;
 
-        if (string.IsNullOrEmpty(projectType) && index < count)
+        if (!projectType.HasValue && index < count)
         {
           OutputWriter.WriteLine();
         }

@@ -26,11 +26,11 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      TerminalAppProjectInfo projectInfo = new TerminalAppProjectInfo("name", "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
       var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
+      DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
-      Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskStarting(deploymentTask, deploymentContext));
+      Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext));
     }
 
     [Test]
@@ -61,7 +61,7 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 
       deploymentTask.Prepare(deploymentInfo);
 
-      Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskFinished(deploymentTask, deploymentContext));
+      Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskFinished(deploymentInfo, deploymentTask, deploymentContext));
     }
   }
 }

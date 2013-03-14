@@ -27,7 +27,7 @@ namespace UberDeployer.WinApp.Forms
       }
 
       Text = "Project: " + projectInfo.Name;
-      lbl_projectType.Text = projectInfo.Type;
+      lbl_projectType.Text = projectInfo.Type.ToString();
 
       projectPropertiesPropertyGrid.SelectedObject =
         ViewModelMapper.Map<ProjectInfo, ProjectInfoInPropertyGridViewModel>(projectInfo);

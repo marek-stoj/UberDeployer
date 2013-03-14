@@ -47,6 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
+    <Compile Include="Dto\Input\DbInputParams.cs" />
+    <Compile Include="Dto\Input\InputParams.cs" />
+    <Compile Include="Dto\Input\NtServiceInputParams.cs" />
+    <Compile Include="Dto\Input\SchedulerAppInputParams.cs" />
+    <Compile Include="Dto\Input\TerminalAppInputParams.cs" />
+    <Compile Include="Dto\Input\WebAppInputParams.cs" />
+    <Compile Include="Dto\Input\WebServiceInputParams.cs" />
     <Compile Include="Dto\ProjectToAppPoolMapping.cs" />
     <Compile Include="Dto\ProjectToWebSiteMapping.cs" />
     <Compile Include="Dto\DeploymentInfo.cs" />
@@ -61,6 +68,7 @@
     <Compile Include="Dto\IisAppPoolMode.cs" />
     <Compile Include="Dto\IisAppPoolVersion.cs" />
     <Compile Include="Dto\ProjectToFailoverClusterGroupMapping.cs" />
+    <Compile Include="Dto\ProjectType.cs" />
     <Compile Include="Dto\SchedulerAppProjectInfo.cs" />
     <Compile Include="Dto\TeamCity\BuildsLocation.cs" />
     <Compile Include="Dto\TeamCity\BuildStatus.cs" />

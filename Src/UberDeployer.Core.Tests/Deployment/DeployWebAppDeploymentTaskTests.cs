@@ -33,10 +33,10 @@ namespace UberDeployer.Core.Tests.Deployment
       _iisManager = new Mock<IIisManager>();
 
       _deployWebAppDeploymentTask = new DeployWebAppDeploymentTask(_msDeploy.Object, _environmentInfoRepository.Object,
-                                                                  _artifactsRepository.Object, _iisManager.Object);
+        _artifactsRepository.Object, _iisManager.Object);
 
       _environmentInfoRepository.Setup(x => x.GetByName(It.IsAny<string>()))
-                                      .Returns(_environmentInfo);
+        .Returns(_environmentInfo);
 
     }
 
@@ -46,13 +46,12 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // Arrange
       ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
-      WebAppInputParams webInputParams = new WebAppInputParams
-      {
-        WebMachines = webMachines,
-      };
+
+      var webInputParams =
+        new WebAppInputParams(webMachines);
 
       DeploymentInfo deploymentInfo = new DeploymentInfo("projectName", "projectConfigurationName", "projectConfigurationBuildId", "targetEnvironmentName",
-                                                         projectInfo, webInputParams);
+        projectInfo, webInputParams);
 
       // Act assert
       Assert.Throws<DeploymentTaskException>(() => _deployWebAppDeploymentTask.Prepare(deploymentInfo));
@@ -63,16 +62,13 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // Arrange
       ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
-      WebAppInputParams webInputParams = new WebAppInputParams
-      {
-        WebMachines = new List<string>
-          {
-            _environmentInfo.WebServerMachineNames.First()
-          },
-      };
+
+      var webInputParams =
+        new WebAppInputParams(
+          new[] { _environmentInfo.WebServerMachineNames.First() });
 
       DeploymentInfo deploymentInfo = new DeploymentInfo("projectName", "projectConfigurationName", "projectConfigurationBuildId", "targetEnvironmentName",
-                                                         projectInfo, webInputParams);
+        projectInfo, webInputParams);
 
 
       // Act
@@ -100,15 +96,21 @@ namespace UberDeployer.Core.Tests.Deployment
     private DeploymentInfo CreateDeploymentInfo(List<string> webMachines)
     {
       ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
-      WebAppInputParams webInputParams = new WebAppInputParams
-      {
-        WebMachines = webMachines
-      };
 
-      return new DeploymentInfo("projectName", "projectConfigurationName",
-                                                         "projectConfigurationBuildId", "targetEnvironmentName",
-                                                         projectInfo, webInputParams);
+      var webInputParams =
+        new WebAppInputParams(webMachines);
+
+      return
+        new DeploymentInfo(
+          "projectName",
+          "projectConfigurationName",
+          "projectConfigurationBuildId",
+          "targetEnvironmentName",
+          projectInfo,
+          webInputParams);
     }
+
+    // ReSharper disable UnusedMethodReturnValue.Local
 
     private IEnumerable<List<string>> GetInvalidWebMachineNames()
     {
@@ -116,5 +118,7 @@ namespace UberDeployer.Core.Tests.Deployment
       yield return new List<string>();
       yield return new List<string> { "incorrectWebmachine" };
     }
+
+    // ReSharper restore UnusedMethodReturnValue.Local
   }
 }

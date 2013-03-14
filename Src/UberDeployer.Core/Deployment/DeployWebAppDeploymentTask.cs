@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
@@ -19,7 +20,7 @@ namespace UberDeployer.Core.Deployment
 
     private WebAppProjectInfo _webAppProjectInfo
     {
-      get { return (WebAppProjectInfo) DeploymentInfo.ProjectInfo; }
+      get { return (WebAppProjectInfo)DeploymentInfo.ProjectInfo; }
     }
 
     #region Constructor(s)
@@ -42,20 +43,25 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      WebAppInputParams webAppProjectInfo = (WebAppInputParams) DeploymentInfo.InputParams;
-
+      WebAppInputParams inputParams = (WebAppInputParams)DeploymentInfo.InputParams;
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
-      if (webAppProjectInfo.WebMachines == null || !webAppProjectInfo.WebMachines.Any())
+      if (inputParams.OnlyIncludedWebMachines != null)
       {
-        throw new DeploymentTaskException(string.Format("No web machine for '{0}' has been specified.", DeploymentInfo.TargetEnvironmentName));
-      }
+        if (!inputParams.OnlyIncludedWebMachines.Any())
+        {
+          throw new DeploymentTaskException("If inputParams OnlyIncludedWebMachines has been specified, it must contain at least one web machine.");
+        }
 
-      string[] invalidMachineNames = webAppProjectInfo.WebMachines.Except(environmentInfo.WebServerMachineNames).ToArray();
+        string[] invalidMachineNames =
+          inputParams.OnlyIncludedWebMachines
+            .Except(environmentInfo.WebServerMachineNames)
+            .ToArray();
 
-      if (invalidMachineNames.Any())
-      {
-        throw new DeploymentTaskException(string.Format("Invalid web machines '{0}' have been specified.", string.Join(",", invalidMachineNames)));
+        if (invalidMachineNames.Any())
+        {
+          throw new DeploymentTaskException(string.Format("Invalid web machines '{0}' have been specified.", string.Join(",", invalidMachineNames)));
+        }
       }
 
       if (_webAppProjectInfo == null)
@@ -91,7 +97,11 @@ namespace UberDeployer.Core.Deployment
       string webSiteName = environmentInfo.GetWebSiteNameForProject(_webAppProjectInfo.Name);
       IisAppPoolInfo appPoolInfo = environmentInfo.GetAppPoolInfoForProject(_webAppProjectInfo.Name);
 
-      foreach (string webServerMachineName in webAppProjectInfo.WebMachines)
+      IEnumerable<string> webMachinesToDeployTo =
+        (inputParams.OnlyIncludedWebMachines ?? environmentInfo.WebServerMachineNames)
+          .Distinct();
+
+      foreach (string webServerMachineName in webMachinesToDeployTo)
       {
         string webApplicationPhysicalPath =
           _iisManager.GetWebApplicationPath(

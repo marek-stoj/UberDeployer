@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Web.Mvc;
 using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.Agent.Proxy.Dto.Input;
 using UberDeployer.Agent.Proxy.Faults;
 using UberDeployer.WebApp.Core.Models.Api;
 using UberDeployer.WebApp.Core.Services;
@@ -86,7 +87,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     {
       List<ProjectViewModel> projectViewModels =
         _agentService.GetProjectInfos(ProjectFilter.Empty)
-          .Select(pi => new ProjectViewModel { Name = pi.Name, Type = pi.Type })
+          .Select(CreateProjectViewModel)
           .ToList();
 
       return
@@ -116,8 +117,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpGet]
-    public ActionResult
-      GetProjectConfigurationBuilds(string projectName, string projectConfigurationName)
+    public ActionResult GetProjectConfigurationBuilds(string projectName, string projectConfigurationName)
     {
       if (string.IsNullOrEmpty(projectName))
       {
@@ -158,8 +158,11 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       try
       {
+        List<string> webMachineNames =
+          _agentService.GetWebMachineNames(envName);
+
         return Json(
-          _agentService.GetWebMachineNames(envName),
+          webMachineNames,
           JsonRequestBehavior.AllowGet);
       }
       catch (FaultException<EnvironmentNotFoundFault>)
@@ -197,7 +200,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpPost]
-    public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, List<string> targetMachines)
+    public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
     {
       if (string.IsNullOrEmpty(projectName))
       {
@@ -217,21 +220,25 @@ namespace UberDeployer.WebApp.Core.Controllers
       if (string.IsNullOrEmpty(targetEnvironmentName))
       {
         return BadRequest();
-      }      
+      }
+
+      if (!projectType.HasValue)
+      {
+        return BadRequest();
+      }
 
       try
       {
         _agentService.DeployAsync(
           _sessionService.UniqueClientId,
           SecurityUtils.CurrentUsername,
-          new DeploymentInfo
-            {
-              ProjectName = projectName,
-              ProjectConfigurationName = projectConfigurationName,
-              ProjectConfigurationBuildId = projectConfigurationBuildId,
-              TargetEnvironmentName = targetEnvironmentName,
-              TargetMachines = targetMachines
-            });
+          CreateDeploymentInfo(
+            projectName,
+            projectConfigurationName,
+            projectConfigurationBuildId,
+            targetEnvironmentName,
+            projectType.Value,
+            targetMachines));
 
         return Json(new { status = "OK" });
       }
@@ -254,6 +261,93 @@ namespace UberDeployer.WebApp.Core.Controllers
       }
 
       return new HashSet<string>(appSettingValue.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries));
+    }
+
+    private static ProjectViewModel CreateProjectViewModel(ProjectInfo pi)
+    {
+      return new ProjectViewModel
+      {
+        Name = pi.Name,
+        Type = (ProjectTypeViewModel)Enum.Parse(typeof(ProjectTypeViewModel), pi.Type.ToString(), true),
+      };
+    }
+
+    private DeploymentInfo CreateDeploymentInfo(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType projectType, IEnumerable<string> targetMachines = null)
+    {
+      return
+        new DeploymentInfo
+        {
+          ProjectName = projectName,
+          ProjectConfigurationName = projectConfigurationName,
+          ProjectConfigurationBuildId = projectConfigurationBuildId,
+          TargetEnvironmentName = targetEnvironmentName,
+          InputParams = CreateDeploymentInputParams(projectName, targetMachines),
+        };
+    }
+
+    private InputParams CreateDeploymentInputParams(string projectName, IEnumerable<string> targetMachines = null)
+    {
+      ProjectType projectType = GetProjectType(projectName);
+
+      switch (projectType)
+      {
+        case ProjectType.Db:
+        {
+          return new DbInputParams();
+        }
+
+        case ProjectType.NtService:
+        {
+          return new NtServiceInputParams();
+        }
+
+        case ProjectType.SchedulerApp:
+        {
+          return new SchedulerAppInputParams();
+        }
+
+        case ProjectType.TerminalApp:
+        {
+          return new TerminalAppInputParams();
+        }
+
+        case ProjectType.WebApp:
+        {
+          return new WebAppInputParams
+          {
+            // TODO IMM HI: xxx test if targetMachines != null but Count == 0
+            OnlyIncludedWebMachines =
+              targetMachines != null
+                ? new List<string>(targetMachines)
+                : null,
+          };
+        }
+
+        case ProjectType.WebService:
+        {
+          return new WebServiceInputParams();
+        }
+
+        default:
+        {
+          throw new NotSupportedException(string.Format("Unknown project type: '{0}'.", projectType));
+        }
+      }
+    }
+
+    private ProjectType GetProjectType(string projectName)
+    {
+      ProjectInfo projectInfo =
+        _agentService.GetProjectInfos(
+          new ProjectFilter { Name = projectName })
+          .SingleOrDefault();
+
+      if (projectInfo == null)
+      {
+        throw new InternalException(string.Format("Unknown project: '{0}'.", projectName));
+      }
+
+      return projectInfo.Type;
     }
   }
 }

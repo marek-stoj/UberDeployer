@@ -6,5 +6,10 @@ namespace UberDeployer.Core.Domain
       : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific, webAppName, webAppDirName)
     {
     }
+
+    public override ProjectType Type
+    {
+      get { return ProjectType.WebService; }
+    }
   }
 }

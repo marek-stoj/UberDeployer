@@ -12,7 +12,7 @@ namespace UberDeployer.Agent.Proxy.Dto
   {
     public string Name { get; set; }
 
-    public string Type { get; set; }
+    public ProjectType Type { get; set; }
 
     public string ArtifactsRepositoryName { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment.Pipeline.Modules
 {
@@ -22,12 +23,12 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     #region IDeploymentPipelineModule Members
 
-    public void OnDeploymentTaskStarting(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
+    public void OnDeploymentTaskStarting(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       // do nothing
     }
 
-    public void OnDeploymentTaskFinished(DeploymentTask deploymentTask, DeploymentContext deploymentContext)
+    public void OnDeploymentTaskFinished(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       var deploymentRequest =
         new DeploymentRequest
@@ -35,10 +36,10 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
             RequesterIdentity = deploymentContext.RequesterIdentity,
             DateStarted = deploymentContext.DateStarted,
             DateFinished = deploymentContext.DateFinished,
-            ProjectName = deploymentTask.DeploymentInfo.ProjectName,
-            ProjectConfigurationName = deploymentTask.DeploymentInfo.ProjectConfigurationName,
-            ProjectConfigurationBuildId = deploymentTask.DeploymentInfo.ProjectConfigurationBuildId,
-            TargetEnvironmentName = deploymentTask.DeploymentInfo.TargetEnvironmentName,
+            ProjectName = deploymentInfo.ProjectName,
+            ProjectConfigurationName = deploymentInfo.ProjectConfigurationName,
+            ProjectConfigurationBuildId = deploymentInfo.ProjectConfigurationBuildId,
+            TargetEnvironmentName = deploymentInfo.TargetEnvironmentName,
             FinishedSuccessfully = deploymentContext.FinishedSuccessfully,
           };
 
