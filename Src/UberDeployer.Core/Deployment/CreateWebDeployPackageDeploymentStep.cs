@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using UberDeployer.Core.Domain;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Deployment
@@ -11,55 +11,43 @@ namespace UberDeployer.Core.Deployment
     private const string _WebDeployManifestFileName = "webDeployManifest.xml";
 
     private readonly IMsDeploy _msDeploy;
-    private readonly string _webAppBinariesDirPath;
+    private readonly Lazy<string> _webAppBinariesDirPath;   
     private readonly string _iisSiteName;
     private readonly string _webApplicationName;
+   
+    private string _webAppBinariesParentDirPath
+    {
+      get 
+      { 
+        var webAppBinariesParentDirPath = Path.GetDirectoryName(_webAppBinariesDirPath.Value);
 
-    private readonly string _webAppBinariesParentDirPath;
-    private readonly string _packageFilePath;
+        if (string.IsNullOrEmpty(webAppBinariesParentDirPath))
+        {
+          throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not valid because its parent can't be determined.", _webAppBinariesDirPath), "webAppBinariesDirPath");
+        }
+        
+        return webAppBinariesParentDirPath;
+      }
+    }
+
+    private string _packageFilePath
+    {
+      get { return Path.Combine(_webAppBinariesParentDirPath, _WebDeployPackageFileName); }
+    }
 
     #region Constructor(s)
 
-    public CreateWebDeployPackageDeploymentStep(IMsDeploy msDeploy, string webAppBinariesDirPath, string iisSiteName, string webApplicationName)
+    public CreateWebDeployPackageDeploymentStep(IMsDeploy msDeploy, Lazy<string> webAppBinariesDirPath, string iisSiteName, string webApplicationName)
     {
-      if (msDeploy == null)
-      {
-        throw new ArgumentNullException("msDeploy");
-      }
-
-      if (string.IsNullOrEmpty(webAppBinariesDirPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "webAppBinariesDirPath");
-      }
-
-      if (!Path.IsPathRooted(webAppBinariesDirPath))
-      {
-        throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not an absolute path.", webAppBinariesDirPath), "webAppBinariesDirPath");
-      }
-
-      if (string.IsNullOrEmpty(iisSiteName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "iisSiteName");
-      }
-
-      if (string.IsNullOrEmpty(webApplicationName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "webApplicationName");
-      }
+      Guard.NotNull(msDeploy, "msDeploy");      
+      Guard.NotNull(_webAppBinariesDirPath, "_webAppBinariesDirPath");
+      Guard.NotNullNorEmpty(iisSiteName, "iisSiteName");
+      Guard.NotNullNorEmpty(webApplicationName, "webApplicationName");           
 
       _msDeploy = msDeploy;
       _webAppBinariesDirPath = webAppBinariesDirPath;
       _iisSiteName = iisSiteName;
       _webApplicationName = webApplicationName;
-
-      _webAppBinariesParentDirPath = Path.GetDirectoryName(_webAppBinariesDirPath);
-
-      if (string.IsNullOrEmpty(_webAppBinariesParentDirPath))
-      {
-        throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not valid because its parent can't be determined.", webAppBinariesDirPath), "webAppBinariesDirPath");
-      }
-
-      _packageFilePath = Path.Combine(_webAppBinariesParentDirPath, _WebDeployPackageFileName);
     }
 
     #endregion
@@ -68,7 +56,12 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      string iisAppPath = _webAppBinariesDirPath;
+      if (!Path.IsPathRooted(_webAppBinariesDirPath.Value))
+      {
+        throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not an absolute path.", _webAppBinariesDirPath.Value), "webAppBinariesDirPath");
+      }
+
+      string iisAppPath = _webAppBinariesDirPath.Value;
       string webDeployManifestFilePath = Path.Combine(_webAppBinariesParentDirPath, _WebDeployManifestFileName);
 
       try
@@ -78,7 +71,7 @@ namespace UberDeployer.Core.Deployment
         string paramMatchValue =
           string.Format(
             "^{0}$",
-            _webAppBinariesDirPath
+            _webAppBinariesDirPath.Value
               .Replace("\\", "\\\\")
               .Replace(".", "\\."));
 

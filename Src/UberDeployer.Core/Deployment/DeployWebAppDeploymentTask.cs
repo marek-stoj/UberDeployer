@@ -120,7 +120,7 @@ namespace UberDeployer.Core.Deployment
         var createWebDeployPackageDeploymentStep =
           new CreateWebDeployPackageDeploymentStep(
             _msDeploy,
-            extractArtifactsDeploymentStep.BinariesDirPath,
+            new Lazy<string>(() =>extractArtifactsDeploymentStep.BinariesDirPath),
             webSiteName,
             _webAppProjectInfo.WebAppName);
 
