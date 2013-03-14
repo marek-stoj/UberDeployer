@@ -8,12 +8,6 @@ var g_TargetEnvironmentCookieExpirationInDays = 365;
 
 var g_ProjectList = [];
 
-$.ajaxSetup({
-  'error' : function(error) {
-    domHelper.showError(error);
-  }
-});
-
 function setAppPrefix(appPrefix) {
   g_AppPrefix = appPrefix;
 }
@@ -43,6 +37,16 @@ function Project(name, type) {
 }
 
 function initializeDeploymentPage() {
+  $.ajaxSetup({
+    'error': function (error) {
+      domHelper.showError(error);
+    }
+  });
+  
+  $('#btn-deploy').click(function () {
+    deploy();
+  });
+
   domHelper.getProjectsElement().change(function () {
     var projectName = getSelectedProjectName();
 
@@ -56,8 +60,8 @@ function initializeDeploymentPage() {
 
     domHelper.getEnvironmentsElement().trigger('change');
   });
-
-  $('#lst-project-configs').change(function() {
+  
+  domHelper.getProjectConfigsElement().change(function () {
     var projectName = getSelectedProjectName();
     var projectConfigurationName = getSelectedProjectConfigurationName();
 
@@ -70,7 +74,7 @@ function initializeDeploymentPage() {
     loadProjectConfigurationBuilds(
       projectName,
       projectConfigurationName,
-      function() {
+      function () {
         // select first element
         $('#lst-project-config-builds')
           .val($('#lst-project-config-builds option').eq(0).val());
@@ -79,28 +83,23 @@ function initializeDeploymentPage() {
       });
   });
 
-  domHelper.getEnvironmentsElement().change(function () {
-    rememberTargetEnvironmentName();
-    loadWebMachinesList();
-  });
-
-  $('#btn-deploy').click(function() {
-    deploy();
-  });
-
-  loadEnvironments(function () {
-    loadWebMachinesOnEnvChange();
-    restoreRememberedTargetEnvironmentName();
-  });
-
-  loadProjects(function() {
-    // select first element
+  loadProjects(function () {
+    //// select first element
     domHelper.getProjectsElement()
       .val($('#lst-projects option').eq(0).val());
 
     domHelper.getProjectsElement().trigger('change');
   });
 
+  loadEnvironments(function () {
+    restoreRememberedTargetEnvironmentName();
+  });
+
+  domHelper.getEnvironmentsElement().change(function () {
+    rememberTargetEnvironmentName();
+    loadWebMachinesList();
+  });
+  
   startDiagnosticMessagesLoader();
 }
 
@@ -298,6 +297,10 @@ domHelper.getProjectsElement = function() {
   return $('#lst-projects');
 };
 
+domHelper.getProjectConfigsElement = function () {
+  return $('#lst-project-configs');
+};
+
 domHelper.getEnvironmentsElement = function() {
   return $('#lst-environments');
 };
@@ -374,10 +377,6 @@ function restoreRememberedTargetEnvironmentName() {
 
   domHelper.getEnvironmentsElement().val(cookie);
   domHelper.getEnvironmentsElement().trigger('change');
-}
-
-function loadWebMachinesOnEnvChange() {
-  domHelper.getEnvironmentsElement().change(loadWebMachinesList);
 }
 
 function setCookie(c_name, value, exdays) {
