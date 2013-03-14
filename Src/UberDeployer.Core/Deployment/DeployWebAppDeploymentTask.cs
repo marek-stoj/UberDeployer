@@ -17,7 +17,10 @@ namespace UberDeployer.Core.Deployment
 
     private readonly IIisManager _iisManager;
 
-    private WebAppProjectInfo _webAppProjectInfo;
+    private WebAppProjectInfo _webAppProjectInfo
+    {
+      get { return (WebAppProjectInfo) DeploymentInfo.ProjectInfo; }
+    }
 
     #region Constructor(s)
 
@@ -39,7 +42,7 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      WebAppInputParams webAppProjectInfo = (WebAppInputParams)DeploymentInfo.InputParams;
+      WebAppInputParams webAppProjectInfo = (WebAppInputParams) DeploymentInfo.InputParams;
 
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
@@ -54,8 +57,6 @@ namespace UberDeployer.Core.Deployment
       {
         throw new DeploymentTaskException(string.Format("Invalid web machines '{0}' have been specified.", string.Join(",", invalidMachineNames)));
       }
-
-      _webAppProjectInfo = DeploymentInfo.ProjectInfo as WebAppProjectInfo;
 
       if (_webAppProjectInfo == null)
       {
