@@ -31,13 +31,13 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Constructor_NullForMsDeploy_ThrowsException()
     {
-      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(null, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath)));
+      Assert.Throws<ArgumentNullException>(() => new DeployWebDeployPackageDeploymentStep(null, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath)));
     }
 
     [Test]
-    public void Constructor_NullForPackageFilePath_ThrowsException()
+    public void Constructor_NullForPackageFilePathProvider_ThrowsException()
     {
-      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _WebServerMachineName, null));
+      Assert.Throws<ArgumentNullException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _WebServerMachineName, null));
     }
 
     [Test]

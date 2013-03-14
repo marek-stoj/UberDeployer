@@ -5,6 +5,7 @@ using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Domain.Input;
 using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
@@ -20,7 +21,15 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       var artifactsRepository = new Mock<IArtifactsRepository>();
       var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
-      DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
+
+      DeploymentInfo deploymentInfo =
+        new DeploymentInfo(
+          "project_name",
+          "branch",
+          "project_configuration_build_id",
+          EnforceTargetEnvironmentConstraintsModule.ProductionEnvironmentName,
+          ProjectInfoGenerator.GetTerminalAppProjectInfo(),
+          new TerminalAppInputParams());
 
       Assert.Throws<InvalidOperationException>(() => enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext));
     }

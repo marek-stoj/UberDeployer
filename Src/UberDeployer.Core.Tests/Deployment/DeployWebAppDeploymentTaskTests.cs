@@ -22,7 +22,7 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<IArtifactsRepository> _artifactsRepository;
     private Mock<IIisManager> _iisManager;
 
-    private readonly EnvironmentInfo _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
+    private EnvironmentInfo _environmentInfo;
 
     [SetUp]
     public virtual void SetUp()
@@ -32,12 +32,13 @@ namespace UberDeployer.Core.Tests.Deployment
       _environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       _iisManager = new Mock<IIisManager>();
 
+      _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
+
       _deployWebAppDeploymentTask = new DeployWebAppDeploymentTask(_msDeploy.Object, _environmentInfoRepository.Object,
         _artifactsRepository.Object, _iisManager.Object);
 
       _environmentInfoRepository.Setup(x => x.GetByName(It.IsAny<string>()))
         .Returns(_environmentInfo);
-
     }
 
     [Test]
@@ -67,9 +68,14 @@ namespace UberDeployer.Core.Tests.Deployment
         new WebAppInputParams(
           new[] { _environmentInfo.WebServerMachineNames.First() });
 
-      DeploymentInfo deploymentInfo = new DeploymentInfo("projectName", "projectConfigurationName", "projectConfigurationBuildId", "targetEnvironmentName",
-        projectInfo, webInputParams);
-
+      var deploymentInfo =
+        new DeploymentInfo(
+          projectInfo.Name, 
+          "projectConfigurationName",
+          "projectConfigurationBuildId",
+          "targetEnvironmentName",
+          projectInfo,
+          webInputParams);
 
       // Act
       _deployWebAppDeploymentTask.Prepare(deploymentInfo);
@@ -114,7 +120,6 @@ namespace UberDeployer.Core.Tests.Deployment
 
     private IEnumerable<List<string>> GetInvalidWebMachineNames()
     {
-      yield return null;
       yield return new List<string>();
       yield return new List<string> { "incorrectWebmachine" };
     }

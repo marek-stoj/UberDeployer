@@ -297,7 +297,7 @@ namespace UberDeployer.Core.Tests.Domain
           WebAppName,
           WebAppDirName);
 
-      Assert.AreEqual("WebService", info.Type);
+      Assert.AreEqual(ProjectType.WebService, info.Type);
     }
   }
 }

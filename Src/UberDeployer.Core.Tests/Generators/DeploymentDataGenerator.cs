@@ -23,19 +23,19 @@ namespace UberDeployer.Core.Tests.Generators
       var projectToWebSiteMappings =
         new List<ProjectToWebSiteMapping>
         {
-          new ProjectToWebSiteMapping("prj1", "website"),
+          new ProjectToWebSiteMapping("name", "website"),
         };
 
       var projectToAppPoolMappings =
         new List<ProjectToAppPoolMapping>
         {
-          new ProjectToAppPoolMapping("prj1", "apppool"),
+          new ProjectToAppPoolMapping("name", "apppool"),
         };
 
       var projectToFailoverClusterGroupMappings =
         new List<ProjectToFailoverClusterGroupMapping>
           {
-            new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+            new ProjectToFailoverClusterGroupMapping("name", "cg1"),
           };
 
       return
