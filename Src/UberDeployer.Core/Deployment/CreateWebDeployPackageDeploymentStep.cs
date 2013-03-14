@@ -40,7 +40,7 @@ namespace UberDeployer.Core.Deployment
     public CreateWebDeployPackageDeploymentStep(IMsDeploy msDeploy, Lazy<string> webAppBinariesDirPathProvider, string iisSiteName, string webApplicationName)
     {
       Guard.NotNull(msDeploy, "msDeploy");      
-      Guard.NotNull(_webAppBinariesDirPathProvider, "_webAppBinariesDirPathProvider");
+      Guard.NotNull(webAppBinariesDirPathProvider, "webAppBinariesDirPathProvider");
       Guard.NotNullNorEmpty(iisSiteName, "iisSiteName");
       Guard.NotNullNorEmpty(webApplicationName, "webApplicationName");           
 

@@ -184,7 +184,7 @@ namespace UberDeployer.Core.Domain
         return mapping.WebSiteName;
       }
 
-      return null;
+      throw new ArgumentException(string.Format("Project named '{0}' has no web site mapping for environment '{1}'.", projectName, Name));
     }
 
     public IisAppPoolInfo GetAppPoolInfoForProject(string projectName)
@@ -201,9 +201,11 @@ namespace UberDeployer.Core.Domain
         {
           return appPoolInfo;
         }
+
+        throw new ArgumentException(string.Format("App pool with id '{0}' is not defined for environment '{1}'.", mapping.AppPoolId, Name));
       }
 
-      return null;
+      throw new ArgumentException(string.Format("Project named '{0}' has no app pool mapping for environment '{1}'.", projectName, Name));
     }
 
     public string GetFailoverClusterGroupNameForProject(string projectName)

@@ -2,7 +2,6 @@
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Tests.Generators;
 
@@ -12,7 +11,6 @@ namespace UberDeployer.Core.Tests.Deployment
   {
     private MockRepository _mockRepository;
     private Mock<IMsDeploy> _msDeploy;
-    private Mock<DeploymentInfo> _deploymentInfoFake;
 
     private const string _WebServerMachineName = "machine_name";
     private const string _PackageFilePath = "/path";
@@ -22,7 +20,6 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       _mockRepository = new MockRepository(MockBehavior.Strict);
       _msDeploy = _mockRepository.Create<IMsDeploy>();
-      _deploymentInfoFake = new Mock<DeploymentInfo>();
     }
 
     [TearDown]
@@ -34,25 +31,25 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Constructor_NullForMsDeploy_ThrowsException()
     {
-      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(null, _PackageFilePath, _WebServerMachineName));
+      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(null, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath)));
     }
 
     [Test]
     public void Constructor_NullForPackageFilePath_ThrowsException()
     {
-      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, null, _WebServerMachineName));
+      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _WebServerMachineName, null));
     }
 
     [Test]
     public void Constructor_NullForWebServerMachineName_ThrowsException()
     {
-      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _PackageFilePath, null));
+      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, null, new Lazy<string>(() => _PackageFilePath)));
     }
 
     [Test]
     public void DoExecute_RunsMsDeploy()
     {
-      var deployWebDeployPackageDeploymentStep = new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _PackageFilePath, _WebServerMachineName);
+      var deployWebDeployPackageDeploymentStep = new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath));
 
       string outString;
       _msDeploy.Setup(mD => mD.Run(It.IsAny<string[]>(), out outString));

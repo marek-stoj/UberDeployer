@@ -1,37 +1,26 @@
 using System;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Deployment
 {
   public class DeployWebDeployPackageDeploymentStep : DeploymentStep
   {
-    private readonly string _packageFilePath;
-    private readonly string _webServerMachineName;
     private readonly IMsDeploy _msDeploy;
+    private readonly string _webServerMachineName;
+    private readonly Lazy<string> _packageFilePathProvider;
 
     #region Constructor(s)
 
-    public DeployWebDeployPackageDeploymentStep(IMsDeploy msDeploy, string packageFilePath, string webServerMachineName)
+    public DeployWebDeployPackageDeploymentStep(IMsDeploy msDeploy, string webServerMachineName, Lazy<string> packageFilePathProvider)
     {
-      if (string.IsNullOrEmpty(packageFilePath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "packageFilePath");
-      }
+      Guard.NotNull(msDeploy, "msDeploy");
+      Guard.NotNullNorEmpty(webServerMachineName, "webServerMachineName");
+      Guard.NotNull(packageFilePathProvider, "packageFilePathProvider");
 
-      if (string.IsNullOrEmpty(webServerMachineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "webServerMachineName");
-      }
-
-      if (msDeploy == null)
-      {
-        throw new ArgumentException("Argument can't be null", "msDeploy");
-      }
-         
-
-      _packageFilePath = packageFilePath;
-      _webServerMachineName = webServerMachineName;
       _msDeploy = msDeploy;
+      _webServerMachineName = webServerMachineName;
+      _packageFilePathProvider = packageFilePathProvider;
     }
 
     #endregion
@@ -41,13 +30,11 @@ namespace UberDeployer.Core.Deployment
     protected override void DoExecute()
     {
       // TODO IMM HI: dependency
-      
-
       var msDeployArgs =
         new[]
           {
             "-verb:sync",
-            string.Format("-source:package=\"{0}\"", _packageFilePath),
+            string.Format("-source:package=\"{0}\"", _packageFilePathProvider.Value),
             string.Format("-dest:auto,computerName=\"{0}\"", _webServerMachineName),
           };
 
@@ -64,7 +51,7 @@ namespace UberDeployer.Core.Deployment
           string.Format(
             "Deploy WebDeploy package to machine '{0}' from '{1}'.",
             _webServerMachineName,
-            _packageFilePath);
+            _packageFilePathProvider.Value);
       }
     }
 

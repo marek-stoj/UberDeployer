@@ -140,8 +140,8 @@ namespace UberDeployer.Core.Deployment
         var deployWebDeployPackageDeploymentStep =
           new DeployWebDeployPackageDeploymentStep(
             _msDeploy,
-            createWebDeployPackageDeploymentStep.PackageFilePath,
-            webServerMachineName);
+            webServerMachineName,
+            new Lazy<string>(() => createWebDeployPackageDeploymentStep.PackageFilePath));
 
         AddSubTask(deployWebDeployPackageDeploymentStep);
 
