@@ -7,6 +7,8 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 
     void UpdateTaskSchedule(string machineName, ScheduledTaskSpecification scheduledTaskSpecification, string userName, string password);
 
-    bool IsTaskScheduled(string machineName, string taskName);
+    ScheduledTaskDetails GetScheduledTaskDetails(string machineName, string taskName);
+    
+    void EnableTask(string machineName, string taskName, bool enable);
   }
 }

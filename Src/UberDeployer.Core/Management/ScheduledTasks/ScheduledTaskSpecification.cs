@@ -7,7 +7,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
   {
     #region Constructor(s)
 
-    public ScheduledTaskSpecification(string name, string exeAbsolutePath, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
+    public  ScheduledTaskSpecification(string name, string exeAbsolutePath, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
     {
       if (string.IsNullOrEmpty(name))
       {

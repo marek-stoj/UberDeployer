@@ -12,7 +12,10 @@ namespace UberDeployer.Core.Deployment
     private readonly ITaskScheduler _taskScheduler;
     private readonly IPasswordCollector _passwordCollector;
 
-    private SchedulerAppProjectInfo _projectInfo;
+    private SchedulerAppProjectInfo _projectInfo
+    {
+      get { return (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo; }
+    }
 
     #region Constructor(s)
 
@@ -43,7 +46,7 @@ namespace UberDeployer.Core.Deployment
       _passwordCollector = passwordCollector;
     }
 
-    #endregion
+    #endregion Constructor(s)
 
     #region Overrides of DeploymentTaskBase
 
@@ -51,7 +54,30 @@ namespace UberDeployer.Core.Deployment
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
-      _projectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
+      string machineName = environmentInfo.AppServerMachineName;
+      string taskName = _projectInfo.SchedulerAppName;
+      string targetDirPath = Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
+      string targetDirNetworkPath = environmentInfo.GetAppServerNetworkPath(targetDirPath);
+      string executablePath = Path.Combine(targetDirPath, _projectInfo.SchedulerAppExeName);
+
+      ScheduledTaskDetails taskDetails = _taskScheduler.GetScheduledTaskDetails(machineName, taskName);
+
+      if (taskDetails != null && taskDetails.IsRunning)
+      {
+        throw new DeploymentTaskException(string.Format(
+          "Task: {0} on machine: {1} is already running. Deployment aborted. Last run time: {2}, next run time: {3}",
+          environmentInfo.AppServerMachineName,
+          _projectInfo.SchedulerAppName,
+          taskDetails.LastRunTime,
+          taskDetails.NextRunTime));
+      }
+
+      // create a step to disable scheduler app.
+      AddSubTask(
+        new EnableSchedulerAppStep(
+          _taskScheduler,
+          machineName,
+          false));
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
@@ -78,40 +104,37 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(binariesConfiguratorStep);
       }
 
-      // create a step for copying the binaries to the target machine
-      string targetDirPath = Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
-
       // create a backup step if needed
-      string targetDirNetworkPath = environmentInfo.GetAppServerNetworkPath(targetDirPath);
-
       if (Directory.Exists(targetDirNetworkPath))
       {
         AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
       }
 
+      // create a step for copying the binaries to the target machine
       AddSubTask(
         new CopyFilesDeploymentStep(
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           environmentInfo.GetAppServerNetworkPath(targetDirPath)));
 
-      // determine if the task should be scheduled anew or if its schedule should be updated
-      string machineName = environmentInfo.AppServerMachineName;
-      string taskName = _projectInfo.SchedulerAppName;
-      string executablePath = Path.Combine(targetDirPath, _projectInfo.SchedulerAppExeName);
-      bool taskIsScheduled = _taskScheduler.IsTaskScheduled(machineName, taskName);
+      bool hasSettingsChanged = HasSettingsChanged(taskDetails, executablePath);
+      bool taskExists = taskDetails != null;
 
-      // collect password
-      EnvironmentUser environmentUser;
+      EnvironmentUser environmentUser = null;
+      string environmentUserPassword = null;
 
-      string environmentUserPassword =
-        PasswordCollectorHelper.CollectPasssword(
-          _passwordCollector,
-          environmentInfo,
-          environmentInfo.AppServerMachineName,
-          _projectInfo.SchedulerAppUserId,
-          out environmentUser);
+      if (!taskExists || hasSettingsChanged)
+      {        
+        // collect password
+        environmentUserPassword =
+          PasswordCollectorHelper.CollectPasssword(
+            _passwordCollector,
+            environmentInfo,
+            environmentInfo.AppServerMachineName,
+            _projectInfo.SchedulerAppUserId,
+            out environmentUser);
+      }
 
-      if (!taskIsScheduled)
+      if (!taskExists)
       {
         // create a step for scheduling a new app
         AddSubTask(
@@ -122,7 +145,7 @@ namespace UberDeployer.Core.Deployment
             environmentUser.UserName,
             environmentUserPassword));
       }
-      else
+      else if (hasSettingsChanged)
       {
         // create a step for updating an existing scheduler app
         AddSubTask(
@@ -133,6 +156,13 @@ namespace UberDeployer.Core.Deployment
             environmentUser.UserName,
             environmentUserPassword));
       }
+
+      // create a step to enable scheduler app.
+      AddSubTask(
+        new EnableSchedulerAppStep(
+          _taskScheduler,
+          machineName,
+          true));
     }
 
     public override string Description
@@ -142,13 +172,27 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Deploy scheduler app '{0} ({1}:{2})' to '{3}'.",
-            DeploymentInfo.ProjectName,
+            _projectInfo.Name,
             DeploymentInfo.ProjectConfigurationName,
             DeploymentInfo.ProjectConfigurationBuildId,
             DeploymentInfo.TargetEnvironmentName);
       }
     }
 
-    #endregion
+    #endregion Overrides of DeploymentTaskBase
+
+    private bool HasSettingsChanged(ScheduledTaskDetails taskDetails, string executablePath)
+    {
+      if (taskDetails == null)
+      {
+        return false;
+      }
+
+      return !(taskDetails.Name == _projectInfo.SchedulerAppName
+               && taskDetails.ScheduledHour == _projectInfo.ScheduledHour
+               && taskDetails.ScheduledMinute == _projectInfo.ScheduledMinute
+               && taskDetails.ExecutionTimeLimitInMinutes == _projectInfo.ExecutionTimeLimitInMinutes
+               && taskDetails.ExeAbsolutePath == executablePath);
+    }
   }
 }

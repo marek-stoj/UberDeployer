@@ -1,6 +1,8 @@
 ﻿using System.IO;
+using System.Linq;
 using Microsoft.Win32.TaskScheduler;
 using System;
+using UberDeployer.Common.SyntaxSugar;
 using Action = Microsoft.Win32.TaskScheduler.Action;
 
 namespace UberDeployer.Core.Management.ScheduledTasks
@@ -13,25 +15,10 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 
     public void ScheduleNewTask(string machineName, ScheduledTaskSpecification scheduledTaskSpecification, string userName, string password)
     {
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (scheduledTaskSpecification == null)
-      {
-        throw new ArgumentNullException("scheduledTaskSpecification");
-      }
-
-      if (string.IsNullOrEmpty(userName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "userName");
-      }
-
-      if (string.IsNullOrEmpty(password))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "password");
-      }
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNull(scheduledTaskSpecification, "scheduledTaskSpecification");
+      Guard.NotNullNorEmpty(userName, "userName");
+      Guard.NotNullNorEmpty(password, "password");
 
       using (var taskService = CreateTaskService(machineName))
       {
@@ -119,7 +106,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 
         try
         {
-          task = taskService.FindTask(taskName);
+          task = taskService.FindTask(taskName, false);
 
           if (task == null)
           {
@@ -161,25 +148,71 @@ namespace UberDeployer.Core.Management.ScheduledTasks
           }
         }
       }
-    }
+    }    
 
-    public bool IsTaskScheduled(string machineName, string taskName)
+    public ScheduledTaskDetails GetScheduledTaskDetails(string machineName, string taskName)
     {
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (string.IsNullOrEmpty(taskName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "taskName");
-      }
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(taskName, "taskName");
 
       using (var taskService = CreateTaskService(machineName))
       {
         Task task = taskService.FindTask(taskName, false);
 
-        return task != null;
+        if (task == null)
+        {
+          return null;
+        }
+
+        int executionTimeLimits = 0;
+        int? startHour = null;
+        int? startMinute = null;
+        string execPath = null;
+
+        if (task.Definition.Actions.Count > 0)
+        {
+          var action = task.Definition.Actions.FirstOrDefault(x => x is ExecAction) as ExecAction;
+          if (action != null)
+          {
+            execPath = action.Path;
+          }
+        }
+
+        if (task.Definition.Triggers.Count > 0)
+        {
+          Trigger trigger = task.Definition.Triggers.First();
+
+          executionTimeLimits = (int)trigger.ExecutionTimeLimit.TotalMinutes;
+          startHour = trigger.StartBoundary.Hour;
+          startMinute = trigger.StartBoundary.Minute;
+        }
+
+        return new ScheduledTaskDetails(
+          task.Name,
+          task.State == TaskState.Running,
+          task.LastRunTime,
+          task.NextRunTime,
+          execPath,
+          startHour,
+          startMinute,
+          executionTimeLimits);
+      }
+    }
+
+    public void EnableTask(string machineName, string taskName, bool enable)
+    {
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(taskName, "taskName");
+
+      using (var taskService = CreateTaskService(machineName))
+      {
+        Task task = taskService.FindTask(taskName, false);
+        if (task == null)
+        {
+          throw new InvalidOperationException("Can't enable not scheduled task");
+        }
+
+        task.Enabled = enable;
       }
     }
 
@@ -205,7 +238,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
               now.Year,
               now.Month,
               now.Day,
-              scheduledTaskSpecification.ScheduledHour + 1, // TODO IMM HI: remove + 1
+              scheduledTaskSpecification.ScheduledHour,
               scheduledTaskSpecification.ScheduledMinute,
               0),
           };

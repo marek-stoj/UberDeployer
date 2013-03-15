@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
+    <Compile Include="Deployment\EnableSchedulerAppStep.cs" />
     <Compile Include="Domain\ProjectToAppPoolMapping.cs" />
     <Compile Include="Domain\ProjectToWebSiteMapping.cs" />
     <Compile Include="Domain\Input\DbInputParams.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Management\MsDeploy\MsDeploy.cs" />
     <Compile Include="Management\MsDeploy\MsDeployException.cs" />
     <Compile Include="Management\ScheduledTasks\ITaskScheduler.cs" />
+    <Compile Include="Management\ScheduledTasks\ScheduledTaskDetails.cs" />
     <Compile Include="Management\ScheduledTasks\ScheduledTaskSpecification.cs" />
     <Compile Include="Management\ScheduledTasks\TaskScheduler.cs" />
     <Compile Include="Domain\TerminalAppProjectInfo.cs" />
