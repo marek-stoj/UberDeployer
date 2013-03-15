@@ -63,19 +63,20 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // Arrange
       _iisManager.Setup(x => x.AppPoolExists(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+
       ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
 
       var webInputParams =
         new WebAppInputParams(new List<string> { _environmentInfo.WebServerMachineNames.First() });
 
-      var deploymentInfo = new DeploymentInfo(
-          "projectName",
+      var deploymentInfo =
+        new DeploymentInfo(
+          projectInfo.Name,
           "projectConfigurationName",
           "projectConfigurationBuildId",
           "targetEnvironmentName",
           projectInfo,
           webInputParams);
-
 
       // Act
       _deployWebAppDeploymentTask.Prepare(deploymentInfo);

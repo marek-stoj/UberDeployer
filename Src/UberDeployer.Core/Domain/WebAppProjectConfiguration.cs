@@ -8,14 +8,14 @@ namespace UberDeployer.Core.Domain
 
     public WebAppProjectConfiguration(string projectName, string appPoolId, string webSiteName, string webAppName = null)
     {
-      Guard.NotNullNorEmpty(appPoolId, "appPoolId");
       Guard.NotNullNorEmpty(projectName, "projectName");
+      Guard.NotNullNorEmpty(appPoolId, "appPoolId");
       Guard.NotNullNorEmpty(webSiteName, "webSiteName");
 
       ProjectName = projectName;
-      AppPoolId = AppPoolId;
+      AppPoolId = appPoolId;
       WebSiteName = webSiteName;
-      WebAppName = WebAppName;
+      WebAppName = webAppName;
     }
 
     #endregion
