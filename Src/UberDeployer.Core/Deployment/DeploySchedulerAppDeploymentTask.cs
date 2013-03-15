@@ -54,35 +54,118 @@ namespace UberDeployer.Core.Deployment
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
-      string machineName = environmentInfo.AppServerMachineName;      
+      string machineName = environmentInfo.AppServerMachineName;
+      string taskName = _projectInfo.SchedulerAppName;
       string targetDirPath = Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
       string targetDirNetworkPath = environmentInfo.GetAppServerNetworkPath(targetDirPath);
       string executablePath = Path.Combine(targetDirPath, _projectInfo.SchedulerAppExeName);
 
-      ScheduledTaskDetails taskDetails = _taskScheduler.GetScheduledTaskDetails(machineName, _projectInfo.SchedulerAppName);
+      ScheduledTaskDetails taskDetails = _taskScheduler.GetScheduledTaskDetails(machineName, taskName);
 
-      CheckIfTaskIsRunning(taskDetails, environmentInfo);
+      if (taskDetails != null && taskDetails.IsRunning)
+      {
+        throw new DeploymentTaskException(string.Format(
+          "Task: {0} on machine: {1} is already running. Deployment aborted. Last run time: {2}, next run time: {3}",
+          environmentInfo.AppServerMachineName,
+          _projectInfo.SchedulerAppName,
+          taskDetails.LastRunTime,
+          taskDetails.NextRunTime));
+      }
 
       // create a step to disable scheduler app.
-      AddEnableTaskStep(machineName, false);
-    
-      Lazy<string> binariesDirPathProvider = AddStepsToObtainBinaries(environmentInfo);
-      
-      AddBackupStep(targetDirNetworkPath);
+      AddSubTask(
+        new EnableSchedulerAppStep(
+          _taskScheduler,
+          machineName,
+          false));
+
+      // create a step for downloading the artifacts
+      var downloadArtifactsDeploymentStep =
+        new DownloadArtifactsDeploymentStep(
+          _artifactsRepository,
+          GetTempDirPath());
+
+      AddSubTask(downloadArtifactsDeploymentStep);
+
+      // create a step for extracting the artifacts
+      var extractArtifactsDeploymentStep =
+        new ExtractArtifactsDeploymentStep(
+          environmentInfo,
+          downloadArtifactsDeploymentStep.ArtifactsFilePath,
+          GetTempDirPath());
+
+      AddSubTask(extractArtifactsDeploymentStep);
+
+      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
+      {
+        var binariesConfiguratorStep = new ConfigureBinariesStep(
+          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
+
+        AddSubTask(binariesConfiguratorStep);
+      }
+
+      // create a backup step if needed
+      if (Directory.Exists(targetDirNetworkPath))
+      {
+        AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
+      }
 
       // create a step for copying the binaries to the target machine
       AddSubTask(
         new CopyFilesDeploymentStep(
-          binariesDirPathProvider,
-          targetDirNetworkPath));
+          new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
+          new Lazy<string>(() => environmentInfo.GetAppServerNetworkPath(targetDirPath))));
 
-      AddTaskConfiguraitonSteps(taskDetails, environmentInfo, executablePath);
+      bool hasSettingsChanged = HasSettingsChanged(taskDetails, executablePath);
+      bool taskExists = taskDetails != null;
+
+      EnvironmentUser environmentUser = null;
+      string environmentUserPassword = null;
+
+      if (!taskExists || hasSettingsChanged)
+      {        
+        // collect password
+        environmentUserPassword =
+          PasswordCollectorHelper.CollectPasssword(
+            _passwordCollector,
+            environmentInfo,
+            environmentInfo.AppServerMachineName,
+            _projectInfo.SchedulerAppUserId,
+            out environmentUser);
+      }
+
+      if (!taskExists)
+      {
+        // create a step for scheduling a new app
+        AddSubTask(
+          new ScheduleNewAppDeploymentStep(
+            _taskScheduler,
+            machineName,
+            executablePath,
+            environmentUser.UserName,
+            environmentUserPassword));
+      }
+      else if (hasSettingsChanged)
+      {
+        // create a step for updating an existing scheduler app
+        AddSubTask(
+          new UpdateAppScheduleDeploymentStep(
+            _taskScheduler,
+            machineName,
+            executablePath,
+            environmentUser.UserName,
+            environmentUserPassword));
+      }
 
       // create a step to enable scheduler app.
-      AddEnableTaskStep(machineName, true);
+      AddSubTask(
+        new EnableSchedulerAppStep(
+          _taskScheduler,
+          machineName,
+          true));
     }
 
-   public override string Description
+    public override string Description
     {
       get
       {
@@ -110,110 +193,6 @@ namespace UberDeployer.Core.Deployment
                && taskDetails.ScheduledMinute == _projectInfo.ScheduledMinute
                && taskDetails.ExecutionTimeLimitInMinutes == _projectInfo.ExecutionTimeLimitInMinutes
                && taskDetails.ExeAbsolutePath == executablePath);
-    }
-
-    private void AddTaskConfiguraitonSteps(ScheduledTaskDetails taskDetails, EnvironmentInfo environmentInfo, string executablePath)
-    {
-      bool hasSettingsChanged = HasSettingsChanged(taskDetails, executablePath);
-      bool taskExists = taskDetails != null;
-
-      EnvironmentUser environmentUser = null;
-      string environmentUserPassword = null;
-
-      if (!taskExists || hasSettingsChanged)
-      {
-        // collect password
-        environmentUserPassword =
-          PasswordCollectorHelper.CollectPasssword(
-            _passwordCollector,
-            environmentInfo,
-            environmentInfo.AppServerMachineName,
-            _projectInfo.SchedulerAppUserId,
-            out environmentUser);
-      }
-
-      if (!taskExists)
-      {
-        // create a step for scheduling a new app
-        AddSubTask(
-          new ScheduleNewAppDeploymentStep(
-            _taskScheduler,
-            environmentInfo.AppServerMachineName,
-            executablePath,
-            environmentUser.UserName,
-            environmentUserPassword));
-      }
-      else if (hasSettingsChanged)
-      {
-        // create a step for updating an existing scheduler app
-        AddSubTask(
-          new UpdateAppScheduleDeploymentStep(
-            _taskScheduler,
-            environmentInfo.AppServerMachineName,
-            executablePath,
-            environmentUser.UserName,
-            environmentUserPassword));
-      }
-    }
-
-    private Lazy<string> AddStepsToObtainBinaries(EnvironmentInfo environmentInfo)
-    {
-      // create a step for downloading the artifacts
-      var downloadArtifactsDeploymentStep =
-        new DownloadArtifactsDeploymentStep(
-          _artifactsRepository,
-          GetTempDirPath());
-
-      AddSubTask(downloadArtifactsDeploymentStep);
-
-      // create a step for extracting the artifacts
-      var extractArtifactsDeploymentStep =
-        new ExtractArtifactsDeploymentStep(
-          environmentInfo,
-          downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          GetTempDirPath());
-
-      AddSubTask(extractArtifactsDeploymentStep);
-
-      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
-      {
-        var binariesConfiguratorStep = new ConfigureBinariesStep(
-          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
-
-        AddSubTask(binariesConfiguratorStep);
-      }
-
-      return new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath);
-    }
-
-    private void CheckIfTaskIsRunning(ScheduledTaskDetails taskDetails, EnvironmentInfo environmentInfo)
-    {
-      if (taskDetails != null && taskDetails.IsRunning)
-      {
-        throw new DeploymentTaskException(string.Format(
-          "Task: {0} on machine: {1} is already running. Deployment aborted. Last run time: {2}, next run time: {3}",
-          environmentInfo.AppServerMachineName,
-          _projectInfo.SchedulerAppName,
-          taskDetails.LastRunTime,
-          taskDetails.NextRunTime));
-      }
-    }
-
-    private void AddEnableTaskStep(string machineName, bool enable)
-    {
-      AddSubTask(
-        new EnableSchedulerAppStep(
-          _taskScheduler,
-          machineName,
-          enable));
-    }
-
-    private void AddBackupStep(string targetDirNetworkPath)
-    {
-      if (Directory.Exists(targetDirNetworkPath))
-      {
-        AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
-      }
     }
   }
 }

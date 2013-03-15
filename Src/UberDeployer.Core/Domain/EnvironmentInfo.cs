@@ -238,6 +238,8 @@ namespace UberDeployer.Core.Domain
 
     public bool EnableFailoverClusteringForNtServices { get; private set; }
 
+    public string TerminalAppsShortcutFolder { get; private set; }
+
     public IEnumerable<EnvironmentUser> EnvironmentUsers
     {
       get { return _environmentUsersDict.Values; }

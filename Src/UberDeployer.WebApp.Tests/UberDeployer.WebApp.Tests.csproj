@@ -41,6 +41,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +56,10 @@
     <ProjectReference Include="..\UberDeployer.Agent.Proxy\UberDeployer.Agent.Proxy.csproj">
       <Project>{20970513-4A64-420E-B814-4D8FC89698FA}</Project>
       <Name>UberDeployer.Agent.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
+      <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
+      <Name>UberDeployer.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\UberDeployer.WebApp\UberDeployer.WebApp.csproj">
       <Project>{720257A5-4AAE-4891-AF33-4D98923DB86F}</Project>

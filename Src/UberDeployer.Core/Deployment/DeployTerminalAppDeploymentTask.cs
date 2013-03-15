@@ -11,6 +11,8 @@ namespace UberDeployer.Core.Deployment
   {
     private readonly IArtifactsRepository _artifactsRepository;
 
+    private readonly IProjectInfoRepository _projectInfoRepository;
+
     private TerminalAppProjectInfo _projectInfo
     {
       get { return (TerminalAppProjectInfo)DeploymentInfo.ProjectInfo; }
@@ -20,12 +22,15 @@ namespace UberDeployer.Core.Deployment
 
     public DeployTerminalAppDeploymentTask(
       IEnvironmentInfoRepository environmentInfoRepository,
-      IArtifactsRepository artifactsRepository)
+      IArtifactsRepository artifactsRepository,
+      IProjectInfoRepository projectInfoRepository)
       : base(environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
+      Guard.NotNull(projectInfoRepository, "projectInfoRepository");
 
       _artifactsRepository = artifactsRepository;
+      _projectInfoRepository = projectInfoRepository;
     }
 
     #endregion
@@ -35,6 +40,7 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      var projectInfo = GetProjectInfo<TerminalAppProjectInfo>();
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
@@ -61,21 +67,28 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(binariesConfiguratorStep);
       }
 
-      // copy binaries to the target machine
-      string targetDirNetworkPath =
-        environmentInfo.GetTerminalServerNetworkPath(
-          Path.Combine(environmentInfo.TerminalAppsBaseDirPath, _projectInfo.TerminalAppDirName));
+      var extractVersionDeploymentStep = new ExtractVersionDeploymentStep(
+        new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
+          projectInfo.TerminalAppExeName
+        );
 
-      // create a backup step if needed
-      if (Directory.Exists(targetDirNetworkPath))
-      {
-        AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
-      }
+      var prepareVersionedFolderDeploymentStep = new PrepareVersionedFolderDeploymentStep(
+        environmentInfo.TerminalAppsBaseDirPath,
+        DeploymentInfo.ProjectName,
+        new Lazy<string>(() => extractVersionDeploymentStep.Version));
+      AddSubTask(prepareVersionedFolderDeploymentStep);
 
       AddSubTask(
         new CopyFilesDeploymentStep(
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
-          targetDirNetworkPath));
+          new Lazy<string>(() => prepareVersionedFolderDeploymentStep.VersionDeploymentDirPath)));
+
+      AddSubTask(
+        new UpdateApplicationShortcutDeploymentStep(
+          environmentInfo.TerminalAppsShortcutFolder,
+          new Lazy<string>(() => prepareVersionedFolderDeploymentStep.VersionDeploymentDirPath),
+          projectInfo.TerminalAppExeName,
+          projectInfo.Name));
     }
 
     public override string Description
@@ -92,6 +105,24 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion
+    #endregion Overrides of DeploymentTaskBase
+
+    protected T GetProjectInfo<T>()
+      where T : ProjectInfo
+    {
+      ProjectInfo projectInfo = _projectInfoRepository.GetByName(DeploymentInfo.ProjectName);
+
+      if (projectInfo == null)
+      {
+        throw new DeploymentTaskException(string.Format("Project named '{0}' doesn't exist.", DeploymentInfo.ProjectName));
+      }
+      if (!(projectInfo is T))
+      {
+        throw new DeploymentTaskException(string.Format("Project named '{0}' is not requsted project type", DeploymentInfo.ProjectName));
+      }
+
+      return (T)projectInfo;
+    }
+
   }
 }

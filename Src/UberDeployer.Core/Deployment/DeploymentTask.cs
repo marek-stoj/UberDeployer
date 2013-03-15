@@ -8,7 +8,7 @@ namespace UberDeployer.Core.Deployment
 {
   public abstract class DeploymentTask : DeploymentTaskBase
   {
-    protected readonly IEnvironmentInfoRepository _environmentInfoRepository;    
+    protected readonly IEnvironmentInfoRepository _environmentInfoRepository;
 
     private readonly List<DeploymentTaskBase> _subTasks;
 
@@ -21,9 +21,9 @@ namespace UberDeployer.Core.Deployment
       if (environmentInfoRepository == null)
       {
         throw new ArgumentNullException("environmentInfoRepository");
-      }    
+      }
 
-      _environmentInfoRepository = environmentInfoRepository;   
+      _environmentInfoRepository = environmentInfoRepository;
 
       _subTasks = new List<DeploymentTaskBase>();
     }

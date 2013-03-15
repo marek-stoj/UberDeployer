@@ -26,7 +26,8 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
+      var projectsInfoRepository = new Mock<IProjectInfoRepository>();
+      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectsInfoRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
@@ -43,8 +44,9 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
+      var projectsInfoRepository = new Mock<IProjectInfoRepository>();
 
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object);
+      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectsInfoRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
 
       deploymentRequestRepository

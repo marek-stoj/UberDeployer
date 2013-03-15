@@ -311,7 +311,7 @@ namespace UberDeployer.Core.Deployment
       AddSubTask(
         new CopyFilesDeploymentStep(
           artifactsBinariesDirPathProvider,
-          getAppServerNetworkPathFunc(targetDirPath)));
+          new Lazy<string>(() => getAppServerNetworkPathFunc(targetDirPath))));
 
       if (!serviceExists)
       {

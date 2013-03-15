@@ -47,7 +47,8 @@ namespace UberDeployer.Core.Domain
       return
         new DeployTerminalAppDeploymentTask(
           objectFactory.CreateEnvironmentInfoRepository(),
-          objectFactory.CreateArtifactsRepository());
+          objectFactory.CreateArtifactsRepository(),
+          objectFactory.CreateProjectInfoRepository());
     }
 
     public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)

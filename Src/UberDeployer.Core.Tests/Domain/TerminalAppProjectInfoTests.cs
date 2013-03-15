@@ -46,7 +46,7 @@ namespace UberDeployer.Core.Tests.Domain
         };
 
     [Test]
-    public void Test_TerminalAppProjectInfo_Thows_When_Name_null()
+    public void Test_TerminalAppProjectInfo_Throws_When_Name_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
@@ -63,7 +63,7 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_TerminalAppProjectInfo_Thows_When_ArtifactsRepositoryName_null()
+    public void Test_TerminalAppProjectInfo_Throws_When_ArtifactsRepositoryName_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
@@ -80,7 +80,7 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_TerminalAppProjectInfo_Thows_When_TerminalAppName_null()
+    public void Test_TerminalAppProjectInfo_Throws_When_TerminalAppName_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
@@ -97,7 +97,7 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_TerminalAppProjectInfo_Thows_When_TerminalAppDirName_null()
+    public void Test_TerminalAppProjectInfo_Throws_When_TerminalAppDirName_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
@@ -114,7 +114,7 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_TerminalAppProjectInfo_Thows_When_TerminalAppExeName_null()
+    public void Test_TerminalAppProjectInfo_Throws_When_TerminalAppExeName_null()
     {
       Assert.Throws<ArgumentException>(
         () =>
@@ -153,6 +153,7 @@ namespace UberDeployer.Core.Tests.Domain
       var artifactsRepository = new Mock<IArtifactsRepository>(MockBehavior.Strict);
       var taskScheduler = new Mock<ITaskScheduler>(MockBehavior.Strict);
       var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict);
+      var projInfoRepository = new Mock<IProjectInfoRepository>(MockBehavior.Strict);
 
       var projectInfo = new TerminalAppProjectInfo(
             _Name,
@@ -167,6 +168,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object);
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreateNtServiceManager()).Returns(ntServiceManager.Object);
+      objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(projInfoRepository.Object);
 
       projectInfo.CreateDeploymentTask(objectFactory.Object);
     }

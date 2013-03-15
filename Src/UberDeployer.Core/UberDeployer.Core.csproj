@@ -81,6 +81,10 @@
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\EnableSchedulerAppStep.cs" />
     <Compile Include="Domain\WebAppProjectConfiguration.cs" />
+    <Compile Include="Deployment\CopyFilesToVersionedFolderDeploymentStep.cs" />
+    <Compile Include="Deployment\ExtractVersionDeploymentStep.cs" />
+    <Compile Include="Deployment\PrepareVersionedFolderDeploymentStep.cs" />
+    <Compile Include="Deployment\UpdateApplicationShortcutDeploymentStep.cs" />
     <Compile Include="Domain\Input\DbInputParams.cs" />
     <Compile Include="Domain\Input\InputParams.cs" />
     <Compile Include="Deployment\CollectedCredentials.cs" />
@@ -190,6 +194,8 @@
     <Compile Include="Domain\NtServiceProjectInfo.cs" />
     <Compile Include="Domain\ProjectInfo.cs" />
     <Compile Include="DataAccess\TeamCityArtifactsRepository.cs" />
+    <Compile Include="Management\Shortcut\ShellLinkNative.cs" />
+    <Compile Include="Management\Shortcut\ShellShortcut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCity\Models\BuildsLocation.cs" />
     <Compile Include="TeamCity\Models\BuildStatus.cs" />

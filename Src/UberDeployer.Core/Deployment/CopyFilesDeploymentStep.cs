@@ -8,18 +8,14 @@ namespace UberDeployer.Core.Deployment
   public class CopyFilesDeploymentStep : DeploymentStep
   {
     private readonly Lazy<string> _srcDirPathProvider;
-    private readonly string _dstDirPath;
+    private readonly Lazy<string> _dstDirPath;
 
     #region Constructor(s)
 
-    public CopyFilesDeploymentStep(Lazy<string> srcDirPathProvider, string dstDirPath)
+    public CopyFilesDeploymentStep(Lazy<string> srcDirPathProvider, Lazy<string> dstDirPath)
     {
-      if (string.IsNullOrEmpty(dstDirPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "dstDirPath");
-      }
-
-      Guard.NotNull(srcDirPathProvider, "srcDirPathProvider");      
+      Guard.NotNull(srcDirPathProvider, "srcDirPathProvider");
+      Guard.NotNull(dstDirPath, "srcDirPathProvider");      
 
       _srcDirPathProvider = srcDirPathProvider;
       _dstDirPath = dstDirPath;
@@ -36,22 +32,22 @@ namespace UberDeployer.Core.Deployment
         throw new DeploymentTaskException(string.Format("Source directory doesn't exist: '{0}'.", _srcDirPathProvider));
       }
 
-      if (Directory.Exists(_dstDirPath))
+      if (Directory.Exists(_dstDirPath.Value))
       {
-        Directory.GetDirectories(_dstDirPath)
+        Directory.GetDirectories(_dstDirPath.Value)
           .ToList()
           .ForEach(dirPath => Directory.Delete(dirPath, true));
 
-        Directory.GetFiles(_dstDirPath)
+        Directory.GetFiles(_dstDirPath.Value)
           .ToList()
           .ForEach(File.Delete);
       }
       else
       {
-        Directory.CreateDirectory(_dstDirPath);
+        Directory.CreateDirectory(_dstDirPath.Value);
       }
 
-      CopyAll(_srcDirPathProvider.Value, _dstDirPath);
+      CopyAll(_srcDirPathProvider.Value, _dstDirPath.Value);
     }
 
     public override string Description
