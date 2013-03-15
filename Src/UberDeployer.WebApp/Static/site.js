@@ -154,15 +154,16 @@ function loadEnvironments(onFinishedCallback) {
   $.getJSON(
     g_AppPrefix + 'Api/GetEnvironments',
     function(data) {
-      $.each(data.environments, function(i, val) {
+      clearEnvironments();
 
+      $.each(data.environments, function(i, val) {
         domHelper.getEnvironmentsElement()
           .append(
             $('<option></option>')
-              .attr('value', val.Name)              
+              .attr('value', val.Name)
               .text(val.Name));
       });
-      
+
       if (onFinishedCallback) {
         onFinishedCallback();
       }
@@ -185,9 +186,9 @@ function loadWebMachinesList() {
     g_AppPrefix + 'Api/GetWebMachineNames',
     { envName: $lstEnvironments.val() },
     function(machines) {
-      $lstMachines.removeAttr('disabled');
-
       clearTargetMachines();
+
+      $lstMachines.removeAttr('disabled');
 
       $.each(machines, function(i, val) {
         $lstMachines.append(
@@ -206,6 +207,7 @@ function loadProjects(onFinishedCallback) {
     g_AppPrefix + 'Api/GetProjects',
     function(data) {
       g_ProjectList = [];
+      clearProjects();
 
       $.each(data.projects, function(i, val) {
         g_ProjectList[val.Name] = new Project(val.Name, val.Type);
@@ -228,7 +230,9 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
 
   $.getJSON(
       g_AppPrefix + 'Api/GetProjectConfigurations?projectName=' + encodeURIComponent(projectName),
-      function(data) {
+      function (data) {
+        clearProjectConfigurations();
+
         $.each(data.projectConfigurations, function(i, val) {
           var $lstProjectConfigs = $('#lst-project-configs');
 
