@@ -85,10 +85,12 @@
     <Content Include="..\..\Data\EnvironmentInfos.xml">
       <Link>Data\EnvironmentInfos.xml</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="..\..\Data\ProjectInfos.xml">
       <Link>Data\ProjectInfos.xml</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
