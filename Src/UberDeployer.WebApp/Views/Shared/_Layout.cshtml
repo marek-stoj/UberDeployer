@@ -1,4 +1,5 @@
-﻿@using UberDeployer.WebApp.Core.Models
+﻿@using System.Web.Compilation
+@using UberDeployer.WebApp.Core.Models
 @model BaseViewModel
 <!DOCTYPE html>
 <html>
@@ -6,13 +7,20 @@
   <title>@ViewBag.Title</title>
   <link href="@Url.Content("~/Static/bootstrap/css/bootstrap.css")" rel="stylesheet" type="text/css" />
   <link href="@Url.Content("~/Static/site.css")" rel="stylesheet" type="text/css" />
+
   <script type="text/javascript" src="@Url.Content("~/Static/jquery.js")"></script>
+
   <script type="text/javascript" src="@Url.Content("~/Static/bootstrap/js/bootstrap.js")"></script>
+
   <script type="text/javascript" src="@Url.Content("~/Static/site.js?t=483928")"></script>
-  
+
+  @* ReSharper disable PossibleNullReferenceException *@
+
   <script type="text/javascript">
     setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
   </script>
+
+  @* ReSharper restore PossibleNullReferenceException *@
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
@@ -48,5 +56,12 @@
     </div>
   </div>
   @RenderBody()
+  <div class="footer navbar navbar-fixed-bottom">
+    <div class="container" style="text-align: right;">
+      @* ReSharper disable PossibleNullReferenceException *@
+      Version @(BuildManager.GetGlobalAsaxType().BaseType.Assembly.GetName().Version)
+      @* ReSharper restore PossibleNullReferenceException *@
+    </div>
+  </div>
 </body>
 </html>
