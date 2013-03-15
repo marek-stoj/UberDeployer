@@ -370,8 +370,15 @@ function rememberTargetEnvironmentName() {
 
 function restoreRememberedTargetEnvironmentName() {
   var cookie = getCookie(g_TargetEnvironmentCookieName);
-  
+
   if (cookie === null) {
+    var firstVal = domHelper.getEnvironmentsElement().find('option').eq(0).val();
+
+    if (firstVal !== undefined) {
+      domHelper.getEnvironmentsElement().val(firstVal);
+      domHelper.getEnvironmentsElement().trigger('change');
+    }
+
     return;
   }
 
