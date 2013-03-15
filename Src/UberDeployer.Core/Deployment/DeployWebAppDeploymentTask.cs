@@ -94,8 +94,11 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(binariesConfiguratorStep);
       }
 
-      string webSiteName = environmentInfo.GetWebSiteNameForProject(_webAppProjectInfo.Name);
-      IisAppPoolInfo appPoolInfo = environmentInfo.GetAppPoolInfoForProject(_webAppProjectInfo.Name);
+      WebAppProjectConfiguration configuration =
+        environmentInfo.GetWebProjectConfiguration(_webAppProjectInfo.Name);
+
+      string webSiteName = configuration.WebSiteName;
+      IisAppPoolInfo appPoolInfo = environmentInfo.GetAppPoolInfo(configuration.AppPoolId);
 
       IEnumerable<string> webMachinesToDeployTo =
         (inputParams.OnlyIncludedWebMachines ?? environmentInfo.WebServerMachineNames)

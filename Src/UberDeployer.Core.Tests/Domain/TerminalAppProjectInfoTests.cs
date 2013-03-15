@@ -33,16 +33,10 @@ namespace UberDeployer.Core.Tests.Domain
         new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
       };
 
-    private static readonly List<ProjectToWebSiteMapping> _ProjectToWebSiteMappings =
-      new List<ProjectToWebSiteMapping>
+    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
+      new List<WebAppProjectConfiguration>
       {
-        new ProjectToWebSiteMapping("prj1", "website"),
-      };
-
-    private static readonly List<ProjectToAppPoolMapping> _ProjectToAppPoolMappings =
-      new List<ProjectToAppPoolMapping>
-      {
-        new ProjectToAppPoolMapping("prj1", "apppool"),
+        new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"),
       };
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
@@ -200,8 +194,7 @@ namespace UberDeployer.Core.Tests.Domain
           false,
           _EnvironmentUsers,
           _AppPoolInfos,
-          _ProjectToWebSiteMappings,
-          _ProjectToAppPoolMappings,
+          _WebAppProjectConfigurations,
           _ProjectToFailoverClusterGroupMappings);
 
       var projectInfo = new TerminalAppProjectInfo(

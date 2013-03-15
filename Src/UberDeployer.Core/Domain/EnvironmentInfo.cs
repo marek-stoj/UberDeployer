@@ -13,8 +13,7 @@ namespace UberDeployer.Core.Domain
     private readonly List<String> _webServerMachines;
     private readonly Dictionary<string, EnvironmentUser> _environmentUsersDict;
     private readonly Dictionary<string, IisAppPoolInfo> _appPoolInfosDict;
-    private readonly Dictionary<string, ProjectToWebSiteMapping> _projectToWebSiteMappingsDict;
-    private readonly Dictionary<string, ProjectToAppPoolMapping> _projectToAppPoolMappingsDict;
+    private readonly Dictionary<string, WebAppProjectConfiguration> _webAppProjectConfigurationsDict;
     private readonly Dictionary<string, ProjectToFailoverClusterGroupMapping> _projectToFailoverClusterGroupMappingsDict;
 
     #region Constructor(s)
@@ -34,8 +33,7 @@ namespace UberDeployer.Core.Domain
       bool enableFailoverClusteringForNtServices,
       IEnumerable<EnvironmentUser> environmentUsers,
       IEnumerable<IisAppPoolInfo> appPoolInfos,
-      IEnumerable<ProjectToWebSiteMapping> projectToWebSiteMappings,
-      IEnumerable<ProjectToAppPoolMapping> projectToAppPoolMappings,
+      IEnumerable<WebAppProjectConfiguration> webAppProjectConfigurations,
       IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings)
     {
       Guard.NotNullNorEmpty(name, "name");
@@ -70,14 +68,9 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentException("If enableFailoverClusteringForNtServices is set, failoverClusterMachineName must not be empty.", "enableFailoverClusteringForNtServices");
       }
 
-      if (projectToWebSiteMappings == null)
+      if (webAppProjectConfigurations == null)
       {
-        throw new ArgumentNullException("projectToWebSiteMappings");
-      }
-
-      if (projectToAppPoolMappings == null)
-      {
-        throw new ArgumentNullException("projectToAppPoolMappings");
+        throw new ArgumentNullException("webAppProjectConfigurations");
       }
 
       if (projectToFailoverClusterGroupMappings == null)
@@ -101,8 +94,7 @@ namespace UberDeployer.Core.Domain
       _environmentUsersDict = environmentUsers.ToDictionary(eu => eu.Id);
       _appPoolInfosDict = appPoolInfos.ToDictionary(api => api.Name);
 
-      _projectToWebSiteMappingsDict = projectToWebSiteMappings.ToDictionary(ptfcgm => ptfcgm.ProjectName);
-      _projectToAppPoolMappingsDict = projectToAppPoolMappings.ToDictionary(ptfcgm => ptfcgm.ProjectName);
+      _webAppProjectConfigurationsDict = webAppProjectConfigurations.ToDictionary(ptfcgm => ptfcgm.ProjectName);
       _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(ptfcgm => ptfcgm.ProjectName);
     }
 
@@ -173,39 +165,18 @@ namespace UberDeployer.Core.Domain
       return null;
     }
 
-    public string GetWebSiteNameForProject(string projectName)
+    public WebAppProjectConfiguration GetWebProjectConfiguration(string projectName)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
 
-      ProjectToWebSiteMapping mapping;
+      WebAppProjectConfiguration configuration;
 
-      if (_projectToWebSiteMappingsDict.TryGetValue(projectName, out mapping))
+      if (_webAppProjectConfigurationsDict.TryGetValue(projectName, out configuration))
       {
-        return mapping.WebSiteName;
+        return configuration;
       }
 
-      throw new ArgumentException(string.Format("Project named '{0}' has no web site mapping for environment '{1}'.", projectName, Name));
-    }
-
-    public IisAppPoolInfo GetAppPoolInfoForProject(string projectName)
-    {
-      Guard.NotNullNorEmpty(projectName, "projectName");
-
-      ProjectToAppPoolMapping mapping;
-
-      if (_projectToAppPoolMappingsDict.TryGetValue(projectName, out mapping))
-      {
-        IisAppPoolInfo appPoolInfo;
-
-        if (_appPoolInfosDict.TryGetValue(mapping.AppPoolId, out appPoolInfo))
-        {
-          return appPoolInfo;
-        }
-
-        throw new ArgumentException(string.Format("App pool with id '{0}' is not defined for environment '{1}'.", mapping.AppPoolId, Name));
-      }
-
-      throw new ArgumentException(string.Format("Project named '{0}' has no app pool mapping for environment '{1}'.", projectName, Name));
+      throw new ArgumentException(string.Format("Project named '{0}' has no configuration for environment '{1}'.", projectName, Name));
     }
 
     public string GetFailoverClusterGroupNameForProject(string projectName)
@@ -220,6 +191,20 @@ namespace UberDeployer.Core.Domain
       }
 
       return null;
+    }
+
+    public IisAppPoolInfo GetAppPoolInfo(string appPoolId)
+    {
+      Guard.NotNullNorEmpty(appPoolId, "appPoolId");
+
+      IisAppPoolInfo iisAppPoolInfo;
+
+      if (_appPoolInfosDict.TryGetValue(appPoolId, out iisAppPoolInfo))
+      {
+        return iisAppPoolInfo;
+      }
+
+      throw new ArgumentException(string.Format("App pool with id '{0}' is not defined for environment '{1}'.", appPoolId, Name));
     }
 
     #endregion
@@ -263,14 +248,9 @@ namespace UberDeployer.Core.Domain
       get { return _appPoolInfosDict.Values; }
     }
 
-    public IEnumerable<ProjectToWebSiteMapping> ProjectToWebSiteMappings
+    public IEnumerable<WebAppProjectConfiguration> WebAppProjectConfigurations
     {
-      get { return _projectToWebSiteMappingsDict.Values; }
-    }
-
-    public IEnumerable<ProjectToAppPoolMapping> ProjectToAppPoolMappings
-    {
-      get { return _projectToAppPoolMappingsDict.Values; }
+      get { return _webAppProjectConfigurationsDict.Values; }
     }
 
     public IEnumerable<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings

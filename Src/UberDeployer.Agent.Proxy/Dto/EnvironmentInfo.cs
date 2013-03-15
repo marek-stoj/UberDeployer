@@ -32,9 +32,7 @@ namespace UberDeployer.Agent.Proxy.Dto
 
     public List<IisAppPoolInfo> AppPoolInfos { get; set; }
 
-    public List<ProjectToWebSiteMapping> ProjectToWebSiteMappings { get; set; }
-
-    public List<ProjectToAppPoolMapping> ProjectToAppPoolMappings { get; set; }
+    public List<WebAppProjectConfiguration> WebAppProjectConfigurations { get; set; }
 
     public List<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings { get; set; }
   }

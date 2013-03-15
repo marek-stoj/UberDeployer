@@ -33,16 +33,10 @@ namespace UberDeployer.Core.Tests.Domain
         new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
       };
 
-    private static readonly List<ProjectToWebSiteMapping> _ProjectToWebSiteMappings =
-      new List<ProjectToWebSiteMapping>
+    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
+      new List<WebAppProjectConfiguration>
       {
-        new ProjectToWebSiteMapping("prj1", "website"),
-      };
-
-    private static readonly List<ProjectToAppPoolMapping> _ProjectToAppPoolMappings =
-      new List<ProjectToAppPoolMapping>
-      {
-        new ProjectToAppPoolMapping("prj1", "apppool"),
+        new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"),
       };
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
@@ -50,33 +44,6 @@ namespace UberDeployer.Core.Tests.Domain
       {
         new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
       };
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_Name_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            null,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            _FailoverClusterMachineName,
-            _WebMachineNames,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            _WebAppsBaseDirPath,
-            _SchedulerAppsBaseDirPath,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
 
     [Test]
     public void Test_EnvironmentInfoTests_Does_Not_Allow_Template_null()
@@ -99,8 +66,7 @@ namespace UberDeployer.Core.Tests.Domain
             false,
             _EnvironmentUsers,
             _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
+            _WebAppProjectConfigurations,
             _ProjectToFailoverClusterGroupMappings);
         });
     }
@@ -126,253 +92,9 @@ namespace UberDeployer.Core.Tests.Domain
             false,
             _EnvironmentUsers,
             _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
+            _WebAppProjectConfigurations,
             _ProjectToFailoverClusterGroupMappings);
         });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_Machine_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            null,
-            _FailoverClusterMachineName,
-            _WebMachineNames,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            _WebAppsBaseDirPath,
-            _SchedulerAppsBaseDirPath,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_FailoverClusterMachineName_null()
-    {
-      Assert.Throws<ArgumentNullException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            null,
-            _WebMachineNames,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            _WebAppsBaseDirPath,
-            _SchedulerAppsBaseDirPath,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_Webmachine_null()
-    {
-      Assert.Throws<ArgumentNullException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            _FailoverClusterMachineName,
-            null,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            _WebAppsBaseDirPath,
-            _SchedulerAppsBaseDirPath,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_Terminalmachine_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            _FailoverClusterMachineName,
-            _WebMachineNames,
-            null,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            _WebAppsBaseDirPath,
-            _SchedulerAppsBaseDirPath,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_BaseDirPath_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            _FailoverClusterMachineName,
-            _WebMachineNames,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            null,
-            _WebAppsBaseDirPath,
-            _SchedulerAppsBaseDirPath,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_Webbasedir_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            _FailoverClusterMachineName,
-            _WebMachineNames,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            null,
-            _SchedulerAppsBaseDirPath,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_Scheduler_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            _FailoverClusterMachineName,
-            _WebMachineNames,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            _WebAppsBaseDirPath,
-            null,
-            _TerminalAppsBaseDirPath,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_EnvironmentInfoTests_Throws_When_Terminal_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new EnvironmentInfo(
-            _EnvironmentName,
-            _ConfigurationTemplateName,
-            _AppServerMachine,
-            _FailoverClusterMachineName,
-            _WebMachineNames,
-            _TerminalMachineName,
-            _DatabaseMachineName,
-            _NtServicesBaseDirPath,
-            _WebAppsBaseDirPath,
-            _SchedulerAppsBaseDirPath,
-            null,
-            false,
-            _EnvironmentUsers,
-            _AppPoolInfos,
-            _ProjectToWebSiteMappings,
-            _ProjectToAppPoolMappings,
-            _ProjectToFailoverClusterGroupMappings);
-        });
-    }
-
-    [Test]
-    public void Test_GetAppServerNetworkPath_Throws_When_path_null()
-    {
-      var envInfo =
-        new EnvironmentInfo(
-          _EnvironmentName,
-          _ConfigurationTemplateName,
-          _AppServerMachine,
-          _FailoverClusterMachineName,
-          _WebMachineNames,
-          _TerminalMachineName,
-          _DatabaseMachineName,
-          _NtServicesBaseDirPath,
-          _WebAppsBaseDirPath,
-          _SchedulerAppsBaseDirPath,
-          _TerminalAppsBaseDirPath,
-          false,
-          _EnvironmentUsers,
-          _AppPoolInfos,
-          _ProjectToWebSiteMappings,
-          _ProjectToAppPoolMappings,
-          _ProjectToFailoverClusterGroupMappings);
-
-      Assert.Throws<ArgumentException>(
-        () => envInfo.GetAppServerNetworkPath(null));
     }
 
     [Test]
@@ -393,8 +115,7 @@ namespace UberDeployer.Core.Tests.Domain
         false,
         _EnvironmentUsers,
         _AppPoolInfos,
-        _ProjectToWebSiteMappings,
-        _ProjectToAppPoolMappings,
+        _WebAppProjectConfigurations,
         _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
@@ -420,8 +141,7 @@ namespace UberDeployer.Core.Tests.Domain
           false,
           _EnvironmentUsers,
           _AppPoolInfos,
-          _ProjectToWebSiteMappings,
-          _ProjectToAppPoolMappings,
+          _WebAppProjectConfigurations,
           _ProjectToFailoverClusterGroupMappings);
 
       Assert.Throws<ArgumentException>(
@@ -447,8 +167,7 @@ namespace UberDeployer.Core.Tests.Domain
           false,
           _EnvironmentUsers,
           _AppPoolInfos,
-          _ProjectToWebSiteMappings,
-          _ProjectToAppPoolMappings,
+          _WebAppProjectConfigurations,
           _ProjectToFailoverClusterGroupMappings);
 
       Assert.AreEqual(

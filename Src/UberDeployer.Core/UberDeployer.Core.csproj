@@ -80,8 +80,7 @@
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\EnableSchedulerAppStep.cs" />
-    <Compile Include="Domain\ProjectToAppPoolMapping.cs" />
-    <Compile Include="Domain\ProjectToWebSiteMapping.cs" />
+    <Compile Include="Domain\WebAppProjectConfiguration.cs" />
     <Compile Include="Domain\Input\DbInputParams.cs" />
     <Compile Include="Domain\Input\InputParams.cs" />
     <Compile Include="Deployment\CollectedCredentials.cs" />

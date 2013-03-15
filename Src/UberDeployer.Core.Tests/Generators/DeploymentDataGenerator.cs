@@ -9,10 +9,10 @@ namespace UberDeployer.Core.Tests.Generators
     {
       var environmentUsers =
         new List<EnvironmentUser>()
-          {
-            new EnvironmentUser("id", "user_name"),
-            new EnvironmentUser("id2", "user_name2")
-          };
+        {
+          new EnvironmentUser("id", "user_name"),
+          new EnvironmentUser("id2", "user_name2")
+        };
 
       var appPoolInfos =
         new List<IisAppPoolInfo>()
@@ -20,23 +20,17 @@ namespace UberDeployer.Core.Tests.Generators
           new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
         };
 
-      var projectToWebSiteMappings =
-        new List<ProjectToWebSiteMapping>
+      var webAppProjectConfigurations =
+        new List<WebAppProjectConfiguration>
         {
-          new ProjectToWebSiteMapping("name", "website"),
-        };
-
-      var projectToAppPoolMappings =
-        new List<ProjectToAppPoolMapping>
-        {
-          new ProjectToAppPoolMapping("name", "apppool"),
+          new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"),
         };
 
       var projectToFailoverClusterGroupMappings =
         new List<ProjectToFailoverClusterGroupMapping>
-          {
-            new ProjectToFailoverClusterGroupMapping("name", "cg1"),
-          };
+        {
+          new ProjectToFailoverClusterGroupMapping("name", "cg1"),
+        };
 
       return
         new EnvironmentInfo(
@@ -54,8 +48,7 @@ namespace UberDeployer.Core.Tests.Generators
           false,
           environmentUsers,
           appPoolInfos,
-          projectToWebSiteMappings,
-          projectToAppPoolMappings,
+          webAppProjectConfigurations,
           projectToFailoverClusterGroupMappings);
     }
   }

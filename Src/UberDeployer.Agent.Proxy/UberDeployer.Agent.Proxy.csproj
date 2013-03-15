@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
+    <Compile Include="Dto\asd.cs" />
     <Compile Include="Dto\Input\DbInputParams.cs" />
     <Compile Include="Dto\Input\InputParams.cs" />
     <Compile Include="Dto\Input\NtServiceInputParams.cs" />
@@ -54,8 +55,6 @@
     <Compile Include="Dto\Input\TerminalAppInputParams.cs" />
     <Compile Include="Dto\Input\WebAppInputParams.cs" />
     <Compile Include="Dto\Input\WebServiceInputParams.cs" />
-    <Compile Include="Dto\ProjectToAppPoolMapping.cs" />
-    <Compile Include="Dto\ProjectToWebSiteMapping.cs" />
     <Compile Include="Dto\DeploymentInfo.cs" />
     <Compile Include="Dto\DiagnosticMessage.cs" />
     <Compile Include="Dto\DiagnosticMessageType.cs" />

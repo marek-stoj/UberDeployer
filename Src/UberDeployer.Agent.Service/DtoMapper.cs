@@ -29,8 +29,7 @@ namespace UberDeployer.Agent.Service
 
       Mapper.CreateMap<Core.Domain.EnvironmentUser, Proxy.Dto.EnvironmentUser>();
 
-      Mapper.CreateMap<Core.Domain.ProjectToWebSiteMapping, Proxy.Dto.ProjectToWebSiteMapping>();
-      Mapper.CreateMap<Core.Domain.ProjectToAppPoolMapping, Proxy.Dto.ProjectToAppPoolMapping>();
+      Mapper.CreateMap<Core.Domain.WebAppProjectConfiguration, Proxy.Dto.WebAppProjectConfiguration>();
       Mapper.CreateMap<Core.Domain.ProjectToFailoverClusterGroupMapping, Proxy.Dto.ProjectToFailoverClusterGroupMapping>();
 
       Mapper.CreateMap<Core.TeamCity.Models.ProjectConfiguration, Proxy.Dto.TeamCity.ProjectConfiguration>();

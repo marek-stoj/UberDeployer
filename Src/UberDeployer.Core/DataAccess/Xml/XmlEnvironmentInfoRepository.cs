@@ -46,9 +46,7 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public List<AppPoolInfoXml> AppPoolInfos { get; set; }
 
-      public List<ProjectToWebSiteMappingXml> ProjectToWebSiteMappings { get; set; }
-
-      public List<ProjectToAppPoolMappingXml> ProjectToAppPoolMappings { get; set; } 
+      public List<WebAppProjectConfigurationXml> WebAppProjectConfigurations { get; set; }
 
       public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; }
     }
@@ -69,16 +67,14 @@ namespace UberDeployer.Core.DataAccess.Xml
       public IisAppPoolMode Mode { get; set; }
     }
 
-    public class ProjectToWebSiteMappingXml
+    public class WebAppProjectConfigurationXml
     {
+      [XmlAttribute("projectName")]
       public string ProjectName { get; set; }
 
       public string WebSiteName { get; set; }
-    }
 
-    public class ProjectToAppPoolMappingXml
-    {
-      public string ProjectName { get; set; }
+      public string WebAppName { get; set; }
 
       public string AppPoolId { get; set; }
     }
@@ -186,16 +182,13 @@ namespace UberDeployer.Core.DataAccess.Xml
                   ap.Name,
                   ap.Version,
                   ap.Mode)),
-              eiXml.ProjectToWebSiteMappings.Select(
-                ptwsm =>
-                new ProjectToWebSiteMapping(
-                  ptwsm.ProjectName,
-                  ptwsm.WebSiteName)),
-              eiXml.ProjectToAppPoolMappings.Select(
-                ptwsm =>
-                new ProjectToAppPoolMapping(
-                  ptwsm.ProjectName,
-                  ptwsm.AppPoolId)),
+              eiXml.WebAppProjectConfigurations.Select(
+                wapc =>
+                new WebAppProjectConfiguration(
+                  wapc.ProjectName,
+                  wapc.WebSiteName,
+                  wapc.WebAppName,
+                  wapc.AppPoolId)),
               eiXml.ProjectToFailoverClusterGroupMappings.Select(
                 ptfcgm =>
                 new ProjectToFailoverClusterGroupMapping(

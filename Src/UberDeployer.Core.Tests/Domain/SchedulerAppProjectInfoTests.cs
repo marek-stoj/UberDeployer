@@ -37,16 +37,10 @@ namespace UberDeployer.Core.Tests.Domain
         new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
       };
 
-    private static readonly List<ProjectToWebSiteMapping> _ProjectToWebSiteMappings =
-      new List<ProjectToWebSiteMapping>
+    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
+      new List<WebAppProjectConfiguration>
       {
-        new ProjectToWebSiteMapping("prj1", "website"),
-      };
-
-    private static readonly List<ProjectToAppPoolMapping> _ProjectToAppPoolMappings =
-      new List<ProjectToAppPoolMapping>
-      {
-        new ProjectToAppPoolMapping("prj1", "apppool"),
+        new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"),
       };
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
@@ -54,48 +48,6 @@ namespace UberDeployer.Core.Tests.Domain
         {
           new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
         };
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_Name_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new SchedulerAppProjectInfo(
-              null,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvirionmentSpecific,
-              _SchedulerAppName,
-              _SchedulerAppDirName,
-              _SchedulerAppExeName,
-              _SchedulerAppUserId,
-              _ScheduledHour,
-              _ScheduledMinute,
-              _ExecutionTimeLimitInMinutes);
-          });
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_ArtifactsRepositoryName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new SchedulerAppProjectInfo(
-              _ProjectName,
-              null,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvirionmentSpecific,
-              _SchedulerAppName,
-              _SchedulerAppDirName,
-              _SchedulerAppExeName,
-              _SchedulerAppUserId,
-              _ScheduledHour,
-              _ScheduledMinute,
-              _ExecutionTimeLimitInMinutes);
-          });
-    }
 
     [Test]
     public void Test_SchedulerAppProjectInfoTests_Throws_When_ScheduledHour_LessThan0()
@@ -203,90 +155,6 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_SchedulerAppName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new SchedulerAppProjectInfo(
-              _ProjectName,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvirionmentSpecific,
-              null,
-              _SchedulerAppDirName,
-              _SchedulerAppExeName,
-              _SchedulerAppUserId,
-              _ScheduledHour,
-              _ScheduledMinute,
-              _ExecutionTimeLimitInMinutes);
-          });
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_SchedulerAppDirName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new SchedulerAppProjectInfo(
-              _ProjectName,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvirionmentSpecific,
-              _SchedulerAppName,
-              null,
-              _SchedulerAppExeName,
-              _SchedulerAppUserId,
-              _ScheduledHour,
-              _ScheduledMinute,
-              _ExecutionTimeLimitInMinutes);
-          });
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_SchedulerAppExeName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new SchedulerAppProjectInfo(
-              _ProjectName,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvirionmentSpecific,
-              _SchedulerAppName,
-              _SchedulerAppDirName,
-              null,
-              _SchedulerAppUserId,
-              _ScheduledHour,
-              _ScheduledMinute,
-              _ExecutionTimeLimitInMinutes);
-          });
-    }
-
-    [Test]
-    public void Test_CreateDeployemntTask_Throws_When_ObjectFactory_null()
-    {
-      var schedulerAppProjectInfo =
-        new SchedulerAppProjectInfo(
-          _ProjectName,
-          _ArtifactsRepositoryName,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvirionmentSpecific,
-          _SchedulerAppName,
-          _SchedulerAppDirName,
-          _SchedulerAppExeName,
-          _SchedulerAppUserId,
-          _ScheduledHour,
-          _ScheduledMinute,
-          _ExecutionTimeLimitInMinutes);
-
-      Assert.Throws<ArgumentNullException>(
-        () => schedulerAppProjectInfo.CreateDeploymentTask(null));
-    }
-
-    [Test]
     public void Test_CreateDeployemntTask_RunsProperly_WhenAllIsWell()
     {
       var objectFactory = new Mock<IObjectFactory>(MockBehavior.Strict);
@@ -339,8 +207,7 @@ namespace UberDeployer.Core.Tests.Domain
           false,
           _EnvironmentUsers,
           _AppPoolInfos,
-          _ProjectToWebSiteMappings,
-          _ProjectToAppPoolMappings,
+          _WebAppProjectConfigurations,
           _ProjectToFailoverClusterGroupMappings);
 
       var schedulerAppProjectInfo =
@@ -364,26 +231,6 @@ namespace UberDeployer.Core.Tests.Domain
       Assert.IsNotNull(targetFolders);
       Assert.AreEqual(1, targetFolders.Count);
       Assert.AreEqual("\\\\" + machine + "\\c$\\scheduler\\" + _SchedulerAppDirName, targetFolders[0]);
-    }
-
-    [Test]
-    public void Test_GetTargetFolde_Throws_EnvInfo_null()
-    {
-      var schedulerAppProjectInfo =
-        new SchedulerAppProjectInfo(
-          _ProjectName,
-          _ArtifactsRepositoryName,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvirionmentSpecific,
-          _SchedulerAppName,
-          _SchedulerAppDirName,
-          _SchedulerAppExeName,
-          _SchedulerAppUserId,
-          _ScheduledHour,
-          _ScheduledMinute,
-          _ExecutionTimeLimitInMinutes);
-
-      Assert.Throws<ArgumentNullException>(() => schedulerAppProjectInfo.GetTargetFolders(null));
     }
   }
 }

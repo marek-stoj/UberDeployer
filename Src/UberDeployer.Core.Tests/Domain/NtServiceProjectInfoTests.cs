@@ -37,137 +37,18 @@ namespace UberDeployer.Core.Tests.Domain
         new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
       };
 
-    private static readonly List<ProjectToWebSiteMapping> _ProjectToWebSiteMappings =
-      new List<ProjectToWebSiteMapping>
+    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
+      new List<WebAppProjectConfiguration>
       {
-        new ProjectToWebSiteMapping("prj1", "website"),
+        new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"),
       };
 
-    private static readonly List<ProjectToAppPoolMapping> _ProjectToAppPoolMappings =
-      new List<ProjectToAppPoolMapping>
-      {
-        new ProjectToAppPoolMapping("prj1", "apppool"),
-      };
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
       new List<ProjectToFailoverClusterGroupMapping>
         {
           new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
         };
-
-    [Test]
-    public void Test_NtServiceProjectInfo_Thows_When_Name_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new NtServiceProjectInfo(
-              null,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvironmentSpecific,
-              _NtServiceName,
-              _NtServiceDirName,
-              _NtServiceDisplayName,
-              _NtServiceExeName,
-              _NtServiceUserId);
-          });
-    }
-
-    [Test]
-    public void Test_NtServiceProjectInfo_Thows_When_ArtifactsRepoName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new NtServiceProjectInfo(
-              _ProjectName,
-              null,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvironmentSpecific,
-              _NtServiceName,
-              _NtServiceDirName,
-              _NtServiceDisplayName,
-              _NtServiceExeName,
-              _NtServiceUserId);
-          });
-    }
-
-    [Test]
-    public void Test_NtServiceProjectInfo_Thows_When_NtServiceName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new NtServiceProjectInfo(
-              _ProjectName,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvironmentSpecific,
-              null,
-              _NtServiceDirName,
-              _NtServiceDisplayName,
-              _NtServiceExeName,
-              _NtServiceUserId);
-          });
-    }
-
-    [Test]
-    public void Test_NtServiceProjectInfo_Thows_When_NtServiceDirName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new NtServiceProjectInfo(
-              _ProjectName,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvironmentSpecific,
-              _NtServiceName,
-              null,
-              _NtServiceDisplayName,
-              _NtServiceExeName,
-              _NtServiceUserId);
-          });
-    }
-
-    [Test]
-    public void Test_NtServiceProjectInfo_Thows_When_NtServiceExeName_null()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-          {
-            new NtServiceProjectInfo(
-              _ProjectName,
-              _ArtifactsRepositoryName,
-              _ArtifactsRepositoryDirName,
-              _ArtifactsAreNotEnvironmentSpecific,
-              _NtServiceName,
-              _NtServiceDirName,
-              _NtServiceDisplayName,
-              null,
-              _NtServiceUserId);
-          });
-    }
-
-    [Test]
-    public void Test_CreateDeploymentTask_Thows_When_ObjectFactory_null()
-    {
-      var projectInfo =
-        new NtServiceProjectInfo(
-          _ProjectName,
-          _ArtifactsRepositoryName,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvironmentSpecific,
-          _NtServiceName,
-          _NtServiceDirName,
-          _NtServiceDisplayName,
-          _NtServiceExeName,
-          _NtServiceUserId);
-
-      Assert.Throws<ArgumentNullException>(
-        () => projectInfo.CreateDeploymentTask(null));
-    }
 
     [Test]
     public void Test_CreateDeployemntTask_RunsProperly_WhenAllIsWell()
@@ -224,8 +105,7 @@ namespace UberDeployer.Core.Tests.Domain
           false,
           _EnvironmentUsers,
           _AppPoolInfos,
-          _ProjectToWebSiteMappings,
-          _ProjectToAppPoolMappings,
+          _WebAppProjectConfigurations,
           _ProjectToFailoverClusterGroupMappings);
 
       var projectInfo =
@@ -245,24 +125,6 @@ namespace UberDeployer.Core.Tests.Domain
       Assert.IsNotNull(targetFolders);
       Assert.AreEqual(1, targetFolders.Count);
       Assert.AreEqual("\\\\" + machine + "\\c$\\basedir\\" + _NtServiceDirName, targetFolders[0]);
-    }
-
-    [Test]
-    public void Test_GetTargetFolders_Throws_EnvInfo_null()
-    {
-      var projectInfo =
-        new NtServiceProjectInfo(
-          _ProjectName,
-          _ArtifactsRepositoryName,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvironmentSpecific,
-          _NtServiceName,
-          _NtServiceDirName,
-          _NtServiceDisplayName,
-          _NtServiceExeName,
-          _NtServiceUserId);
-
-      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(null));
     }
   }
 }
