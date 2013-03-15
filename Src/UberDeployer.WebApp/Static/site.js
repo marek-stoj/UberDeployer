@@ -171,12 +171,10 @@ function loadEnvironments(onFinishedCallback) {
 
 function loadWebMachinesList() {
   var $lstEnvironments = domHelper.getEnvironmentsElement();
-  
   var $lstMachines = domHelper.getMachinesElement();
-
-  $lstMachines.empty();
-
   var selectedProject = domHelper.getProjectsElement().val();
+
+  clearTargetMachines();
 
   if (g_ProjectList[selectedProject].type != APP_TYPES.WebApp) {
     $lstMachines.attr('disabled', 'disabled');
@@ -188,6 +186,8 @@ function loadWebMachinesList() {
     { envName: $lstEnvironments.val() },
     function(machines) {
       $lstMachines.removeAttr('disabled');
+
+      clearTargetMachines();
 
       $.each(machines, function(i, val) {
         $lstMachines.append(
@@ -250,7 +250,9 @@ function loadProjectConfigurationBuilds(projectName, projectConfigurationName, o
 
   $.getJSON(
     g_AppPrefix + 'Api/GetProjectConfigurationBuilds?projectName=' + encodeURIComponent(projectName) + '&projectConfigurationName=' + encodeURIComponent(projectConfigurationName),
-    function(data) {
+    function (data) {
+      clearProjectConfigurationBuilds();
+
       $.each(data.projectConfigurationBuilds, function(i, val) {
         var $lstProjectConfigBuilds = $('#lst-project-config-builds');
 
@@ -283,10 +285,9 @@ function loadNewDiagnosticMessages() {
     function(data) {
       $.each(data.messages, function(i, val) {
         if (val.MessageId > g_lastSeenMessageId) {
+          logMessage(val.Message, val.Type);
           g_lastSeenMessageId = val.MessageId;
         }
-
-        logMessage(val.Message, val.Type);
       });
     });
   }
@@ -353,6 +354,10 @@ function clearProjectConfigurations() {
 
 function clearProjectConfigurationBuilds() {
   $('#lst-project-config-builds').empty();
+}
+
+function clearTargetMachines() {
+  domHelper.getMachinesElement().empty();
 }
 
 function rememberTargetEnvironmentName() {
