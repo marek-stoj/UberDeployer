@@ -72,11 +72,11 @@ namespace UberDeployer.Core.DataAccess.Xml
       [XmlAttribute("projectName")]
       public string ProjectName { get; set; }
 
+      public string AppPoolId { get; set; }
+
       public string WebSiteName { get; set; }
 
       public string WebAppName { get; set; }
-
-      public string AppPoolId { get; set; }
     }
 
     public class ProjectToFailoverClusterGroupMappingXml
@@ -186,9 +186,9 @@ namespace UberDeployer.Core.DataAccess.Xml
                 wapc =>
                 new WebAppProjectConfiguration(
                   wapc.ProjectName,
+                  wapc.AppPoolId,
                   wapc.WebSiteName,
-                  wapc.WebAppName,
-                  wapc.AppPoolId)),
+                  wapc.WebAppName)),
               eiXml.ProjectToFailoverClusterGroupMappings.Select(
                 ptfcgm =>
                 new ProjectToFailoverClusterGroupMapping(
