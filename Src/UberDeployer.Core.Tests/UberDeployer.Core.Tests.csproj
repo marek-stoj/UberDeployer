@@ -74,6 +74,7 @@
     <Compile Include="Deployment\DeployNtServiceDeploymentTaskTests.cs" />
     <Compile Include="Deployment\BackupFilesDeploymentStepTests.cs" />
     <Compile Include="Deployment\CtorTester.cs" />
+    <Compile Include="Deployment\DeploySchedulerAppDeploymentTaskTests.cs" />
     <Compile Include="Deployment\DeployWebAppDeploymentTaskTests.cs" />
     <Compile Include="Deployment\ExtractArtifactsDeploymentStepTests.cs" />
     <Compile Include="Deployment\ExtractVersionDeploymentStepTests.cs" />

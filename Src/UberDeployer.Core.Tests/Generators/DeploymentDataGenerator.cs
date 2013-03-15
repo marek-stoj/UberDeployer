@@ -43,7 +43,7 @@ namespace UberDeployer.Core.Tests.Generators
           "database_server_machine_name",
           "nt_service_base_dir_path",
           "web_apps_base_dir_path",
-          "scheduler_apps_base_dir_path",
+          "X:\\scheduler_apps_base_dir_path",
           "X:\\terminal_apps_base_dir_path",
           false,
           environmentUsers,
