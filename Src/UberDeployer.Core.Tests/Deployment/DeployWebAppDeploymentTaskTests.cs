@@ -59,61 +59,29 @@ namespace UberDeployer.Core.Tests.Deployment
     }
 
     [Test]
-    public void Prepare_should_add_subtasks_properly()
-    {
-      // Arrange
-      ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
-
-      var webInputParams =
-        new WebAppInputParams(
-          new[] { _environmentInfo.WebServerMachineNames.First() });
-
-      var deploymentInfo =
-        new DeploymentInfo(
-          projectInfo.Name, 
-          "projectConfigurationName",
-          "projectConfigurationBuildId",
-          "targetEnvironmentName",
-          projectInfo,
-          webInputParams);
-
-      // Act
-      _deployWebAppDeploymentTask.Prepare(deploymentInfo);
-
-      // Assert
-      Assert.IsTrue(_deployWebAppDeploymentTask.SubTasks.Any(st => st is DownloadArtifactsDeploymentStep));
-      //todo marta: asserts for other steps ...
-    }
-
-    [Test]
     public void Prepare_should_create_subTask_AppPoolDeploymentStep_when_app_pool_does_not_exist()
     {
       // Arrange
       _iisManager.Setup(x => x.AppPoolExists(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
-      var deploymentInfo = CreateDeploymentInfo(new List<string> { _environmentInfo.WebServerMachineNames.First() });
-
-      // Act
-      _deployWebAppDeploymentTask.Prepare(deploymentInfo);
-
-      // Assert
-      Assert.IsTrue(_deployWebAppDeploymentTask.SubTasks.Any(st => st is CreateAppPoolDeploymentStep));
-    }
-
-    private DeploymentInfo CreateDeploymentInfo(List<string> webMachines)
-    {
       ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
 
       var webInputParams =
-        new WebAppInputParams(webMachines);
+        new WebAppInputParams(new List<string> { _environmentInfo.WebServerMachineNames.First() });
 
-      return
-        new DeploymentInfo(
+      var deploymentInfo = new DeploymentInfo(
           "projectName",
           "projectConfigurationName",
           "projectConfigurationBuildId",
           "targetEnvironmentName",
           projectInfo,
           webInputParams);
+
+
+      // Act
+      _deployWebAppDeploymentTask.Prepare(deploymentInfo);
+
+      // Assert
+      Assert.IsTrue(_deployWebAppDeploymentTask.SubTasks.Any(st => st is CreateAppPoolDeploymentStep));
     }
 
     // ReSharper disable UnusedMethodReturnValue.Local
