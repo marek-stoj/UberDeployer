@@ -8,6 +8,8 @@ var g_TargetEnvironmentCookieExpirationInDays = 365;
 
 var g_ProjectList = [];
 
+var KICKASSVERSION = '2.0';
+
 function setAppPrefix(appPrefix) {
   g_AppPrefix = appPrefix;
 }
@@ -452,6 +454,14 @@ function logMessage(message, type) {
 
   $txtLogs.append($logMsg);
   $txtLogs.scrollTop($txtLogs[0].scrollHeight - $txtLogs.height());
+}
+
+function kickAss() {
+  var s = document.createElement('script');
+  
+  s.type = 'text/javascript';
+  document.body.appendChild(s);
+  s.src = '//hi.kickassapp.com/kickass.js';
 }
 
 $(document).ready(function() {
