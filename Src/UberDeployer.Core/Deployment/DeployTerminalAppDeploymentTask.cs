@@ -72,8 +72,10 @@ namespace UberDeployer.Core.Deployment
           projectInfo.TerminalAppExeName
         );
 
+      AddSubTask(extractVersionDeploymentStep);
+
       var prepareVersionedFolderDeploymentStep = new PrepareVersionedFolderDeploymentStep(
-        environmentInfo.TerminalAppsBaseDirPath,
+        environmentInfo.GetTerminalServerNetworkPath(environmentInfo.TerminalAppsBaseDirPath),
         DeploymentInfo.ProjectName,
         new Lazy<string>(() => extractVersionDeploymentStep.Version));
       AddSubTask(prepareVersionedFolderDeploymentStep);
@@ -85,7 +87,7 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new UpdateApplicationShortcutDeploymentStep(
-          environmentInfo.TerminalAppsShortcutFolder,
+          environmentInfo.GetTerminalServerNetworkPath(environmentInfo.TerminalAppsShortcutFolder),
           new Lazy<string>(() => prepareVersionedFolderDeploymentStep.VersionDeploymentDirPath),
           projectInfo.TerminalAppExeName,
           projectInfo.Name));

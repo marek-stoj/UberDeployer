@@ -52,7 +52,7 @@ namespace UberDeployer.Core.Deployment
 
     public override string Description
     {
-      get { return string.Format("Copy files to '{0}' from '{1}'.", _dstDirPath, _srcDirPathProvider); }
+      get { return string.Format("Copy files to '{0}' from '{1}'.", _dstDirPath.Value, _srcDirPathProvider.Value); }
     }
 
     #endregion
