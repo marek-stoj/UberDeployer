@@ -11,10 +11,6 @@ namespace UberDeployer.WinApp.ViewModels.PropertyGrids
 
     [Category("Specific")]
     [ReadOnly(true)]
-    public string WebAppName { get; set; }
-
-    [Category("Specific")]
-    [ReadOnly(true)]
     public string WebAppDirName { get; set; }
 
     [Category("Specific")]
