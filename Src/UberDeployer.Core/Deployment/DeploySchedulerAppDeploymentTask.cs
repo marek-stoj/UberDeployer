@@ -56,7 +56,7 @@ namespace UberDeployer.Core.Deployment
 
       if (!_directoryAdapter.Exists(targetDirNetworkPath))
       {
-        throw new DeploymentTaskException(string.Format("Target directory does not exists: {0}", targetDirNetworkPath));
+        throw new DeploymentTaskException(string.Format("Target directory does not exist: {0}", targetDirNetworkPath));
       }
 
       ScheduledTaskDetails taskDetails = _taskScheduler.GetScheduledTaskDetails(machineName, _projectInfo.SchedulerAppName);
@@ -216,7 +216,7 @@ namespace UberDeployer.Core.Deployment
       }
       else
       {
-        throw new DeploymentTaskException(string.Format("Target directory does not exists: {0}", targetDirNetworkPath));
+        throw new DeploymentTaskException(string.Format("Target directory does not exist: {0}", targetDirNetworkPath));
       }
     }
   }
