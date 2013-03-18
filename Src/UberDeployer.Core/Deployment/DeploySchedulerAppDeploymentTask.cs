@@ -33,7 +33,7 @@ namespace UberDeployer.Core.Deployment
       Guard.NotNull(artifactsRepository, "artifactsRepository");
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNull(passwordCollector, "passwordCollector");
-      Guard.NotNull(directoryAdapter, "directoryAdapter");      
+      Guard.NotNull(directoryAdapter, "directoryAdapter");
 
       _artifactsRepository = artifactsRepository;
       _taskScheduler = taskScheduler;
@@ -206,18 +206,6 @@ namespace UberDeployer.Core.Deployment
           _taskScheduler,
           machineName,
           enable));
-    }
-
-    private void AddBackupStep(string targetDirNetworkPath)
-    {
-      if (_directoryAdapter.Exists(targetDirNetworkPath))
-      {
-        AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
-      }
-      else
-      {
-        throw new DeploymentTaskException(string.Format("Target directory does not exist: {0}", targetDirNetworkPath));
-      }
     }
   }
 }
