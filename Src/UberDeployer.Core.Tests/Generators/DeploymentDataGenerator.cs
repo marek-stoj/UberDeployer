@@ -44,6 +44,7 @@ namespace UberDeployer.Core.Tests.Generators
           "failover_cluster_machine_name",
           new[] { "web_server_machine_name" },
           "terminal_server_machine_name",
+          "schedulerServerMachineName",
           "database_server_machine_name",
           "nt_service_base_dir_path",
           "web_apps_base_dir_path",

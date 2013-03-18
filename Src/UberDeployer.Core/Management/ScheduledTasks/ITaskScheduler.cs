@@ -9,6 +9,6 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 
     ScheduledTaskDetails GetScheduledTaskDetails(string machineName, string taskName);
     
-    void EnableTask(string machineName, string taskName, bool enable);
+    void ToggleTaskEnabled(string machineName, string taskName, bool enabled);
   }
 }

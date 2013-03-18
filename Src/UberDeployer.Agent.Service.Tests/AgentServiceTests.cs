@@ -98,6 +98,7 @@ namespace UberDeployer.Agent.Service.Tests
         "failOverMachineName",
         expectedWebMachineNames,
         "terminalServerMachineName",
+        "schedulerServerMachineName",
         "databaseServerMachineName",
         "ntServiceDirPath",
         "webAppsBaseDirPath",

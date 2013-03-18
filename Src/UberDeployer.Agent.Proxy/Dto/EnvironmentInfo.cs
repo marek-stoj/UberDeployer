@@ -16,6 +16,8 @@ namespace UberDeployer.Agent.Proxy.Dto
 
     public string TerminalServerMachineName { get; set; }
 
+    public string SchedulerServerMachineName { get; set; }
+
     public string DatabaseServerMachineName { get; set; }
 
     public string NtServicesBaseDirPath { get; set; }

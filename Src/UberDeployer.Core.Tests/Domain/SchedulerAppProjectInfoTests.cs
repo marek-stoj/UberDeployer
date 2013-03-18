@@ -198,10 +198,11 @@ namespace UberDeployer.Core.Tests.Domain
         new EnvironmentInfo(
           "name",
           "templates",
-          machine,
+          "appservermachine",
           "failover",
           new[] { "webmachine" },
           "terminalmachine",
+          machine,
           "databasemachine",
           baseDirPath,
           "webbasedir",

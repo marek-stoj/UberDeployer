@@ -25,6 +25,7 @@ namespace UberDeployer.Core.Domain
       string failoverClusterMachineName,
       IEnumerable<string> webServerMachineNames,
       string terminalServerMachineName,
+      string schedulerServerMachineName,
       string databaseServerMachineName,
       string ntServicesBaseDirPath,
       string webAppsBaseDirPath,
@@ -49,6 +50,7 @@ namespace UberDeployer.Core.Domain
       }
 
       Guard.NotNullNorEmpty(terminalServerMachineName, "terminalServerMachineName");
+      Guard.NotNullNorEmpty(schedulerServerMachineName, "schedulerServerMachineName");
       Guard.NotNullNorEmpty(databaseServerMachineName, "databaseServerMachineName");
       Guard.NotNullNorEmpty(ntServicesBaseDirPath, "ntServicesBaseDirPath");
       Guard.NotNullNorEmpty(webAppsBaseDirPath, "webAppsBaseDirPath");
@@ -88,6 +90,7 @@ namespace UberDeployer.Core.Domain
       FailoverClusterMachineName = failoverClusterMachineName;
       _webServerMachines = new List<string>(webServerMachineNames);
       TerminalServerMachineName = terminalServerMachineName;
+      SchedulerServerMachineName = schedulerServerMachineName;
       DatabaseServerMachineName = databaseServerMachineName;
       NtServicesBaseDirPath = ntServicesBaseDirPath;
       WebAppsBaseDirPath = webAppsBaseDirPath;
@@ -139,6 +142,13 @@ namespace UberDeployer.Core.Domain
       Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
 
       return GetNetworkPath(AppServerMachineName, absoluteLocalPath);
+    }
+
+    public string GetSchedulerServerNetworkPath(string absoluteLocalPath)
+    {
+      Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
+
+      return GetNetworkPath(SchedulerServerMachineName, absoluteLocalPath);
     }
 
     public string GetWebServerNetworkPath(string webServerMachineName, string absoluteLocalPath)
@@ -230,6 +240,8 @@ namespace UberDeployer.Core.Domain
     }
 
     public string TerminalServerMachineName { get; private set; }
+
+    public string SchedulerServerMachineName { get; private set; }
 
     public string DatabaseServerMachineName { get; private set; }
 

@@ -49,9 +49,9 @@ namespace UberDeployer.Core.Deployment
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
 
-      string machineName = environmentInfo.AppServerMachineName;
+      string machineName = environmentInfo.SchedulerServerMachineName;
       string targetDirPath = Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
-      string targetDirNetworkPath = environmentInfo.GetAppServerNetworkPath(targetDirPath);
+      string targetDirNetworkPath = environmentInfo.GetSchedulerServerNetworkPath(targetDirPath);
       string executablePath = Path.Combine(targetDirPath, _projectInfo.SchedulerAppExeName);
 
       if (!_directoryAdapter.Exists(targetDirNetworkPath))
@@ -64,7 +64,10 @@ namespace UberDeployer.Core.Deployment
       CheckIfTaskIsRunning(taskDetails, environmentInfo);
 
       // create a step to disable scheduler app.
-      AddEnableTaskStep(machineName, false);
+      if (taskDetails != null)
+      {
+        AddToggleSchedulerAppEnabledStep(machineName, false);
+      }
 
       Lazy<string> binariesDirPathProvider = AddStepsToObtainBinaries(environmentInfo);
 
@@ -76,10 +79,10 @@ namespace UberDeployer.Core.Deployment
           binariesDirPathProvider,
           new Lazy<string>(() => targetDirNetworkPath)));
 
-      AddTaskConfiguraitonSteps(taskDetails, environmentInfo, executablePath);
+      AddTaskConfigurationSteps(taskDetails, environmentInfo, executablePath);
 
-      // create a step to enable scheduler app.
-      AddEnableTaskStep(machineName, true);
+      // create a step to toggle scheduler app enabled
+      AddToggleSchedulerAppEnabledStep(machineName, true);
     }
 
     public override string Description
@@ -112,7 +115,7 @@ namespace UberDeployer.Core.Deployment
                && taskDetails.ExeAbsolutePath == executablePath);
     }
 
-    private void AddTaskConfiguraitonSteps(ScheduledTaskDetails taskDetails, EnvironmentInfo environmentInfo, string executablePath)
+    private void AddTaskConfigurationSteps(ScheduledTaskDetails taskDetails, EnvironmentInfo environmentInfo, string executablePath)
     {
       bool hasSettingsChanged = HasSettingsChanged(taskDetails, executablePath);
       bool taskExists = taskDetails != null;
@@ -127,7 +130,7 @@ namespace UberDeployer.Core.Deployment
           PasswordCollectorHelper.CollectPasssword(
             _passwordCollector,
             environmentInfo,
-            environmentInfo.AppServerMachineName,
+            environmentInfo.SchedulerServerMachineName,
             _projectInfo.SchedulerAppUserId,
             out environmentUser);
       }
@@ -138,7 +141,7 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(
           new ScheduleNewAppDeploymentStep(
             _taskScheduler,
-            environmentInfo.AppServerMachineName,
+            environmentInfo.SchedulerServerMachineName,
             executablePath,
             environmentUser.UserName,
             environmentUserPassword));
@@ -149,7 +152,7 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(
           new UpdateAppScheduleDeploymentStep(
             _taskScheduler,
-            environmentInfo.AppServerMachineName,
+            environmentInfo.SchedulerServerMachineName,
             executablePath,
             environmentUser.UserName,
             environmentUserPassword));
@@ -192,20 +195,20 @@ namespace UberDeployer.Core.Deployment
       {
         throw new DeploymentTaskException(string.Format(
           "Task: {0} on machine: {1} is already running. Deployment aborted. Last run time: {2}, next run time: {3}",
-          environmentInfo.AppServerMachineName,
+          environmentInfo.SchedulerServerMachineName,
           _projectInfo.SchedulerAppName,
           taskDetails.LastRunTime,
           taskDetails.NextRunTime));
       }
     }
 
-    private void AddEnableTaskStep(string machineName, bool enable)
+    private void AddToggleSchedulerAppEnabledStep(string machineName, bool enabled)
     {
       AddSubTask(
-        new EnableSchedulerAppStep(
+        new ToggleSchedulerAppEnabledStep(
           _taskScheduler,
           machineName,
-          enable));
+          enabled));
     }
   }
 }

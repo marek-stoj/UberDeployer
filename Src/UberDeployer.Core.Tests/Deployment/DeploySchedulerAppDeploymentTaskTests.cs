@@ -101,11 +101,11 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare(_deploymentInfo);
 
       // assert
-      AssertStepIsBefore(typeof (EnableSchedulerAppStep), typeof (CopyFilesDeploymentStep), _deployTask.SubTasks.ToArray());
+      AssertStepIsBefore(typeof (ToggleSchedulerAppEnabledStep), typeof (CopyFilesDeploymentStep), _deployTask.SubTasks.ToArray());
 
-      var disableTask = _deployTask.SubTasks.First(x => x is EnableSchedulerAppStep) as EnableSchedulerAppStep;
+      var disableTask = _deployTask.SubTasks.First(x => x is ToggleSchedulerAppEnabledStep) as ToggleSchedulerAppEnabledStep;
       Assert.IsNotNull(disableTask);
-      Assert.IsFalse(disableTask.Enable);
+      Assert.IsFalse(disableTask.Enabled);
     }    
 
     [Test]
@@ -116,8 +116,8 @@ namespace UberDeployer.Core.Tests.Deployment
 
       // assert
       DeploymentTaskBase lastTask = _deployTask.SubTasks.Last();
-      Assert.IsInstanceOf<EnableSchedulerAppStep>(lastTask);
-      Assert.IsTrue(((EnableSchedulerAppStep)lastTask).Enable);
+      Assert.IsInstanceOf<ToggleSchedulerAppEnabledStep>(lastTask);
+      Assert.IsTrue(((ToggleSchedulerAppEnabledStep)lastTask).Enabled);
     }
 
     [Test]

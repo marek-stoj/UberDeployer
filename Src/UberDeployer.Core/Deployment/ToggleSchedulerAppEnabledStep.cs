@@ -4,36 +4,37 @@ using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Deployment
 {
-  public class EnableSchedulerAppStep : DeploymentStep
+  public class ToggleSchedulerAppEnabledStep : DeploymentStep
   {
     private readonly ITaskScheduler _taskScheduler;
     private readonly string _machineName;
-    private readonly bool _enable;
+    private readonly bool _enabled;
 
     private string _taskName
     {
       get
       {
         var projectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
+
         return projectInfo.SchedulerAppName;
       }
     }
 
-    public EnableSchedulerAppStep(ITaskScheduler taskScheduler, string machineName, bool enable)
+    public ToggleSchedulerAppEnabledStep(ITaskScheduler taskScheduler, string machineName, bool enabled)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNullNorEmpty(machineName, "machineName");
 
       _taskScheduler = taskScheduler;
       _machineName = machineName;
-      _enable = enable;
+      _enabled = enabled;
     }
 
     public override string Description
     {
       get
       {
-        string action = _enable ? "Enable" : "Disable";
+        string action = _enabled ? "Enable" : "Disable";
 
         return string.Format(
           "{0} task: {1} on machine: {2}.", 
@@ -43,14 +44,14 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    public bool Enable
+    public bool Enabled
     {
-      get { return _enable; }
+      get { return _enabled; }
     }
 
     protected override void DoExecute()
     {
-      _taskScheduler.EnableTask(_machineName, _taskName, _enable);
+      _taskScheduler.ToggleTaskEnabled(_machineName, _taskName, _enabled);
     }
   }
 }

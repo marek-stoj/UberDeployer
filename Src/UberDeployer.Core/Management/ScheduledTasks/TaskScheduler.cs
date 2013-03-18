@@ -199,7 +199,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
       }
     }
 
-    public void EnableTask(string machineName, string taskName, bool enable)
+    public void ToggleTaskEnabled(string machineName, string taskName, bool enabled)
     {
       Guard.NotNullNorEmpty(machineName, "machineName");
       Guard.NotNullNorEmpty(taskName, "taskName");
@@ -207,12 +207,13 @@ namespace UberDeployer.Core.Management.ScheduledTasks
       using (var taskService = CreateTaskService(machineName))
       {
         Task task = taskService.FindTask(taskName, false);
+
         if (task == null)
         {
-          throw new InvalidOperationException("Can't enable not scheduled task");
+          throw new InvalidOperationException(string.Format("Can't {0} task because it doesn't exist.", (enabled ? "enable" : "disable")));
         }
 
-        task.Enabled = enable;
+        task.Enabled = enabled;
       }
     }
 

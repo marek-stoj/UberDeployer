@@ -97,6 +97,7 @@ namespace UberDeployer.Core.Tests.Domain
           "failover",
           new[] { "webmachine" },
           "terminalmachine",
+          "schedulermachine",
           "databasemachine",
           baseDirPath,
           "webbasedir",

@@ -15,6 +15,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _ConfigurationTemplateName = "conf";
     private static readonly List<string> _WebMachineNames = new List<string> { "web1", "web2" };
     private const string _TerminalMachineName = "terminal_server";
+    private const string _SchedulerMachineName = "scheduler_server";
     private const string _DatabaseMachineName = "databae_server";
     private const string _NtServicesBaseDirPath = "C:\\NtServices";
     private const string _WebAppsBaseDirPath = "C:\\WebApps";
@@ -59,6 +60,7 @@ namespace UberDeployer.Core.Tests.Domain
             _FailoverClusterMachineName,
             _WebMachineNames,
             _TerminalMachineName,
+            _SchedulerMachineName,
             _DatabaseMachineName,
             _NtServicesBaseDirPath,
             _WebAppsBaseDirPath,
@@ -86,6 +88,7 @@ namespace UberDeployer.Core.Tests.Domain
             _FailoverClusterMachineName,
             _WebMachineNames,
             _TerminalMachineName,
+            _SchedulerMachineName,
             _DatabaseMachineName,
             _NtServicesBaseDirPath,
             _WebAppsBaseDirPath,
@@ -110,6 +113,7 @@ namespace UberDeployer.Core.Tests.Domain
         _FailoverClusterMachineName,
         _WebMachineNames,
         _TerminalMachineName,
+        _SchedulerMachineName,
         _DatabaseMachineName,
         _NtServicesBaseDirPath,
         _WebAppsBaseDirPath,
@@ -137,6 +141,7 @@ namespace UberDeployer.Core.Tests.Domain
           _FailoverClusterMachineName,
           _WebMachineNames,
           _TerminalMachineName,
+          _SchedulerMachineName,
           _DatabaseMachineName,
           _NtServicesBaseDirPath,
           _WebAppsBaseDirPath,
@@ -164,6 +169,7 @@ namespace UberDeployer.Core.Tests.Domain
           _FailoverClusterMachineName,
           _WebMachineNames,
           _TerminalMachineName,
+          _SchedulerMachineName,
           _DatabaseMachineName,
           _NtServicesBaseDirPath,
           _WebAppsBaseDirPath,
