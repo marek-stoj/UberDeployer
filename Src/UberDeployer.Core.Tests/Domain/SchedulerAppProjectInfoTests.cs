@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
@@ -162,6 +163,7 @@ namespace UberDeployer.Core.Tests.Domain
       var artifactsRepository = new Mock<IArtifactsRepository>(MockBehavior.Loose);
       var taskScheduler = new Mock<ITaskScheduler>(MockBehavior.Loose);
       var passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Loose);
+      var directoryAdapter = new Mock<IDirectoryAdapter>(MockBehavior.Loose);
 
       var schedulerAppProjectInfo =
         new SchedulerAppProjectInfo(
@@ -181,6 +183,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object);
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
+      objectFactory.Setup(o => o.CreateDirectoryAdapter()).Returns(directoryAdapter.Object);
 
       schedulerAppProjectInfo.CreateDeploymentTask(objectFactory.Object);
     }
