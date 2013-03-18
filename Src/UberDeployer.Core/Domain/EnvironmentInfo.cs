@@ -34,7 +34,9 @@ namespace UberDeployer.Core.Domain
       IEnumerable<EnvironmentUser> environmentUsers,
       IEnumerable<IisAppPoolInfo> appPoolInfos,
       IEnumerable<WebAppProjectConfiguration> webAppProjectConfigurations,
-      IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings)
+      IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings,
+      string terminalAppShortcutFolder
+      )
     {
       Guard.NotNullNorEmpty(name, "name");
       Guard.NotNull(configurationTemplateName, "configurationTemplateName");
@@ -78,6 +80,8 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("projectToFailoverClusterGroupMappings");
       }
 
+      Guard.NotNullNorEmpty(name, "terminalAppShortcutPath");
+
       Name = name;
       ConfigurationTemplateName = configurationTemplateName;
       AppServerMachineName = appServerMachineName;
@@ -96,6 +100,7 @@ namespace UberDeployer.Core.Domain
 
       _webAppProjectConfigurationsDict = webAppProjectConfigurations.ToDictionary(ptfcgm => ptfcgm.ProjectName);
       _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(ptfcgm => ptfcgm.ProjectName);
+      TerminalAppsShortcutFolder = terminalAppShortcutFolder;
     }
 
     #endregion

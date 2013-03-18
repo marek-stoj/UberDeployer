@@ -20,6 +20,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _WebAppsBaseDirPath = "C:\\WebApps";
     private const string _SchedulerAppsBaseDirPath = "C:\\SchedulerApps";
     private const string _TerminalAppsBaseDirPath = "C:\\TerminalApps";
+    private const string _TerminalAppsShortcutFolder = "C:\\TerminalAppShortcuts";
 
     private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
@@ -67,7 +68,8 @@ namespace UberDeployer.Core.Tests.Domain
             _EnvironmentUsers,
             _AppPoolInfos,
             _WebAppProjectConfigurations,
-            _ProjectToFailoverClusterGroupMappings);
+            _ProjectToFailoverClusterGroupMappings,
+            _TerminalAppsShortcutFolder);
         });
     }
 
@@ -93,7 +95,8 @@ namespace UberDeployer.Core.Tests.Domain
             _EnvironmentUsers,
             _AppPoolInfos,
             _WebAppProjectConfigurations,
-            _ProjectToFailoverClusterGroupMappings);
+            _ProjectToFailoverClusterGroupMappings,
+            _TerminalAppsShortcutFolder);
         });
     }
 
@@ -116,7 +119,8 @@ namespace UberDeployer.Core.Tests.Domain
         _EnvironmentUsers,
         _AppPoolInfos,
         _WebAppProjectConfigurations,
-        _ProjectToFailoverClusterGroupMappings);
+        _ProjectToFailoverClusterGroupMappings,
+        _TerminalAppsShortcutFolder);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(@"\\kasjdkasdj"));
@@ -142,7 +146,8 @@ namespace UberDeployer.Core.Tests.Domain
           _EnvironmentUsers,
           _AppPoolInfos,
           _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings);
+          _ProjectToFailoverClusterGroupMappings,
+          _TerminalAppsShortcutFolder);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath("qlwelqwelw"));
@@ -168,7 +173,8 @@ namespace UberDeployer.Core.Tests.Domain
           _EnvironmentUsers,
           _AppPoolInfos,
           _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings);
+          _ProjectToFailoverClusterGroupMappings,
+          _TerminalAppsShortcutFolder);
 
       Assert.AreEqual(
         "\\\\" + _WebMachineNames[0] + "\\c$\\",

@@ -49,7 +49,14 @@ namespace UberDeployer.Core.Tests.Generators
           environmentUsers,
           appPoolInfos,
           webAppProjectConfigurations,
-          projectToFailoverClusterGroupMappings);
+          projectToFailoverClusterGroupMappings,
+          "X:\\terminal_apps_shortcut_folder");
     }
+
+    public static ProjectInfo GetTerminalAppProjectInfo()
+    {
+      return new TerminalAppProjectInfo("project_name", "artifactsRepositoryName", "artifactsRepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
+    }
+
   }
 }

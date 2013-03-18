@@ -49,6 +49,8 @@ namespace UberDeployer.Core.DataAccess.Xml
       public List<WebAppProjectConfigurationXml> WebAppProjectConfigurations { get; set; }
 
       public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; }
+
+      public string TerminalAppsShortcutFolder { get; set; }
     }
 
     public class EnvironmentUserXml
@@ -193,7 +195,9 @@ namespace UberDeployer.Core.DataAccess.Xml
                 ptfcgm =>
                 new ProjectToFailoverClusterGroupMapping(
                   ptfcgm.ProjectName,
-                  ptfcgm.ClusterGroupName))))
+                  ptfcgm.ClusterGroupName)),
+              eiXml.TerminalAppsShortcutFolder
+                  ))
           .ToDictionary(ei => ei.Name);
     }
 

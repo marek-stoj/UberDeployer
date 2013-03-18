@@ -35,7 +35,8 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     }
 
     [Test]
-    public void OnDeploymentTaskFinished_ExpectAddDeploymnetRequest()
+    public void 
+      OnDeploymentTaskFinished_ExpectAddDeploymentRequest()
     {
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
@@ -60,6 +61,10 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       environmentInfoRepository
         .Setup(x => x.GetByName(deploymentInfo.TargetEnvironmentName))
         .Returns(DeploymentDataGenerator.GetEnvironmentInfo());
+
+      projectsInfoRepository
+        .Setup(pir => pir.GetByName(deploymentInfo.ProjectName))
+        .Returns(DeploymentDataGenerator.GetTerminalAppProjectInfo());
 
       deploymentTask.Prepare(deploymentInfo);
 

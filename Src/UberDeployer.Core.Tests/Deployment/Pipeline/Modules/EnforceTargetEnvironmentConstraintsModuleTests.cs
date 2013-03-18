@@ -50,6 +50,10 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
         .Setup(x => x.GetByName(It.IsAny<string>()))
         .Returns(DeploymentDataGenerator.GetEnvironmentInfo());
 
+      projectsInfoRepository
+        .Setup(pir => pir.GetByName(deploymentInfo.ProjectName))
+        .Returns(DeploymentDataGenerator.GetTerminalAppProjectInfo());
+
       deploymentTask.Prepare(deploymentInfo);      
 
       Assert.DoesNotThrow(() => enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext));

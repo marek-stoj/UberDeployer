@@ -107,7 +107,8 @@ namespace UberDeployer.Agent.Service.Tests
         new[] { new EnvironmentUser("id", "user") },
         new[] { new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated), },
         new[] { new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"), },
-        new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") });
+        new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") },
+        "terminalAppsShortcutFolder");
     }
   }
 }

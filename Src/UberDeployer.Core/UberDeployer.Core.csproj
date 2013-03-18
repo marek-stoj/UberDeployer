@@ -81,7 +81,6 @@
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\EnableSchedulerAppStep.cs" />
     <Compile Include="Domain\WebAppProjectConfiguration.cs" />
-    <Compile Include="Deployment\CopyFilesToVersionedFolderDeploymentStep.cs" />
     <Compile Include="Deployment\ExtractVersionDeploymentStep.cs" />
     <Compile Include="Deployment\PrepareVersionedFolderDeploymentStep.cs" />
     <Compile Include="Deployment\UpdateApplicationShortcutDeploymentStep.cs" />

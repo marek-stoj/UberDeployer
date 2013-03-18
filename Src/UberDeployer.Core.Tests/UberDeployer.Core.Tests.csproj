@@ -76,6 +76,7 @@
     <Compile Include="Deployment\CtorTester.cs" />
     <Compile Include="Deployment\DeployWebAppDeploymentTaskTests.cs" />
     <Compile Include="Deployment\ExtractArtifactsDeploymentStepTests.cs" />
+    <Compile Include="Deployment\ExtractVersionDeploymentStepTests.cs" />
     <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStepTests.cs" />
     <Compile Include="Deployment\InstallNtServiceDeploymentStepTests.cs" />
     <Compile Include="Deployment\MigrateDbDeploymentTaskTests.cs" />
@@ -87,7 +88,9 @@
     <Compile Include="Deployment\Pipeline\Modules\DeploymentRequestTests.cs" />
     <Compile Include="Deployment\Pipeline\Modules\EnforceTargetEnvironmentConstraintsModuleTests.cs" />
     <Compile Include="Deployment\MsSqlDbScriptRunnerTests.cs" />
+    <Compile Include="Deployment\PrepareVersionedFolderDeploymentStepTests.cs" />
     <Compile Include="Deployment\RunDbScriptsDeploymentStepTests.cs" />
+    <Compile Include="Deployment\UpdateApplicationShortcutDeploymentStepTests.cs" />
     <Compile Include="Domain\IisAppPoolInfoTests.cs" />
     <Compile Include="Domain\EnvironmentInfoTests.cs" />
     <Compile Include="Domain\TerminalAppProjectInfoTests.cs" />
@@ -125,7 +128,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\TestVersionExtract\subst.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TODO.txt" />
+    <None Include="TestData\Shortcuts\ExistingAppShortcut.lnk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Shortcuts\FolderMattersFile.dummy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\TestArtifacts\artifacts.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -175,6 +187,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="TestData\TestSrcDir\SubDir2\File6.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\VersionedFolders\TestProject\1.0.3.5\FolderMattersFile.dummy">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

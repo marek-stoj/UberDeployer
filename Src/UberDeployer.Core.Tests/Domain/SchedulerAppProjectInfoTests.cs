@@ -208,7 +208,8 @@ namespace UberDeployer.Core.Tests.Domain
           _EnvironmentUsers,
           _AppPoolInfos,
           _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings);
+          _ProjectToFailoverClusterGroupMappings,
+          "terminalAppsShortcutFolder");
 
       var schedulerAppProjectInfo =
         new SchedulerAppProjectInfo(
