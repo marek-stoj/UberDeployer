@@ -1,4 +1,5 @@
-﻿using UberDeployer.Core;
+﻿using UberDeployer.Common.IO;
+using UberDeployer.Core;
 using UberDeployer.Core.Configuration;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
@@ -105,6 +106,11 @@ namespace UberDeployer.CommonConfiguration
     public IFailoverClusterManager CreateFailoverClusterManager()
     {
       return new PowerShellFailoverClusterManager();
+    }
+
+    public IDirectoryAdapter CreateDirectoryAdapter()
+    {
+      return _container.Resolve<IDirectoryAdapter>();
     }
 
     #endregion

@@ -7,11 +7,15 @@ namespace UberDeployer.Core.Tests.Generators
   {
     public static EnvironmentInfo GetEnvironmentInfo()
     {
+      return GetEnvironmentInfo(new EnvironmentUser("id", "user_name"));
+    }
+
+    public static EnvironmentInfo GetEnvironmentInfo(EnvironmentUser user)
+    {
       var environmentUsers =
         new List<EnvironmentUser>()
-        {
-          new EnvironmentUser("id", "user_name"),
-          new EnvironmentUser("id2", "user_name2")
+        {          
+          user
         };
 
       var appPoolInfos =
@@ -57,6 +61,5 @@ namespace UberDeployer.Core.Tests.Generators
     {
       return new TerminalAppProjectInfo("project_name", "artifactsRepositoryName", "artifactsRepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
     }
-
   }
 }

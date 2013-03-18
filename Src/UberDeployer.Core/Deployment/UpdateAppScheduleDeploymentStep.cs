@@ -30,7 +30,7 @@ namespace UberDeployer.Core.Deployment
       string password)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
-      Guard.NotNullNorEmpty(_machineName, "_machineName");
+      Guard.NotNullNorEmpty(machineName, "machineName");
       Guard.NotNullNorEmpty(executablePath, "executablePath");
       Guard.NotNullNorEmpty(userName, "userName");
       Guard.NotNullNorEmpty(password, "password");

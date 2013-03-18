@@ -61,6 +61,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UberDeployer.Common\UberDeployer.Common.csproj">
+      <Project>{256FF6D7-F1B8-43E7-97CA-7A63455C0BE6}</Project>
+      <Name>UberDeployer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
       <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
       <Name>UberDeployer.Core</Name>

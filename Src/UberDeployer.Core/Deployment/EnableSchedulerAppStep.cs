@@ -43,6 +43,11 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
+    public bool Enable
+    {
+      get { return _enable; }
+    }
+
     protected override void DoExecute()
     {
       _taskScheduler.EnableTask(_machineName, _taskName, _enable);

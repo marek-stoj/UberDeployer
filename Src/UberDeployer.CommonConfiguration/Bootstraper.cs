@@ -5,6 +5,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using Castle.MicroKernel.Registration;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Configuration;
 using UberDeployer.Core.DataAccess.NHibernate;
 using UberDeployer.Core.Domain;
@@ -49,6 +50,8 @@ namespace UberDeployer.CommonConfiguration
         Component.For<IEnvironmentInfoRepository>()
           .UsingFactoryMethod(() => new XmlEnvironmentInfoRepository(_EnvironmentInfoPath))
           .LifeStyle.Singleton);
+
+      container.Register(Component.For<IDirectoryAdapter>().ImplementedBy<DirectoryAdapter>());
 
       container.Register(
         Component.For<ITeamCityClient>()

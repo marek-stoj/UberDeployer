@@ -1,3 +1,4 @@
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Configuration;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
@@ -44,6 +45,8 @@ namespace UberDeployer.Core
 
     IDbVersionProvider CreateDbVersionProvider();
 
-    IFailoverClusterManager CreateFailoverClusterManager();       
+    IFailoverClusterManager CreateFailoverClusterManager();
+    
+    IDirectoryAdapter CreateDirectoryAdapter();
   }
 }
