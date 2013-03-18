@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Web.Administration;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using System.Text.RegularExpressions;
 using UberDeployer.Core.Management.MsDeploy;
@@ -100,31 +101,33 @@ namespace UberDeployer.Core.Management.Iis
 
     public void SetAppPool(string machineName, string fullWebAppName, string appPoolName)
     {
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (string.IsNullOrEmpty(fullWebAppName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "fullWebAppName");
-      }
-
-      if (string.IsNullOrEmpty(appPoolName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "appPoolName");
-      }
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(fullWebAppName, "fullWebAppName");
+      Guard.NotNullNorEmpty(appPoolName, "appPoolName");
 
       if (!AppPoolExists(machineName, appPoolName))
       {
         throw new ArgumentException(string.Format("Couldn't set app's application pool to '{0}' because it doesn't exist on '{1}'.", appPoolName, machineName), "appPoolName");
       }
 
-      string appCmdCommand =
-        string.Format(
-          "set app /app.name:\"{0}\" -applicationPool:\"{1}\"",
-          fullWebAppName,
-          appPoolName);
+      string appCmdCommand;
+
+      if (fullWebAppName.Contains("/"))
+      {
+        appCmdCommand =
+          string.Format(
+            "set app /app.name:\"{0}\" -applicationPool:\"{1}\"",
+            fullWebAppName,
+            appPoolName);
+      }
+      else
+      {
+        appCmdCommand =
+          string.Format(
+            "set site /site.name:\"{0}\" /[path='/'].applicationPool:\"{1}\"",
+            fullWebAppName,
+            appPoolName);
+      }
 
       RunAppCmd(machineName, appCmdCommand);
     }

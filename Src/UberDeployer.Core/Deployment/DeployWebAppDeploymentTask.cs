@@ -168,8 +168,8 @@ namespace UberDeployer.Core.Deployment
             _iisManager,
             webServerMachineName,
             webSiteName,
-            webAppName,
-            appPoolInfo);
+            appPoolInfo,
+            webAppName);
 
         AddSubTask(setAppPoolDeploymentStep);
       }

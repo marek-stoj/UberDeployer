@@ -1,4 +1,5 @@
 using System;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Iis;
 
@@ -9,41 +10,21 @@ namespace UberDeployer.Core.Deployment
     private readonly IIisManager _iisManager;
     private readonly string _machineName;
     private readonly string _webSiteName;
-    private readonly string _webAppName;
     private readonly IisAppPoolInfo _appPoolInfo;
+    private readonly string _webAppName;
 
-    public SetAppPoolDeploymentStep(IIisManager iisManager, string machineName, string webSiteName, string webAppName, IisAppPoolInfo appPoolInfo)
+    public SetAppPoolDeploymentStep(IIisManager iisManager, string machineName, string webSiteName, IisAppPoolInfo appPoolInfo, string webAppName = null)
     {
-      if (iisManager == null)
-      {
-        throw new ArgumentNullException("iisManager");
-      }
-
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (string.IsNullOrEmpty(webSiteName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "webSiteName");
-      }
-
-      if (string.IsNullOrEmpty(webAppName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "webAppName");
-      }
-
-      if (appPoolInfo == null)
-      {
-        throw new ArgumentNullException("appPoolInfo");
-      }
+      Guard.NotNull(iisManager, "iisManager");
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(webSiteName, "webSiteName");
+      Guard.NotNull(appPoolInfo, "appPoolInfo");
 
       _iisManager = iisManager;
       _machineName = machineName;
       _webSiteName = webSiteName;
-      _webAppName = webAppName;
       _appPoolInfo = appPoolInfo;
+      _webAppName = webAppName;
     }
 
     #region Overrides of DeploymentStep
@@ -74,7 +55,17 @@ namespace UberDeployer.Core.Deployment
 
     protected string FullWebAppName
     {
-      get { return string.Format("{0}/{1}", _webSiteName, _webAppName); }
+      get
+      {
+        string fullWebAppName = _webSiteName;
+
+        if (!string.IsNullOrEmpty(_webAppName))
+        {
+          fullWebAppName += string.Format("/{0}", _webAppName);
+        }
+
+        return fullWebAppName;
+      }
     }
 
     #endregion

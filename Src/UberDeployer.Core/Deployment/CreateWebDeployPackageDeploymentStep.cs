@@ -13,8 +13,10 @@ namespace UberDeployer.Core.Deployment
     private readonly IMsDeploy _msDeploy;
     private readonly Lazy<string> _webAppBinariesDirPathProvider;   
     private readonly string _iisSiteName;
-    private readonly string _webApplicationName;
-   
+    private readonly string _webAppName;
+    
+    private readonly string _fullWebAppName;
+
     private string _webAppBinariesParentDirPath
     {
       get 
@@ -23,7 +25,7 @@ namespace UberDeployer.Core.Deployment
 
         if (string.IsNullOrEmpty(webAppBinariesParentDirPath))
         {
-          throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not valid because its parent can't be determined.", _webAppBinariesDirPathProvider), "webAppBinariesDirPath");
+          throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not valid because its parent can't be determined.", _webAppBinariesDirPathProvider));
         }
         
         return webAppBinariesParentDirPath;
@@ -37,17 +39,23 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public CreateWebDeployPackageDeploymentStep(IMsDeploy msDeploy, Lazy<string> webAppBinariesDirPathProvider, string iisSiteName, string webApplicationName)
+    public CreateWebDeployPackageDeploymentStep(IMsDeploy msDeploy, Lazy<string> webAppBinariesDirPathProvider, string iisSiteName, string webAppName = null)
     {
       Guard.NotNull(msDeploy, "msDeploy");      
       Guard.NotNull(webAppBinariesDirPathProvider, "webAppBinariesDirPathProvider");
       Guard.NotNullNorEmpty(iisSiteName, "iisSiteName");
-      Guard.NotNullNorEmpty(webApplicationName, "webApplicationName");           
 
       _msDeploy = msDeploy;
       _webAppBinariesDirPathProvider = webAppBinariesDirPathProvider;
       _iisSiteName = iisSiteName;
-      _webApplicationName = webApplicationName;
+      _webAppName = webAppName;
+
+      _fullWebAppName = _iisSiteName;
+
+      if (!string.IsNullOrEmpty(_webAppName))
+      {
+        _fullWebAppName += string.Format("/{0}", _webAppName);
+      }
     }
 
     #endregion
@@ -58,7 +66,7 @@ namespace UberDeployer.Core.Deployment
     {
       if (!Path.IsPathRooted(_webAppBinariesDirPathProvider.Value))
       {
-        throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not an absolute path.", _webAppBinariesDirPathProvider.Value), "webAppBinariesDirPath");
+        throw new ArgumentException(string.Format("Given web app binaries dir path ('{0}') is not an absolute path.", _webAppBinariesDirPathProvider.Value));
       }
 
       string iisAppPath = _webAppBinariesDirPathProvider.Value;
@@ -75,15 +83,13 @@ namespace UberDeployer.Core.Deployment
               .Replace("\\", "\\\\")
               .Replace(".", "\\."));
 
-        string _fullWebApplicationName = string.Format("{0}/{1}", _iisSiteName, _webApplicationName);
-
         var msDeployArgs =
           new[]
             {
               "-verb:sync",
               string.Format("-source:manifest=\"{0}\"", webDeployManifestFilePath),
               string.Format("-dest:package=\"{0}\"", _packageFilePath),
-              string.Format("-declareParam:name=IIS Web Application Name,defaultValue=\"{0}\",tags=iisApp", _fullWebApplicationName),
+              string.Format("-declareParam:name=IIS Web Application Name,defaultValue=\"{0}\",tags=iisApp", _fullWebAppName),
               string.Format("-declareParam:name=IIS Web Application Name,kind=ProviderPath,scope=iisApp,match=\"{0}\"", paramMatchValue),
               string.Format("-declareParam:name=IIS Web Application Name,kind=ProviderPath,scope=setAcl,match=\"{0}\"", paramMatchValue),
             };
