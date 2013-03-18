@@ -49,10 +49,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     public class WebAppProjectInfoXml : ProjectInfoXml
     {
-      // TODO IMM HI: xxx this shouldn't be here
-      public string WebAppName { get; set; }
-
-      // TODO IMM HI: xxx this shouldn't be here
       public string WebAppDirName { get; set; }
     }
 
@@ -174,7 +170,6 @@ namespace UberDeployer.Core.DataAccess.Xml
             webAppProjectInfoXml.ArtifactsRepositoryName,
             webAppProjectInfoXml.ArtifactsRepositoryDirName,
             webAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
-            webAppProjectInfoXml.WebAppName,
             webAppProjectInfoXml.WebAppDirName);
       }
 

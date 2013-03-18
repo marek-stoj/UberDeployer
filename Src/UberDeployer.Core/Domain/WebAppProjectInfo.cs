@@ -12,13 +12,11 @@ namespace UberDeployer.Core.Domain
   {
     #region Ctor(s)
 
-    public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string webAppName, string webAppDirName)
+    public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string webAppDirName)
       : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
-      Guard.NotNullNorEmpty(webAppName, "webAppName");
       Guard.NotNullNorEmpty(webAppDirName, "webAppDirName");
 
-      WebAppName = webAppName;
       WebAppDirName = webAppDirName;
     }
 
@@ -74,18 +72,24 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("environmentInfo");
       }
 
+      WebAppProjectConfiguration webAppProjectConfiguration =
+        environmentInfo.GetWebProjectConfiguration(Name);
+
       // TODO IMM HI: what about https vs http?
       return
         environmentInfo.WebServerMachineNames
-          .Select(wsmn => string.Format("http://{0}/{1}", wsmn, WebAppName))
+          .Select(
+            wsmn =>
+            string.Format(
+              "http://{0}/{1}",
+              wsmn,
+              webAppProjectConfiguration.WebAppName))
           .ToList();
     }
 
     #endregion
 
     #region Properties
-
-    public string WebAppName { get; private set; }
 
     public string WebAppDirName { get; private set; }
     

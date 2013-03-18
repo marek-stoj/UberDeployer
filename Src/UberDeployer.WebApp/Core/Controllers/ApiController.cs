@@ -313,14 +313,23 @@ namespace UberDeployer.WebApp.Core.Controllers
 
         case ProjectType.WebApp:
         {
-          return new WebAppInputParams
+          List<string> onlyIncludedWebMachines = null;
+
+          if (targetMachines != null)
           {
-            // TODO IMM HI: xxx test if targetMachines != null but Count == 0
-            OnlyIncludedWebMachines =
-              targetMachines != null
-                ? new List<string>(targetMachines)
-                : null,
-          };
+            onlyIncludedWebMachines = new List<string>(targetMachines);
+
+            if (onlyIncludedWebMachines.Count == 0)
+            {
+              throw new ArgumentException("If target machines are specified there must be at least one present.", "targetMachines");
+            }
+          }
+
+          return
+            new WebAppInputParams
+            {
+              OnlyIncludedWebMachines = onlyIncludedWebMachines,
+            };
         }
 
         case ProjectType.WebService:

@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
-    <Compile Include="Dto\asd.cs" />
+    <Compile Include="Dto\WebAppProjectConfiguration.cs" />
     <Compile Include="Dto\Input\DbInputParams.cs" />
     <Compile Include="Dto\Input\InputParams.cs" />
     <Compile Include="Dto\Input\NtServiceInputParams.cs" />

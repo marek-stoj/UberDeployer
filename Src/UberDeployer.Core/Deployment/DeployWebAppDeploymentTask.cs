@@ -98,6 +98,7 @@ namespace UberDeployer.Core.Deployment
         environmentInfo.GetWebProjectConfiguration(_webAppProjectInfo.Name);
 
       string webSiteName = configuration.WebSiteName;
+      string webAppName = configuration.WebAppName;
       IisAppPoolInfo appPoolInfo = environmentInfo.GetAppPoolInfo(configuration.AppPoolId);
 
       IEnumerable<string> webMachinesToDeployTo =
@@ -109,7 +110,7 @@ namespace UberDeployer.Core.Deployment
         string webApplicationPhysicalPath =
           _iisManager.GetWebApplicationPath(
             webServerMachineName,
-            string.Format("{0}/{1}", webSiteName, _webAppProjectInfo.WebAppName));
+            string.Format("{0}/{1}", webSiteName, webAppName));
 
         if (!string.IsNullOrEmpty(webApplicationPhysicalPath))
         {
@@ -135,7 +136,7 @@ namespace UberDeployer.Core.Deployment
             _msDeploy,
             new Lazy<string>(() =>extractArtifactsDeploymentStep.BinariesDirPath),
             webSiteName,
-            _webAppProjectInfo.WebAppName);
+            webAppName);
 
         AddSubTask(createWebDeployPackageDeploymentStep);
 
@@ -167,7 +168,7 @@ namespace UberDeployer.Core.Deployment
             _iisManager,
             webServerMachineName,
             webSiteName,
-            _webAppProjectInfo.WebAppName,
+            webAppName,
             appPoolInfo);
 
         AddSubTask(setAppPoolDeploymentStep);

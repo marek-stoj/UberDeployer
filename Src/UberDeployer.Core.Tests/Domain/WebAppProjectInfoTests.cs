@@ -14,9 +14,8 @@ namespace UberDeployer.Core.Tests.Domain
   [TestFixture]
   public class WebAppProjectInfoTests
   {
-    private const string WebAppName = "WebAppName";
     private const string WebAppDirName = "WebAppDirName";
-    private const string Name = "name";
+    private const string Name = "prj1";
     private const string ArtifactsRepositoryName = "repoName";
     private const string ArtifactsRepositoryDirName = "repoDirName";
     private const bool ArtifactsAreNotEnvironmentSpecific = false;
@@ -61,7 +60,6 @@ namespace UberDeployer.Core.Tests.Domain
           ArtifactsRepositoryName,
           ArtifactsRepositoryDirName,
           ArtifactsAreNotEnvironmentSpecific,
-          WebAppName,
           WebAppDirName);
 
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
@@ -104,7 +102,6 @@ namespace UberDeployer.Core.Tests.Domain
           ArtifactsRepositoryName,
           ArtifactsRepositoryDirName,
           false,
-          WebAppName,
           WebAppDirName);
 
       Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolders(envInfo).FirstOrDefault());
@@ -142,7 +139,6 @@ namespace UberDeployer.Core.Tests.Domain
           ArtifactsRepositoryName,
           ArtifactsRepositoryDirName,
           ArtifactsAreNotEnvironmentSpecific,
-          WebAppName,
           WebAppDirName);
 
       List<string> targetUrls =
@@ -151,7 +147,7 @@ namespace UberDeployer.Core.Tests.Domain
 
       Assert.IsNotNull(targetUrls);
       Assert.AreEqual(1, targetUrls.Count);
-      Assert.AreEqual("http://webmachine/" + WebAppName, targetUrls[0]);
+      Assert.AreEqual("http://webmachine/" + "prj1", targetUrls[0]);
     }
 
     [Test]
@@ -162,7 +158,6 @@ namespace UberDeployer.Core.Tests.Domain
         ArtifactsRepositoryName,
         ArtifactsRepositoryDirName,
         ArtifactsAreNotEnvironmentSpecific,
-        WebAppName,
         WebAppDirName);
     }
 
@@ -175,7 +170,6 @@ namespace UberDeployer.Core.Tests.Domain
           ArtifactsRepositoryName,
           ArtifactsRepositoryDirName,
           ArtifactsAreNotEnvironmentSpecific,
-          WebAppName,
           WebAppDirName);
 
       Assert.AreEqual(ProjectType.WebService, info.Type);

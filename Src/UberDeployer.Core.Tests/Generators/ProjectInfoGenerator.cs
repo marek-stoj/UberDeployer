@@ -27,7 +27,6 @@ namespace UberDeployer.Core.Tests.Generators
           "artifactsRepositoryName",
           "artifactsRepositoryDirName",
           true,
-          "webAppName",
           "webAppDirName");
     }
 
@@ -39,7 +38,6 @@ namespace UberDeployer.Core.Tests.Generators
           "artifactsRepositoryName",
           "artifactsRepositoryDirName",
           true,
-          "webAppName",
           "webAppDirName");
     }
 
