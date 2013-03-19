@@ -80,6 +80,8 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public string WebSiteName { get; set; }
 
+      public string WebAppDirName { get; set; }
+
       public string WebAppName { get; set; }
     }
 
@@ -193,6 +195,7 @@ namespace UberDeployer.Core.DataAccess.Xml
                   wapc.ProjectName,
                   wapc.AppPoolId,
                   wapc.WebSiteName,
+                  wapc.WebAppDirName,
                   wapc.WebAppName)),
               eiXml.ProjectToFailoverClusterGroupMappings.Select(
                 ptfcgm =>

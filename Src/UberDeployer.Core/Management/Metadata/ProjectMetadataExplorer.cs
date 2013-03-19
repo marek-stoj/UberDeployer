@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
+using log4net;
+using UberDeployer.Common;
 
 namespace UberDeployer.Core.Management.Metadata
 {
   public class ProjectMetadataExplorer : IProjectMetadataExplorer
   {
     private static readonly Regex _MachineNameInNetworkPathRegex = new Regex("^\\\\\\\\(?<MachineName>[^\\\\]+)\\\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IEnvironmentInfoRepository _environmentInfoRepository;
@@ -28,6 +33,8 @@ namespace UberDeployer.Core.Management.Metadata
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
       Guard.NotNullNorEmpty(environmentName, "environmentName");
+
+      _log.DebugIfEnabled(() => string.Format("Getting project metadata. Project name: '{0}'. Environment name: '{1}'.", projectName, environmentName));
 
       ProjectInfo projectInfo =
         _projectInfoRepository.FindByName(projectName);
@@ -52,6 +59,8 @@ namespace UberDeployer.Core.Management.Metadata
 
       foreach (string targetFolder in targetFolders)
       {
+        _log.DebugIfEnabled(() => string.Format("Processing target folder: '{0}'.", targetFolder));
+
         string machineName;
 
         if (!TryExtractMachineName(targetFolder, out machineName))

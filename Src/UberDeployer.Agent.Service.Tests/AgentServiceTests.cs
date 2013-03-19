@@ -112,7 +112,7 @@ namespace UberDeployer.Agent.Service.Tests
         false,
         new[] { new EnvironmentUser("id", "user") },
         new[] { new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated), },
-        new[] { new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"), },
+        new[] { new WebAppProjectConfiguration("prj1", "website", "apppool", "dir", "prj1"), },
         new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") },
         "terminalAppsShortcutFolder");
     }

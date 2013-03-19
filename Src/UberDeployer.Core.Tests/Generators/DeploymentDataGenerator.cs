@@ -27,7 +27,7 @@ namespace UberDeployer.Core.Tests.Generators
       var webAppProjectConfigurations =
         new List<WebAppProjectConfiguration>
         {
-          new WebAppProjectConfiguration("name", "apppool", "website", "name"),
+          new WebAppProjectConfiguration("name", "apppool", "website", "dir", "name"),
         };
 
       var projectToFailoverClusterGroupMappings =

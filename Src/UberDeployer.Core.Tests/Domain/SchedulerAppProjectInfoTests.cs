@@ -41,7 +41,7 @@ namespace UberDeployer.Core.Tests.Domain
     private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
       new List<WebAppProjectConfiguration>
       {
-        new WebAppProjectConfiguration("prj1", "website", "apppool", "prj1"),
+        new WebAppProjectConfiguration("prj1", "website", "apppool", "dir", "prj1"),
       };
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =

@@ -26,8 +26,7 @@ namespace UberDeployer.Core.Tests.Generators
           "name",
           "artifactsRepositoryName",
           "artifactsRepositoryDirName",
-          true,
-          "webAppDirName");
+          true);
     }
 
     public static WebServiceProjectInfo GetWebServiceProjectInfo()
@@ -37,8 +36,7 @@ namespace UberDeployer.Core.Tests.Generators
           "name",
           "artifactsRepositoryName",
           "artifactsRepositoryDirName",
-          true,
-          "webAppDirName");
+          true);
     }
 
     public static DbProjectInfo GetDbProjectInfo(bool areEnvironmentSpecific = false)

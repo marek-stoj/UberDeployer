@@ -49,7 +49,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     public class WebAppProjectInfoXml : ProjectInfoXml
     {
-      public string WebAppDirName { get; set; }
     }
 
     public class SchedulerAppProjectInfoXml : ProjectInfoXml
@@ -169,8 +168,7 @@ namespace UberDeployer.Core.DataAccess.Xml
             webAppProjectInfoXml.Name,
             webAppProjectInfoXml.ArtifactsRepositoryName,
             webAppProjectInfoXml.ArtifactsRepositoryDirName,
-            webAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
-            webAppProjectInfoXml.WebAppDirName);
+            webAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific);
       }
 
       var schedulerAppProjectInfoXml = projectInfoXml as SchedulerAppProjectInfoXml;

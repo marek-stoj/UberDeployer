@@ -12,12 +12,9 @@ namespace UberDeployer.Core.Domain
   {
     #region Ctor(s)
 
-    public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string webAppDirName)
+    public WebAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific)
       : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
-      Guard.NotNullNorEmpty(webAppDirName, "webAppDirName");
-
-      WebAppDirName = webAppDirName;
     }
 
     #endregion
@@ -53,7 +50,9 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("environmentInfo");
       }
 
-      // TODO IMM HI: this might be wrong (due to msdeploy)!
+      WebAppProjectConfiguration configuration =
+        environmentInfo.GetWebProjectConfiguration(Name);
+
       return
         environmentInfo
           .WebServerMachineNames
@@ -61,7 +60,7 @@ namespace UberDeployer.Core.Domain
             wsmn =>
             environmentInfo.GetWebServerNetworkPath(
               wsmn,
-              Path.Combine(environmentInfo.WebAppsBaseDirPath, WebAppDirName)))
+              Path.Combine(environmentInfo.WebAppsBaseDirPath, configuration.WebAppDirName)))
           .ToList();
     }
 
@@ -93,12 +92,6 @@ namespace UberDeployer.Core.Domain
       return string.Format("bin\\{0}.dll", Name);
     }
 
-    #endregion
-
-    #region Properties
-
-    public string WebAppDirName { get; private set; }
-    
     #endregion
   }
 }
