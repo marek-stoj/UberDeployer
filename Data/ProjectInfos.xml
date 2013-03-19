@@ -19,14 +19,7 @@
       <Name>UberDeployer.SampleWebApp</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleWebApp</ArtifactsRepositoryDirName>
-      <IisSiteName>Default Web Site</IisSiteName>
-      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
       <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
-      <AppPool>
-        <Name>ASP.NET v4.0</Name>
-        <Version>V4_0</Version>
-        <Mode>Integrated</Mode>
-      </AppPool>
     </ProjectInfoXml>
 
     <!-- Scheduler apps -->

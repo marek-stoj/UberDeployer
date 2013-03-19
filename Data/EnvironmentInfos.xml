@@ -12,11 +12,13 @@
         <string>localhost</string>
       </WebServerMachineNames>
       <TerminalServerMachineName>localhost</TerminalServerMachineName>
+      <SchedulerServerMachineName>localhost</SchedulerServerMachineName>
       <DatabaseServerMachineName>localhost</DatabaseServerMachineName>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
       <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
+      <TerminalAppsShortcutFolder>C:\AppShortcuts</TerminalAppsShortcutFolder>
       <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
       <EnvironmentUsers>
         <EnvironmentUserXml>
@@ -24,6 +26,21 @@
           <UserName>UberDeployer</UserName>
         </EnvironmentUserXml>
       </EnvironmentUsers>
+      <AppPoolInfos>
+        <AppPoolInfoXml>
+          <Id>ASP.NET v4.0</Id>
+          <Name>ASP.NET v4.0</Name>
+          <Version>V4_0</Version>
+          <Mode>Integrated</Mode>
+        </AppPoolInfoXml>
+      </AppPoolInfos>
+      <WebAppProjectConfigurations>
+        <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
+          <AppPoolId>ASP.NET v4.0</AppPoolId>
+          <WebSiteName>Default Web Site</WebSiteName>
+          <WebAppName>UberDeployer.SampleWebApp</WebAppName>
+        </WebAppProjectConfigurationXml>
+      </WebAppProjectConfigurations>
     </EnvironmentInfoXml>
 
     <!-- Remote -->
@@ -36,11 +53,13 @@
         <string>REMOTE</string>
       </WebServerMachineNames>
       <TerminalServerMachineName>REMOTE</TerminalServerMachineName>
+      <SchedulerServerMachineName>REMOTE</SchedulerServerMachineName>
       <DatabaseServerMachineName>REMOTE</DatabaseServerMachineName>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
       <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
+      <TerminalAppsShortcutFolder>C:\Users\Public\Desktop</TerminalAppsShortcutFolder>
       <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
       <EnvironmentUsers>
         <EnvironmentUserXml>
@@ -48,6 +67,21 @@
           <UserName>UberDeployer</UserName>
         </EnvironmentUserXml>
       </EnvironmentUsers>
+      <AppPoolInfos>
+        <AppPoolInfoXml>
+          <Id>ASP.NET v4.0</Id>
+          <Name>ASP.NET v4.0</Name>
+          <Version>V4_0</Version>
+          <Mode>Integrated</Mode>
+        </AppPoolInfoXml>
+      </AppPoolInfos>
+      <WebAppProjectConfigurations>
+        <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
+          <AppPoolId>ASP.NET v4.0</AppPoolId>
+          <WebSiteName>Default Web Site</WebSiteName>
+          <WebAppName>UberDeployer.SampleWebApp</WebAppName>
+        </WebAppProjectConfigurationXml>
+      </WebAppProjectConfigurations>
       <ProjectToFailoverClusterGroupMappings>
         <ProjectToFailoverClusterGroupMappingXml>
           <ProjectName>UberDeployer.SampleNtService</ProjectName>
