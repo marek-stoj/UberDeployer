@@ -177,6 +177,10 @@ function loadWebMachinesList() {
   var $lstMachines = domHelper.getMachinesElement();
   var selectedProject = domHelper.getProjectsElement().val();
 
+  if (g_ProjectList[selectedProject] === undefined) {
+    return;
+  }
+
   clearTargetMachines();
 
   if (g_ProjectList[selectedProject].type != APP_TYPES.WebApp) {
