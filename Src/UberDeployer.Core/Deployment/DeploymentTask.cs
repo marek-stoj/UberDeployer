@@ -74,7 +74,7 @@ namespace UberDeployer.Core.Deployment
 
     protected EnvironmentInfo GetEnvironmentInfo()
     {
-      EnvironmentInfo environmentInfo = _environmentInfoRepository.GetByName(DeploymentInfo.TargetEnvironmentName);
+      EnvironmentInfo environmentInfo = _environmentInfoRepository.FindByName(DeploymentInfo.TargetEnvironmentName);
 
       if (environmentInfo == null)
       {

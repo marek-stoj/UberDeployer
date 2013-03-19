@@ -33,6 +33,8 @@ namespace UberDeployer.Core.Domain
 
     public abstract IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo);
 
+    public abstract string GetMainAssemblyFileName();
+
     public string Name { get; private set; }
 
     public string ArtifactsRepositoryName { get; private set; }

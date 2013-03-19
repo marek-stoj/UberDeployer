@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.Agent.Proxy.Dto.Metadata;
 using UberDeployer.Agent.Proxy.Dto.TeamCity;
 using UberDeployer.Agent.Proxy.Faults;
 
@@ -53,6 +54,10 @@ namespace UberDeployer.Agent.Proxy
 
     // TODO IMM HI: separate interface?
     [OperationContract]
-    List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId, DiagnosticMessageType minMessageType);    
+    List<DiagnosticMessage> GetDiagnosticMessages(Guid uniqueClientId, long lastSeenMaxMessageId, DiagnosticMessageType minMessageType);
+
+    // TODO IMM HI: separate interface?
+    [OperationContract]
+    ProjectMetadata GetProjectMetadata(string projectName, string environmentName);
   }
 }

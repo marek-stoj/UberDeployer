@@ -6,6 +6,6 @@ namespace UberDeployer.Core.Domain
   {
     IEnumerable<EnvironmentInfo> GetAll();
 
-    EnvironmentInfo GetByName(string environmentName);
+    EnvironmentInfo FindByName(string environmentName);
   }
 }

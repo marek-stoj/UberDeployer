@@ -118,7 +118,7 @@ namespace UberDeployer.Core.DataAccess.Xml
           .OrderBy(pi => pi.Name);
     }
 
-    public ProjectInfo GetByName(string name)
+    public ProjectInfo FindByName(string name)
     {
       if (string.IsNullOrEmpty(name))
       {

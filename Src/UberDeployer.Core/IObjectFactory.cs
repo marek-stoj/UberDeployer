@@ -7,6 +7,7 @@ using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.Iis;
+using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Management.NtServices;
 using UberDeployer.Core.Management.ScheduledTasks;
@@ -48,5 +49,7 @@ namespace UberDeployer.Core
     IFailoverClusterManager CreateFailoverClusterManager();
     
     IDirectoryAdapter CreateDirectoryAdapter();
+
+    IProjectMetadataExplorer CreateProjectMetadataExplorer();
   }
 }

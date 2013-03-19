@@ -37,7 +37,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployWebAppDeploymentTask = new DeployWebAppDeploymentTask(_msDeploy.Object, _environmentInfoRepository.Object,
         _artifactsRepository.Object, _iisManager.Object);
 
-      _environmentInfoRepository.Setup(x => x.GetByName(It.IsAny<string>()))
+      _environmentInfoRepository.Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(_environmentInfo);
     }
 

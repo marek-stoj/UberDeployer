@@ -77,12 +77,18 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("environmentInfo");
       }
 
+      // TODO IMM HI: what about clustered environment?
       return
         new List<string>
           {
             environmentInfo.GetAppServerNetworkPath(
               Path.Combine(environmentInfo.NtServicesBaseDirPath, NtServiceDirName))
           };
+    }
+
+    public override string GetMainAssemblyFileName()
+    {
+      return NtServiceExeName;
     }
 
     #endregion

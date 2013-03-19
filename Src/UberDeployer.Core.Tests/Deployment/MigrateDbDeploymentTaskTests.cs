@@ -38,7 +38,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
 
       _environmentInfoRepositoryFake
-        .Setup(x => x.GetByName(It.IsAny<string>()))
+        .Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(DeploymentDataGenerator.GetEnvironmentInfo);
 
       _dbScriptRunnerFactoryFake
@@ -91,7 +91,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // act
       _environmentInfoRepositoryFake
-        .Setup(x => x.GetByName(It.IsAny<string>()))
+        .Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns((EnvironmentInfo)null);
 
       // assert

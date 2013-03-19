@@ -15,12 +15,14 @@ using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.TeamCity;
 using log4net;
 using DeploymentInfo = UberDeployer.Agent.Proxy.Dto.DeploymentInfo;
 using DeploymentRequest = UberDeployer.Core.Deployment.Pipeline.Modules.DeploymentRequest;
 using DiagnosticMessage = UberDeployer.Core.Deployment.DiagnosticMessage;
 using EnvironmentInfo = UberDeployer.Core.Domain.EnvironmentInfo;
+using MachineSpecificProjectVersion = UberDeployer.Agent.Proxy.Dto.Metadata.MachineSpecificProjectVersion;
 using ProjectInfo = UberDeployer.Core.Domain.ProjectInfo;
 using WebAppProjectInfo = UberDeployer.Core.Domain.WebAppProjectInfo;
 
@@ -36,6 +38,7 @@ namespace UberDeployer.Agent.Service
     private readonly ITeamCityClient _teamCityClient; // TODO IMM HI: abstract away?
     private readonly IDeploymentRequestRepository _deploymentRequestRepository;
     private readonly IDiagnosticMessagesLogger _diagnosticMessagesLogger;
+    private readonly IProjectMetadataExplorer _projectMetadataExplorer;
 
     #region Constructor(s)
 
@@ -45,7 +48,8 @@ namespace UberDeployer.Agent.Service
       IEnvironmentInfoRepository environmentInfoRepository,
       ITeamCityClient teamCityClient,
       IDeploymentRequestRepository deploymentRequestRepository,
-      IDiagnosticMessagesLogger diagnosticMessagesLogger)
+      IDiagnosticMessagesLogger diagnosticMessagesLogger,
+      IProjectMetadataExplorer projectMetadataExplorer)
     {
       Guard.NotNull(deploymentPipeline, "deploymentPipeline");
       Guard.NotNull(projectInfoRepository, "projectInfoRepository");
@@ -60,16 +64,18 @@ namespace UberDeployer.Agent.Service
       _deploymentPipeline = deploymentPipeline;
       _deploymentRequestRepository = deploymentRequestRepository;
       _diagnosticMessagesLogger = diagnosticMessagesLogger;
+      _projectMetadataExplorer = projectMetadataExplorer;
     }
 
     public AgentService()
       : this(
-      ObjectFactory.Instance.CreateDeploymentPipeline(),
-      ObjectFactory.Instance.CreateProjectInfoRepository(),
-      ObjectFactory.Instance.CreateEnvironmentInfoRepository(),
-      ObjectFactory.Instance.CreateTeamCityClient(),
-      ObjectFactory.Instance.CreateDeploymentRequestRepository(),
-      InMemoryDiagnosticMessagesLogger.Instance)
+        ObjectFactory.Instance.CreateDeploymentPipeline(),
+        ObjectFactory.Instance.CreateProjectInfoRepository(),
+        ObjectFactory.Instance.CreateEnvironmentInfoRepository(),
+        ObjectFactory.Instance.CreateTeamCityClient(),
+        ObjectFactory.Instance.CreateDeploymentRequestRepository(),
+        InMemoryDiagnosticMessagesLogger.Instance,
+        ObjectFactory.Instance.CreateProjectMetadataExplorer())
     {
     }
 
@@ -94,7 +100,7 @@ namespace UberDeployer.Agent.Service
         }
 
         ProjectInfo projectInfo =
-        _projectInfoRepository.GetByName(deploymentInfo.ProjectName);
+          _projectInfoRepository.FindByName(deploymentInfo.ProjectName);
 
         if (projectInfo == null)
         {
@@ -117,7 +123,7 @@ namespace UberDeployer.Agent.Service
         Guard.NotNullNorEmpty(deploymentInfo.ProjectName, "DeploymentInfo.ProjectName");
 
         ProjectInfo projectInfo =
-        _projectInfoRepository.GetByName(deploymentInfo.ProjectName);
+          _projectInfoRepository.FindByName(deploymentInfo.ProjectName);
 
         if (projectInfo == null)
         {
@@ -184,15 +190,15 @@ namespace UberDeployer.Agent.Service
         throw new ArgumentException("Environment name can't be null or empty", "environmentName");
       }
 
-      EnvironmentInfo environmentInfo = _environmentInfoRepository.GetByName(environmentName);
+      EnvironmentInfo environmentInfo = _environmentInfoRepository.FindByName(environmentName);
 
       if (environmentInfo == null)
       {
         throw new FaultException<EnvironmentNotFoundFault>(
           new EnvironmentNotFoundFault
-            {
-              EnvironmentName = environmentName
-            });
+          {
+            EnvironmentName = environmentName
+          });
       }
 
       return environmentInfo.WebServerMachineNames.ToList();
@@ -211,7 +217,7 @@ namespace UberDeployer.Agent.Service
       }
 
       ProjectInfo projectInfo =
-        _projectInfoRepository.GetByName(projectName);
+        _projectInfoRepository.FindByName(projectName);
 
       Core.TeamCity.Models.Project project =
         projectInfo != null
@@ -266,7 +272,7 @@ namespace UberDeployer.Agent.Service
       }
 
       ProjectInfo projectInfo =
-        _projectInfoRepository.GetByName(projectName);
+        _projectInfoRepository.FindByName(projectName);
 
       Core.TeamCity.Models.Project project =
         projectInfo != null
@@ -335,7 +341,7 @@ namespace UberDeployer.Agent.Service
       }
 
       WebAppProjectInfo webAppProjectInfo =
-        _projectInfoRepository.GetByName(projectName) as WebAppProjectInfo;
+        _projectInfoRepository.FindByName(projectName) as WebAppProjectInfo;
 
       if (webAppProjectInfo == null)
       {
@@ -343,7 +349,7 @@ namespace UberDeployer.Agent.Service
       }
 
       EnvironmentInfo environmentInfo =
-        _environmentInfoRepository.GetByName(environmentName);
+        _environmentInfoRepository.FindByName(environmentName);
 
       if (environmentInfo == null)
       {
@@ -370,7 +376,7 @@ namespace UberDeployer.Agent.Service
       }
 
       ProjectInfo projectInfo =
-        _projectInfoRepository.GetByName(projectName);
+        _projectInfoRepository.FindByName(projectName);
 
       if (projectInfo == null)
       {
@@ -378,7 +384,7 @@ namespace UberDeployer.Agent.Service
       }
 
       EnvironmentInfo environmentInfo =
-        _environmentInfoRepository.GetByName(environmentName);
+        _environmentInfoRepository.FindByName(environmentName);
 
       if (environmentInfo == null)
       {
@@ -412,6 +418,40 @@ namespace UberDeployer.Agent.Service
           .Select(DtoMapper.Map<DiagnosticMessage, Proxy.Dto.DiagnosticMessage>)
           .Where(dm => dm.Type >= minMessageType)
           .ToList();
+    }
+
+    public Proxy.Dto.Metadata.ProjectMetadata GetProjectMetadata(string projectName, string environmentName)
+    {
+      Guard.NotNullNorEmpty(projectName, "projectName");
+      Guard.NotNullNorEmpty(environmentName, "environmentName");
+
+      try
+      {
+        ProjectMetadata projectMetadata =
+          _projectMetadataExplorer.GetProjectMetadata(projectName, environmentName);
+
+        return
+          new Proxy.Dto.Metadata.ProjectMetadata
+          {
+            ProjectName = projectMetadata.ProjectName,
+            EnvironmentName = projectMetadata.EnvironmentName,
+            ProjectVersions =
+              projectMetadata.ProjectVersions
+                .Select(
+                  pv =>
+                  new MachineSpecificProjectVersion
+                  {
+                    MachineName = pv.MachineName,
+                    ProjectVersion = pv.ProjectVersion,
+                  }).ToList(),
+          };
+      }
+      catch (Exception exc)
+      {
+        _log.ErrorIfEnabled(() => "Unhandled exception.", exc);
+        
+        throw;
+      }
     }
 
     #endregion

@@ -121,7 +121,7 @@ namespace UberDeployer.Core.DataAccess.Xml
         .OrderByDescending(ei => ei.Name); // TODO IMM HI: OrderBy instead of OrderByDescending
     }
 
-    public EnvironmentInfo GetByName(string environmentName)
+    public EnvironmentInfo FindByName(string environmentName)
     {
       if (string.IsNullOrEmpty(environmentName))
       {

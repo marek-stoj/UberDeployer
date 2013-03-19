@@ -156,6 +156,10 @@
     <Compile Include="Deployment\ScheduleNewAppDeploymentStep.cs" />
     <Compile Include="Deployment\Pipeline\Modules\IDeploymentRequestRepository.cs" />
     <Compile Include="Management\Iis\MsDeployBasedIisManager.cs" />
+    <Compile Include="Management\Metadata\IProjectMetadataExplorer.cs" />
+    <Compile Include="Management\Metadata\MachineSpecificProjectVersion.cs" />
+    <Compile Include="Management\Metadata\ProjectMetadata.cs" />
+    <Compile Include="Management\Metadata\ProjectMetadataExplorer.cs" />
     <Compile Include="Management\MsDeploy\IMsDeploy.cs" />
     <Compile Include="Management\MsDeploy\MsDeploy.cs" />
     <Compile Include="Management\MsDeploy\MsDeployException.cs" />

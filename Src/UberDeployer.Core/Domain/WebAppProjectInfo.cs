@@ -87,6 +87,12 @@ namespace UberDeployer.Core.Domain
           .ToList();
     }
 
+    public override string GetMainAssemblyFileName()
+    {
+      // TODO IMM HI: add mainassemblyfilename to config?
+      return string.Format("bin\\{0}.dll", Name);
+    }
+
     #endregion
 
     #region Properties

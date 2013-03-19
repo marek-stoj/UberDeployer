@@ -49,6 +49,11 @@ namespace UberDeployer.Core.Domain
       throw new NotSupportedException();
     }
 
+    public override string GetMainAssemblyFileName()
+    {
+      throw new NotSupportedException();
+    }
+
     #endregion
 
     #region Properties

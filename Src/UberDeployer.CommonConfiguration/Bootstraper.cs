@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
+using Castle.Core;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
@@ -12,6 +12,7 @@ using UberDeployer.Core.Domain;
 using UberDeployer.Core.DataAccess.Xml;
 using UberDeployer.Core.DataAccess;
 using UberDeployer.Core.Management.Db;
+using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.TeamCity;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
@@ -51,7 +52,10 @@ namespace UberDeployer.CommonConfiguration
           .UsingFactoryMethod(() => new XmlEnvironmentInfoRepository(_EnvironmentInfoPath))
           .LifeStyle.Singleton);
 
-      container.Register(Component.For<IDirectoryAdapter>().ImplementedBy<DirectoryAdapter>());
+      container.Register(
+        Component.For<IDirectoryAdapter>()
+          .ImplementedBy<DirectoryAdapter>()
+          .LifeStyle.Is(LifestyleType.Transient));
 
       container.Register(
         Component.For<ITeamCityClient>()
@@ -151,6 +155,10 @@ namespace UberDeployer.CommonConfiguration
               })
           .LifeStyle.Transient);
 
+      container.Register(
+        Component.For<IProjectMetadataExplorer>()
+          .ImplementedBy<ProjectMetadataExplorer>()
+          .LifeStyle.Is(LifestyleType.Transient));
     }
 
     private static ISessionFactory CreateNHibernateSessionFactory()

@@ -8,6 +8,7 @@ using UberDeployer.Agent.Service.Diagnostics;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.TeamCity;
 
 namespace UberDeployer.Agent.Service.Tests
@@ -22,6 +23,7 @@ namespace UberDeployer.Agent.Service.Tests
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
     private Mock<ITeamCityClient> _teamCityClientFake;
     private Mock<IDeploymentRequestRepository> _deploymentRequestRepositoryFake;
+    private Mock<IProjectMetadataExplorer> _projectMetadataExplorerFake;
 
     [SetUp]
     public void SetUp()
@@ -32,14 +34,17 @@ namespace UberDeployer.Agent.Service.Tests
       _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
       _teamCityClientFake = new Mock<ITeamCityClient>();
       _deploymentRequestRepositoryFake = new Mock<IDeploymentRequestRepository>();
+      _projectMetadataExplorerFake = new Mock<IProjectMetadataExplorer>();
 
-      _agentService = new AgentService(
+      _agentService =
+        new AgentService(
         _deploymentPipelineFake.Object,
         _projectInfoRepositoryFake.Object,
         _environmentInfoRepositoryFake.Object,
         _teamCityClientFake.Object,
         _deploymentRequestRepositoryFake.Object,
-        _diagnositcMessagesLoggerFake.Object);
+        _diagnositcMessagesLoggerFake.Object,
+        _projectMetadataExplorerFake.Object);
     }
 
     [Test]
@@ -49,7 +54,7 @@ namespace UberDeployer.Agent.Service.Tests
       const string notExistingEnvName = "env name";
 
       _environmentInfoRepositoryFake
-        .Setup(x => x.GetByName(notExistingEnvName))
+        .Setup(x => x.FindByName(notExistingEnvName))
         .Returns((EnvironmentInfo)null);
 
       // act assert
@@ -67,7 +72,7 @@ namespace UberDeployer.Agent.Service.Tests
       var environmentInfo = GetEnvironmentInfo(environmentName, expectedWebMachineNames);
 
       _environmentInfoRepositoryFake
-        .Setup(x => x.GetByName(environmentName))
+        .Setup(x => x.FindByName(environmentName))
         .Returns(environmentInfo);
 
       // act      

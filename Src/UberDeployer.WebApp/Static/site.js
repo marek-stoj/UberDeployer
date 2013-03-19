@@ -113,7 +113,7 @@ function deploy() {
   var targetMachines = getSelectedTargetMachines();    
 
   if (!projectName || !projectConfigurationName || !projectConfigurationBuildId || !targetEnvironmentName) {
-    alert('Selected project, configuration, build and environment!');
+    alert('Select project, configuration, build and environment!');
     return;
   }
 
@@ -134,18 +134,8 @@ function deploy() {
       targetMachines: targetMachines
     },
     traditional: true,
-    success: function(data) {
-      if (!data.status || data.status.toLowerCase() === 'fail') {
-        var message;
-
-        if (data.errorMessage) {
-          message = data.errorMessage;
-        } else {
-          message = '(no error message)';
-        }
-
-        logMessage('Error: ' + message, 'error');
-      }
+    success: function (data) {
+      handleApiErrorIfPresent(data);
     }
   });
 }
@@ -472,6 +462,61 @@ function logMessage(message, type) {
 
   $txtLogs.append($logMsg);
   $txtLogs.scrollTop($txtLogs[0].scrollHeight - $txtLogs.height());
+}
+
+// returns true if there was no error
+function handleApiErrorIfPresent(data) {
+  if (!data.Status || data.Status.toLowerCase() === 'fail') {
+    var message;
+
+    if (data.ErrorMessage) {
+      message = data.ErrorMessage;
+    } else {
+      message = '(no error message)';
+    }
+
+    logMessage('Error: ' + message, 'error');
+
+    return false;
+  }
+
+  return true;
+}
+
+function getProjectVersion() {
+  var projectName = getSelectedProjectName();
+  var targetEnvironmentName = getSelectedTargetEnvironmentName();
+
+  if (!projectName || !targetEnvironmentName) {
+    alert('Select project and environment!');
+    return;
+  }
+
+  logMessage('Getting version info for project \'' + projectName + '\' on environment \'' + targetEnvironmentName + '\'...', 'info');
+
+  $.ajax({
+    url: g_AppPrefix + 'Api/GetProjectMetadata',
+    type: "GET",
+    data: {
+      projectName: projectName,
+      environmentName: targetEnvironmentName
+    },
+    traditional: true,
+    success: function(data) {
+      if (!handleApiErrorIfPresent(data)) {
+        return;
+      }
+
+      if (!data.ProjectVersions || data.ProjectVersions.length === 0) {
+        logMessage('No version info for project \'' + data.ProjectName + '\' on environment \'' + data.EnvironmentName + '\'.', 'info');
+        return;
+      }
+
+      $(data.ProjectVersions).each(function (i, projectVersion) {
+        logMessage('Version of project \'' + data.ProjectName + '\' on environment \'' + data.EnvironmentName + '\' on machine \'' + projectVersion.MachineName + '\' is: \'' + projectVersion.ProjectVersion + '\'.', 'info');
+      });
+    }
+  });
 }
 
 function kickAss() {

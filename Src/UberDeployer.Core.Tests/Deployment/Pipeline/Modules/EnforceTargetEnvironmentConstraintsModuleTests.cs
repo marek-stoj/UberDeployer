@@ -47,11 +47,11 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
       environmentInfoRepository
-        .Setup(x => x.GetByName(It.IsAny<string>()))
+        .Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(DeploymentDataGenerator.GetEnvironmentInfo());
 
       projectsInfoRepository
-        .Setup(pir => pir.GetByName(deploymentInfo.ProjectName))
+        .Setup(pir => pir.FindByName(deploymentInfo.ProjectName))
         .Returns(DeploymentDataGenerator.GetTerminalAppProjectInfo());
 
       deploymentTask.Prepare(deploymentInfo);      

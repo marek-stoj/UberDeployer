@@ -112,7 +112,7 @@ namespace UberDeployer.Core.Deployment
     protected T GetProjectInfo<T>()
       where T : ProjectInfo
     {
-      ProjectInfo projectInfo = _projectInfoRepository.GetByName(DeploymentInfo.ProjectName);
+      ProjectInfo projectInfo = _projectInfoRepository.FindByName(DeploymentInfo.ProjectName);
 
       if (projectInfo == null)
       {

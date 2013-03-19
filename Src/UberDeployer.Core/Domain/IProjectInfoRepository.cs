@@ -6,6 +6,6 @@ namespace UberDeployer.Core.Domain
   {
     IEnumerable<ProjectInfo> GetAll();
 
-    ProjectInfo GetByName(string name);
+    ProjectInfo FindByName(string name);
   }
 }

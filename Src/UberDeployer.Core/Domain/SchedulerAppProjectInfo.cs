@@ -88,6 +88,11 @@ namespace UberDeployer.Core.Domain
           };
     }
 
+    public override string GetMainAssemblyFileName()
+    {
+      return SchedulerAppExeName;
+    }
+
     #endregion
 
     #region Properties

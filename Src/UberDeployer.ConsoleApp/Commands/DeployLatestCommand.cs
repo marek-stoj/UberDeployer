@@ -38,7 +38,7 @@ namespace UberDeployer.ConsoleApp.Commands
       string projectConfigurationName = args[1];
       string targetEnvironmentName = args[2];
 
-      ProjectInfo projectInfo = projectInfoRepository.GetByName(projectName);
+      ProjectInfo projectInfo = projectInfoRepository.FindByName(projectName);
 
       if (projectInfo == null)
       {

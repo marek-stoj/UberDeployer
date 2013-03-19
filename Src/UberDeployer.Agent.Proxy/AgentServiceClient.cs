@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UberDeployer.Agent.Proxy.Dto;
+using UberDeployer.Agent.Proxy.Dto.Metadata;
 using UberDeployer.Agent.Proxy.Dto.TeamCity;
+using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Agent.Proxy
 {
@@ -62,6 +64,11 @@ namespace UberDeployer.Agent.Proxy
     public List<string> GetWebMachineNames(string environmentName)
     {
       return Exec(@as => @as.GetWebMachineNames(environmentName));
+    }
+
+    public ProjectMetadata GetProjectMetadata(string projectName, string environmentName)
+    {
+      return Exec(@as => @as.GetProjectMetadata(projectName, environmentName));
     }
 
     #endregion

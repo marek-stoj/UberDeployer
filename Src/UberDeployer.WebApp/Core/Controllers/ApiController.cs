@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Agent.Proxy.Dto.Input;
+using UberDeployer.Agent.Proxy.Dto.Metadata;
 using UberDeployer.Agent.Proxy.Faults;
 using UberDeployer.WebApp.Core.Models.Api;
 using UberDeployer.WebApp.Core.Services;
@@ -241,11 +242,58 @@ namespace UberDeployer.WebApp.Core.Controllers
             projectType.Value,
             targetMachines));
 
-        return Json(new { status = "OK" });
+        return Json(new { Status = "OK" });
       }
       catch (Exception exc)
       {
-        return Json(new { status = "FAIL", errorMessage = exc.Message });
+        return HandleAjaxError(exc);
+      }
+    }
+
+    [HttpGet]
+    public ActionResult GetProjectMetadata(string projectName, string environmentName)
+    {
+      if (string.IsNullOrEmpty(projectName))
+      {
+        return BadRequest();
+      }
+
+      if (string.IsNullOrEmpty(environmentName))
+      {
+        return BadRequest();
+      }
+
+      try
+      {
+        ProjectMetadata projectMetadata =
+          _agentService.GetProjectMetadata(projectName, environmentName);
+
+        var projectMetadataViewModel =
+          new ProjectMetadataViewModel
+          {
+            ProjectName = projectMetadata.ProjectName,
+            EnvironmentName = projectMetadata.EnvironmentName,
+            ProjectVersions =
+              projectMetadata.ProjectVersions
+                .Select(
+                  pv =>
+                  new MachineSpecificProjectVersionViewModel
+                  {
+                    MachineName = pv.MachineName,
+                    ProjectVersion = pv.ProjectVersion,
+                  }).ToList(),
+          };
+
+        projectMetadataViewModel.Status = "OK";
+
+        return
+          Json(
+            projectMetadataViewModel,
+            JsonRequestBehavior.AllowGet);
+      }
+      catch (Exception exc)
+      {
+        return HandleAjaxError(exc);
       }
     }
 
@@ -271,6 +319,11 @@ namespace UberDeployer.WebApp.Core.Controllers
         Name = pi.Name,
         Type = (ProjectTypeViewModel)Enum.Parse(typeof(ProjectTypeViewModel), pi.Type.ToString(), true),
       };
+    }
+
+    private ActionResult HandleAjaxError(Exception exception)
+    {
+      return Json(new { Status = "FAIL", ErrorMessage = exception.Message }, JsonRequestBehavior.AllowGet);
     }
 
     private DeploymentInfo CreateDeploymentInfo(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType projectType, IEnumerable<string> targetMachines = null)

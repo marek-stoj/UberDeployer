@@ -24,7 +24,7 @@ namespace UberDeployer.NAnt
       {
         IProjectInfoRepository projectInfoRepository = ObjectFactory.Instance.CreateProjectInfoRepository();
 
-        ProjectInfo projectInfo = projectInfoRepository.GetByName(ProjectName);
+        ProjectInfo projectInfo = projectInfoRepository.FindByName(ProjectName);
 
         DeploymentTask deploymentTask = projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
 

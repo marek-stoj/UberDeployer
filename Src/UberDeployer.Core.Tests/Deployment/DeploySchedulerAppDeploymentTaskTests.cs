@@ -53,7 +53,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(runningTaskDetails);      
 
       _environmentInfoRepositoryFake
-        .Setup(x => x.GetByName(It.IsAny<string>()))
+        .Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(_environmentInfo);
 
       _directoryAdapterFake

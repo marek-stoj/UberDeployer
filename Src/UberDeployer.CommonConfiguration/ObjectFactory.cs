@@ -8,6 +8,7 @@ using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.Iis;
+using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Management.NtServices;
 using UberDeployer.Core.Management.ScheduledTasks;
@@ -111,6 +112,11 @@ namespace UberDeployer.CommonConfiguration
     public IDirectoryAdapter CreateDirectoryAdapter()
     {
       return _container.Resolve<IDirectoryAdapter>();
+    }
+
+    public IProjectMetadataExplorer CreateProjectMetadataExplorer()
+    {
+      return new ProjectMetadataExplorer(CreateProjectInfoRepository(), CreateEnvironmentInfoRepository());
     }
 
     #endregion

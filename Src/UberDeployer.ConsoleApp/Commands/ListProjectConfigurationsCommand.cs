@@ -27,7 +27,7 @@ namespace UberDeployer.ConsoleApp.Commands
       IProjectInfoRepository projectInfoRepository =
         ObjectFactory.Instance.CreateProjectInfoRepository();
 
-      ProjectInfo projectInfo = projectInfoRepository.GetByName(projectName);
+      ProjectInfo projectInfo = projectInfoRepository.FindByName(projectName);
 
       if (projectInfo == null)
       {

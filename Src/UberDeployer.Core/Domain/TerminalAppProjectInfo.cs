@@ -66,6 +66,11 @@ namespace UberDeployer.Core.Domain
           };
     }
 
+    public override string GetMainAssemblyFileName()
+    {
+      return TerminalAppExeName;
+    }
+
     #endregion
 
     #region Properties
