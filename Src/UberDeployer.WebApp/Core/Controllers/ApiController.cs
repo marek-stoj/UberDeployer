@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.ServiceModel;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto;
@@ -72,7 +73,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     {
       List<EnvironmentViewModel> environmentViewModels =
         _agentService.GetEnvironmentInfos()
-          .Where(pi => _allowedEnvironments.Count == 0 || _allowedEnvironments.Contains(pi.Name))
+          .Where(pi => _allowedEnvironments.Count == 0 || _allowedEnvironments.Any(ae => Regex.IsMatch(pi.Name, ae, RegexOptions.IgnoreCase)))
           .Select(pi => new EnvironmentViewModel { Name = pi.Name })
           .ToList();
 
@@ -106,7 +107,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       List<ProjectConfigurationViewModel> projectConfigurationViewModels =
         _agentService.GetProjectConfigurations(projectName, ProjectConfigurationFilter.Empty)
-          .Where(pc => _allowedProjectConfigurations.Count == 0 || _allowedProjectConfigurations.Contains(pc.Name))
+          .Where(pc => _allowedProjectConfigurations.Count == 0 || _allowedProjectConfigurations.Any(apc => Regex.IsMatch(pc.Name, apc, RegexOptions.IgnoreCase)))
           .Select(pc => new ProjectConfigurationViewModel { Name = pc.Name })
           .ToList();
 
