@@ -40,8 +40,8 @@ function Project(name, type) {
 
 function initializeDeploymentPage() {
   $.ajaxSetup({
-    'error': function (error) {
-      domHelper.showError(error);
+    'error': function (xhr) {
+      domHelper.showError(xhr);
     }
   });
   
@@ -324,8 +324,12 @@ domHelper.getSelectedMachines = function() {
   return $.map($('#lst-machines option:selected'), function (item) { return $(item).val(); });
 };
 
-domHelper.showError = function(error) {
-  $('#errorMsg').html('<strong>Error</strong>, Status Code:' + error.status + ' ' + error.statusText + ' ' + error.responseText);
+domHelper.showError = function(xhr) {
+  if (xhr.readyState === 0 || xhr.status === 0) {
+    return;
+  }
+
+  $('#errorMsg').html('<strong>Error</strong>, Status Code:' + xhr.status + ' ' + xhr.statusText + ' ' + xhr.responseText);
   $('#errorMsg').show();
   $('#main-container').hide();
 };
@@ -384,20 +388,30 @@ function rememberTargetEnvironmentName() {
 }
 
 function restoreRememberedTargetEnvironmentName() {
+  var selectFirstValueFunc =
+    function() {
+      var firstVal = domHelper.getEnvironmentsElement().find('option').eq(0).val();
+
+      if (firstVal !== undefined) {
+        domHelper.getEnvironmentsElement().val(firstVal);
+        domHelper.getEnvironmentsElement().trigger('change');
+      }
+    };
+
   var cookie = getCookie(g_TargetEnvironmentCookieName);
 
   if (cookie === null) {
-    var firstVal = domHelper.getEnvironmentsElement().find('option').eq(0).val();
-
-    if (firstVal !== undefined) {
-      domHelper.getEnvironmentsElement().val(firstVal);
-      domHelper.getEnvironmentsElement().trigger('change');
-    }
-
+    selectFirstValueFunc();
     return;
   }
 
   domHelper.getEnvironmentsElement().val(cookie);
+  
+  if (domHelper.getEnvironmentsElement().val() === null) {
+    selectFirstValueFunc();
+    return;
+  }
+
   domHelper.getEnvironmentsElement().trigger('change');
 }
 
