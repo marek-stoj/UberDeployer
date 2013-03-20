@@ -181,7 +181,14 @@ function loadWebMachinesList() {
   $.getJSON(
     g_AppPrefix + 'Api/GetWebMachineNames',
     { envName: $lstEnvironments.val() },
-    function(machines) {
+    function (machines) {
+      var newSelectedProject = domHelper.getProjectsElement().val();
+
+      if (g_ProjectList[newSelectedProject].type != APP_TYPES.WebApp) {
+        $lstMachines.attr('disabled', 'disabled');
+        return;
+      }
+
       clearTargetMachines();
 
       $lstMachines.removeAttr('disabled');
