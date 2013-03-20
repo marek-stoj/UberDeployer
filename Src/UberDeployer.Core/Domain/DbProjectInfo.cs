@@ -44,7 +44,7 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateDbVersionProvider());
     }
 
-    public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
+    public override IEnumerable<string> GetTargetFolders(IObjectFactory objectFactory, EnvironmentInfo environmentInfo)
     {
       throw new NotSupportedException();
     }

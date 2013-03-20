@@ -43,6 +43,14 @@ namespace UberDeployer.Core.Tests.Domain
           new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
         };
 
+    private Mock<IObjectFactory> _objectFactoryFake;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _objectFactoryFake = new Mock<IObjectFactory>(MockBehavior.Loose);
+    }
+
     [Test]
     public void Test_CreateDeployemntTask_RunsProperly_WhenAllIsWell()
     {
@@ -102,7 +110,7 @@ namespace UberDeployer.Core.Tests.Domain
           ArtifactsRepositoryDirName,
           false);
 
-      Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolders(envInfo).FirstOrDefault());
+      Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo).FirstOrDefault());
     }
 
     [Test]

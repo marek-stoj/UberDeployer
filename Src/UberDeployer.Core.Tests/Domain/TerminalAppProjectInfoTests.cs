@@ -45,6 +45,14 @@ namespace UberDeployer.Core.Tests.Domain
           new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
         };
 
+    private Mock<IObjectFactory> _objectFactoryFake;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _objectFactoryFake = new Mock<IObjectFactory>(MockBehavior.Loose);
+    }
+
     [Test]
     public void Test_TerminalAppProjectInfo_Throws_When_Name_null()
     {
@@ -211,7 +219,7 @@ namespace UberDeployer.Core.Tests.Domain
             _TerminalAppExeName);
 
       List<string> targetFolders =
-              projectInfo.GetTargetFolders(envInfo)
+              projectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo)
                 .ToList();
 
       Assert.IsNotNull(targetFolders);
@@ -231,7 +239,7 @@ namespace UberDeployer.Core.Tests.Domain
             _TerminalAppDirName,
             _TerminalAppExeName);
 
-      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(null));
+      Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(_objectFactoryFake.Object, null));
     }
   }
 }

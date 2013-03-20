@@ -17,14 +17,17 @@ namespace UberDeployer.Core.Management.Metadata
 
     private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+    private readonly IObjectFactory _objectFactory;
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IEnvironmentInfoRepository _environmentInfoRepository;
 
-    public ProjectMetadataExplorer(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository)
+    public ProjectMetadataExplorer(IObjectFactory objectFactory, IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository)
     {
+      Guard.NotNull(objectFactory, "objectFactory");
       Guard.NotNull(projectInfoRepository, "projectInfoRepository");
       Guard.NotNull(environmentInfoRepository, "environmentInfoRepository");
 
+      _objectFactory = objectFactory;
       _projectInfoRepository = projectInfoRepository;
       _environmentInfoRepository = environmentInfoRepository;
     }
@@ -55,7 +58,7 @@ namespace UberDeployer.Core.Management.Metadata
       var projectVersions = new List<MachineSpecificProjectVersion>();
 
       IEnumerable<string> targetFolders =
-        projectInfo.GetTargetFolders(environmentInfo);
+        projectInfo.GetTargetFolders(_objectFactory, environmentInfo);
 
       foreach (string targetFolder in targetFolders)
       {

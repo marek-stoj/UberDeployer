@@ -31,7 +31,7 @@ namespace UberDeployer.Core.Domain
 
     public abstract DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory);
 
-    public abstract IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo);
+    public abstract IEnumerable<string> GetTargetFolders(IObjectFactory objectFactory, EnvironmentInfo environmentInfo);
 
     public abstract string GetMainAssemblyFileName();
 

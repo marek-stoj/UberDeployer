@@ -50,6 +50,14 @@ namespace UberDeployer.Core.Tests.Domain
           new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
         };
 
+    private Mock<IObjectFactory> _objectFactoryFake;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _objectFactoryFake = new Mock<IObjectFactory>(MockBehavior.Loose);
+    }
+
     [Test]
     public void Test_SchedulerAppProjectInfoTests_Throws_When_ScheduledHour_LessThan0()
     {
@@ -230,7 +238,7 @@ namespace UberDeployer.Core.Tests.Domain
           _ExecutionTimeLimitInMinutes);
 
       List<string> targetFolders =
-        schedulerAppProjectInfo.GetTargetFolders(envInfo)
+        schedulerAppProjectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo)
           .ToList();
 
       Assert.IsNotNull(targetFolders);

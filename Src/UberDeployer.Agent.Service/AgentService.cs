@@ -392,7 +392,7 @@ namespace UberDeployer.Agent.Service
       }
 
       List<string> targetFolders =
-        projectInfo.GetTargetFolders(environmentInfo)
+        projectInfo.GetTargetFolders(ObjectFactory.Instance, environmentInfo)
           .ToList();
 
       return targetFolders;

@@ -43,12 +43,10 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateIIisManager());
     }
 
-    public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
+    public override IEnumerable<string> GetTargetFolders(IObjectFactory objectFactory, EnvironmentInfo environmentInfo)
     {
-      if (environmentInfo == null)
-      {
-        throw new ArgumentNullException("environmentInfo");
-      }
+      Guard.NotNull(objectFactory, "objectFactory");
+      Guard.NotNull(environmentInfo, "environmentInfo");
 
       WebAppProjectConfiguration configuration =
         environmentInfo.GetWebProjectConfiguration(Name);

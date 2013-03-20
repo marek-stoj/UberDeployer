@@ -1,8 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain.Input;
+using UberDeployer.Core.Management.FailoverCluster;
 
 namespace UberDeployer.Core.Domain
 {
@@ -13,25 +15,10 @@ namespace UberDeployer.Core.Domain
     public NtServiceProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string ntServiceName, string ntServiceDirName, string ntServiceDisplayName, string ntServiceExeName, string ntServiceUserId)
       : base(name, artifactsRepositoryName, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
-      if (string.IsNullOrEmpty(ntServiceName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "ntServiceName");
-      }
-
-      if (string.IsNullOrEmpty(ntServiceDirName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "ntServiceDirName");
-      }
-
-      if (string.IsNullOrEmpty(ntServiceExeName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "ntServiceExeName");
-      }
-
-      if (string.IsNullOrEmpty(ntServiceUserId))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "ntServiceUserId");
-      }
+      Guard.NotNullNorEmpty(ntServiceName, "ntServiceName");
+      Guard.NotNullNorEmpty(ntServiceDirName, "ntServiceDirName");
+      Guard.NotNullNorEmpty(ntServiceExeName, "ntServiceExeName");
+      Guard.NotNullNorEmpty(ntServiceUserId, "ntServiceUserId");
 
       NtServiceName = ntServiceName;
       NtServiceDisplayName = ntServiceDisplayName;
@@ -56,11 +43,6 @@ namespace UberDeployer.Core.Domain
 
     public override DeploymentTask CreateDeploymentTask(IObjectFactory objectFactory)
     {
-      if (objectFactory == null)
-      {
-        throw new ArgumentNullException("objectFactory");
-      }
-
       return
         new DeployNtServiceDeploymentTask(
           objectFactory.CreateEnvironmentInfoRepository(),
@@ -70,20 +52,38 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateFailoverClusterManager());
     }
 
-    public override IEnumerable<string> GetTargetFolders(EnvironmentInfo environmentInfo)
+    public override IEnumerable<string> GetTargetFolders(IObjectFactory objectFactory, EnvironmentInfo environmentInfo)
     {
-      if (environmentInfo == null)
-      {
-        throw new ArgumentNullException("environmentInfo");
-      }
+      Guard.NotNull(objectFactory, "objectFactory");
+      Guard.NotNull(environmentInfo, "environmentInfo");
 
-      // TODO IMM HI: what about clustered environment?
-      return
-        new List<string>
+      if (environmentInfo.EnableFailoverClusteringForNtServices)
+      {
+        IFailoverClusterManager failoverClusterManager =
+          objectFactory.CreateFailoverClusterManager();
+
+        string clusterGroupName =
+          environmentInfo.GetFailoverClusterGroupNameForProject(Name);
+
+        IEnumerable<string> possibleNodeNames =
+          failoverClusterManager.GetPossibleNodeNames(
+            environmentInfo.FailoverClusterMachineName,
+            clusterGroupName);
+
+        return
+          possibleNodeNames
+            .Select(node => EnvironmentInfo.GetNetworkPath(node, Path.Combine(environmentInfo.NtServicesBaseDirPath, NtServiceDirName)))
+            .ToList();
+      }
+      else
+      {
+        return
+          new List<string>
           {
             environmentInfo.GetAppServerNetworkPath(
               Path.Combine(environmentInfo.NtServicesBaseDirPath, NtServiceDirName))
           };
+      }
     }
 
     public override string GetMainAssemblyFileName()
