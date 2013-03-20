@@ -236,8 +236,14 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
       function (data) {
         clearProjectConfigurations();
 
+        var valueToSelect = null;
+
         $.each(data.projectConfigurations, function(i, val) {
           var $lstProjectConfigs = $('#lst-project-configs');
+
+          if (valueToSelect === null && (val.Name === 'Trunk' || val.Name === 'Production' || val.Name === 'Default' || val.Name === 'Master')) {
+            valueToSelect = val.Name;
+          }
 
           $lstProjectConfigs
             .append(
@@ -245,6 +251,11 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
                 .attr('value', val.Name)
                 .text(val.Name));
         });
+
+        if (valueToSelect !== null) {
+          domHelper.getProjectConfigsElement().val(valueToSelect);
+          domHelper.getProjectConfigsElement().trigger('change');
+        }
 
         if (onFinishedCallback) {
           onFinishedCallback();
