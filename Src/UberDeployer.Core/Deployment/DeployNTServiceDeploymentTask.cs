@@ -92,26 +92,26 @@ namespace UberDeployer.Core.Deployment
         AddSubTask(binariesConfiguratorStep);
       }
 
-      bool deployToClusteredEnvironment = environmentInfo.EnableFailoverClusteringForNtServices;
+      bool deployToClusteredEnvironment =
+        environmentInfo.EnableFailoverClusteringForNtServices;
 
       if (deployToClusteredEnvironment)
       {
+        PostDiagnosticMessage("Will deploy to a clustered environment.", DiagnosticMessageType.Trace);
+
         if (string.IsNullOrEmpty(environmentInfo.GetFailoverClusterGroupNameForProject(DeploymentInfo.ProjectName)))
         {
-          PostDiagnosticMessage(string.Format("Failover clustering for NT services is enabled for environment '{0}' but there is no cluster group mapping for project '{1}'.", environmentInfo.Name, DeploymentInfo.ProjectName), DiagnosticMessageType.Warn);
-
-          deployToClusteredEnvironment = false;
+          throw new InvalidOperationException(string.Format("Failover clustering for NT services is enabled for environment '{0}' but there is no cluster group mapping for project '{1}'.", environmentInfo.Name, DeploymentInfo.ProjectName));
         }
-      }
 
-      if (deployToClusteredEnvironment)
-      {
         DoPrepareDeploymentToClusteredEnvironment(
           environmentInfo,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath));
       }
       else
       {
+        PostDiagnosticMessage("Will deploy to a non-clustered environment.", DiagnosticMessageType.Trace);
+
         DoPrepareDeploymentToStandardEnvironment(
           environmentInfo,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath));
@@ -191,9 +191,13 @@ namespace UberDeployer.Core.Deployment
         throw new InvalidOperationException(string.Format("Cluster group '{0}' has no current node in a cluster '{1}' in environment '{2}'.", clusterGroupName, environmentInfo.FailoverClusterMachineName, environmentInfo.Name));
       }
 
+      PostDiagnosticMessage(string.Format("Current node: '{0}'.", currentNodeName), DiagnosticMessageType.Trace);
+
       List<string> possibleNodeNames =
         _failoverClusterManager.GetPossibleNodeNames(failoverClusterMachineName, clusterGroupName)
           .ToList();
+
+      PostDiagnosticMessage(string.Format("Possible nodes: {0}.", string.Join(", ", possibleNodeNames.Select(n => string.Format("'{0}'", n)))), DiagnosticMessageType.Trace);
 
       if (possibleNodeNames.Count < 2)
       {
@@ -236,7 +240,7 @@ namespace UberDeployer.Core.Deployment
       {
         string machineName = possibleNodeName;
 
-        if (machineName == currentNodeName)
+        if (string.Equals(machineName, currentNodeName, StringComparison.OrdinalIgnoreCase))
         {
           continue;
         }
@@ -254,6 +258,8 @@ namespace UberDeployer.Core.Deployment
       // move cluster group to another node
       string targetNodeName =
         possibleNodeNames.FirstOrDefault(nodeName => nodeName != currentNodeName);
+
+      PostDiagnosticMessage(string.Format("Target node: '{0}'.", targetNodeName), DiagnosticMessageType.Trace);
 
       if (string.IsNullOrEmpty(targetNodeName))
       {
