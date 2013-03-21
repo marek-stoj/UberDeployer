@@ -42,11 +42,11 @@ namespace UberDeployer.ConsoleApp.Commands
 
       var deploymentInfo =
         new DeploymentInfo(
+          false, // TODO IMM HI: xxx param for simulation?
           projectName,
           projectConfigurationName,
           projectConfigurationBuildId,
           targetEnvironmentName,
-          projectInfo,
           projectInfo.CreateEmptyInputParams());
 
       try
@@ -54,11 +54,11 @@ namespace UberDeployer.ConsoleApp.Commands
         DeploymentTask deploymentTask =
           projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
 
-        deploymentTask.DiagnosticMessagePosted +=
-          (eventSender, tmpArgs) => LogMessage(tmpArgs.Message);
-
         IDeploymentPipeline deploymentPipeline =
           ObjectFactory.Instance.CreateDeploymentPipeline();
+
+        deploymentPipeline.DiagnosticMessagePosted +=
+          (sender, tmpArgs) => LogMessage(tmpArgs.Message);
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 

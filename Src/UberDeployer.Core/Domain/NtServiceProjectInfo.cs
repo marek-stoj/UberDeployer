@@ -45,6 +45,7 @@ namespace UberDeployer.Core.Domain
     {
       return
         new DeployNtServiceDeploymentTask(
+          objectFactory.CreateProjectInfoRepository(),
           objectFactory.CreateEnvironmentInfoRepository(),
           objectFactory.CreateArtifactsRepository(),
           objectFactory.CreateNtServiceManager(),

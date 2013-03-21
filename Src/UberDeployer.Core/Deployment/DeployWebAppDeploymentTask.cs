@@ -18,15 +18,10 @@ namespace UberDeployer.Core.Deployment
 
     private readonly IIisManager _iisManager;
 
-    private WebAppProjectInfo _webAppProjectInfo
-    {
-      get { return (WebAppProjectInfo)DeploymentInfo.ProjectInfo; }
-    }
-
     #region Constructor(s)
 
-    public DeployWebAppDeploymentTask(IMsDeploy msDeploy, IEnvironmentInfoRepository environmentInfoRepository, IArtifactsRepository artifactsRepository, IIisManager iisManager)
-      : base(environmentInfoRepository)
+    public DeployWebAppDeploymentTask(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository, IMsDeploy msDeploy, IArtifactsRepository artifactsRepository, IIisManager iisManager)
+      : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(msDeploy, "msDeploy");
       Guard.NotNull(artifactsRepository, "artifactsRepository");
@@ -43,8 +38,9 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      WebAppInputParams inputParams = (WebAppInputParams)DeploymentInfo.InputParams;
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      WebAppProjectInfo projectInfo = GetProjectInfo<WebAppProjectInfo>();
+      WebAppInputParams inputParams = (WebAppInputParams)DeploymentInfo.InputParams;
 
       if (inputParams.OnlyIncludedWebMachines != null)
       {
@@ -64,7 +60,7 @@ namespace UberDeployer.Core.Deployment
         }
       }
 
-      if (_webAppProjectInfo == null)
+      if (projectInfo == null)
       {
         throw new InvalidOperationException(string.Format("Project info must be of type '{0}'.", typeof(WebAppProjectInfo).FullName));
       }
@@ -72,6 +68,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
+          projectInfo,
           _artifactsRepository,
           GetTempDirPath());
 
@@ -80,22 +77,26 @@ namespace UberDeployer.Core.Deployment
       // create a step for extracting the artifacts
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
+          projectInfo,
           environmentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
 
-      if (DeploymentInfo.ProjectInfo.ArtifactsAreEnvironmentSpecific)
+      if (projectInfo.ArtifactsAreEnvironmentSpecific)
       {
-        var binariesConfiguratorStep = new ConfigureBinariesStep(
-          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
+        var binariesConfiguratorStep =
+          new ConfigureBinariesStep(
+            projectInfo,
+            environmentInfo.ConfigurationTemplateName,
+            GetTempDirPath());
 
         AddSubTask(binariesConfiguratorStep);
       }
 
       WebAppProjectConfiguration configuration =
-        environmentInfo.GetWebProjectConfiguration(_webAppProjectInfo.Name);
+        environmentInfo.GetWebProjectConfiguration(projectInfo.Name);
 
       string webSiteName = configuration.WebSiteName;
       string webAppName = configuration.WebAppName;
@@ -123,7 +124,10 @@ namespace UberDeployer.Core.Deployment
 
           if (Directory.Exists(webApplicationNetworkPath))
           {
-            var backupFilesDeploymentStep = new BackupFilesDeploymentStep(webApplicationNetworkPath);
+            var backupFilesDeploymentStep =
+              new BackupFilesDeploymentStep(
+                projectInfo,
+                webApplicationNetworkPath);
 
             AddSubTask(backupFilesDeploymentStep);
           }
@@ -133,6 +137,7 @@ namespace UberDeployer.Core.Deployment
         // TODO IMM HI: add possibility to specify physical path on the target machine
         var createWebDeployPackageDeploymentStep =
           new CreateWebDeployPackageDeploymentStep(
+            projectInfo,
             _msDeploy,
             new Lazy<string>(() =>extractArtifactsDeploymentStep.BinariesDirPath),
             webSiteName,
@@ -143,6 +148,7 @@ namespace UberDeployer.Core.Deployment
         // create a step for deploying the WebDeploy package to the target machine
         var deployWebDeployPackageDeploymentStep =
           new DeployWebDeployPackageDeploymentStep(
+            projectInfo,
             _msDeploy,
             webServerMachineName,
             new Lazy<string>(() => createWebDeployPackageDeploymentStep.PackageFilePath));
@@ -155,6 +161,7 @@ namespace UberDeployer.Core.Deployment
           // create a step for creating a new app pool
           var createAppPoolDeploymentStep =
             new CreateAppPoolDeploymentStep(
+              projectInfo,
               _iisManager,
               webServerMachineName,
               appPoolInfo);
@@ -165,6 +172,7 @@ namespace UberDeployer.Core.Deployment
         // create a step for assigning the app pool to the web application
         var setAppPoolDeploymentStep =
           new SetAppPoolDeploymentStep(
+            projectInfo,
             _iisManager,
             webServerMachineName,
             webSiteName,
@@ -182,7 +190,7 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Deploy web app '{0} ({1}:{2})' to '{3}'.",
-            _webAppProjectInfo.Name,
+            DeploymentInfo.ProjectName,
             DeploymentInfo.ProjectConfigurationName,
             DeploymentInfo.ProjectConfigurationBuildId,
             DeploymentInfo.TargetEnvironmentName);

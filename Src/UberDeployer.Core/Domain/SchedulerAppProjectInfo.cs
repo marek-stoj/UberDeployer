@@ -66,6 +66,7 @@ namespace UberDeployer.Core.Domain
 
       return
         new DeploySchedulerAppDeploymentTask(
+          objectFactory.CreateProjectInfoRepository(),
           objectFactory.CreateEnvironmentInfoRepository(),
           objectFactory.CreateArtifactsRepository(),
           objectFactory.CreateTaskScheduler(),

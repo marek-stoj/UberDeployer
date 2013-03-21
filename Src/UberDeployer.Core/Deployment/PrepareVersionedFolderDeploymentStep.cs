@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -12,7 +13,8 @@ namespace UberDeployer.Core.Deployment
 
     private string _createdVersionedFolderPath;
 
-    public PrepareVersionedFolderDeploymentStep(string terminalAppsBaseDirPath, string projectName, Lazy<string> version)
+    public PrepareVersionedFolderDeploymentStep(ProjectInfo projectInfo, string terminalAppsBaseDirPath, string projectName, Lazy<string> version)
+      : base(projectInfo)
     {
       Guard.NotNullNorEmpty(terminalAppsBaseDirPath, "terminalAppsBaseDirPath");
       Guard.NotNullNorEmpty(projectName, "projectName");
@@ -27,7 +29,7 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
-        return string.Format("Preparing folder for project '{0}' in base path '{1}' for version '{2}'", _projectName, _terminalAppsBaseDirPath, _version.Value);
+        return string.Format("Prepare folder for project '{0}' in base path '{1}' for version '{2}'.", _projectName, _terminalAppsBaseDirPath, _version.Value);
       }
     }
 

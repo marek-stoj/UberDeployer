@@ -113,7 +113,7 @@
     <Compile Include="Management\Db\MsSqlDbScriptRunnerFactory.cs" />
     <Compile Include="Deployment\RunDbScriptsDeploymentStep.cs" />
     <Compile Include="Management\Db\MsSqlDbScriptRunner.cs" />
-    <Compile Include="Deployment\UpdateAppScheduleDeploymentStep.cs" />
+    <Compile Include="Deployment\UpdateSchedulerTaskDeploymentStep.cs" />
     <Compile Include="Deployment\CreateAppPoolDeploymentStep.cs" />
     <Compile Include="Deployment\Pipeline\Modules\EnforceTargetEnvironmentConstraintsModule.cs" />
     <Compile Include="Deployment\IPasswordCollector.cs" />

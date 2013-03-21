@@ -24,12 +24,12 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Test_InstallNtServiceDeploymentStep_Thows_When_Service_null()
     {
       const string machineName = "machine";
+
       var ntServiceDescriptor = new Mock<NtServiceDescriptor>(MockBehavior.Strict);
-      var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict); 
 
       Assert.Throws<ArgumentException>(
         () =>
-        { new InstallNtServiceDeploymentStep(null, machineName, ntServiceDescriptor.Object); });
+        { new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), null, machineName, ntServiceDescriptor.Object); });
     }
 
     [Test]
@@ -41,7 +41,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentException>(
         () =>
-        { new InstallNtServiceDeploymentStep(ntServiceManager.Object, null, ntServiceDescriptor); });
+        { new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, null, ntServiceDescriptor); });
     }
 
     [Test]
@@ -52,7 +52,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentNullException>(
         () =>
-        { new InstallNtServiceDeploymentStep(ntServiceManager.Object, machineName, null); });
+        { new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, machineName, null); });
     }
 
     [Test]
@@ -63,7 +63,7 @@ namespace UberDeployer.Core.Tests.Deployment
         "serviceName", "serviceExecutablePath", new ServiceAccount(), ServiceStartMode.Automatic);
       var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict);
 
-      var installNTServiceStep =  new InstallNtServiceDeploymentStep(ntServiceManager.Object, machineName, ntServiceDescriptor);
+      var installNTServiceStep = new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, machineName, ntServiceDescriptor);
 
       ntServiceManager.Setup(k => k.InstallService(machineName, ntServiceDescriptor));
 

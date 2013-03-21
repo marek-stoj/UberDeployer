@@ -18,10 +18,12 @@ namespace UberDeployer.Core.Tests.Deployment
     private DeployWebAppDeploymentTask _deployWebAppDeploymentTask;
 
     private Mock<IMsDeploy> _msDeploy;
-    private Mock<IEnvironmentInfoRepository> _environmentInfoRepository;
+    private Mock<IProjectInfoRepository> _projectInfoRepositoryFake;
+    private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
     private Mock<IArtifactsRepository> _artifactsRepository;
     private Mock<IIisManager> _iisManager;
 
+    private WebAppProjectInfo _projectInfo;
     private EnvironmentInfo _environmentInfo;
 
     [SetUp]
@@ -29,15 +31,24 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       _msDeploy = new Mock<IMsDeploy>();
       _artifactsRepository = new Mock<IArtifactsRepository>();
-      _environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
+      _projectInfoRepositoryFake = new Mock<IProjectInfoRepository>(MockBehavior.Loose);
+      _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
       _iisManager = new Mock<IIisManager>();
 
+      _projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
       _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
 
-      _deployWebAppDeploymentTask = new DeployWebAppDeploymentTask(_msDeploy.Object, _environmentInfoRepository.Object,
-        _artifactsRepository.Object, _iisManager.Object);
+      _deployWebAppDeploymentTask =
+        new DeployWebAppDeploymentTask(
+          _projectInfoRepositoryFake.Object,
+          _environmentInfoRepositoryFake.Object,
+          _msDeploy.Object,
+          _artifactsRepository.Object, _iisManager.Object);
 
-      _environmentInfoRepository.Setup(x => x.FindByName(It.IsAny<string>()))
+      _projectInfoRepositoryFake.Setup(x => x.FindByName(It.IsAny<string>()))
+        .Returns(_projectInfo);
+
+      _environmentInfoRepositoryFake.Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(_environmentInfo);
     }
 
@@ -46,13 +57,17 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Prepare_should_throw_exception_when_web_machines_are_invalid(List<string> webMachines)
     {
       // Arrange
-      ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
-
       var webInputParams =
         new WebAppInputParams(webMachines);
 
-      DeploymentInfo deploymentInfo = new DeploymentInfo("projectName", "projectConfigurationName", "projectConfigurationBuildId", "targetEnvironmentName",
-        projectInfo, webInputParams);
+      DeploymentInfo deploymentInfo =
+        new DeploymentInfo(
+          false,
+          "projectName",
+          "projectConfigurationName",
+          "projectConfigurationBuildId",
+          "targetEnvironmentName",
+          webInputParams);
 
       // Act assert
       Assert.Throws<DeploymentTaskException>(() => _deployWebAppDeploymentTask.Prepare(deploymentInfo));
@@ -71,11 +86,11 @@ namespace UberDeployer.Core.Tests.Deployment
 
       var deploymentInfo =
         new DeploymentInfo(
+          false,
           projectInfo.Name,
           "projectConfigurationName",
           "projectConfigurationBuildId",
           "targetEnvironmentName",
-          projectInfo,
           webInputParams);
 
       // Act

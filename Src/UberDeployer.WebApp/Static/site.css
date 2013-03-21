@@ -18,6 +18,7 @@ label.lst-header {
   overflow: auto;
   padding: 10px;
   border: solid #ccc 1px;
+  margin-bottom: 10px;
 }
 
 .log-msg {
@@ -49,9 +50,6 @@ label.lst-header {
   text-align: left;
 }
 
-#tbl-history th {
-}
-
 #tbl-history tr.even td {
   background-color: #eee;
 }
@@ -68,4 +66,12 @@ hr {
 
 .footer {
   padding: 10px;
+}
+
+button.pull-right {
+  margin-left: 10px;
+}
+
+button.pull-left {
+  margin-right: 10px;
 }

@@ -100,20 +100,21 @@ namespace UberDeployer.ConsoleApp.Commands
       {
         DeploymentTask deploymentTask =
           projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
-        
-        var deploymentInfo = new DeploymentInfo(
-          projectName,
-          projectConfigurationName,
-          projectConfigurationBuildId,
-          targetEnvironmentName,
-          projectInfo,
-          null); //TODO MARIO create InputParams
 
-        deploymentTask.DiagnosticMessagePosted +=
-          (eventSender, tmpArgs) => LogMessage(tmpArgs.Message);
+        var deploymentInfo =
+          new DeploymentInfo(
+            false, // TODO IMM HI: xxx param for simulation?
+            projectName,
+            projectConfigurationName,
+            projectConfigurationBuildId,
+            targetEnvironmentName,
+            projectInfo.CreateEmptyInputParams());
 
         IDeploymentPipeline deploymentPipeline =
           ObjectFactory.Instance.CreateDeploymentPipeline();
+
+        deploymentPipeline.DiagnosticMessagePosted +=
+          (eventSender, tmpArgs) => LogMessage(tmpArgs.Message);
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
@@ -124,7 +125,7 @@ namespace UberDeployer.ConsoleApp.Commands
       catch (Exception exc)
       {
         LogMessage("Error: " + exc);
-        
+
         return 1;
       }
     }

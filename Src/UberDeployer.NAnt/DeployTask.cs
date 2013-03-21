@@ -23,26 +23,25 @@ namespace UberDeployer.NAnt
       try
       {
         IProjectInfoRepository projectInfoRepository = ObjectFactory.Instance.CreateProjectInfoRepository();
-
         ProjectInfo projectInfo = projectInfoRepository.FindByName(ProjectName);
-
         DeploymentTask deploymentTask = projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
-
-        deploymentTask.DiagnosticMessagePosted +=
-          (eventSender, tmpArgs) => Log(Level.Info, tmpArgs.Message);
 
         IDeploymentPipeline deploymentPipeline =
           ObjectFactory.Instance.CreateDeploymentPipeline();
 
+        deploymentPipeline.DiagnosticMessagePosted +=
+          (eventSender, tmpArgs) => Log(Level.Info, tmpArgs.Message);
+
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
-        var deploymentInfo = new DeploymentInfo(
-          ProjectName,
-          ConfigurationName,
-          BuildId,
-          Environment,
-          projectInfo,
-          null); //TODO MARIO create InputParams
+        var deploymentInfo =
+          new DeploymentInfo(
+            false, // TODO IMM HI: xxx param for simulation?
+            ProjectName,
+            ConfigurationName,
+            BuildId,
+            Environment,
+            projectInfo.CreateEmptyInputParams());
 
         deploymentPipeline.StartDeployment(deploymentInfo, deploymentTask, deploymentContext);
       }

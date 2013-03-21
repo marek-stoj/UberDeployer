@@ -1,5 +1,5 @@
-using System;
 using System.IO;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
@@ -13,17 +13,11 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public DownloadArtifactsDeploymentStep(IArtifactsRepository artifactsRepository, string targetDirPath)
+    public DownloadArtifactsDeploymentStep(ProjectInfo projectInfo, IArtifactsRepository artifactsRepository, string targetDirPath)
+      : base(projectInfo)
     {
-      if (artifactsRepository == null)
-      {
-        throw new ArgumentNullException("artifactsRepository");
-      }
-
-      if (string.IsNullOrEmpty(targetDirPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "targetDirPath");
-      }
+      Guard.NotNull(artifactsRepository, "artifactsRepository");
+      Guard.NotNullNorEmpty(targetDirPath, "targetDirPath");
 
       _artifactsRepository = artifactsRepository;
       _targetDirPath = targetDirPath;
@@ -38,7 +32,7 @@ namespace UberDeployer.Core.Deployment
     protected override void DoExecute()
     {
       _artifactsRepository.GetArtifacts(
-        DeploymentInfo.ProjectInfo.ArtifactsRepositoryName,
+        ProjectInfo.ArtifactsRepositoryName,
         DeploymentInfo.ProjectConfigurationName,
         DeploymentInfo.ProjectConfigurationBuildId,
         _artifactsFilePath);

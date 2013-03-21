@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Ionic.Zip;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
@@ -15,22 +16,12 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public ExtractArtifactsDeploymentStep(EnvironmentInfo environmentInfo, string artifactsFilePath, string targetArtifactsDirPath)
+    public ExtractArtifactsDeploymentStep(ProjectInfo projectInfo, EnvironmentInfo environmentInfo, string artifactsFilePath, string targetArtifactsDirPath)
+      : base(projectInfo)
     {
-      if (environmentInfo == null)
-      {
-        throw new ArgumentNullException("environmentInfo");
-      }      
-
-      if (string.IsNullOrEmpty(artifactsFilePath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "artifactsFilePath");
-      }
-
-      if (string.IsNullOrEmpty(targetArtifactsDirPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "targetArtifactsDirPath");
-      }
+      Guard.NotNull(environmentInfo, "environmentInfo");
+      Guard.NotNullNorEmpty(artifactsFilePath, "artifactsFilePath");
+      Guard.NotNullNorEmpty(targetArtifactsDirPath, "targetArtifactsDirPath");
 
       _environmentInfo = environmentInfo;      
       _artifactsFilePath = artifactsFilePath;
@@ -43,19 +34,17 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoPrepare()
     {
-      base.DoPrepare();
-
       string archiveParentPath = string.Empty;
 
-      if (DeploymentInfo.ProjectInfo.ArtifactsAreEnvironmentSpecific)
+      if (ProjectInfo.ArtifactsAreEnvironmentSpecific)
       {
         archiveParentPath = string.Format("{0}/", _environmentInfo.ConfigurationTemplateName);
       }
 
       // eg. when artifacts are enviroment specific: Service/dev2/
       _archiveSubPath =
-        !string.IsNullOrEmpty(DeploymentInfo.ProjectInfo.ArtifactsRepositoryDirName)
-          ? string.Format("{0}{1}/", archiveParentPath, DeploymentInfo.ProjectInfo.ArtifactsRepositoryDirName)
+        !string.IsNullOrEmpty(ProjectInfo.ArtifactsRepositoryDirName)
+          ? string.Format("{0}{1}/", archiveParentPath, ProjectInfo.ArtifactsRepositoryDirName)
           : archiveParentPath;
     }
 
@@ -71,7 +60,7 @@ namespace UberDeployer.Core.Deployment
       string projectArchiveFileName =
         string.Format(
           @"{0}_{1}.zip",
-          DeploymentInfo.ProjectInfo.ArtifactsRepositoryName,
+          ProjectInfo.ArtifactsRepositoryName,
           DeploymentInfo.ProjectConfigurationName);
 
       string archivePath = Path.Combine(_targetArtifactsDirPath, projectArchiveFileName);

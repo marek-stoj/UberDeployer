@@ -10,6 +10,8 @@ namespace UberDeployer.Core.Deployment
 
     private DeploymentInfo _deploymentInfo;
 
+    #region Public methods
+
     public void Prepare(DeploymentInfo deploymentInfo)
     {
       Guard.NotNull(deploymentInfo, "DeploymentInfo");
@@ -35,7 +37,10 @@ namespace UberDeployer.Core.Deployment
         throw new InvalidOperationException("The task has to be prepared before it can be executed.");
       }
 
-      PostDiagnosticMessage(string.Format("Executing: {0}", Description));
+      if (!DeploymentInfo.IsSimulation)
+      {
+        PostDiagnosticMessage(string.Format("Executing: {0}", Description), DiagnosticMessageType.Info);
+      }
 
       DoExecute();
     }
@@ -48,14 +53,13 @@ namespace UberDeployer.Core.Deployment
 
     public abstract string Description { get; }
 
+    #endregion
+
+    #region Protected members
+
     protected abstract void DoExecute();
 
     protected abstract void DoPrepare();
-
-    protected void PostDiagnosticMessage(string message)
-    {
-      PostDiagnosticMessage(message, DiagnosticMessageType.Info);
-    }
 
     protected void PostDiagnosticMessage(string message, DiagnosticMessageType diagnosticMessageType)
     {
@@ -79,6 +83,7 @@ namespace UberDeployer.Core.Deployment
 
     protected bool IsPrepared { get; private set; }
 
+    // TODO IMM HI: xxx move down?
     protected DeploymentInfo DeploymentInfo
     {
       get
@@ -93,5 +98,7 @@ namespace UberDeployer.Core.Deployment
 
       private set { _deploymentInfo = value; }
     }
+
+    #endregion
   }
 }

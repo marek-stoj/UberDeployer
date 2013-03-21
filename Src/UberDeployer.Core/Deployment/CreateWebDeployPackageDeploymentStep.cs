@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Deployment
@@ -39,7 +40,8 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public CreateWebDeployPackageDeploymentStep(IMsDeploy msDeploy, Lazy<string> webAppBinariesDirPathProvider, string iisSiteName, string webAppName = null)
+    public CreateWebDeployPackageDeploymentStep(ProjectInfo projectInfo, IMsDeploy msDeploy, Lazy<string> webAppBinariesDirPathProvider, string iisSiteName, string webAppName = null)
+      : base(projectInfo)
     {
       Guard.NotNull(msDeploy, "msDeploy");      
       Guard.NotNull(webAppBinariesDirPathProvider, "webAppBinariesDirPathProvider");

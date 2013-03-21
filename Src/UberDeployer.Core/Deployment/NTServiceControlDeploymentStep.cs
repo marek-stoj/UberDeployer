@@ -1,4 +1,6 @@
 using System;
+using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
 
 namespace UberDeployer.Core.Deployment
@@ -13,22 +15,12 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    protected NtServiceControlDeploymentStep(INtServiceManager ntServiceManager, string machineName, string serviceName, NtServiceControlAction action)
+    protected NtServiceControlDeploymentStep(ProjectInfo projectInfo, INtServiceManager ntServiceManager, string machineName, string serviceName, NtServiceControlAction action)
+      : base(projectInfo)
     {
-      if (ntServiceManager == null)
-      {
-        throw new ArgumentNullException("ntServiceManager");
-      }
-
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (string.IsNullOrEmpty(serviceName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "serviceName");
-      }
+      Guard.NotNull(ntServiceManager, "ntServiceManager");
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(serviceName, "serviceName");
 
       _ntServiceManager = ntServiceManager;
       _machineName = machineName;

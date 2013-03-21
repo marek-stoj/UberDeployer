@@ -1,5 +1,6 @@
 using System;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Deployment
@@ -12,7 +13,8 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public DeployWebDeployPackageDeploymentStep(IMsDeploy msDeploy, string webServerMachineName, Lazy<string> packageFilePathProvider)
+    public DeployWebDeployPackageDeploymentStep(ProjectInfo projectInfo, IMsDeploy msDeploy, string webServerMachineName, Lazy<string> packageFilePathProvider)
+      : base(projectInfo)
     {
       Guard.NotNull(msDeploy, "msDeploy");
       Guard.NotNullNorEmpty(webServerMachineName, "webServerMachineName");

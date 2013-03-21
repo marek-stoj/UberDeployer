@@ -17,19 +17,19 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     public void OnDeploymentTaskStarting_WhenEnvironmentIsProductionAndConfigurationIsNot_ThrowsInvalidOperationException()
     {
       var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
-      var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
+      var environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      var projectsInfoRepository = new Mock<IProjectInfoRepository>();
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectsInfoRepository.Object);
+      var projectsInfoRepositoryFake = new Mock<IProjectInfoRepository>();
+      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepositoryFake.Object, environmentInfoRepositoryFake.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
 
       DeploymentInfo deploymentInfo =
         new DeploymentInfo(
+          false,
           "project_name",
           "branch",
           "project_configuration_build_id",
           EnforceTargetEnvironmentConstraintsModule.ProductionEnvironmentName,
-          ProjectInfoGenerator.GetTerminalAppProjectInfo(),
           new TerminalAppInputParams());
 
       Assert.Throws<InvalidOperationException>(() => enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext));
@@ -39,10 +39,10 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     public void OnDeploymentTaskStarting_WhenEnvironmentAndConfigurationIsProduction_DoesNotThrows()
     {
       var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
+      var projectsInfoRepositoryFake = new Mock<IProjectInfoRepository>();
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      var projectsInfoRepository = new Mock<IProjectInfoRepository>();
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectsInfoRepository.Object);
+      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepositoryFake.Object, environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
@@ -50,7 +50,7 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
         .Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(DeploymentDataGenerator.GetEnvironmentInfo());
 
-      projectsInfoRepository
+      projectsInfoRepositoryFake
         .Setup(pir => pir.FindByName(deploymentInfo.ProjectName))
         .Returns(DeploymentDataGenerator.GetTerminalAppProjectInfo());
 
@@ -63,11 +63,10 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     public void OnDeploymentTaskFinished_DoNothing_SoDoesNotThrows()
     {
       var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
+      var projectsInfoRepositoryFake = new Mock<IProjectInfoRepository>();
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      var projectsInfoRepository = new Mock<IProjectInfoRepository>();
-      var projectInfo = new TerminalAppProjectInfo("name", "artifactsRepositoryName", "artifactsrepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
-      var deploymentTask = new DeployTerminalAppDeploymentTask(environmentInfoRepository.Object, artifactsRepository.Object, projectsInfoRepository.Object);
+      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepositoryFake.Object, environmentInfoRepository.Object, artifactsRepository.Object);
       var deploymentContext = new DeploymentContext("requester");
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 

@@ -56,11 +56,11 @@ namespace UberDeployer.Agent.Service
 
       return
         new Core.Domain.DeploymentInfo(
+          deploymentInfo.IsSimulation,
           deploymentInfo.ProjectName,
           deploymentInfo.ProjectConfigurationName,
           deploymentInfo.ProjectConfigurationBuildId,
           deploymentInfo.TargetEnvironmentName,
-          projectInfo,
           inputParams);
     }
 

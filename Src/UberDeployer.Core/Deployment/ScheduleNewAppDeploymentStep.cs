@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 
@@ -16,41 +17,25 @@ namespace UberDeployer.Core.Deployment
     #region Constructor(s)
 
     public ScheduleNewAppDeploymentStep(
+      ProjectInfo projectInfo,
       ITaskScheduler taskScheduler,
       string machineName,
       string executablePath,
       string userName,
       string password)
+      : base(projectInfo)
     {
-      if (taskScheduler == null)
-      {
-        throw new ArgumentNullException("taskScheduler");
-      }
-
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (string.IsNullOrEmpty(executablePath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "executablePath");
-      }
+      Guard.NotNull(taskScheduler, "taskScheduler");
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(executablePath, "executablePath");
 
       if (!Path.IsPathRooted(executablePath))
       {
         throw new ArgumentException(string.Format("Executable path ('{0}') is not an absolute path.", executablePath), "executablePath");
       }
 
-      if (string.IsNullOrEmpty(userName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "userName");
-      }
-
-      if (string.IsNullOrEmpty(password))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "password");
-      }
+      Guard.NotNullNorEmpty(userName, "userName");
+      Guard.NotNullNorEmpty(password, "password");
 
       _taskScheduler = taskScheduler;
       _machineName = machineName;
@@ -65,7 +50,7 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      var schedulerAppProjectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
+      var schedulerAppProjectInfo = (SchedulerAppProjectInfo)ProjectInfo;
       string taskName = schedulerAppProjectInfo.SchedulerAppName;
       int scheduledHour = schedulerAppProjectInfo.ScheduledHour;
       int scheduledMinute = schedulerAppProjectInfo.ScheduledMinute;
@@ -91,7 +76,7 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
-        var schedulerAppProjectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
+        var schedulerAppProjectInfo = (SchedulerAppProjectInfo)ProjectInfo;
 
         return
           string.Format(

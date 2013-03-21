@@ -136,12 +136,12 @@ namespace UberDeployer.WebApp.Core.Controllers
           .Select(
             pcb =>
             new ProjectConfigurationBuildViewModel
-              {
-                Id = pcb.Id,
-                Number = pcb.Number,
-                Status = pcb.Status.ToString(),
-                StartDateStr = pcb.StartDate
-              })
+            {
+              Id = pcb.Id,
+              Number = pcb.Number,
+              Status = pcb.Status.ToString(),
+              StartDateStr = pcb.StartDate
+            })
           .ToList();
 
       return
@@ -170,7 +170,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       catch (FaultException<EnvironmentNotFoundFault>)
       {
         return BadRequest();
-      }      
+      }
     }
 
     [HttpGet]
@@ -189,11 +189,11 @@ namespace UberDeployer.WebApp.Core.Controllers
           .Select(
             dm =>
             new DiagnosticMessageViewModel
-              {
-                MessageId = dm.MessageId,
-                Message = dm.Message,
-                Type = dm.Type.ToString(),
-              }).ToList();
+            {
+              MessageId = dm.MessageId,
+              Message = dm.Message,
+              Type = dm.Type.ToString(),
+            }).ToList();
 
       return
         Json(
@@ -204,50 +204,29 @@ namespace UberDeployer.WebApp.Core.Controllers
     [HttpPost]
     public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
     {
-      if (string.IsNullOrEmpty(projectName))
-      {
-        return BadRequest();
-      }
+      return
+        DoDeployOrSimulate(
+          false,
+          projectName,
+          projectConfigurationName,
+          projectConfigurationBuildId,
+          targetEnvironmentName,
+          projectType,
+          targetMachines);
+    }
 
-      if (string.IsNullOrEmpty(projectConfigurationName))
-      {
-        return BadRequest();
-      }
-
-      if (string.IsNullOrEmpty(projectConfigurationBuildId))
-      {
-        return BadRequest();
-      }
-
-      if (string.IsNullOrEmpty(targetEnvironmentName))
-      {
-        return BadRequest();
-      }
-
-      if (!projectType.HasValue)
-      {
-        return BadRequest();
-      }
-
-      try
-      {
-        _agentService.DeployAsync(
-          _sessionService.UniqueClientId,
-          SecurityUtils.CurrentUsername,
-          CreateDeploymentInfo(
-            projectName,
-            projectConfigurationName,
-            projectConfigurationBuildId,
-            targetEnvironmentName,
-            projectType.Value,
-            targetMachines));
-
-        return Json(new { Status = "OK" });
-      }
-      catch (Exception exc)
-      {
-        return HandleAjaxError(exc);
-      }
+    [HttpPost]
+    public ActionResult Simulate(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
+    {
+      return
+        DoDeployOrSimulate(
+          true,
+          projectName,
+          projectConfigurationName,
+          projectConfigurationBuildId,
+          targetEnvironmentName,
+          projectType,
+          targetMachines);
     }
 
     [HttpGet]
@@ -321,16 +300,66 @@ namespace UberDeployer.WebApp.Core.Controllers
       };
     }
 
+    private ActionResult DoDeployOrSimulate(bool isSimulation, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
+    {
+      if (string.IsNullOrEmpty(projectName))
+      {
+        return BadRequest();
+      }
+
+      if (string.IsNullOrEmpty(projectConfigurationName))
+      {
+        return BadRequest();
+      }
+
+      if (string.IsNullOrEmpty(projectConfigurationBuildId))
+      {
+        return BadRequest();
+      }
+
+      if (string.IsNullOrEmpty(targetEnvironmentName))
+      {
+        return BadRequest();
+      }
+
+      if (!projectType.HasValue)
+      {
+        return BadRequest();
+      }
+
+      try
+      {
+        _agentService.DeployAsync(
+          _sessionService.UniqueClientId,
+          SecurityUtils.CurrentUsername,
+          CreateDeploymentInfo(
+            isSimulation,
+            projectName,
+            projectConfigurationName,
+            projectConfigurationBuildId,
+            targetEnvironmentName,
+            projectType.Value,
+            targetMachines));
+
+        return Json(new { Status = "OK" });
+      }
+      catch (Exception exc)
+      {
+        return HandleAjaxError(exc);
+      }
+    }
+
     private ActionResult HandleAjaxError(Exception exception)
     {
       return Json(new { Status = "FAIL", ErrorMessage = exception.Message }, JsonRequestBehavior.AllowGet);
     }
 
-    private DeploymentInfo CreateDeploymentInfo(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType projectType, IEnumerable<string> targetMachines = null)
+    private DeploymentInfo CreateDeploymentInfo(bool isSimulation, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType projectType, IEnumerable<string> targetMachines = null)
     {
       return
         new DeploymentInfo
         {
+          IsSimulation = isSimulation,
           ProjectName = projectName,
           ProjectConfigurationName = projectConfigurationName,
           ProjectConfigurationBuildId = projectConfigurationBuildId,

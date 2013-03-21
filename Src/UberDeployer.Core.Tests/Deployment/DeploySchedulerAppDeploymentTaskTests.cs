@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Common.IO;
@@ -17,6 +15,7 @@ namespace UberDeployer.Core.Tests.Deployment
   public class DeploySchedulerAppDeploymentTaskTests
   {
     private DeploySchedulerAppDeploymentTask _deployTask;
+    private Mock<IProjectInfoRepository> _projectInfoRepositoryFake;
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
     private Mock<IArtifactsRepository> _artifactsRepositoryFake;
     private Mock<ITaskScheduler> _taskSchedulerFake;
@@ -31,6 +30,7 @@ namespace UberDeployer.Core.Tests.Deployment
     [SetUp]
     public void SetUp()
     {
+      _projectInfoRepositoryFake = new Mock<IProjectInfoRepository>();
       _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
       _artifactsRepositoryFake = new Mock<IArtifactsRepository>();
       _taskSchedulerFake = new Mock<ITaskScheduler>();
@@ -38,8 +38,11 @@ namespace UberDeployer.Core.Tests.Deployment
       _directoryAdapterFake = new Mock<IDirectoryAdapter>();
 
       _deploymentInfo = DeploymentInfoGenerator.GetSchedulerAppDeploymentInfo();
-      _projectInfo = (SchedulerAppProjectInfo)_deploymentInfo.ProjectInfo;
+      _projectInfo = ProjectInfoGenerator.GetSchedulerAppProjectInfo();
       _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo(new EnvironmentUser(_projectInfo.SchedulerAppUserId, "user_name"));
+
+      _projectInfoRepositoryFake.Setup(pir => pir.FindByName(It.IsAny<string>()))
+        .Returns(_projectInfo);
 
       _appExePath = Path.Combine(
         _environmentInfo.SchedulerAppsBaseDirPath,
@@ -60,7 +63,9 @@ namespace UberDeployer.Core.Tests.Deployment
         .Setup(x => x.Exists(It.IsAny<string>()))
         .Returns(true);
 
-      _deployTask = new DeploySchedulerAppDeploymentTask(
+      _deployTask =
+        new DeploySchedulerAppDeploymentTask(
+        _projectInfoRepositoryFake.Object,
         _environmentInfoRepositoryFake.Object,
         _artifactsRepositoryFake.Object,
         _taskSchedulerFake.Object,
@@ -72,7 +77,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Prepare_should_fail_if_task_is_running()
     {
       // arrange  
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails((SchedulerAppProjectInfo)_deploymentInfo.ProjectInfo, _appExePath, true);
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo, _appExePath, true);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -180,7 +185,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare(_deploymentInfo);
 
       // assert
-      Assert.IsTrue(_deployTask.SubTasks.Any(x => x is UpdateAppScheduleDeploymentStep));
+      Assert.IsTrue(_deployTask.SubTasks.Any(x => x is UpdateSchedulerTaskDeploymentStep));
     }
 
     [Test]

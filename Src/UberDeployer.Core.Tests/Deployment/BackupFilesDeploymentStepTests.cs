@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
@@ -34,7 +32,7 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Constructor_EmptyPath_Throws()
     {
-      Assert.Throws<ArgumentException>(() => new BackupFilesDeploymentStep(""));
+      Assert.Throws<ArgumentException>(() => new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), ""));
     }
 
     [Test]
@@ -42,7 +40,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       Assert.Throws<InvalidOperationException>(
         () =>
-          new BackupFilesDeploymentStep(Path.Combine(_workingDir, "28947289374298"))
+          new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), Path.Combine(_workingDir, "28947289374298"))
             .Execute());
     }
 
@@ -50,7 +48,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Execute_NoPreviousBackup_CreatesZippedFileWithNameCreatedFromLastDir()
     {
       string zippedBackupFileName = Path.Combine(Environment.CurrentDirectory, string.Format("{0}\\{1}.bak.000.zip", _workingDir, DstSubDir));
-      var backupFilesDeploymentStep = new BackupFilesDeploymentStep(_dstDir);
+      var backupFilesDeploymentStep = new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), _dstDir);
 
       backupFilesDeploymentStep.Prepare(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
       backupFilesDeploymentStep.Execute();
@@ -64,7 +62,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Execute_PreviousBackupExistNoRotationFunctionality_OverridesZippedFileWithNameCreatedFromLastDir()
     {
       string zippedBackupFileName = Path.Combine(Environment.CurrentDirectory, string.Format("{0}\\{1}.bak.000.zip", _workingDir, DstSubDir));
-      var backupFilesDeploymentStep = new BackupFilesDeploymentStep(_dstDir);
+      var backupFilesDeploymentStep = new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), _dstDir);
 
       backupFilesDeploymentStep.Prepare(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
       backupFilesDeploymentStep.Execute();
@@ -79,7 +77,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Execute_PreviousBackupExistAndFilesRotationOn_CreatesNewBackupAndMovingOldOne()
     {
       const int maxBackupCount = 4;
-      var backupFilesDeploymentStep = new BackupFilesDeploymentStep(_dstDir, maxBackupCount);
+      var backupFilesDeploymentStep = new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), _dstDir, maxBackupCount);
 
       backupFilesDeploymentStep.Prepare(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
 

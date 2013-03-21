@@ -28,7 +28,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
-      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
+      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
       _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
     }
 
@@ -127,6 +127,7 @@ namespace UberDeployer.Core.Tests.Deployment
       return
         new OrderedDictionary
           {
+            { "projectInfo", ProjectInfoGenerator.GetDbProjectInfo() },
             { "scriptsDirectoryPath", new Lazy<string>(() => _ScriptPath) },
             { "sqlServerName", _SqlServerName },
             { "environmentName", _Environment },

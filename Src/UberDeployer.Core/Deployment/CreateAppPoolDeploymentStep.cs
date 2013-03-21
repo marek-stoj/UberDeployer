@@ -1,4 +1,5 @@
 using System;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Iis;
 
@@ -12,22 +13,12 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public CreateAppPoolDeploymentStep(IIisManager iisManager, string machineName, IisAppPoolInfo appPoolInfo)
+    public CreateAppPoolDeploymentStep(ProjectInfo projectInfo, IIisManager iisManager, string machineName, IisAppPoolInfo appPoolInfo)
+      : base(projectInfo)
     {
-      if (iisManager == null)
-      {
-        throw new ArgumentNullException("iisManager");
-      }
-
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (appPoolInfo == null)
-      {
-        throw new ArgumentNullException("appPoolInfo");
-      }
+      Guard.NotNull(iisManager, "iisManager");
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNull(appPoolInfo, "appPoolInfo");
 
       _iisManager = iisManager;
       _machineName = machineName;

@@ -21,15 +21,16 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline
     [Test]
     public void StartDeployment_WhenDeploymentTaskIsNull_ThrowsArgumentNullException()
     {
+      var projectInfoRepositoryFake = new Mock<IProjectInfoRepository>(MockBehavior.Loose);
       var environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>(MockBehavior.Loose);
 
       var pipeline = new DeploymentPipeline();
 
       var deploymentInfo = DeploymentInfoGenerator.GetNtServiceDeploymentInfo();
 
-      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(null, new DummyDeploymentTask(environmentInfoRepositoryFake.Object), new DeploymentContext("requester")));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(null, new DummyDeploymentTask(projectInfoRepositoryFake.Object, environmentInfoRepositoryFake.Object), new DeploymentContext("requester")));
       Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfo, null, new DeploymentContext("requester")));
-      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfo, new DummyDeploymentTask(environmentInfoRepositoryFake.Object), null));
+      Assert.Throws<ArgumentNullException>(() => pipeline.StartDeployment(deploymentInfo, new DummyDeploymentTask(projectInfoRepositoryFake.Object, environmentInfoRepositoryFake.Object), null));
     }
   }
 }

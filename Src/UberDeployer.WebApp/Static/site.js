@@ -49,6 +49,10 @@ function initializeDeploymentPage() {
     deploy();
   });
 
+  $('#btn-simulate').click(function () {
+    simulate();
+  });
+
   domHelper.getProjectsElement().change(function () {
     var projectName = getSelectedProjectName();
 
@@ -105,12 +109,12 @@ function initializeDeploymentPage() {
   startDiagnosticMessagesLoader();
 }
 
-function deploy() {
+function doDeployOrSimulate(isSimulation) {
   var projectName = getSelectedProjectName();
   var projectConfigurationName = getSelectedProjectConfigurationName();
   var projectConfigurationBuildId = getSelectedProjectConfigurationBuildId();
   var targetEnvironmentName = getSelectedTargetEnvironmentName();
-  var targetMachines = getSelectedTargetMachines();    
+  var targetMachines = getSelectedTargetMachines();
 
   if (!projectName || !projectConfigurationName || !projectConfigurationBuildId || !targetEnvironmentName) {
     alert('Select project, configuration, build and environment!');
@@ -122,8 +126,10 @@ function deploy() {
     return;
   }
 
+  var action = isSimulation ? 'Api/Simulate' : 'Api/Deploy';
+
   $.ajax({
-    url: g_AppPrefix + 'Api/Deploy',
+    url: g_AppPrefix + action,
     type: "POST",
     data: {
       projectName: projectName,
@@ -138,6 +144,14 @@ function deploy() {
       handleApiErrorIfPresent(data);
     }
   });
+}
+
+function deploy() {
+  doDeployOrSimulate(false);
+}
+
+function simulate() {
+  doDeployOrSimulate(true);
 }
 
 function loadEnvironments(onFinishedCallback) {
@@ -480,6 +494,12 @@ function logMessage(message, type) {
 
   $txtLogs.append($logMsg);
   $txtLogs.scrollTop($txtLogs[0].scrollHeight - $txtLogs.height());
+}
+
+function clearLogs() {
+  var $txtLogs = $('#txt-logs');
+
+  $txtLogs.find('*').remove();
 }
 
 // returns true if there was no error

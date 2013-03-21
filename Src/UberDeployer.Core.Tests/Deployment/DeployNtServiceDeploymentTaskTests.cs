@@ -29,6 +29,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
     private Mock<INtServiceManager> _ntServiceManager;
     private Mock<IArtifactsRepository> _artifactsRepository;
+    private Mock<IProjectInfoRepository> _projectInfoRepository;
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepository;
     private Mock<IPasswordCollector> _passwordCollector;
     private Mock<IFailoverClusterManager> _failoverClusterManager;
@@ -38,6 +39,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       _ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict);
       _artifactsRepository = new Mock<IArtifactsRepository>(MockBehavior.Strict);
+      _projectInfoRepository = new Mock<IProjectInfoRepository>(MockBehavior.Strict);
       _environmentInfoRepository = new Mock<IEnvironmentInfoRepository>(MockBehavior.Strict);
       _passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Strict);
       _failoverClusterManager = new Mock<IFailoverClusterManager>(MockBehavior.Strict);
@@ -50,6 +52,7 @@ namespace UberDeployer.Core.Tests.Deployment
         new CtorTester<DeployNtServiceDeploymentTask>(
           new object[]
             {
+              _projectInfoRepository.Object,
               _environmentInfoRepository.Object,
               _artifactsRepository.Object,
               _ntServiceManager.Object,

@@ -21,7 +21,8 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public GatherDbScriptsToRunDeploymentStep(Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
+    public GatherDbScriptsToRunDeploymentStep(ProjectInfo projectInfo, Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
+      : base(projectInfo)
     {
       Guard.NotNull(scriptsDirectoryPathProvider, "scriptsDirectoryPathProvider");
       Guard.NotNullNorEmpty(sqlServerName, "sqlServerName");
@@ -42,7 +43,7 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      _dbProjectInfo = (DbProjectInfo) DeploymentInfo.ProjectInfo;
+      _dbProjectInfo = (DbProjectInfo)ProjectInfo;
 
       // get db versions
       var versions = _dbVersionProvider.GetVersions(_dbProjectInfo.DbName, _sqlServerName);
@@ -110,7 +111,7 @@ namespace UberDeployer.Core.Deployment
           string.Format(
             "Gather db scripts from '{0}' to run on database '{1}'.",
             _scriptsDirectoryPathProvider,
-            ((DbProjectInfo)DeploymentInfo.ProjectInfo).DbName);
+            ((DbProjectInfo)ProjectInfo).DbName);
       }
     }
 

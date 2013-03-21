@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -12,7 +13,8 @@ namespace UberDeployer.Core.Deployment
 
     private string _resolvedVersion;
 
-    public ExtractVersionDeploymentStep(Lazy<string> binariesDirPathProvider, string terminalAppExeName)
+    public ExtractVersionDeploymentStep(ProjectInfo projectInfo, Lazy<string> binariesDirPathProvider, string terminalAppExeName)
+      : base(projectInfo)
     {
       Guard.NotNull(binariesDirPathProvider);
       Guard.NotNullNorEmpty(terminalAppExeName);
@@ -23,7 +25,7 @@ namespace UberDeployer.Core.Deployment
 
     public override string Description
     {
-      get { return string.Format("Extracting version number for file {0}/{1}", _binariesDirPathProvider.Value, _terminalAppExeName); }
+      get { return string.Format("Extract version info of file '{0}/{1}'.", _binariesDirPathProvider.Value, _terminalAppExeName); }
     }
 
     public string Version

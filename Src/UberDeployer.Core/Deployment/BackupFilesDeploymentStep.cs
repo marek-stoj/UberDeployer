@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Ionic.Zip;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
 // TODO IMM HI: review
@@ -16,12 +17,10 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public BackupFilesDeploymentStep(string destinationPath, int maxBackupNumber)
+    public BackupFilesDeploymentStep(ProjectInfo projectInfo, string destinationPath, int maxBackupNumber)
+      : base(projectInfo)
     {
-      if (string.IsNullOrEmpty(destinationPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "destinationPath");
-      }
+      Guard.NotNullNorEmpty(destinationPath, "destinationPath");
 
       if (!Path.IsPathRooted(destinationPath))
       {
@@ -32,8 +31,8 @@ namespace UberDeployer.Core.Deployment
       _maxBackupNumber = maxBackupNumber;
     }
 
-    public BackupFilesDeploymentStep(string destinationPath)
-      : this(destinationPath, _DefaultMaxBackupCount)
+    public BackupFilesDeploymentStep(ProjectInfo projectInfo, string destinationPath)
+      : this(projectInfo, destinationPath, _DefaultMaxBackupCount)
     {
     }
 

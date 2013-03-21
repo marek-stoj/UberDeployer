@@ -18,37 +18,23 @@ namespace UberDeployer.Core.Deployment
     private readonly IPasswordCollector _passwordCollector;
     private readonly IFailoverClusterManager _failoverClusterManager;
 
-    private NtServiceProjectInfo _ntServiceProjectInfo;
+    private NtServiceProjectInfo _projectInfo;
 
     #region Constructor(s)
 
     public DeployNtServiceDeploymentTask(
+      IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
       INtServiceManager ntServiceManager,
       IPasswordCollector passwordCollector,
       IFailoverClusterManager failoverClusterManager)
-      : base(environmentInfoRepository)
+      : base(projectInfoRepository, environmentInfoRepository)
     {
-      if (artifactsRepository == null)
-      {
-        throw new ArgumentNullException("artifactsRepository");
-      }
-
-      if (ntServiceManager == null)
-      {
-        throw new ArgumentNullException("ntServiceManager");
-      }      
-
-      if (passwordCollector == null)
-      {
-        throw new ArgumentNullException("passwordCollector");
-      }
-
-      if (failoverClusterManager == null)
-      {
-        throw new ArgumentNullException("failoverClusterManager");
-      }
+      Guard.NotNull(artifactsRepository, "artifactsRepository");
+      Guard.NotNull(ntServiceManager, "ntServiceManager");
+      Guard.NotNull(passwordCollector, "passwordCollector");
+      Guard.NotNull(failoverClusterManager, "failoverClusterManager");
 
       _artifactsRepository = artifactsRepository;
       _ntServiceManager = ntServiceManager;
@@ -63,13 +49,13 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
-      _ntServiceProjectInfo = DeploymentInfo.ProjectInfo as NtServiceProjectInfo;
-
-      Guard.NotNull(_ntServiceProjectInfo, "_ntServiceProjectInfo");
+      
+      _projectInfo = GetProjectInfo<NtServiceProjectInfo>();
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
+          _projectInfo,
           _artifactsRepository,
           GetTempDirPath());
 
@@ -78,16 +64,20 @@ namespace UberDeployer.Core.Deployment
       // create a step for extracting the artifacts
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
+          _projectInfo,
           environmentInfo,          
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
       AddSubTask(extractArtifactsDeploymentStep);
 
-      if (DeploymentInfo.ProjectInfo.ArtifactsAreEnvironmentSpecific)
+      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
       {
-        var binariesConfiguratorStep = new ConfigureBinariesStep(
-          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
+        var binariesConfiguratorStep =
+          new ConfigureBinariesStep(
+            _projectInfo,
+            environmentInfo.ConfigurationTemplateName,
+            GetTempDirPath());
 
         AddSubTask(binariesConfiguratorStep);
       }
@@ -125,7 +115,7 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Deploy NT service '{0} ({1}:{2})' to '{3}'.",
-            DeploymentInfo.ProjectInfo.Name,
+            DeploymentInfo.ProjectName,
             DeploymentInfo.ProjectConfigurationName,
             DeploymentInfo.ProjectConfigurationBuildId,
             DeploymentInfo.TargetEnvironmentName);
@@ -148,7 +138,7 @@ namespace UberDeployer.Core.Deployment
               _passwordCollector,
               environmentInfo,
               environmentInfo.AppServerMachineName,
-              _ntServiceProjectInfo.NtServiceUserId,
+              _projectInfo.NtServiceUserId,
               out environmentUser);
 
           return
@@ -158,7 +148,7 @@ namespace UberDeployer.Core.Deployment
         };
 
       DoPrepareCommonDeploymentSteps(
-        _ntServiceProjectInfo.NtServiceName,
+        _projectInfo.NtServiceName,
         environmentInfo.AppServerMachineName,
         environmentInfo.NtServicesBaseDirPath,
         environmentInfo.GetAppServerNetworkPath,
@@ -225,7 +215,7 @@ namespace UberDeployer.Core.Deployment
               _passwordCollector,
               environmentInfo,
               machineName,
-              _ntServiceProjectInfo.NtServiceUserId,
+              _projectInfo.NtServiceUserId,
               out environmentUser);
 
           cachedCollectedCredentials =
@@ -246,7 +236,7 @@ namespace UberDeployer.Core.Deployment
         }
 
         DoPrepareCommonDeploymentSteps(
-          _ntServiceProjectInfo.NtServiceName,
+          _projectInfo.NtServiceName,
           machineName,
           environmentInfo.NtServicesBaseDirPath,
           absoluteLocalPath => EnvironmentInfo.GetNetworkPath(machineName, absoluteLocalPath),
@@ -268,6 +258,7 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new MoveClusterGroupToAnotherNodeDeploymentStep(
+          _projectInfo,
           _failoverClusterManager,
           failoverClusterMachineName,
           clusterGroupName,
@@ -277,7 +268,7 @@ namespace UberDeployer.Core.Deployment
       string previousMachineName = currentNodeName;
 
       DoPrepareCommonDeploymentSteps(
-        _ntServiceProjectInfo.NtServiceName,
+        _projectInfo.NtServiceName,
         previousMachineName,
         environmentInfo.NtServicesBaseDirPath,
         absoluteLocalPath => EnvironmentInfo.GetNetworkPath(previousMachineName, absoluteLocalPath),
@@ -298,24 +289,29 @@ namespace UberDeployer.Core.Deployment
         // create a step for stopping the service
         AddSubTask(
           new StopNtServiceDeploymentStep(
+            _projectInfo,
             _ntServiceManager,
             appServerMachineName,
-            _ntServiceProjectInfo.NtServiceName));
+            _projectInfo.NtServiceName));
       }
 
       // create a step for copying the binaries to the target machine
-      string targetDirPath = Path.Combine(ntServicesBaseDirPath, _ntServiceProjectInfo.NtServiceDirName);
+      string targetDirPath = Path.Combine(ntServicesBaseDirPath, _projectInfo.NtServiceDirName);
 
       // create a backup step if needed
       string targetDirNetworkPath = getAppServerNetworkPathFunc(targetDirPath);
 
       if (Directory.Exists(targetDirNetworkPath))
       {
-        AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
+        AddSubTask(
+          new BackupFilesDeploymentStep(
+            _projectInfo,
+            targetDirNetworkPath));
       }
 
       AddSubTask(
         new CopyFilesDeploymentStep(
+          _projectInfo,
           artifactsBinariesDirPathProvider,
           new Lazy<string>(() => getAppServerNetworkPathFunc(targetDirPath))));
 
@@ -325,20 +321,21 @@ namespace UberDeployer.Core.Deployment
         CollectedCredentials collectedCredentials = collectCredentialsFunc();
 
         // create a step for installing the service,
-        string serviceExecutablePath = Path.Combine(targetDirPath, _ntServiceProjectInfo.NtServiceExeName);
+        string serviceExecutablePath = Path.Combine(targetDirPath, _projectInfo.NtServiceExeName);
 
         var ntServiceDescriptor =
           new NtServiceDescriptor(
-            _ntServiceProjectInfo.NtServiceName,
+            _projectInfo.NtServiceName,
             serviceExecutablePath,
             ServiceAccount.NetworkService,
             ServiceStartMode.Automatic,
-            _ntServiceProjectInfo.NtServiceDisplayName,
+            _projectInfo.NtServiceDisplayName,
             collectedCredentials.UserName,
             collectedCredentials.Password);
 
         AddSubTask(
           new InstallNtServiceDeploymentStep(
+            _projectInfo,
             _ntServiceManager,
             appServerMachineName,
             ntServiceDescriptor));
@@ -349,9 +346,10 @@ namespace UberDeployer.Core.Deployment
         // create a step for starting the service
         AddSubTask(
           new StartNtServiceDeploymentStep(
+            _projectInfo,
             _ntServiceManager,
             appServerMachineName,
-            _ntServiceProjectInfo.NtServiceName));
+            _projectInfo.NtServiceName));
       }
     }
 

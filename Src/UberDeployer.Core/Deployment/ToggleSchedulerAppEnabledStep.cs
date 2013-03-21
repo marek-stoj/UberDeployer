@@ -8,26 +8,27 @@ namespace UberDeployer.Core.Deployment
   {
     private readonly ITaskScheduler _taskScheduler;
     private readonly string _machineName;
+    private readonly string _schedulerTaskName;
     private readonly bool _enabled;
 
-    private string _taskName
-    {
-      get
-      {
-        var projectInfo = (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo;
-
-        return projectInfo.SchedulerAppName;
-      }
-    }
-
-    public ToggleSchedulerAppEnabledStep(ITaskScheduler taskScheduler, string machineName, bool enabled)
+    public ToggleSchedulerAppEnabledStep(SchedulerAppProjectInfo projectInfo, ITaskScheduler taskScheduler, string machineName, string schedulerTaskName, bool enabled)
+      : base(projectInfo)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNullNorEmpty(machineName, "machineName");
 
       _taskScheduler = taskScheduler;
       _machineName = machineName;
+      _schedulerTaskName = schedulerTaskName;
       _enabled = enabled;
+    }
+
+    protected override void DoExecute()
+    {
+      _taskScheduler.ToggleTaskEnabled(
+        _machineName,
+        _schedulerTaskName,
+        _enabled);
     }
 
     public override string Description
@@ -37,9 +38,9 @@ namespace UberDeployer.Core.Deployment
         string action = _enabled ? "Enable" : "Disable";
 
         return string.Format(
-          "{0} task: {1} on machine: {2}.", 
+          "{0} task: {1} on machine: {2}.",
           action,
-          _taskName,
+          _schedulerTaskName,
           _machineName);
       }
     }
@@ -47,11 +48,6 @@ namespace UberDeployer.Core.Deployment
     public bool Enabled
     {
       get { return _enabled; }
-    }
-
-    protected override void DoExecute()
-    {
-      _taskScheduler.ToggleTaskEnabled(_machineName, _taskName, _enabled);
     }
   }
 }

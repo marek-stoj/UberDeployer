@@ -14,21 +14,19 @@ namespace UberDeployer.Core.Deployment
     private readonly ITaskScheduler _taskScheduler;
     private readonly IPasswordCollector _passwordCollector;
     private readonly IDirectoryAdapter _directoryAdapter;
-
-    private SchedulerAppProjectInfo _projectInfo
-    {
-      get { return (SchedulerAppProjectInfo)DeploymentInfo.ProjectInfo; }
-    }
+    
+    private SchedulerAppProjectInfo _projectInfo;
 
     #region Constructor(s)
 
     public DeploySchedulerAppDeploymentTask(
+      IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
       ITaskScheduler taskScheduler,
       IPasswordCollector passwordCollector,
       IDirectoryAdapter directoryAdapter)
-      : base(environmentInfoRepository)
+      : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
       Guard.NotNull(taskScheduler, "taskScheduler");
@@ -41,13 +39,14 @@ namespace UberDeployer.Core.Deployment
       _directoryAdapter = directoryAdapter;
     }
 
-    #endregion Constructor(s)
+    #endregion
 
     #region Overrides of DeploymentTaskBase
 
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      _projectInfo = GetProjectInfo<SchedulerAppProjectInfo>();
 
       string machineName = environmentInfo.SchedulerServerMachineName;
       string targetDirPath = Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
@@ -71,11 +70,15 @@ namespace UberDeployer.Core.Deployment
 
       Lazy<string> binariesDirPathProvider = AddStepsToObtainBinaries(environmentInfo);
 
-      AddSubTask(new BackupFilesDeploymentStep(targetDirNetworkPath));
+      AddSubTask(
+        new BackupFilesDeploymentStep(
+          _projectInfo,
+          targetDirNetworkPath));
 
       // create a step for copying the binaries to the target machine
       AddSubTask(
         new CopyFilesDeploymentStep(
+          _projectInfo,
           binariesDirPathProvider,
           new Lazy<string>(() => targetDirNetworkPath)));
 
@@ -92,14 +95,16 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Deploy scheduler app '{0} ({1}:{2})' to '{3}'.",
-            _projectInfo.Name,
+            DeploymentInfo.ProjectName,
             DeploymentInfo.ProjectConfigurationName,
             DeploymentInfo.ProjectConfigurationBuildId,
             DeploymentInfo.TargetEnvironmentName);
       }
     }
 
-    #endregion Overrides of DeploymentTaskBase
+    #endregion
+
+    #region Private methods
 
     private bool HasSettingsChanged(ScheduledTaskDetails taskDetails, string executablePath)
     {
@@ -140,6 +145,7 @@ namespace UberDeployer.Core.Deployment
         // create a step for scheduling a new app
         AddSubTask(
           new ScheduleNewAppDeploymentStep(
+            _projectInfo,
             _taskScheduler,
             environmentInfo.SchedulerServerMachineName,
             executablePath,
@@ -150,12 +156,17 @@ namespace UberDeployer.Core.Deployment
       {
         // create a step for updating an existing scheduler app
         AddSubTask(
-          new UpdateAppScheduleDeploymentStep(
+          new UpdateSchedulerTaskDeploymentStep(
+            _projectInfo,
             _taskScheduler,
             environmentInfo.SchedulerServerMachineName,
+            _projectInfo.SchedulerAppName,
             executablePath,
             environmentUser.UserName,
-            environmentUserPassword));
+            environmentUserPassword,
+            _projectInfo.ScheduledHour,
+            _projectInfo.ScheduledMinute,
+            _projectInfo.ExecutionTimeLimitInMinutes));
       }
     }
 
@@ -164,6 +175,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
+          _projectInfo,
           _artifactsRepository,
           GetTempDirPath());
 
@@ -172,6 +184,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for extracting the artifacts
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
+          _projectInfo, 
           environmentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
@@ -180,8 +193,11 @@ namespace UberDeployer.Core.Deployment
 
       if (_projectInfo.ArtifactsAreEnvironmentSpecific)
       {
-        var binariesConfiguratorStep = new ConfigureBinariesStep(
-          environmentInfo.ConfigurationTemplateName, GetTempDirPath());
+        var binariesConfiguratorStep =
+          new ConfigureBinariesStep(
+            _projectInfo,
+            environmentInfo.ConfigurationTemplateName,
+            GetTempDirPath());
 
         AddSubTask(binariesConfiguratorStep);
       }
@@ -206,9 +222,13 @@ namespace UberDeployer.Core.Deployment
     {
       AddSubTask(
         new ToggleSchedulerAppEnabledStep(
+          _projectInfo,
           _taskScheduler,
           machineName,
+          _projectInfo.SchedulerAppName,
           enabled));
     }
+
+    #endregion
   }
 }

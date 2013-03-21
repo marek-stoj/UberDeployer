@@ -15,15 +15,11 @@ namespace UberDeployer.Core.Tests.Deployment
   [TestFixture]
   public class MigrateDbDeploymentTaskTests
   {
-    private const string _ProjectConfigurationName = "project_configuration_name";
-    private const string _ProjectConfigurationBuildId = "project_configuration_build_id";
-    private const string _TargetEnvironmentName = "target_environment_name";
-
+    private Mock<IProjectInfoRepository> _projectInfoRepositoryFake;
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
     private Mock<IArtifactsRepository> _artifactsRepositoryFake;
     private Mock<IDbScriptRunnerFactory> _dbScriptRunnerFactoryFake;
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
-    private DbProjectInfo _projectInfo;
 
     private MigrateDbDeploymentTask _deploymentTask;
 
@@ -32,10 +28,15 @@ namespace UberDeployer.Core.Tests.Deployment
     [SetUp]
     public void SetUp()
     {
+      _projectInfoRepositoryFake = new Mock<IProjectInfoRepository>(MockBehavior.Loose);
       _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>(MockBehavior.Loose);
       _artifactsRepositoryFake = new Mock<IArtifactsRepository>(MockBehavior.Loose);
       _dbScriptRunnerFactoryFake = new Mock<IDbScriptRunnerFactory>(MockBehavior.Loose);
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
+
+      _projectInfoRepositoryFake
+        .Setup(x => x.FindByName(It.IsAny<string>()))
+        .Returns(ProjectInfoGenerator.GetDbProjectInfo());
 
       _environmentInfoRepositoryFake
         .Setup(x => x.FindByName(It.IsAny<string>()))
@@ -45,13 +46,13 @@ namespace UberDeployer.Core.Tests.Deployment
         .Setup(x => x.CreateDbScriptRunner(It.IsAny<string>()))
         .Returns(new Mock<IDbScriptRunner>(MockBehavior.Loose).Object);
 
-      _projectInfo = ProjectInfoGenerator.GetDbProjectInfo();
-
-      _deploymentTask = new MigrateDbDeploymentTask(
-        _environmentInfoRepositoryFake.Object,
-        _artifactsRepositoryFake.Object,
-        _dbScriptRunnerFactoryFake.Object,
-        _dbVersionProviderFake.Object);
+      _deploymentTask =
+        new MigrateDbDeploymentTask(
+          _projectInfoRepositoryFake.Object,
+          _environmentInfoRepositoryFake.Object,
+          _artifactsRepositoryFake.Object,
+          _dbScriptRunnerFactoryFake.Object,
+          _dbVersionProviderFake.Object);
 
       _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
     }
@@ -187,6 +188,7 @@ namespace UberDeployer.Core.Tests.Deployment
       return
         new OrderedDictionary
           {
+            { "projectInfoRepository", _projectInfoRepositoryFake.Object },
             { "environmentInfoRepository", _environmentInfoRepositoryFake.Object },
             { "artifactsRepository", _artifactsRepositoryFake.Object },
             { "dbScriptRunnerFactory", _dbScriptRunnerFactoryFake.Object },

@@ -1,3 +1,4 @@
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
 
 namespace UberDeployer.Core.Deployment
@@ -6,8 +7,8 @@ namespace UberDeployer.Core.Deployment
   {
     #region Constructor(s)
 
-    public StartNtServiceDeploymentStep(INtServiceManager ntServiceManager, string machineName, string serviceName)
-      : base(ntServiceManager, machineName, serviceName, NtServiceControlAction.Start)
+    public StartNtServiceDeploymentStep(ProjectInfo projectInfo, INtServiceManager ntServiceManager, string machineName, string serviceName)
+      : base(projectInfo, ntServiceManager, machineName, serviceName, NtServiceControlAction.Start)
     {
     }
 

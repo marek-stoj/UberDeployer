@@ -2,13 +2,15 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
   public abstract class DeploymentTask : DeploymentTaskBase
   {
-    protected readonly IEnvironmentInfoRepository _environmentInfoRepository;
+    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IEnvironmentInfoRepository _environmentInfoRepository;
 
     private readonly List<DeploymentTaskBase> _subTasks;
 
@@ -16,13 +18,12 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    protected DeploymentTask(IEnvironmentInfoRepository environmentInfoRepository)
+    protected DeploymentTask(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository)
     {
-      if (environmentInfoRepository == null)
-      {
-        throw new ArgumentNullException("environmentInfoRepository");
-      }
+      Guard.NotNull(projectInfoRepository, "projectInfoRepository");
+      Guard.NotNull(environmentInfoRepository, "environmentInfoRepository");
 
+      _projectInfoRepository = projectInfoRepository;
       _environmentInfoRepository = environmentInfoRepository;
 
       _subTasks = new List<DeploymentTaskBase>();
@@ -32,6 +33,11 @@ namespace UberDeployer.Core.Deployment
 
     #region Overrides of DeploymentTaskBase
 
+    protected override void DoPrepare()
+    {
+      // do nothing
+    }
+
     protected override void DoExecute()
     {
       try
@@ -39,10 +45,12 @@ namespace UberDeployer.Core.Deployment
         foreach (DeploymentTaskBase subTask in _subTasks)
         {
           subTask.Prepare(DeploymentInfo);
-          subTask.Execute();
-        }
 
-        PostDiagnosticMessage(string.Format("Finished '{0}' (\"{1}\").", GetType().Name, Description));
+          if (!DeploymentInfo.IsSimulation)
+          {
+            subTask.Execute();
+          }
+        }
       }
       finally
       {
@@ -59,6 +67,39 @@ namespace UberDeployer.Core.Deployment
 
     #region Protected members
 
+    protected EnvironmentInfo GetEnvironmentInfo()
+    {
+      EnvironmentInfo environmentInfo =
+        _environmentInfoRepository.FindByName(
+          DeploymentInfo.TargetEnvironmentName);
+
+      if (environmentInfo == null)
+      {
+        throw new DeploymentTaskException(string.Format("Environment named '{0}' doesn't exist.", DeploymentInfo.TargetEnvironmentName));
+      }
+
+      return environmentInfo;
+    }
+
+    protected T GetProjectInfo<T>()
+      where T : ProjectInfo
+    {
+      ProjectInfo projectInfo =
+        _projectInfoRepository.FindByName(DeploymentInfo.ProjectName);
+
+      if (projectInfo == null)
+      {
+        throw new DeploymentTaskException(string.Format("Project named '{0}' doesn't exist.", DeploymentInfo.ProjectName));
+      }
+
+      if (!(projectInfo is T))
+      {
+        throw new DeploymentTaskException(string.Format("Project named '{0}' is not of the expected type: '{1}'.", DeploymentInfo.ProjectName, typeof(T).FullName));
+      }
+
+      return (T)projectInfo;
+    }
+
     protected void AddSubTask(DeploymentTaskBase subTask)
     {
       if (subTask == null)
@@ -70,18 +111,6 @@ namespace UberDeployer.Core.Deployment
 
       // this will cause the events raised by sub-tasks to bubble up
       subTask.DiagnosticMessagePosted += OnDiagnosticMessagePosted;
-    }
-
-    protected EnvironmentInfo GetEnvironmentInfo()
-    {
-      EnvironmentInfo environmentInfo = _environmentInfoRepository.FindByName(DeploymentInfo.TargetEnvironmentName);
-
-      if (environmentInfo == null)
-      {
-        throw new DeploymentTaskException(string.Format("Environment named '{0}' doesn't exist.", DeploymentInfo.TargetEnvironmentName));
-      }
-
-      return environmentInfo;
     }
 
     protected string GetTempDirPath()

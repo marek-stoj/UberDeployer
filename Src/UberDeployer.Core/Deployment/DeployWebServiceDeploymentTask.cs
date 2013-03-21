@@ -8,8 +8,8 @@ namespace UberDeployer.Core.Deployment
   {
     #region Constructor(s)
 
-    public DeployWebServiceDeploymentTask(IMsDeploy msDeploy,IEnvironmentInfoRepository environmentInfoRepository, IArtifactsRepository artifactsRepository, IIisManager iisManager)
-      : base(msDeploy, environmentInfoRepository, artifactsRepository, iisManager)
+    public DeployWebServiceDeploymentTask(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository, IMsDeploy msDeploy, IArtifactsRepository artifactsRepository, IIisManager iisManager)
+      : base(projectInfoRepository, environmentInfoRepository, msDeploy, artifactsRepository, iisManager)
     {
     }
 

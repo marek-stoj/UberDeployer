@@ -62,6 +62,7 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_CreateDeployemntTask_RunsProperly_WhenAllIsWell()
     {
       var objectFactory = new Mock<IObjectFactory>(MockBehavior.Strict);
+      var prjInfoRepository = new Mock<IProjectInfoRepository>(MockBehavior.Loose);
       var envInfoRepository = new Mock<IEnvironmentInfoRepository>(MockBehavior.Loose);
       var artifactsRepository = new Mock<IArtifactsRepository>(MockBehavior.Loose);
       var taskScheduler = new Mock<ITaskScheduler>(MockBehavior.Loose);
@@ -81,6 +82,7 @@ namespace UberDeployer.Core.Tests.Domain
           _NtServiceExeName,
           _NtServiceUserId);
 
+      objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(prjInfoRepository.Object);
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
       objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object);
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);

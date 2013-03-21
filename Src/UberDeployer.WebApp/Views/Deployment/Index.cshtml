@@ -58,8 +58,13 @@
     </div>
     <div class="row">
       <div class="span12">
-        <input id="btn-deploy" type="submit" name="btn-deploy" value="Deploy" class="btn btn-primary pull-right" />
-        <button id="btn-version" class="btn pull-left" onclick="javascript: getProjectVersion();" style="margin-right: 10px;">
+        <button id="btn-deploy" name="btn-deploy" class="btn btn-primary pull-right">
+          Deploy
+        </button>
+        <button id="btn-simulate" name="btn-simulate" class="btn pull-right">
+          Simulate
+        </button>
+        <button id="btn-version" class="btn pull-left" onclick="javascript: getProjectVersion();">
           Version?
         </button>
         <button id="btn-kick-ass" class="btn pull-left" onclick="javascript: kickAss();">
@@ -70,7 +75,11 @@
     <div class="row">
       <div class="span12">
         <hr />
-        <div id="txt-logs"></div>
+        <div id="txt-logs">
+        </div>
+        <button id="btn-clear-logs" class="btn pull-right" onclick="javascript: clearLogs();">
+          Clear
+        </button>
       </div>
     </div>
   </div>

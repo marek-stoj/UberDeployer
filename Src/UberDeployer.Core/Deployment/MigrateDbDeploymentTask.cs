@@ -1,4 +1,5 @@
 ﻿using System;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 
@@ -13,26 +14,16 @@ namespace UberDeployer.Core.Deployment
     #region Constructor(s)
 
     public MigrateDbDeploymentTask(
+      IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
       IDbScriptRunnerFactory dbScriptRunnerFactory,
       IDbVersionProvider dbVersionProvider)
-      : base(environmentInfoRepository)
+      : base(projectInfoRepository, environmentInfoRepository)
     {
-      if (artifactsRepository == null)
-      {
-        throw new ArgumentNullException("artifactsRepository");
-      }
-
-      if (dbVersionProvider == null)
-      {
-        throw new ArgumentNullException("dbVersionProvider");
-      }
-
-      if (dbScriptRunnerFactory == null)
-      {
-        throw new ArgumentNullException("dbScriptRunnerFactory");
-      }
+      Guard.NotNull(artifactsRepository, "artifactsRepository");
+      Guard.NotNull(dbVersionProvider, "dbVersionProvider");
+      Guard.NotNull(dbScriptRunnerFactory, "dbScriptRunnerFactory");
 
       _artifactsRepository = artifactsRepository;
       _dbScriptRunnerFactory = dbScriptRunnerFactory;
@@ -46,10 +37,12 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      DbProjectInfo projectInfo = GetProjectInfo<DbProjectInfo>();
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
+          projectInfo,
           _artifactsRepository,
           GetTempDirPath());
 
@@ -58,6 +51,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for extracting the artifacts
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
+          projectInfo,
           environmentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
@@ -69,6 +63,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for gathering scripts to run
       var gatherDbScriptsToRunDeploymentStep =
         new GatherDbScriptsToRunDeploymentStep(
+          projectInfo,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           environmentInfo.DatabaseServerMachineName,
           environmentInfo.Name,
@@ -79,6 +74,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for running scripts
       var runDbScriptsDeploymentStep =
         new RunDbScriptsDeploymentStep(
+          projectInfo,
           GetScriptRunner(environmentInfo.DatabaseServerMachineName),
           environmentInfo.DatabaseServerMachineName,
           new DeferredEnumerable<string>(() => gatherDbScriptsToRunDeploymentStep.ScriptsToRun));

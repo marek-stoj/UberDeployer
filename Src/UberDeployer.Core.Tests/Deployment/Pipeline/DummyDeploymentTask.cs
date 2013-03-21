@@ -5,13 +5,9 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline
 {
   public class DummyDeploymentTask : DeploymentTask
   {
-    public DummyDeploymentTask(IEnvironmentInfoRepository environmentInfoRepository)
-      : base(environmentInfoRepository)
+    public DummyDeploymentTask(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository)
+      : base(projectInfoRepository, environmentInfoRepository)
     {
     }
-
-    protected override void DoPrepare()
-    {
-      // do nothing
-    }      }
+  }
 }

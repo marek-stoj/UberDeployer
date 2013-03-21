@@ -9,14 +9,14 @@ namespace UberDeployer.Core.Tests.Generators
       return
         new NtServiceProjectInfo(
           "name",
-          "artifactsRepositoryName",
-          "artifactsRepositoryDirName",
+          "artifacts_repository_name",
+          "artifacts_repository_dir_name",
           !areEnvironmentSpecific,
-          "ntServiceName",
-          "ntServiceDirName",
-          "ntServiceDisplayName",
-          "ntServiceExeName",
-          "ntServiceUserId");
+          "nt_service_name",
+          "nt_service_dir_name",
+          "nt_service_display_name",
+          "nt_service_exe_name",
+          "nt_service_user_id");
     }
 
     public static WebAppProjectInfo GetWebAppProjectInfo()
@@ -24,8 +24,8 @@ namespace UberDeployer.Core.Tests.Generators
       return
         new WebAppProjectInfo(
           "name",
-          "artifactsRepositoryName",
-          "artifactsRepositoryDirName",
+          "artifacts_repository_name",
+          "artifacts_repository_dir_name",
           true);
     }
 
@@ -34,8 +34,8 @@ namespace UberDeployer.Core.Tests.Generators
       return
         new WebServiceProjectInfo(
           "name",
-          "artifactsRepositoryName",
-          "artifactsRepositoryDirName",
+          "artifacts_repository_name",
+          "artifacts_repository_dir_name",
           true);
     }
 
@@ -55,12 +55,12 @@ namespace UberDeployer.Core.Tests.Generators
       return
         new TerminalAppProjectInfo(
           "name",
-          "artifactsRepositoryName",
-          "artifactsRepositoryDirName",
+          "artifacts_repository_name",
+          "artifacts_repository_dir_name",
           true,
-          "terminalAppName",
-          "terminalAppDirName",
-          "terminalAppExeName");
+          "terminal_app_name",
+          "terminal_app_dir_name",
+          "terminal_app_exe_name");
     }
 
     public static SchedulerAppProjectInfo GetSchedulerAppProjectInfo()
@@ -68,13 +68,13 @@ namespace UberDeployer.Core.Tests.Generators
       return
         new SchedulerAppProjectInfo(
           "name",
-          "artifactsRepositoryName",
-          "artifactsRepositoryDirName",
+          "artifacts_repository_name",
+          "artifacts_repository_dir_name",
           true,
-          "schedulerAppName",
-          "schedulerAppDirName",
-          "schedulerAppExeName",
-          "schedulerAppUserId",
+          "scheduler_app_name",
+          "scheduler_app_dir_name",
+          "scheduler_app_exe_name",
+          "scheduler_app_user_id",
           0,
           0,
           0);

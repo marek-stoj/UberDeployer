@@ -37,8 +37,9 @@ namespace UberDeployer.Core.Domain
 
       return
         new DeployWebAppDeploymentTask(
-          objectFactory.CreateIMsDeploy(),
+          objectFactory.CreateProjectInfoRepository(),
           objectFactory.CreateEnvironmentInfoRepository(),
+          objectFactory.CreateIMsDeploy(),
           objectFactory.CreateArtifactsRepository(),
           objectFactory.CreateIIisManager());
     }

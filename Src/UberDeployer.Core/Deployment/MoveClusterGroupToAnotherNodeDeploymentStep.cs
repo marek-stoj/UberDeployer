@@ -1,4 +1,5 @@
-using System;
+using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.FailoverCluster;
 
 namespace UberDeployer.Core.Deployment
@@ -12,27 +13,14 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public MoveClusterGroupToAnotherNodeDeploymentStep(IFailoverClusterManager failoverClusterManager, string failoverClusterMachineName, string clusterGroupName, string targetNodeName)
+    public MoveClusterGroupToAnotherNodeDeploymentStep(ProjectInfo projectInfo, IFailoverClusterManager failoverClusterManager, string failoverClusterMachineName, string clusterGroupName, string targetNodeName)
+      : base(projectInfo)
     {
-      if (failoverClusterManager == null)
-      {
-        throw new ArgumentNullException("failoverClusterManager");
-      }
-
-      if (string.IsNullOrEmpty(failoverClusterMachineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "failoverClusterMachineName");
-      }
-
-      if (string.IsNullOrEmpty(clusterGroupName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "clusterGroupName");
-      }
-
-      if (string.IsNullOrEmpty(targetNodeName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "targetNodeName");
-      }
+      Guard.NotNull(failoverClusterManager, "failoverClusterManager");
+      Guard.NotNullNorEmpty(failoverClusterMachineName, "failoverClusterMachineName");
+      Guard.NotNullNorEmpty(clusterGroupName, "clusterGroupName");
+      Guard.NotNullNorEmpty(clusterGroupName, "clusterGroupName");
+      Guard.NotNullNorEmpty(targetNodeName, "targetNodeName");
 
       _failoverClusterManager = failoverClusterManager;
       _failoverClusterMachineName = failoverClusterMachineName;

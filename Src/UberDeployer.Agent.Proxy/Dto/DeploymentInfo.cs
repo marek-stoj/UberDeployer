@@ -4,6 +4,8 @@ namespace UberDeployer.Agent.Proxy.Dto
 {
   public class DeploymentInfo
   {
+    public bool IsSimulation { get; set; }
+    
     public string ProjectName { get; set; }
 
     public string ProjectConfigurationName { get; set; }

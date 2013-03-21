@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
   public class ConfigureBinariesStep : DeploymentStep
   {
     private readonly string _templateConfigurationName;
-
     private readonly string _artifactsDirPath;
 
-    public override string Description
-    {
-      get { return "Runs *.bat for specific configuration."; }
-    }
-
-    public ConfigureBinariesStep(string templateConfigurationName, string artifactsDirPath)
+    public ConfigureBinariesStep(ProjectInfo projectInfo, string templateConfigurationName, string artifactsDirPath)
+      : base(projectInfo)
     {
       if (string.IsNullOrWhiteSpace(artifactsDirPath))
       {
@@ -34,6 +30,11 @@ namespace UberDeployer.Core.Deployment
     protected override void DoExecute()
     {
       Execute(Path.Combine(_artifactsDirPath, string.Format("Config_{0}.bat", _templateConfigurationName)), _artifactsDirPath, null);
+    }
+
+    public override string Description
+    {
+      get { return string.Format("Run Config_{0}.bat in order to create environment-specific artifacts.", _templateConfigurationName); }
     }
 
     private void Execute(string fileToExecute, string workingDir, string arguments)

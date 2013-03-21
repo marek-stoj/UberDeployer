@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Deployment
@@ -13,18 +15,12 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public RunDbScriptsDeploymentStep(IDbScriptRunner dbScriptRunner, string databaseServerMachineName, IEnumerable<string> scriptPathsToRunEnumerable)
+    public RunDbScriptsDeploymentStep(ProjectInfo projectInfo, IDbScriptRunner dbScriptRunner, string databaseServerMachineName, IEnumerable<string> scriptPathsToRunEnumerable)
+      : base(projectInfo)
     {
-      if (dbScriptRunner == null)
-      {
-        throw new ArgumentNullException("dbScriptRunner");
-      }
-
-      if (string.IsNullOrEmpty(databaseServerMachineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "databaseServerMachineName");
-      }
-
+      Guard.NotNull(dbScriptRunner, "dbScriptRunner");
+      Guard.NotNullNorEmpty(databaseServerMachineName, "databaseServerMachineName");
+      
       if (scriptPathsToRunEnumerable == null)
       {
         throw new ArgumentNullException("scriptPathsToRunEnumerable");

@@ -6,34 +6,40 @@ using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Deployment
 {
-  public class UpdateAppScheduleDeploymentStep : DeploymentStep
+  public class UpdateSchedulerTaskDeploymentStep : DeploymentStep
   {
     private readonly ITaskScheduler _taskScheduler;
     private readonly string _machineName;
+    private readonly string _schedulerTaskName;
     private readonly string _executablePath;
     private readonly string _userName;
     private readonly string _password;
-
-    private SchedulerAppProjectInfo _schedulerAppProjectInfo
-    {
-      get { return (SchedulerAppProjectInfo) DeploymentInfo.ProjectInfo; }
-    }
+    private readonly int _scheduledHour;
+    private readonly int _scheduledMinute;
+    private readonly int _executionTimeLimitInMinutes;
 
     #region Constructor(s)
 
     // TODO IMM HI: can we update scheduler app without user name and password?
-    public UpdateAppScheduleDeploymentStep(
+    public UpdateSchedulerTaskDeploymentStep(
+      ProjectInfo projectInfo,
       ITaskScheduler taskScheduler,
-      string machineName,      
+      string machineName,
+      string schedulerTaskName,
       string executablePath,
       string userName,
-      string password)
+      string password,
+      int scheduledHour,
+      int scheduledMinute,
+      int executionTimeLimitInMinutes)
+      : base(projectInfo)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNullNorEmpty(machineName, "machineName");
       Guard.NotNullNorEmpty(executablePath, "executablePath");
       Guard.NotNullNorEmpty(userName, "userName");
       Guard.NotNullNorEmpty(password, "password");
+      Guard.NotNullNorEmpty(schedulerTaskName, "schedulerTaskName");
       
       if (!Path.IsPathRooted(executablePath))
       {
@@ -42,9 +48,13 @@ namespace UberDeployer.Core.Deployment
 
       _taskScheduler = taskScheduler;
       _machineName = machineName;      
+      _schedulerTaskName = schedulerTaskName;
       _executablePath = executablePath;
       _userName = userName;
       _password = password;
+      _scheduledHour = scheduledHour;
+      _scheduledMinute = scheduledMinute;
+      _executionTimeLimitInMinutes = executionTimeLimitInMinutes;
     }
 
     #endregion
@@ -53,18 +63,13 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {      
-      string taskName = _schedulerAppProjectInfo.SchedulerAppName;
-      int scheduledHour = _schedulerAppProjectInfo.ScheduledHour;
-      int scheduledMinute = _schedulerAppProjectInfo.ScheduledMinute;
-      int executionTimeLimitInMinutes = _schedulerAppProjectInfo.ExecutionTimeLimitInMinutes;
-
       var scheduledTaskSpecification =
         new ScheduledTaskSpecification(
-          taskName,
+          _schedulerTaskName,
           _executablePath,
-          scheduledHour,
-          scheduledMinute,
-          executionTimeLimitInMinutes);
+          _scheduledHour,
+          _scheduledMinute,
+          _executionTimeLimitInMinutes);
 
       _taskScheduler.UpdateTaskSchedule(
         _machineName,
@@ -80,11 +85,11 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
           "Update schedule of app named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes.",
-          _schedulerAppProjectInfo.Name,
+          ProjectInfo.Name,
           _machineName,
-          _schedulerAppProjectInfo.ScheduledHour.ToString().PadLeft(2, '0'),
-          _schedulerAppProjectInfo.ScheduledMinute.ToString().PadLeft(2, '0'),
-          _schedulerAppProjectInfo.ExecutionTimeLimitInMinutes);
+          _scheduledHour.ToString().PadLeft(2, '0'),
+          _scheduledMinute.ToString().PadLeft(2, '0'),
+          _executionTimeLimitInMinutes);
       }
     }
 

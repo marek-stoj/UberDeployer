@@ -473,12 +473,16 @@ namespace UberDeployer.Agent.Service
 
     private void DoDeploy(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfoDto, ProjectInfo projectInfo)
     {
-      Core.Domain.DeploymentInfo deploymentInfo = DtoMapper.ConvertDeploymentInfo(deploymentInfoDto, projectInfo);
+      Core.Domain.DeploymentInfo deploymentInfo =
+        DtoMapper.ConvertDeploymentInfo(deploymentInfoDto, projectInfo);
 
       DeploymentTask deploymentTask =
         projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
 
-      deploymentTask.DiagnosticMessagePosted +=
+      var deploymentContext =
+        new DeploymentContext(requesterIdentity);
+
+      EventHandler<DiagnosticMessageEventArgs> deploymentPipelineDiagnosticMessageAction =
         (eventSender, tmpArgs) =>
         {
           _log.DebugIfEnabled(() => string.Format("{0}: {1}", tmpArgs.MessageType, tmpArgs.Message));
@@ -486,10 +490,16 @@ namespace UberDeployer.Agent.Service
           _diagnosticMessagesLogger.LogMessage(uniqueClientId, tmpArgs.MessageType, tmpArgs.Message);
         };
 
-      var deploymentContext =
-        new DeploymentContext(requesterIdentity);
+      try
+      {
+        _deploymentPipeline.DiagnosticMessagePosted += deploymentPipelineDiagnosticMessageAction;
 
-      _deploymentPipeline.StartDeployment(deploymentInfo, deploymentTask, deploymentContext);
+        _deploymentPipeline.StartDeployment(deploymentInfo, deploymentTask, deploymentContext);
+      }
+      finally
+      {
+        _deploymentPipeline.DiagnosticMessagePosted -= deploymentPipelineDiagnosticMessageAction;
+      }
     }
 
     #endregion
