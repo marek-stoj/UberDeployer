@@ -1,6 +1,4 @@
 ﻿using System;
-using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -8,20 +6,14 @@ namespace UberDeployer.Core.Deployment
   {
     public event EventHandler<DiagnosticMessageEventArgs> DiagnosticMessagePosted;
 
-    private DeploymentInfo _deploymentInfo;
-
     #region Public methods
 
-    public void Prepare(DeploymentInfo deploymentInfo)
+    public void Prepare()
     {
-      Guard.NotNull(deploymentInfo, "DeploymentInfo");
-
       if (IsPrepared)
       {
         throw new InvalidOperationException("The task has already been prepared.");
       }
-
-      DeploymentInfo = deploymentInfo;
 
       PostDiagnosticMessage(string.Format("Preparing: {0}", Description), DiagnosticMessageType.Trace);
 
@@ -37,17 +29,12 @@ namespace UberDeployer.Core.Deployment
         throw new InvalidOperationException("The task has to be prepared before it can be executed.");
       }
 
-      if (!DeploymentInfo.IsSimulation)
-      {
-        PostDiagnosticMessage(string.Format("Executing: {0}", Description), DiagnosticMessageType.Info);
-      }
-
       DoExecute();
     }
 
-    public void PrepareAndExecute(DeploymentInfo deploymentInfo)
+    public void PrepareAndExecute()
     {
-      Prepare(deploymentInfo);
+      Prepare();
       Execute();
     }
 
@@ -82,22 +69,6 @@ namespace UberDeployer.Core.Deployment
     }
 
     protected bool IsPrepared { get; private set; }
-
-    // TODO IMM HI: xxx move down?
-    protected DeploymentInfo DeploymentInfo
-    {
-      get
-      {
-        if (_deploymentInfo == null)
-        {
-          throw new InvalidOperationException("The task hasn't been prepared.");
-        }
-
-        return _deploymentInfo;
-      }
-
-      private set { _deploymentInfo = value; }
-    }
 
     #endregion
   }

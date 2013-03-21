@@ -36,7 +36,7 @@ namespace UberDeployer.NAnt
 
         var deploymentInfo =
           new DeploymentInfo(
-            false, // TODO IMM HI: xxx param for simulation?
+            IsSimulation,
             ProjectName,
             ConfigurationName,
             BuildId,
@@ -66,6 +66,10 @@ namespace UberDeployer.NAnt
     [TaskAttribute("environment", Required = true)]
     [StringValidator(AllowEmpty = false)]
     public string Environment { get; set; }
+
+    [TaskAttribute("isSimulation", Required = false)]
+    [BooleanValidator]
+    public bool IsSimulation { get; set; }
 
     private static string RequesterIdentity
     {

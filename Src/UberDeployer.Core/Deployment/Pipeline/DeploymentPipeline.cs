@@ -26,7 +26,6 @@ namespace UberDeployer.Core.Deployment.Pipeline
       _modules.Add(module);
     }
 
-    // TODO IMM HI: xxx somehow mark simulation in history
     public void StartDeployment(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
       Guard.NotNull(deploymentInfo, "deploymentInfo");
@@ -45,7 +44,8 @@ namespace UberDeployer.Core.Deployment.Pipeline
 
       try
       {
-        deploymentTask.PrepareAndExecute(deploymentInfo);
+        deploymentTask.Initialize(deploymentInfo);
+        deploymentTask.PrepareAndExecute();
 
         finishedSuccessfully = true;
 
@@ -60,7 +60,6 @@ namespace UberDeployer.Core.Deployment.Pipeline
         // TODO IMM HI: catch exceptions; pass them upstream using some mechanisms like DeploymentTask.DiagnosticMessagePosted event
         OnDeploymentTaskFinished(deploymentInfo, deploymentTask, deploymentContext);
 
-        // TODO IMM HI: xxx
         deploymentTask.DiagnosticMessagePosted -= OnDeploymentTaskDiagnosticMessagePosted;
       }
     }

@@ -19,7 +19,7 @@ namespace UberDeployer.Core.Tests.Deployment
       {
         var copyFilesDeploymentStep = new CopyFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), new Lazy<string>(() => srcDirPath), new Lazy<string>(() => dstDirPath));
 
-        copyFilesDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
+        copyFilesDeploymentStep.PrepareAndExecute();
 
         Assert.IsTrue(Directory.Exists(dstDirPath));
 
@@ -48,7 +48,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
         var copyFilesDeploymentStep = new CopyFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), new Lazy<string>(() => srcDirPath), new Lazy<string>(() => dstDirPath));
 
-        copyFilesDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
+        copyFilesDeploymentStep.PrepareAndExecute();
 
         Assert.IsTrue(Directory.Exists(dstDirPath));
 
@@ -76,7 +76,7 @@ namespace UberDeployer.Core.Tests.Deployment
       {
         var copyFilesDeploymentStep = new CopyFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), new Lazy<string>(() => srcDirPath), new Lazy<string>(() => dstDirPath));
 
-        Assert.Throws<DeploymentTaskException>(() => copyFilesDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetNtServiceDeploymentInfo()));
+        Assert.Throws<DeploymentTaskException>(() => copyFilesDeploymentStep.PrepareAndExecute());
       }
       finally
       {

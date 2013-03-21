@@ -67,7 +67,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       ntServiceManager.Setup(k => k.InstallService(machineName, ntServiceDescriptor));
 
-      installNTServiceStep.PrepareAndExecute(_deploymentInfo);
+      installNTServiceStep.PrepareAndExecute();
     }
   }
 }

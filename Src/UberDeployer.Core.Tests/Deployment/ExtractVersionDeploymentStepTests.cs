@@ -17,7 +17,7 @@ namespace UberDeployer.Core.Tests.Deployment
           new Lazy<string>(() => "TestData\\TestVersionExtract"),
           "subst.exe");
 
-      step.PrepareAndExecute(DeploymentInfoGenerator.GetDbDeploymentInfo());
+      step.PrepareAndExecute();
 
       Assert.AreEqual("6.1.7600.16385",step.Version);
     }

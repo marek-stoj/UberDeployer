@@ -7,20 +7,23 @@ namespace UberDeployer.Core.Deployment
   public class DownloadArtifactsDeploymentStep : DeploymentStep
   {
     private readonly IArtifactsRepository _artifactsRepository;
+    private readonly DeploymentInfo _deploymentInfo;
     private readonly string _targetDirPath;
     
     private readonly string _artifactsFilePath;
 
     #region Constructor(s)
 
-    public DownloadArtifactsDeploymentStep(ProjectInfo projectInfo, IArtifactsRepository artifactsRepository, string targetDirPath)
+    public DownloadArtifactsDeploymentStep(ProjectInfo projectInfo, DeploymentInfo deploymentInfo, string targetDirPath, IArtifactsRepository artifactsRepository)
       : base(projectInfo)
     {
-      Guard.NotNull(artifactsRepository, "artifactsRepository");
+      Guard.NotNull(deploymentInfo, "deploymentInfo");
       Guard.NotNullNorEmpty(targetDirPath, "targetDirPath");
+      Guard.NotNull(artifactsRepository, "artifactsRepository");
 
-      _artifactsRepository = artifactsRepository;
+      _deploymentInfo = deploymentInfo;
       _targetDirPath = targetDirPath;
+      _artifactsRepository = artifactsRepository;
 
       _artifactsFilePath = Path.Combine(_targetDirPath, "artifacts.zip");
     }
@@ -33,8 +36,8 @@ namespace UberDeployer.Core.Deployment
     {
       _artifactsRepository.GetArtifacts(
         ProjectInfo.ArtifactsRepositoryName,
-        DeploymentInfo.ProjectConfigurationName,
-        DeploymentInfo.ProjectConfigurationBuildId,
+        _deploymentInfo.ProjectConfigurationName,
+        _deploymentInfo.ProjectConfigurationBuildId,
         _artifactsFilePath);
     }
 
@@ -45,9 +48,9 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Download artifacts of project '{0} ({1}:{2})' to '{3}'.'",
-            DeploymentInfo.ProjectName,
-            DeploymentInfo.ProjectConfigurationName,
-            DeploymentInfo.ProjectConfigurationBuildId,
+            _deploymentInfo.ProjectName,
+            _deploymentInfo.ProjectConfigurationName,
+            _deploymentInfo.ProjectConfigurationBuildId,
             _targetDirPath);
       }
     }

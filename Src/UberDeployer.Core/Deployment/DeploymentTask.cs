@@ -14,6 +14,7 @@ namespace UberDeployer.Core.Deployment
 
     private readonly List<DeploymentTaskBase> _subTasks;
 
+    private DeploymentInfo _deploymentInfo;
     private string _tempDirPath;
 
     #region Constructor(s)
@@ -31,6 +32,17 @@ namespace UberDeployer.Core.Deployment
 
     #endregion
 
+    #region Public methods
+
+    public void Initialize(DeploymentInfo deploymentInfo)
+    {
+      Guard.NotNull(deploymentInfo, "deploymentInfo");
+
+      _deploymentInfo = deploymentInfo;
+    }
+
+    #endregion
+
     #region Overrides of DeploymentTaskBase
 
     protected override void DoPrepare()
@@ -42,9 +54,21 @@ namespace UberDeployer.Core.Deployment
     {
       try
       {
+        if (!DeploymentInfo.IsSimulation)
+        {
+          PostDiagnosticMessage(string.Format("Executing: {0}", Description), DiagnosticMessageType.Info);
+        }
+
         foreach (DeploymentTaskBase subTask in _subTasks)
         {
-          subTask.Prepare(DeploymentInfo);
+          var deploymentTask = subTask as DeploymentTask;
+
+          if (deploymentTask != null)
+          {
+            deploymentTask.Initialize(DeploymentInfo);
+          }
+
+          subTask.Prepare();
 
           if (!DeploymentInfo.IsSimulation)
           {
@@ -125,6 +149,19 @@ namespace UberDeployer.Core.Deployment
       }
 
       return _tempDirPath;
+    }
+
+    protected DeploymentInfo DeploymentInfo
+    {
+      get
+      {
+        if (_deploymentInfo == null)
+        {
+          throw new InvalidOperationException("DeploymentInfo is missing - have you initialized the task?");
+        }
+
+        return _deploymentInfo;
+      }
     }
 
     #endregion

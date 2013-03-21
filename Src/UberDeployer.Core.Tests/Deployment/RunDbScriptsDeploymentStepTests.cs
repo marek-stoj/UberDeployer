@@ -5,7 +5,6 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using UberDeployer.Core.Tests.Generators;
 
@@ -24,7 +23,6 @@ namespace UberDeployer.Core.Tests.Deployment
         };
 
     private Mock<IDbScriptRunner> _dbScriptRunnerFake;
-    private DeploymentInfo _deploymentInfo;
 
     private RunDbScriptsDeploymentStep _deploymentStep;
 
@@ -33,7 +31,6 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       _dbScriptRunnerFake = new Mock<IDbScriptRunner>(MockBehavior.Loose);
       _deploymentStep = new RunDbScriptsDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), _dbScriptRunnerFake.Object, _DatabaseServerName, _ScriptsToRun);
-      _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
     }
 
     [Test]
@@ -54,7 +51,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoExecute_calls_script_runner_for_each_script()
     {
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfo);
+      _deploymentStep.PrepareAndExecute();
 
       // assert
       _dbScriptRunnerFake.Verify(
@@ -71,7 +68,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Throws(new DbScriptRunnerException(It.IsAny<string>(), new Exception("message")));
 
       // act, assert
-      Assert.Throws<DeploymentTaskException>(() => _deploymentStep.PrepareAndExecute(_deploymentInfo));
+      Assert.Throws<DeploymentTaskException>(() => _deploymentStep.PrepareAndExecute());
     }
 
     [Test]
@@ -83,7 +80,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deploymentStep = new RunDbScriptsDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), _dbScriptRunnerFake.Object, _DatabaseServerName, notExistingScripts);
 
       // act, assert
-      Assert.Throws<FileNotFoundException>(() => _deploymentStep.PrepareAndExecute(_deploymentInfo));
+      Assert.Throws<FileNotFoundException>(() => _deploymentStep.PrepareAndExecute());
     }
   }
 }

@@ -17,7 +17,7 @@ namespace UberDeployer.ConsoleApp.Commands
 
     public override int Run(string[] args)
     {
-      if (args.Length != 4)
+      if (args.Length != 4 && args.Length != 5)
       {
         DisplayCommandUsage();
 
@@ -30,7 +30,8 @@ namespace UberDeployer.ConsoleApp.Commands
       string projectName = args[0];
       string projectConfigurationName = args[1];
       string projectConfigurationBuildId = args[2];
-      string targetEnvironmentName = args[3];      
+      string targetEnvironmentName = args[3];
+      bool isSimulation = (args.Length >= 5 ? string.Equals(args[4], "simulate", StringComparison.OrdinalIgnoreCase) : false);
 
       ProjectInfo projectInfo = projectInfoRepository.FindByName(projectName);
 
@@ -42,7 +43,7 @@ namespace UberDeployer.ConsoleApp.Commands
 
       var deploymentInfo =
         new DeploymentInfo(
-          false, // TODO IMM HI: xxx param for simulation?
+          isSimulation,
           projectName,
           projectConfigurationName,
           projectConfigurationBuildId,

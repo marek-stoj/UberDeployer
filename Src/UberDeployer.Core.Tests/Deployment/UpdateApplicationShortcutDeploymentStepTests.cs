@@ -19,7 +19,7 @@ namespace UberDeployer.Core.Tests.Deployment
         "FolderMattersFile.dummy",
         "TestProject");
 
-      step.PrepareAndExecute(DeploymentInfoGenerator.GetDbDeploymentInfo());
+      step.PrepareAndExecute();
 
       Assert.IsTrue(File.Exists("TestData/Shortcuts/TestProject.lnk"));
       File.Delete("TestData/ShortCuts/TestProject.lnk");
@@ -35,7 +35,7 @@ namespace UberDeployer.Core.Tests.Deployment
         "FolderMattersFile.dummy",
         "ExistingAppShortcut");
 
-      step.PrepareAndExecute(DeploymentInfoGenerator.GetDbDeploymentInfo());
+      step.PrepareAndExecute();
 
       var modifiedDate = File.GetLastWriteTime("TestData/Shortcuts/ExistingAppShortcut.lnk");
       Assert.LessOrEqual((DateTime.Now - modifiedDate).TotalMilliseconds, 10);

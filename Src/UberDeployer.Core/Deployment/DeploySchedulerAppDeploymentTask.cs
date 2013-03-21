@@ -176,8 +176,9 @@ namespace UberDeployer.Core.Deployment
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
           _projectInfo,
-          _artifactsRepository,
-          GetTempDirPath());
+          DeploymentInfo,
+          GetTempDirPath(),
+          _artifactsRepository);
 
       AddSubTask(downloadArtifactsDeploymentStep);
 
@@ -186,6 +187,7 @@ namespace UberDeployer.Core.Deployment
         new ExtractArtifactsDeploymentStep(
           _projectInfo, 
           environmentInfo,
+          DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 

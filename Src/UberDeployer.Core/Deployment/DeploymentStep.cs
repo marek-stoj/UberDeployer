@@ -7,7 +7,7 @@ namespace UberDeployer.Core.Deployment
   {
     #region Ctor(s)
 
-    // TODO IMM HI: xxx user something else instead of ProjectInfo?
+    // TODO IMM HI: xxx use something else instead of ProjectInfo?
     protected DeploymentStep(ProjectInfo projectInfo)
     {
       Guard.NotNull(projectInfo, "projectInfo");

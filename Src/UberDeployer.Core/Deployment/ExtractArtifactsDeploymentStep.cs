@@ -8,7 +8,8 @@ namespace UberDeployer.Core.Deployment
 {
   public class ExtractArtifactsDeploymentStep : DeploymentStep
   {
-    private readonly EnvironmentInfo _environmentInfo;   
+    private readonly EnvironmentInfo _environmentInfo;
+    private readonly DeploymentInfo _deploymentInfo;
     private readonly string _artifactsFilePath;
     private readonly string _targetArtifactsDirPath;
 
@@ -16,14 +17,16 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public ExtractArtifactsDeploymentStep(ProjectInfo projectInfo, EnvironmentInfo environmentInfo, string artifactsFilePath, string targetArtifactsDirPath)
+    public ExtractArtifactsDeploymentStep(ProjectInfo projectInfo, EnvironmentInfo environmentInfo, DeploymentInfo deploymentInfo, string artifactsFilePath, string targetArtifactsDirPath)
       : base(projectInfo)
     {
       Guard.NotNull(environmentInfo, "environmentInfo");
+      Guard.NotNull(deploymentInfo, "deploymentInfo");
       Guard.NotNullNorEmpty(artifactsFilePath, "artifactsFilePath");
       Guard.NotNullNorEmpty(targetArtifactsDirPath, "targetArtifactsDirPath");
 
-      _environmentInfo = environmentInfo;      
+      _environmentInfo = environmentInfo;
+      _deploymentInfo = deploymentInfo;
       _artifactsFilePath = artifactsFilePath;
       _targetArtifactsDirPath = targetArtifactsDirPath;
     }
@@ -61,7 +64,7 @@ namespace UberDeployer.Core.Deployment
         string.Format(
           @"{0}_{1}.zip",
           ProjectInfo.ArtifactsRepositoryName,
-          DeploymentInfo.ProjectConfigurationName);
+          _deploymentInfo.ProjectConfigurationName);
 
       string archivePath = Path.Combine(_targetArtifactsDirPath, projectArchiveFileName);
 
@@ -79,9 +82,9 @@ namespace UberDeployer.Core.Deployment
         return
           string.Format(
             "Extract artifacts of project '{0} ({1}:{2})' on environment '{3}' to '{4}' from '{5}'.'",
-            DeploymentInfo.ProjectName,
-            DeploymentInfo.ProjectConfigurationName,
-            DeploymentInfo.ProjectConfigurationBuildId,
+            _deploymentInfo.ProjectName,
+            _deploymentInfo.ProjectConfigurationName,
+            _deploymentInfo.ProjectConfigurationBuildId,
             _environmentInfo.Name,
             _targetArtifactsDirPath,
             _artifactsFilePath);

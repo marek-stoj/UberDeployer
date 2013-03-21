@@ -23,8 +23,6 @@ namespace UberDeployer.Core.Tests.Deployment
 
     private MigrateDbDeploymentTask _deploymentTask;
 
-    private DeploymentInfo _deploymentInfo;
-
     [SetUp]
     public void SetUp()
     {
@@ -54,7 +52,7 @@ namespace UberDeployer.Core.Tests.Deployment
           _dbScriptRunnerFactoryFake.Object,
           _dbVersionProviderFake.Object);
 
-      _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
+      _deploymentTask.Initialize(DeploymentInfoGenerator.GetDbDeploymentInfo());
     }
 
     [Test]
@@ -72,7 +70,7 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Description_is_not_empty()
     {
-      _deploymentTask.Prepare(_deploymentInfo);
+      _deploymentTask.Prepare();
 
       Assert.IsNotNullOrEmpty(_deploymentTask.Description);
     }    
@@ -81,7 +79,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoPrepare_calls_environment_info_repository()
     {
       // act
-      _deploymentTask.Prepare(_deploymentInfo);
+      _deploymentTask.Prepare();
 
       // assert
       _environmentInfoRepositoryFake.VerifyAll();
@@ -96,14 +94,14 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((EnvironmentInfo)null);
 
       // assert
-      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(_deploymentInfo));
+      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare());
     }
 
     [Test]
     public void DoPrepare_calls_db_script_runner_factory()
     {
       // act
-      _deploymentTask.Prepare(_deploymentInfo);
+      _deploymentTask.Prepare();
 
       // assert
       _dbScriptRunnerFactoryFake.VerifyAll();
@@ -118,7 +116,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((IDbScriptRunner)null);
 
       // assert
-      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare(_deploymentInfo));
+      Assert.Throws<DeploymentTaskException>(() => _deploymentTask.Prepare());
     }
 
     [Test]
@@ -129,7 +127,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoPrepare_adds_deployment_step(Type deploymentStepType)
     {
       // act
-      _deploymentTask.Prepare(_deploymentInfo);
+      _deploymentTask.Prepare();
 
       // assert
       Assert.IsNotNull(_deploymentTask.SubTasks.Any(x => x.GetType() == deploymentStepType));
@@ -149,7 +147,7 @@ namespace UberDeployer.Core.Tests.Deployment
           };
 
       // act
-      _deploymentTask.Prepare(_deploymentInfo);
+      _deploymentTask.Prepare();
 
       // assert
       int prevStepIndex = GetIndexOfTaskWithType(_deploymentTask.SubTasks, stepsTypesOrder[0]);

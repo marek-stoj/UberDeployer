@@ -23,7 +23,6 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<IDirectoryAdapter> _directoryAdapterFake;
 
     private EnvironmentInfo _environmentInfo;
-    private DeploymentInfo _deploymentInfo;    
     private SchedulerAppProjectInfo _projectInfo;
     private string _appExePath;
 
@@ -37,7 +36,6 @@ namespace UberDeployer.Core.Tests.Deployment
       _passwordCollectorFake = new Mock<IPasswordCollector>();
       _directoryAdapterFake = new Mock<IDirectoryAdapter>();
 
-      _deploymentInfo = DeploymentInfoGenerator.GetSchedulerAppDeploymentInfo();
       _projectInfo = ProjectInfoGenerator.GetSchedulerAppProjectInfo();
       _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo(new EnvironmentUser(_projectInfo.SchedulerAppUserId, "user_name"));
 
@@ -71,6 +69,8 @@ namespace UberDeployer.Core.Tests.Deployment
         _taskSchedulerFake.Object,
         _passwordCollectorFake.Object,
         _directoryAdapterFake.Object);
+
+      _deployTask.Initialize(DeploymentInfoGenerator.GetSchedulerAppDeploymentInfo());
     }
 
     [Test]
@@ -84,7 +84,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(runningTaskDetails);
 
       // act assert
-      Assert.Throws<DeploymentTaskException>(() => _deployTask.Prepare(_deploymentInfo));
+      Assert.Throws<DeploymentTaskException>(() => _deployTask.Prepare());
     }
 
     [Test]
@@ -96,14 +96,14 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(false);
 
       // act assert
-      Assert.Throws<DeploymentTaskException>(() => _deployTask.Prepare(_deploymentInfo));
+      Assert.Throws<DeploymentTaskException>(() => _deployTask.Prepare());
     }
 
     [Test]
     public void Prepare_should_add_step_to_disable_scheduled_task_before_copy_files_step()
     {
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert
       AssertStepIsBefore(typeof (ToggleSchedulerAppEnabledStep), typeof (CopyFilesDeploymentStep), _deployTask.SubTasks.ToArray());
@@ -117,7 +117,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Prepare_should_add_step_to_enable_scheduled_task_as_the_last_one()
     {
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert
       DeploymentTaskBase lastTask = _deployTask.SubTasks.Last();
@@ -141,7 +141,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns("password");
 
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert
       _passwordCollectorFake.VerifyAll();
@@ -160,7 +160,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns("password");
 
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert
       _passwordCollectorFake.VerifyAll();
@@ -182,7 +182,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns("password");
 
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is UpdateSchedulerTaskDeploymentStep));
@@ -201,7 +201,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns("password");
 
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is ScheduleNewAppDeploymentStep));
@@ -211,7 +211,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Prepare_should_add_step_to_do_a_backup()
     {
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert      
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is BackupFilesDeploymentStep));
@@ -221,7 +221,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Prepare_should_add_step_to_copy_application_files()
     {
       // act
-      _deployTask.Prepare(_deploymentInfo);
+      _deployTask.Prepare();
 
       // assert
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is CopyFilesDeploymentStep));

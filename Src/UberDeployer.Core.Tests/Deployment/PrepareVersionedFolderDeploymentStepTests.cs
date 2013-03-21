@@ -19,7 +19,7 @@ namespace UberDeployer.Core.Tests.Deployment
           "TestProject",
           new Lazy<string>(() => "1.0.3.4"));
 
-      step.PrepareAndExecute(DeploymentInfoGenerator.GetDbDeploymentInfo());
+      step.PrepareAndExecute();
 
       Assert.IsTrue(Directory.Exists("TestData/VersionedFolders/TestProject/1.0.3.4"));
 
@@ -35,7 +35,7 @@ namespace UberDeployer.Core.Tests.Deployment
         "TestProject",
         new Lazy<string>(() => "1.0.3.5"));
 
-      step.PrepareAndExecute(DeploymentInfoGenerator.GetDbDeploymentInfo());
+      step.PrepareAndExecute();
 
       Assert.IsTrue(Directory.Exists("TestData/VersionedFolders/TestProject/1.0.3.5.1"));
 

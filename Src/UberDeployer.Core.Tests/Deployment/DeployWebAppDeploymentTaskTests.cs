@@ -45,6 +45,8 @@ namespace UberDeployer.Core.Tests.Deployment
           _msDeploy.Object,
           _artifactsRepository.Object, _iisManager.Object);
 
+      _deployWebAppDeploymentTask.Initialize(DeploymentInfoGenerator.GetWebAppDeploymentInfo());
+
       _projectInfoRepositoryFake.Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(_projectInfo);
 
@@ -69,8 +71,10 @@ namespace UberDeployer.Core.Tests.Deployment
           "targetEnvironmentName",
           webInputParams);
 
+      _deployWebAppDeploymentTask.Initialize(deploymentInfo);
+
       // Act assert
-      Assert.Throws<DeploymentTaskException>(() => _deployWebAppDeploymentTask.Prepare(deploymentInfo));
+      Assert.Throws<DeploymentTaskException>(() => _deployWebAppDeploymentTask.Prepare());
     }
 
     [Test]
@@ -79,22 +83,8 @@ namespace UberDeployer.Core.Tests.Deployment
       // Arrange
       _iisManager.Setup(x => x.AppPoolExists(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
-      ProjectInfo projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
-
-      var webInputParams =
-        new WebAppInputParams(new List<string> { _environmentInfo.WebServerMachineNames.First() });
-
-      var deploymentInfo =
-        new DeploymentInfo(
-          false,
-          projectInfo.Name,
-          "projectConfigurationName",
-          "projectConfigurationBuildId",
-          "targetEnvironmentName",
-          webInputParams);
-
       // Act
-      _deployWebAppDeploymentTask.Prepare(deploymentInfo);
+      _deployWebAppDeploymentTask.Prepare();
 
       // Assert
       Assert.IsTrue(_deployWebAppDeploymentTask.SubTasks.Any(st => st is CreateAppPoolDeploymentStep));

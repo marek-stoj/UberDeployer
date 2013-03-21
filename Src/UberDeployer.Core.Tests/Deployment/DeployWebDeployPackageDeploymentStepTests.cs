@@ -54,7 +54,7 @@ namespace UberDeployer.Core.Tests.Deployment
       string outString;
       _msDeploy.Setup(mD => mD.Run(It.IsAny<string[]>(), out outString));
 
-      deployWebDeployPackageDeploymentStep.PrepareAndExecute(DeploymentInfoGenerator.GetWebAppDeploymentInfo());
+      deployWebDeployPackageDeploymentStep.PrepareAndExecute();
     }
   }
 }

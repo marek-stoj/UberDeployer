@@ -49,15 +49,16 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
-      
+
       _projectInfo = GetProjectInfo<NtServiceProjectInfo>();
 
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
           _projectInfo,
-          _artifactsRepository,
-          GetTempDirPath());
+          DeploymentInfo,
+          GetTempDirPath(),
+          _artifactsRepository);
 
       AddSubTask(downloadArtifactsDeploymentStep);
 
@@ -65,7 +66,8 @@ namespace UberDeployer.Core.Deployment
       var extractArtifactsDeploymentStep =
         new ExtractArtifactsDeploymentStep(
           _projectInfo,
-          environmentInfo,          
+          environmentInfo,
+          DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
           GetTempDirPath());
 
@@ -131,7 +133,7 @@ namespace UberDeployer.Core.Deployment
       Func<CollectedCredentials> collectCredentialsFunc =
         () =>
         {
-          EnvironmentUser environmentUser;                    
+          EnvironmentUser environmentUser;
 
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(

@@ -50,7 +50,7 @@ namespace UberDeployer.Core.Tests.Deployment
       string zippedBackupFileName = Path.Combine(Environment.CurrentDirectory, string.Format("{0}\\{1}.bak.000.zip", _workingDir, DstSubDir));
       var backupFilesDeploymentStep = new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), _dstDir);
 
-      backupFilesDeploymentStep.Prepare(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
+      backupFilesDeploymentStep.Prepare();
       backupFilesDeploymentStep.Execute();
 
       var fileInfo = new FileInfo(zippedBackupFileName);
@@ -64,7 +64,7 @@ namespace UberDeployer.Core.Tests.Deployment
       string zippedBackupFileName = Path.Combine(Environment.CurrentDirectory, string.Format("{0}\\{1}.bak.000.zip", _workingDir, DstSubDir));
       var backupFilesDeploymentStep = new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), _dstDir);
 
-      backupFilesDeploymentStep.Prepare(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
+      backupFilesDeploymentStep.Prepare();
       backupFilesDeploymentStep.Execute();
       backupFilesDeploymentStep.Execute();
 
@@ -79,7 +79,7 @@ namespace UberDeployer.Core.Tests.Deployment
       const int maxBackupCount = 4;
       var backupFilesDeploymentStep = new BackupFilesDeploymentStep(ProjectInfoGenerator.GetTerminalAppProjectInfo(), _dstDir, maxBackupCount);
 
-      backupFilesDeploymentStep.Prepare(DeploymentInfoGenerator.GetNtServiceDeploymentInfo());
+      backupFilesDeploymentStep.Prepare();
 
       for (int i = 0; i < maxBackupCount + 1; i++)
       {

@@ -36,8 +36,7 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
     }
 
     [Test]
-    public void 
-      OnDeploymentTaskFinished_ExpectAddDeploymentRequest()
+    public void OnDeploymentTaskFinished_ExpectAddDeploymentRequest()
     {
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
@@ -67,7 +66,8 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
         .Setup(pir => pir.FindByName(deploymentInfo.ProjectName))
         .Returns(DeploymentDataGenerator.GetTerminalAppProjectInfo());
 
-      deploymentTask.Prepare(deploymentInfo);
+      deploymentTask.Initialize(deploymentInfo);
+      deploymentTask.Prepare();
 
       Assert.DoesNotThrow(() => auditingModule.OnDeploymentTaskFinished(deploymentInfo, deploymentTask, deploymentContext));
     }

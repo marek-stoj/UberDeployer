@@ -36,6 +36,7 @@ namespace UberDeployer.Core.Tests.Deployment
         new ExtractArtifactsDeploymentStep(
           _projectInfo,
           _environmentInfo,
+          _deploymentInfo,
           _ArtifactsFilePath,
           _TargetArtifactsDirPath);
     }
@@ -60,7 +61,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Description_is_not_empty()
     {
       // arrange
-      _deploymentStep.Prepare(_deploymentInfo);
+      _deploymentStep.Prepare();
 
       // act, assert
       Assert.IsNotNullOrEmpty(_deploymentStep.Description);
@@ -79,10 +80,11 @@ namespace UberDeployer.Core.Tests.Deployment
         new ExtractArtifactsDeploymentStep(
           projectInfo,
           environmentInfo,
+          _deploymentInfo,
           _ArtifactsFilePath,
           _TargetArtifactsDirPath);
 
-      _deploymentStep.Prepare(_deploymentInfo);
+      _deploymentStep.Prepare();
 
       // act, assert
       Assert.IsTrue(_deploymentStep.BinariesDirPath.Contains(environmentInfo.ConfigurationTemplateName));
@@ -99,10 +101,11 @@ namespace UberDeployer.Core.Tests.Deployment
         new ExtractArtifactsDeploymentStep(
           projectInfo,
           _environmentInfo,
+          _deploymentInfo,
           _ArtifactsFilePath,
           _TargetArtifactsDirPath);
 
-      _deploymentStep.Prepare(_deploymentInfo);
+      _deploymentStep.Prepare();
 
       // act, assert
       Assert.IsFalse(_deploymentStep.BinariesDirPath.Contains(_environmentInfo.ConfigurationTemplateName));
@@ -121,7 +124,7 @@ namespace UberDeployer.Core.Tests.Deployment
       }
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfo);
+      _deploymentStep.PrepareAndExecute();
 
       // assert
       Assert.True(Directory.Exists(expectedPath));
@@ -139,6 +142,7 @@ namespace UberDeployer.Core.Tests.Deployment
         {
           { "projectInfo", ProjectInfoGenerator.GetTerminalAppProjectInfo() },
           { "environmentInfo", DeploymentDataGenerator.GetEnvironmentInfo() },
+          { "deploymentInfo", DeploymentInfoGenerator.GetTerminalAppDeploymentInfo() },
           { "artifactsFilePath", _ArtifactsFilePath },
           { "targetArtifactsDirPath", _TargetArtifactsDirPath }
         };

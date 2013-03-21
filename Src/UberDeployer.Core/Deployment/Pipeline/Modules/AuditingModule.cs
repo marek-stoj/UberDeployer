@@ -30,6 +30,11 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
     public void OnDeploymentTaskFinished(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
+      if (deploymentInfo.IsSimulation)
+      {
+        return;
+      }
+
       var deploymentRequest =
         new DeploymentRequest
           {

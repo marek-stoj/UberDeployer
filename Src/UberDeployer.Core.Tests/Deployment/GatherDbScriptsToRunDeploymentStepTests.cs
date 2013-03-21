@@ -5,7 +5,6 @@ using System.IO;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using System.Linq;
 using UberDeployer.Core.Tests.Generators;
@@ -22,14 +21,12 @@ namespace UberDeployer.Core.Tests.Deployment
     private const string _Environment = "env";
 
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
-    private DeploymentInfo _deploymentInfo;
 
     [SetUp]
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
       _deploymentStep = new GatherDbScriptsToRunDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
-      _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
     }
 
     [Test]
@@ -47,7 +44,7 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Description_is_not_empty()
     {      
-      _deploymentStep.Prepare(_deploymentInfo);
+      _deploymentStep.Prepare();
 
       Assert.IsNotNullOrEmpty(_deploymentStep.Description);
     }
@@ -61,7 +58,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(new List<string>() { "1.2", "1.3" });
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfo);
+      _deploymentStep.PrepareAndExecute();
 
       // assert
       _dbVersionProviderFake.VerifyAll();
@@ -79,7 +76,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfo);
+      _deploymentStep.PrepareAndExecute();
 
       // assert
       Assert.AreEqual(1, _deploymentStep.ScriptsToRun.Count());
@@ -98,7 +95,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfo);
+      _deploymentStep.PrepareAndExecute();
 
       // assert
       Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == scriptOlderThanCurrent));
@@ -116,7 +113,7 @@ namespace UberDeployer.Core.Tests.Deployment
         Returns(executedScriptsVersion);
 
       // act
-      _deploymentStep.PrepareAndExecute(_deploymentInfo);
+      _deploymentStep.PrepareAndExecute();
 
       // assert
       Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == notSupportedScript));
