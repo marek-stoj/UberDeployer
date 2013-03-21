@@ -1,47 +1,56 @@
 ﻿using System;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Deployment
 {
-  public class ScheduleNewAppDeploymentStep : DeploymentStep
+  public class CreateSchedulerTaskDeploymentStep : DeploymentStep
   {
     private readonly ITaskScheduler _taskScheduler;
     private readonly string _machineName;
+    private readonly string _schedulerTaskName;
     private readonly string _executablePath;
     private readonly string _userName;
     private readonly string _password;
+    private readonly int _scheduledHour;
+    private readonly int _scheduledMinute;
+    private readonly int _executionTimeLimitInMinutes;
 
     #region Constructor(s)
 
-    public ScheduleNewAppDeploymentStep(
-      ProjectInfo projectInfo,
-      ITaskScheduler taskScheduler,
+    public CreateSchedulerTaskDeploymentStep(
       string machineName,
+      string schedulerTaskName,
       string executablePath,
       string userName,
-      string password)
-      : base(projectInfo)
+      string password,
+      int scheduledHour,
+      int scheduledMinute,
+      int executionTimeLimitInMinutes,
+      ITaskScheduler taskScheduler)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(schedulerTaskName, "schedulerTaskName");
       Guard.NotNullNorEmpty(executablePath, "executablePath");
+      Guard.NotNullNorEmpty(userName, "userName");
+      Guard.NotNullNorEmpty(password, "password");
 
       if (!Path.IsPathRooted(executablePath))
       {
         throw new ArgumentException(string.Format("Executable path ('{0}') is not an absolute path.", executablePath), "executablePath");
       }
 
-      Guard.NotNullNorEmpty(userName, "userName");
-      Guard.NotNullNorEmpty(password, "password");
-
       _taskScheduler = taskScheduler;
       _machineName = machineName;
+      _schedulerTaskName = schedulerTaskName;
       _executablePath = executablePath;
       _userName = userName;
       _password = password;
+      _scheduledHour = scheduledHour;
+      _scheduledMinute = scheduledMinute;
+      _executionTimeLimitInMinutes = executionTimeLimitInMinutes;
     }
 
     #endregion
@@ -50,19 +59,13 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      var schedulerAppProjectInfo = (SchedulerAppProjectInfo)ProjectInfo;
-      string taskName = schedulerAppProjectInfo.SchedulerAppName;
-      int scheduledHour = schedulerAppProjectInfo.ScheduledHour;
-      int scheduledMinute = schedulerAppProjectInfo.ScheduledMinute;
-      int executionTimeLimitInMinutes = schedulerAppProjectInfo.ExecutionTimeLimitInMinutes;
-
       var scheduledTaskSpecification =
         new ScheduledTaskSpecification(
-          taskName,
+          _schedulerTaskName,
           _executablePath,
-          scheduledHour,
-          scheduledMinute,
-          executionTimeLimitInMinutes);
+          _scheduledHour,
+          _scheduledMinute,
+          _executionTimeLimitInMinutes);
 
       _taskScheduler
         .ScheduleNewTask(
@@ -76,16 +79,14 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
-        var schedulerAppProjectInfo = (SchedulerAppProjectInfo)ProjectInfo;
-
         return
           string.Format(
-            "Schedule new app named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes under user named '{5}'.",
-            schedulerAppProjectInfo.Name,
+            "Create new scheduler task named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes under user named '{5}'.",
+            _schedulerTaskName,
             _machineName,
-            schedulerAppProjectInfo.ScheduledHour.ToString().PadLeft(2, '0'),
-            schedulerAppProjectInfo.ScheduledMinute.ToString().PadLeft(2, '0'),
-            schedulerAppProjectInfo.ExecutionTimeLimitInMinutes,
+            _scheduledHour.ToString().PadLeft(2, '0'),
+            _scheduledMinute.ToString().PadLeft(2, '0'),
+            _executionTimeLimitInMinutes,
             _userName);
       }
     }

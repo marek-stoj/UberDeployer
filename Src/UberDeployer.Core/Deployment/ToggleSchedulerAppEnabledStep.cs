@@ -1,5 +1,4 @@
 ﻿using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Deployment
@@ -11,8 +10,7 @@ namespace UberDeployer.Core.Deployment
     private readonly string _schedulerTaskName;
     private readonly bool _enabled;
 
-    public ToggleSchedulerAppEnabledStep(SchedulerAppProjectInfo projectInfo, ITaskScheduler taskScheduler, string machineName, string schedulerTaskName, bool enabled)
-      : base(projectInfo)
+    public ToggleSchedulerAppEnabledStep(ITaskScheduler taskScheduler, string machineName, string schedulerTaskName, bool enabled)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNullNorEmpty(machineName, "machineName");

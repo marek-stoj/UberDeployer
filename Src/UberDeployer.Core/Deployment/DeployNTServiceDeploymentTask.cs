@@ -77,7 +77,6 @@ namespace UberDeployer.Core.Deployment
       {
         var binariesConfiguratorStep =
           new ConfigureBinariesStep(
-            _projectInfo,
             environmentInfo.ConfigurationTemplateName,
             GetTempDirPath());
 
@@ -260,7 +259,6 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new MoveClusterGroupToAnotherNodeDeploymentStep(
-          _projectInfo,
           _failoverClusterManager,
           failoverClusterMachineName,
           clusterGroupName,
@@ -291,7 +289,6 @@ namespace UberDeployer.Core.Deployment
         // create a step for stopping the service
         AddSubTask(
           new StopNtServiceDeploymentStep(
-            _projectInfo,
             _ntServiceManager,
             appServerMachineName,
             _projectInfo.NtServiceName));
@@ -307,13 +304,11 @@ namespace UberDeployer.Core.Deployment
       {
         AddSubTask(
           new BackupFilesDeploymentStep(
-            _projectInfo,
             targetDirNetworkPath));
       }
 
       AddSubTask(
         new CopyFilesDeploymentStep(
-          _projectInfo,
           artifactsBinariesDirPathProvider,
           new Lazy<string>(() => getAppServerNetworkPathFunc(targetDirPath))));
 
@@ -337,7 +332,6 @@ namespace UberDeployer.Core.Deployment
 
         AddSubTask(
           new InstallNtServiceDeploymentStep(
-            _projectInfo,
             _ntServiceManager,
             appServerMachineName,
             ntServiceDescriptor));
@@ -348,7 +342,6 @@ namespace UberDeployer.Core.Deployment
         // create a step for starting the service
         AddSubTask(
           new StartNtServiceDeploymentStep(
-            _projectInfo,
             _ntServiceManager,
             appServerMachineName,
             _projectInfo.NtServiceName));

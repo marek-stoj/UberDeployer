@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Deployment
@@ -15,8 +14,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public RunDbScriptsDeploymentStep(ProjectInfo projectInfo, IDbScriptRunner dbScriptRunner, string databaseServerMachineName, IEnumerable<string> scriptPathsToRunEnumerable)
-      : base(projectInfo)
+    public RunDbScriptsDeploymentStep(IDbScriptRunner dbScriptRunner, string databaseServerMachineName, IEnumerable<string> scriptPathsToRunEnumerable)
     {
       Guard.NotNull(dbScriptRunner, "dbScriptRunner");
       Guard.NotNullNorEmpty(databaseServerMachineName, "databaseServerMachineName");

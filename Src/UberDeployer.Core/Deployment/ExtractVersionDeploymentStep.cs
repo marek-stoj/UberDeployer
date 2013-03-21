@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -13,8 +12,7 @@ namespace UberDeployer.Core.Deployment
 
     private string _resolvedVersion;
 
-    public ExtractVersionDeploymentStep(ProjectInfo projectInfo, Lazy<string> binariesDirPathProvider, string terminalAppExeName)
-      : base(projectInfo)
+    public ExtractVersionDeploymentStep(Lazy<string> binariesDirPathProvider, string terminalAppExeName)
     {
       Guard.NotNull(binariesDirPathProvider);
       Guard.NotNullNorEmpty(terminalAppExeName);

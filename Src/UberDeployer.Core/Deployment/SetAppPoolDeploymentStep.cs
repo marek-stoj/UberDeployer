@@ -13,8 +13,7 @@ namespace UberDeployer.Core.Deployment
     private readonly IisAppPoolInfo _appPoolInfo;
     private readonly string _webAppName;
 
-    public SetAppPoolDeploymentStep(ProjectInfo projectInfo, IIisManager iisManager, string machineName, string webSiteName, IisAppPoolInfo appPoolInfo, string webAppName = null)
-      : base(projectInfo)
+    public SetAppPoolDeploymentStep(IIisManager iisManager, string machineName, string webSiteName, IisAppPoolInfo appPoolInfo, string webAppName = null)
     {
       Guard.NotNull(iisManager, "iisManager");
       Guard.NotNullNorEmpty(machineName, "machineName");

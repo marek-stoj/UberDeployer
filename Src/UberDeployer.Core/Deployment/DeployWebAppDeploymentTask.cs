@@ -90,7 +90,6 @@ namespace UberDeployer.Core.Deployment
       {
         var binariesConfiguratorStep =
           new ConfigureBinariesStep(
-            projectInfo,
             environmentInfo.ConfigurationTemplateName,
             GetTempDirPath());
 
@@ -128,7 +127,6 @@ namespace UberDeployer.Core.Deployment
           {
             var backupFilesDeploymentStep =
               new BackupFilesDeploymentStep(
-                projectInfo,
                 webApplicationNetworkPath);
 
             AddSubTask(backupFilesDeploymentStep);
@@ -139,7 +137,6 @@ namespace UberDeployer.Core.Deployment
         // TODO IMM HI: add possibility to specify physical path on the target machine
         var createWebDeployPackageDeploymentStep =
           new CreateWebDeployPackageDeploymentStep(
-            projectInfo,
             _msDeploy,
             new Lazy<string>(() =>extractArtifactsDeploymentStep.BinariesDirPath),
             webSiteName,
@@ -150,7 +147,6 @@ namespace UberDeployer.Core.Deployment
         // create a step for deploying the WebDeploy package to the target machine
         var deployWebDeployPackageDeploymentStep =
           new DeployWebDeployPackageDeploymentStep(
-            projectInfo,
             _msDeploy,
             webServerMachineName,
             new Lazy<string>(() => createWebDeployPackageDeploymentStep.PackageFilePath));
@@ -163,7 +159,6 @@ namespace UberDeployer.Core.Deployment
           // create a step for creating a new app pool
           var createAppPoolDeploymentStep =
             new CreateAppPoolDeploymentStep(
-              projectInfo,
               _iisManager,
               webServerMachineName,
               appPoolInfo);
@@ -174,7 +169,6 @@ namespace UberDeployer.Core.Deployment
         // create a step for assigning the app pool to the web application
         var setAppPoolDeploymentStep =
           new SetAppPoolDeploymentStep(
-            projectInfo,
             _iisManager,
             webServerMachineName,
             webSiteName,

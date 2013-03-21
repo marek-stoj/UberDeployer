@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -13,8 +12,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public CopyFilesDeploymentStep(ProjectInfo projectInfo, Lazy<string> srcDirPathProvider, Lazy<string> dstDirPath)
-      : base(projectInfo)
+    public CopyFilesDeploymentStep(Lazy<string> srcDirPathProvider, Lazy<string> dstDirPath)
     {
       Guard.NotNull(srcDirPathProvider, "srcDirPathProvider");
       Guard.NotNull(dstDirPath, "srcDirPathProvider");      

@@ -72,13 +72,11 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new BackupFilesDeploymentStep(
-          _projectInfo,
           targetDirNetworkPath));
 
       // create a step for copying the binaries to the target machine
       AddSubTask(
         new CopyFilesDeploymentStep(
-          _projectInfo,
           binariesDirPathProvider,
           new Lazy<string>(() => targetDirNetworkPath)));
 
@@ -144,21 +142,7 @@ namespace UberDeployer.Core.Deployment
       {
         // create a step for scheduling a new app
         AddSubTask(
-          new ScheduleNewAppDeploymentStep(
-            _projectInfo,
-            _taskScheduler,
-            environmentInfo.SchedulerServerMachineName,
-            executablePath,
-            environmentUser.UserName,
-            environmentUserPassword));
-      }
-      else if (hasSettingsChanged)
-      {
-        // create a step for updating an existing scheduler app
-        AddSubTask(
-          new UpdateSchedulerTaskDeploymentStep(
-            _projectInfo,
-            _taskScheduler,
+          new CreateSchedulerTaskDeploymentStep(
             environmentInfo.SchedulerServerMachineName,
             _projectInfo.SchedulerAppName,
             executablePath,
@@ -166,7 +150,23 @@ namespace UberDeployer.Core.Deployment
             environmentUserPassword,
             _projectInfo.ScheduledHour,
             _projectInfo.ScheduledMinute,
-            _projectInfo.ExecutionTimeLimitInMinutes));
+            _projectInfo.ExecutionTimeLimitInMinutes,
+            _taskScheduler));
+      }
+      else if (hasSettingsChanged)
+      {
+        // create a step for updating an existing scheduler app
+        AddSubTask(
+          new UpdateSchedulerTaskDeploymentStep(
+            environmentInfo.SchedulerServerMachineName,
+            _projectInfo.SchedulerAppName,
+            executablePath,
+            environmentUser.UserName,
+            environmentUserPassword,
+            _projectInfo.ScheduledHour,
+            _projectInfo.ScheduledMinute,
+            _projectInfo.ExecutionTimeLimitInMinutes,
+            _taskScheduler));
       }
     }
 
@@ -197,7 +197,6 @@ namespace UberDeployer.Core.Deployment
       {
         var binariesConfiguratorStep =
           new ConfigureBinariesStep(
-            _projectInfo,
             environmentInfo.ConfigurationTemplateName,
             GetTempDirPath());
 
@@ -224,7 +223,6 @@ namespace UberDeployer.Core.Deployment
     {
       AddSubTask(
         new ToggleSchedulerAppEnabledStep(
-          _projectInfo,
           _taskScheduler,
           machineName,
           _projectInfo.SchedulerAppName,

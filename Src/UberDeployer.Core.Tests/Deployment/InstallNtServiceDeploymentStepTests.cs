@@ -3,23 +3,13 @@ using System.ServiceProcess;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
   [TestFixture]
   public class InstallNtServiceDeploymentStepTests
   {
-    private DeploymentInfo _deploymentInfo;
-
-    [SetUp]
-    public void SetUp()
-    {
-      _deploymentInfo = DeploymentInfoGenerator.GetNtServiceDeploymentInfo();
-    }
-
     [Test]
     public void Test_InstallNtServiceDeploymentStep_Thows_When_Service_null()
     {
@@ -29,7 +19,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentException>(
         () =>
-        { new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), null, machineName, ntServiceDescriptor.Object); });
+        { new InstallNtServiceDeploymentStep(null, machineName, ntServiceDescriptor.Object); });
     }
 
     [Test]
@@ -41,7 +31,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentException>(
         () =>
-        { new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, null, ntServiceDescriptor); });
+        { new InstallNtServiceDeploymentStep(ntServiceManager.Object, null, ntServiceDescriptor); });
     }
 
     [Test]
@@ -52,7 +42,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentNullException>(
         () =>
-        { new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, machineName, null); });
+        { new InstallNtServiceDeploymentStep(ntServiceManager.Object, machineName, null); });
     }
 
     [Test]
@@ -63,7 +53,7 @@ namespace UberDeployer.Core.Tests.Deployment
         "serviceName", "serviceExecutablePath", new ServiceAccount(), ServiceStartMode.Automatic);
       var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict);
 
-      var installNTServiceStep = new InstallNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, machineName, ntServiceDescriptor);
+      var installNTServiceStep = new InstallNtServiceDeploymentStep(ntServiceManager.Object, machineName, ntServiceDescriptor);
 
       ntServiceManager.Setup(k => k.InstallService(machineName, ntServiceDescriptor));
 

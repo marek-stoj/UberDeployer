@@ -6,21 +6,23 @@ namespace UberDeployer.Core.Deployment
 {
   public class DownloadArtifactsDeploymentStep : DeploymentStep
   {
-    private readonly IArtifactsRepository _artifactsRepository;
+    private readonly ProjectInfo _projectInfo;
     private readonly DeploymentInfo _deploymentInfo;
     private readonly string _targetDirPath;
+    private readonly IArtifactsRepository _artifactsRepository;
     
     private readonly string _artifactsFilePath;
 
     #region Constructor(s)
 
     public DownloadArtifactsDeploymentStep(ProjectInfo projectInfo, DeploymentInfo deploymentInfo, string targetDirPath, IArtifactsRepository artifactsRepository)
-      : base(projectInfo)
     {
+      Guard.NotNull(projectInfo, "projectInfo");
       Guard.NotNull(deploymentInfo, "deploymentInfo");
       Guard.NotNullNorEmpty(targetDirPath, "targetDirPath");
       Guard.NotNull(artifactsRepository, "artifactsRepository");
 
+      _projectInfo = projectInfo;
       _deploymentInfo = deploymentInfo;
       _targetDirPath = targetDirPath;
       _artifactsRepository = artifactsRepository;
@@ -35,7 +37,7 @@ namespace UberDeployer.Core.Deployment
     protected override void DoExecute()
     {
       _artifactsRepository.GetArtifacts(
-        ProjectInfo.ArtifactsRepositoryName,
+        _projectInfo.ArtifactsRepositoryName,
         _deploymentInfo.ProjectConfigurationName,
         _deploymentInfo.ProjectConfigurationBuildId,
         _artifactsFilePath);

@@ -3,7 +3,6 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Management.MsDeploy;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -31,25 +30,25 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void Constructor_NullForMsDeploy_ThrowsException()
     {
-      Assert.Throws<ArgumentNullException>(() => new DeployWebDeployPackageDeploymentStep(ProjectInfoGenerator.GetWebAppProjectInfo(), null, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath)));
+      Assert.Throws<ArgumentNullException>(() => new DeployWebDeployPackageDeploymentStep(null, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath)));
     }
 
     [Test]
     public void Constructor_NullForPackageFilePathProvider_ThrowsException()
     {
-      Assert.Throws<ArgumentNullException>(() => new DeployWebDeployPackageDeploymentStep(ProjectInfoGenerator.GetWebAppProjectInfo(), _msDeploy.Object, _WebServerMachineName, null));
+      Assert.Throws<ArgumentNullException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _WebServerMachineName, null));
     }
 
     [Test]
     public void Constructor_NullForWebServerMachineName_ThrowsException()
     {
-      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(ProjectInfoGenerator.GetWebAppProjectInfo(), _msDeploy.Object, null, new Lazy<string>(() => _PackageFilePath)));
+      Assert.Throws<ArgumentException>(() => new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, null, new Lazy<string>(() => _PackageFilePath)));
     }
 
     [Test]
     public void DoExecute_RunsMsDeploy()
     {
-      var deployWebDeployPackageDeploymentStep = new DeployWebDeployPackageDeploymentStep(ProjectInfoGenerator.GetWebAppProjectInfo(), _msDeploy.Object, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath));
+      var deployWebDeployPackageDeploymentStep = new DeployWebDeployPackageDeploymentStep(_msDeploy.Object, _WebServerMachineName, new Lazy<string>(() => _PackageFilePath));
 
       string outString;
       _msDeploy.Setup(mD => mD.Run(It.IsAny<string[]>(), out outString));

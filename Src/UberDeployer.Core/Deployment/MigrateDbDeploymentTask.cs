@@ -65,7 +65,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for gathering scripts to run
       var gatherDbScriptsToRunDeploymentStep =
         new GatherDbScriptsToRunDeploymentStep(
-          projectInfo,
+          projectInfo.DbName,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           environmentInfo.DatabaseServerMachineName,
           environmentInfo.Name,
@@ -76,7 +76,6 @@ namespace UberDeployer.Core.Deployment
       // create a step for running scripts
       var runDbScriptsDeploymentStep =
         new RunDbScriptsDeploymentStep(
-          projectInfo,
           GetScriptRunner(environmentInfo.DatabaseServerMachineName),
           environmentInfo.DatabaseServerMachineName,
           new DeferredEnumerable<string>(() => gatherDbScriptsToRunDeploymentStep.ScriptsToRun));

@@ -1,7 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -13,7 +12,6 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       ExtractVersionDeploymentStep step =
         new ExtractVersionDeploymentStep(
-          ProjectInfoGenerator.GetSchedulerAppProjectInfo(),
           new Lazy<string>(() => "TestData\\TestVersionExtract"),
           "subst.exe");
 

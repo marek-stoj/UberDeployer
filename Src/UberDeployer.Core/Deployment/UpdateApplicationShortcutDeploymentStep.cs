@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Shortcut;
 
 namespace UberDeployer.Core.Deployment
@@ -14,12 +13,10 @@ namespace UberDeployer.Core.Deployment
     private readonly string _projectName;
 
     public UpdateApplicationShortcutDeploymentStep(
-      ProjectInfo projectInfo,
       string terminalAppsShortcutFolder, 
       Lazy<string> versionDeploymentDirPath, 
       string terminalAppExeName, 
       string projectName)
-      : base(projectInfo)
     {
       Guard.NotNullNorEmpty(terminalAppsShortcutFolder, "terminalAppsShortcutFolder");
       Guard.NotNull(versionDeploymentDirPath, "versionDeploymentDirPath");

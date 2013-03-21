@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Deployment
@@ -22,8 +21,6 @@ namespace UberDeployer.Core.Deployment
 
     // TODO IMM HI: can we update scheduler app without user name and password?
     public UpdateSchedulerTaskDeploymentStep(
-      ProjectInfo projectInfo,
-      ITaskScheduler taskScheduler,
       string machineName,
       string schedulerTaskName,
       string executablePath,
@@ -31,15 +28,15 @@ namespace UberDeployer.Core.Deployment
       string password,
       int scheduledHour,
       int scheduledMinute,
-      int executionTimeLimitInMinutes)
-      : base(projectInfo)
+      int executionTimeLimitInMinutes,
+      ITaskScheduler taskScheduler)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(schedulerTaskName, "schedulerTaskName");
       Guard.NotNullNorEmpty(executablePath, "executablePath");
       Guard.NotNullNorEmpty(userName, "userName");
       Guard.NotNullNorEmpty(password, "password");
-      Guard.NotNullNorEmpty(schedulerTaskName, "schedulerTaskName");
       
       if (!Path.IsPathRooted(executablePath))
       {
@@ -84,8 +81,8 @@ namespace UberDeployer.Core.Deployment
       {        
         return
           string.Format(
-          "Update schedule of app named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes.",
-          ProjectInfo.Name,
+          "Update schedule of task named '{0}' on machine '{1}' to run daily at '{2}:{3}' with execution time limit of '{4}' minutes.",
+          _schedulerTaskName,
           _machineName,
           _scheduledHour.ToString().PadLeft(2, '0'),
           _scheduledMinute.ToString().PadLeft(2, '0'),

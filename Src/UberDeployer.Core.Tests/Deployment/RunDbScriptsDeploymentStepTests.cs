@@ -6,7 +6,6 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Management.Db;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -30,15 +29,15 @@ namespace UberDeployer.Core.Tests.Deployment
     public void SetUp()
     {
       _dbScriptRunnerFake = new Mock<IDbScriptRunner>(MockBehavior.Loose);
-      _deploymentStep = new RunDbScriptsDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), _dbScriptRunnerFake.Object, _DatabaseServerName, _ScriptsToRun);
+      _deploymentStep = new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, _ScriptsToRun);
     }
 
     [Test]
     public void Constructor_checks_arguments()
     {
-      Assert.Throws<ArgumentNullException>(() => new RunDbScriptsDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), null, _DatabaseServerName, _ScriptsToRun));
-      Assert.Throws<ArgumentException>(() => new RunDbScriptsDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), _dbScriptRunnerFake.Object, null, _ScriptsToRun));
-      Assert.Throws<ArgumentNullException>(() => new RunDbScriptsDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), _dbScriptRunnerFake.Object, _DatabaseServerName, null));
+      Assert.Throws<ArgumentNullException>(() => new RunDbScriptsDeploymentStep(null, _DatabaseServerName, _ScriptsToRun));
+      Assert.Throws<ArgumentException>(() => new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, null, _ScriptsToRun));
+      Assert.Throws<ArgumentNullException>(() => new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, null));
     }
 
     [Test]
@@ -77,7 +76,7 @@ namespace UberDeployer.Core.Tests.Deployment
       // arrange
       IEnumerable<string> notExistingScripts = new List<string>() { "someScript.sql" };
 
-      _deploymentStep = new RunDbScriptsDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), _dbScriptRunnerFake.Object, _DatabaseServerName, notExistingScripts);
+      _deploymentStep = new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, notExistingScripts);
 
       // act, assert
       Assert.Throws<FileNotFoundException>(() => _deploymentStep.PrepareAndExecute());

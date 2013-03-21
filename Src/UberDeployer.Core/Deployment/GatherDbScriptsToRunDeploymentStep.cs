@@ -4,31 +4,31 @@ using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.DbDiff;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Deployment
 {
   public class GatherDbScriptsToRunDeploymentStep : DeploymentStep
   {
+    private readonly string _dbName;
     private readonly Lazy<string> _scriptsDirectoryPathProvider;
     private readonly string _sqlServerName;
     private readonly string _environmentName;
     private readonly IDbVersionProvider _dbVersionProvider;
 
     private IEnumerable<string> _scriptsToRun = new List<string>();
-    private DbProjectInfo _dbProjectInfo;
 
     #region Constructor(s)
 
-    public GatherDbScriptsToRunDeploymentStep(ProjectInfo projectInfo, Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
-      : base(projectInfo)
+    public GatherDbScriptsToRunDeploymentStep(string dbName, Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
     {
+      Guard.NotNullNorEmpty(dbName, "dbName");
       Guard.NotNull(scriptsDirectoryPathProvider, "scriptsDirectoryPathProvider");
       Guard.NotNullNorEmpty(sqlServerName, "sqlServerName");
       Guard.NotNullNorEmpty(environmentName, "environmentName");
       Guard.NotNull(dbVersionProvider, "dbVersionProvider");
       
+      _dbName = dbName;
       _scriptsDirectoryPathProvider = scriptsDirectoryPathProvider;
       _sqlServerName = sqlServerName;
       _environmentName = environmentName;
@@ -43,17 +43,17 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      _dbProjectInfo = (DbProjectInfo)ProjectInfo;
-
       // get db versions
-      var versions = _dbVersionProvider.GetVersions(_dbProjectInfo.DbName, _sqlServerName);
+      IEnumerable<string> versions =
+        _dbVersionProvider.GetVersions(_dbName, _sqlServerName);
 
       var dbVersionsModel = new DbVersionsModel();
-      dbVersionsModel.AddDatabase(_environmentName, _dbProjectInfo.DbName, versions);
+
+      dbVersionsModel.AddDatabase(_environmentName, _dbName, versions);
 
       // sort db versions
       List<DbVersion> dbVersionsList =
-        dbVersionsModel.GetAllSortedDbVersions(_dbProjectInfo.DbName)
+        dbVersionsModel.GetAllSortedDbVersions(_dbName)
           .Select(DbVersion.FromString)
           .ToList();
 
@@ -111,7 +111,7 @@ namespace UberDeployer.Core.Deployment
           string.Format(
             "Gather db scripts from '{0}' to run on database '{1}'.",
             _scriptsDirectoryPathProvider,
-            ((DbProjectInfo)ProjectInfo).DbName);
+            _dbName);
       }
     }
 

@@ -1,6 +1,5 @@
 using System;
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
 
 namespace UberDeployer.Core.Deployment
@@ -15,8 +14,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    protected NtServiceControlDeploymentStep(ProjectInfo projectInfo, INtServiceManager ntServiceManager, string machineName, string serviceName, NtServiceControlAction action)
-      : base(projectInfo)
+    protected NtServiceControlDeploymentStep(INtServiceManager ntServiceManager, string machineName, string serviceName, NtServiceControlAction action)
     {
       Guard.NotNull(ntServiceManager, "ntServiceManager");
       Guard.NotNullNorEmpty(machineName, "machineName");

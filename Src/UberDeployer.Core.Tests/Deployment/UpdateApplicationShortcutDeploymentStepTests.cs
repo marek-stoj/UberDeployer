@@ -2,7 +2,6 @@
 using System.IO;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -12,12 +11,12 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void shortcut_is_created_and_named_after_terminal_app()
     {
-      var step = new UpdateApplicationShortcutDeploymentStep(
-        ProjectInfoGenerator.GetSchedulerAppProjectInfo(),
-        "TestData/Shortcuts",
-        new Lazy<string>(() => "TestData/VersionedFolders/TestProject/1.0.3.5"),
-        "FolderMattersFile.dummy",
-        "TestProject");
+      var step =
+        new UpdateApplicationShortcutDeploymentStep(
+          "TestData/Shortcuts",
+          new Lazy<string>(() => "TestData/VersionedFolders/TestProject/1.0.3.5"),
+          "FolderMattersFile.dummy",
+          "TestProject");
 
       step.PrepareAndExecute();
 
@@ -28,12 +27,12 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void shortcut_can_be_modified()
     {
-      var step = new UpdateApplicationShortcutDeploymentStep(
-        ProjectInfoGenerator.GetSchedulerAppProjectInfo(),
-        "TestData/Shortcuts",
-        new Lazy<string>(() => "TestData/VersionedFolders/TestProject/1.0.3.5"),
-        "FolderMattersFile.dummy",
-        "ExistingAppShortcut");
+      var step =
+        new UpdateApplicationShortcutDeploymentStep(
+          "TestData/Shortcuts",
+          new Lazy<string>(() => "TestData/VersionedFolders/TestProject/1.0.3.5"),
+          "FolderMattersFile.dummy",
+          "ExistingAppShortcut");
 
       step.PrepareAndExecute();
 

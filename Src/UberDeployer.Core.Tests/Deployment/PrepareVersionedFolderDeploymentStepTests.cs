@@ -2,7 +2,6 @@
 using System.IO;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -14,7 +13,6 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       var step =
         new PrepareVersionedFolderDeploymentStep(
-          ProjectInfoGenerator.GetSchedulerAppProjectInfo(),
           "TestData/VersionedFolders",
           "TestProject",
           new Lazy<string>(() => "1.0.3.4"));
@@ -30,7 +28,6 @@ namespace UberDeployer.Core.Tests.Deployment
     public void created_folder_is_named_after_version_with_suffix_if_folder_exists()
     {
       var step = new PrepareVersionedFolderDeploymentStep(
-        ProjectInfoGenerator.GetSchedulerAppProjectInfo(),
         "TestData/VersionedFolders",
         "TestProject",
         new Lazy<string>(() => "1.0.3.5"));

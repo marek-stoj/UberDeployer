@@ -204,7 +204,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      Assert.IsTrue(_deployTask.SubTasks.Any(x => x is ScheduleNewAppDeploymentStep));
+      Assert.IsTrue(_deployTask.SubTasks.Any(x => x is CreateSchedulerTaskDeploymentStep));
     }
 
     [Test]

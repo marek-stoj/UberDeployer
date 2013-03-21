@@ -5,6 +5,7 @@ using System.IO;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using System.Linq;
 using UberDeployer.Core.Tests.Generators;
@@ -26,7 +27,10 @@ namespace UberDeployer.Core.Tests.Deployment
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
-      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(ProjectInfoGenerator.GetDbProjectInfo(), new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
+
+      DbProjectInfo dbProjectInfo = ProjectInfoGenerator.GetDbProjectInfo();
+
+      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(dbProjectInfo.DbName, new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
     }
 
     [Test]
@@ -40,10 +44,10 @@ namespace UberDeployer.Core.Tests.Deployment
         expectedExceptionType,
         () => ReflectionTestTools.CreateInstance<GatherDbScriptsToRunDeploymentStep>(GetDefaultConstructorParams(), nullParamName));
     }
-    
+
     [Test]
     public void Description_is_not_empty()
-    {      
+    {
       _deploymentStep.Prepare();
 
       Assert.IsNotNullOrEmpty(_deploymentStep.Description);
@@ -123,13 +127,13 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       return
         new OrderedDictionary
-          {
-            { "projectInfo", ProjectInfoGenerator.GetDbProjectInfo() },
-            { "scriptsDirectoryPath", new Lazy<string>(() => _ScriptPath) },
-            { "sqlServerName", _SqlServerName },
-            { "environmentName", _Environment },
-            { "dbVersionProvider", _dbVersionProviderFake.Object }
-          };
+        {
+          { "dbName", "database_name" },
+          { "scriptsDirectoryPath", new Lazy<string>(() => _ScriptPath) },
+          { "sqlServerName", _SqlServerName },
+          { "environmentName", _Environment },
+          { "dbVersionProvider", _dbVersionProviderFake.Object }
+        };
     }
   }
 }

@@ -1,5 +1,4 @@
 using UberDeployer.Common.SyntaxSugar;
-using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.FailoverCluster;
 
 namespace UberDeployer.Core.Deployment
@@ -13,8 +12,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public MoveClusterGroupToAnotherNodeDeploymentStep(ProjectInfo projectInfo, IFailoverClusterManager failoverClusterManager, string failoverClusterMachineName, string clusterGroupName, string targetNodeName)
-      : base(projectInfo)
+    public MoveClusterGroupToAnotherNodeDeploymentStep(IFailoverClusterManager failoverClusterManager, string failoverClusterMachineName, string clusterGroupName, string targetNodeName)
     {
       Guard.NotNull(failoverClusterManager, "failoverClusterManager");
       Guard.NotNullNorEmpty(failoverClusterMachineName, "failoverClusterMachineName");

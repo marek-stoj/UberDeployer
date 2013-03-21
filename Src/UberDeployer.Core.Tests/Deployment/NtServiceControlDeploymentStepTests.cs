@@ -3,7 +3,6 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Management.NtServices;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
@@ -18,7 +17,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentNullException>(
         () =>
-        { new StartNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), null, machineName, serviceName); });
+        { new StartNtServiceDeploymentStep(null, machineName, serviceName); });
     }
 
     [Test]
@@ -30,7 +29,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentException>(
         () =>
-        { new StartNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), new ScExeBasedNtServiceManager(scPath, time), null, serviceName); });
+        { new StartNtServiceDeploymentStep(new ScExeBasedNtServiceManager(scPath, time), null, serviceName); });
     }
 
     [Test]
@@ -42,7 +41,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       Assert.Throws<ArgumentException>(
         () =>
-        { new StartNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), new ScExeBasedNtServiceManager(scPath, time), machineName, null); });
+        { new StartNtServiceDeploymentStep(new ScExeBasedNtServiceManager(scPath, time), machineName, null); });
     }
 
     [Test]
@@ -53,7 +52,7 @@ namespace UberDeployer.Core.Tests.Deployment
       const string machineName = "machine";
       const string serviceName = "service";
 
-      var startNTServiceStep = new StartNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, machineName, serviceName);
+      var startNTServiceStep = new StartNtServiceDeploymentStep(ntServiceManager.Object, machineName, serviceName);
 
       ntServiceManager.Setup(k => k.StartService(machineName, serviceName));
 
@@ -68,7 +67,7 @@ namespace UberDeployer.Core.Tests.Deployment
       const string machineName = "machine";
       const string serviceName = "service";
 
-      var startNTServiceStep = new StopNtServiceDeploymentStep(ProjectInfoGenerator.GetNtServiceProjectInfo(), ntServiceManager.Object, machineName, serviceName);
+      var startNTServiceStep = new StopNtServiceDeploymentStep(ntServiceManager.Object, machineName, serviceName);
 
       ntServiceManager.Setup(k => k.StopService(machineName, serviceName));
 

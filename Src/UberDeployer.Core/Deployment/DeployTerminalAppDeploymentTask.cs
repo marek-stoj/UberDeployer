@@ -57,7 +57,6 @@ namespace UberDeployer.Core.Deployment
       {
         var binariesConfiguratorStep =
           new ConfigureBinariesStep(
-            projectInfo,
             environmentInfo.ConfigurationTemplateName,
             GetTempDirPath());
 
@@ -66,7 +65,6 @@ namespace UberDeployer.Core.Deployment
 
       var extractVersionDeploymentStep =
         new ExtractVersionDeploymentStep(
-          projectInfo,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           projectInfo.TerminalAppExeName
           );
@@ -75,22 +73,19 @@ namespace UberDeployer.Core.Deployment
 
       var prepareVersionedFolderDeploymentStep =
         new PrepareVersionedFolderDeploymentStep(
-          projectInfo,
-        environmentInfo.GetTerminalServerNetworkPath(environmentInfo.TerminalAppsBaseDirPath),
-        DeploymentInfo.ProjectName,
-        new Lazy<string>(() => extractVersionDeploymentStep.Version));
+          environmentInfo.GetTerminalServerNetworkPath(environmentInfo.TerminalAppsBaseDirPath),
+          DeploymentInfo.ProjectName,
+          new Lazy<string>(() => extractVersionDeploymentStep.Version));
 
       AddSubTask(prepareVersionedFolderDeploymentStep);
 
       AddSubTask(
         new CopyFilesDeploymentStep(
-          projectInfo,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           new Lazy<string>(() => prepareVersionedFolderDeploymentStep.VersionDeploymentDirPath)));
 
       AddSubTask(
         new UpdateApplicationShortcutDeploymentStep(
-          projectInfo,
           environmentInfo.GetTerminalServerNetworkPath(environmentInfo.TerminalAppsShortcutFolder),
           new Lazy<string>(() => prepareVersionedFolderDeploymentStep.VersionDeploymentDirPath),
           projectInfo.TerminalAppExeName,

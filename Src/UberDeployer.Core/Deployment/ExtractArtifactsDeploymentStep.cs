@@ -8,6 +8,7 @@ namespace UberDeployer.Core.Deployment
 {
   public class ExtractArtifactsDeploymentStep : DeploymentStep
   {
+    private readonly ProjectInfo _projectInfo;
     private readonly EnvironmentInfo _environmentInfo;
     private readonly DeploymentInfo _deploymentInfo;
     private readonly string _artifactsFilePath;
@@ -18,13 +19,14 @@ namespace UberDeployer.Core.Deployment
     #region Constructor(s)
 
     public ExtractArtifactsDeploymentStep(ProjectInfo projectInfo, EnvironmentInfo environmentInfo, DeploymentInfo deploymentInfo, string artifactsFilePath, string targetArtifactsDirPath)
-      : base(projectInfo)
     {
+      Guard.NotNull(projectInfo, "projectInfo");
       Guard.NotNull(environmentInfo, "environmentInfo");
       Guard.NotNull(deploymentInfo, "deploymentInfo");
       Guard.NotNullNorEmpty(artifactsFilePath, "artifactsFilePath");
       Guard.NotNullNorEmpty(targetArtifactsDirPath, "targetArtifactsDirPath");
 
+      _projectInfo = projectInfo;
       _environmentInfo = environmentInfo;
       _deploymentInfo = deploymentInfo;
       _artifactsFilePath = artifactsFilePath;
@@ -39,15 +41,15 @@ namespace UberDeployer.Core.Deployment
     {
       string archiveParentPath = string.Empty;
 
-      if (ProjectInfo.ArtifactsAreEnvironmentSpecific)
+      if (_projectInfo.ArtifactsAreEnvironmentSpecific)
       {
         archiveParentPath = string.Format("{0}/", _environmentInfo.ConfigurationTemplateName);
       }
 
       // eg. when artifacts are enviroment specific: Service/dev2/
       _archiveSubPath =
-        !string.IsNullOrEmpty(ProjectInfo.ArtifactsRepositoryDirName)
-          ? string.Format("{0}{1}/", archiveParentPath, ProjectInfo.ArtifactsRepositoryDirName)
+        !string.IsNullOrEmpty(_projectInfo.ArtifactsRepositoryDirName)
+          ? string.Format("{0}{1}/", archiveParentPath, _projectInfo.ArtifactsRepositoryDirName)
           : archiveParentPath;
     }
 
@@ -63,7 +65,7 @@ namespace UberDeployer.Core.Deployment
       string projectArchiveFileName =
         string.Format(
           @"{0}_{1}.zip",
-          ProjectInfo.ArtifactsRepositoryName,
+          _projectInfo.ArtifactsRepositoryName,
           _deploymentInfo.ProjectConfigurationName);
 
       string archivePath = Path.Combine(_targetArtifactsDirPath, projectArchiveFileName);

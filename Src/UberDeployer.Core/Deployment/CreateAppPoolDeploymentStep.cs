@@ -13,8 +13,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public CreateAppPoolDeploymentStep(ProjectInfo projectInfo, IIisManager iisManager, string machineName, IisAppPoolInfo appPoolInfo)
-      : base(projectInfo)
+    public CreateAppPoolDeploymentStep(IIisManager iisManager, string machineName, IisAppPoolInfo appPoolInfo)
     {
       Guard.NotNull(iisManager, "iisManager");
       Guard.NotNullNorEmpty(machineName, "machineName");

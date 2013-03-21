@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment
 {
@@ -10,8 +9,7 @@ namespace UberDeployer.Core.Deployment
     private readonly string _templateConfigurationName;
     private readonly string _artifactsDirPath;
 
-    public ConfigureBinariesStep(ProjectInfo projectInfo, string templateConfigurationName, string artifactsDirPath)
-      : base(projectInfo)
+    public ConfigureBinariesStep(string templateConfigurationName, string artifactsDirPath)
     {
       if (string.IsNullOrWhiteSpace(artifactsDirPath))
       {
