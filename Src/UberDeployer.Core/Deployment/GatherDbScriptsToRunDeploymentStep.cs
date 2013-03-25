@@ -43,6 +43,27 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
+      _scriptsToRun = GetScriptsToRun();
+    }
+
+    public override string Description
+    {
+      get
+      {
+        return
+          string.Format(
+            "Gather db scripts from '{0}' to run on database '{1}'.",
+            _scriptsDirectoryPathProvider,
+            _dbName);
+      }
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private IEnumerable<string> GetScriptsToRun()
+    {
       // get db versions
       IEnumerable<string> versions =
         _dbVersionProvider.GetVersions(_dbName, _sqlServerName);
@@ -67,21 +88,23 @@ namespace UberDeployer.Core.Deployment
          let dbVersion = DbVersion.FromString(Path.GetFileNameWithoutExtension(filePath))
          where !dbVersionsSet.Contains(dbVersion)
          select new { dbVersion, filePath })
-         .ToDictionary(unknown => unknown.dbVersion, unknown => unknown.filePath);
-      
-      var scriptsNewerThanCurrentVersion =
+          .ToDictionary(unknown => unknown.dbVersion, unknown => unknown.filePath);
+
+      Dictionary<DbVersion, string> scriptsNewerThanCurrentVersion =
         scriptsToRunDict
           .Where(kvp => currentDbVersion == null || kvp.Key.IsGreatherThan(currentDbVersion))
           .OrderBy(kvp => kvp.Key)
           .Select(x => x)
           .ToDictionary(x => x.Key, x => x.Value);
-      
+
       RemoveNotSupportedScripts(scriptsNewerThanCurrentVersion);
 
-      _scriptsToRun = 
+      List<string> scriptsToRun =
         scriptsNewerThanCurrentVersion
-        .Select(x => x.Value)
-        .ToList();
+          .Select(x => x.Value)
+          .ToList();
+
+      return scriptsToRun;
     }
 
     /// <summary>
@@ -90,28 +113,17 @@ namespace UberDeployer.Core.Deployment
     /// <param name="scriptsToRun"></param>
     private void RemoveNotSupportedScripts(Dictionary<DbVersion, string> scriptsToRun)
     {
-      var keysToRemove =
+      List<DbVersion> keysToRemove =
         (from scriptToRun in scriptsToRun
          where !string.IsNullOrEmpty(scriptToRun.Key.Tail)
          select scriptToRun.Key)
           .ToList();
 
-      foreach (var keyToRemove in keysToRemove)
+      foreach (DbVersion keyToRemove in keysToRemove)
       {
         scriptsToRun.Remove(keyToRemove);
-        PostDiagnosticMessage("The following script has not been run yet: " + keyToRemove, DiagnosticMessageType.Warn);
-      }
-    }
 
-    public override string Description
-    {
-      get
-      {
-        return
-          string.Format(
-            "Gather db scripts from '{0}' to run on database '{1}'.",
-            _scriptsDirectoryPathProvider,
-            _dbName);
+        PostDiagnosticMessage("The following script has not been run yet: " + keyToRemove, DiagnosticMessageType.Warn);
       }
     }
 
