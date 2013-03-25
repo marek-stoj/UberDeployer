@@ -85,7 +85,7 @@ namespace UberDeployer.Core.DbDiff
 
     public override string ToString()
     {
-      return string.Format("{0}.{1}.{2}.{3}.{4}", Major, Minor, Revision, Build, Tail);
+      return string.Format("{0}.{1}.{2}.{3}{4}", Major, Minor, Revision, Build, Tail);
     }
 
     #endregion

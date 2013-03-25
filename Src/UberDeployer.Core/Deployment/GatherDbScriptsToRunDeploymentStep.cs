@@ -97,6 +97,14 @@ namespace UberDeployer.Core.Deployment
           .Select(x => x)
           .ToDictionary(x => x.Key, x => x.Value);
 
+      IEnumerable<DbVersion> scriptsToRunOlderThanCurrentVersion =
+        scriptsToRunDict.Keys.Except(scriptsNewerThanCurrentVersion.Keys);
+
+      foreach (DbVersion dbVersion in scriptsToRunOlderThanCurrentVersion)
+      {
+        PostDiagnosticMessage(string.Format("This script should be run but it's older than the current version so we won't run it: '{0}'.", dbVersion), DiagnosticMessageType.Warn);
+      }
+
       RemoveNotSupportedScripts(scriptsNewerThanCurrentVersion);
 
       List<string> scriptsToRun =
@@ -123,7 +131,7 @@ namespace UberDeployer.Core.Deployment
       {
         scriptsToRun.Remove(keyToRemove);
 
-        PostDiagnosticMessage("The following script has not been run yet: " + keyToRemove, DiagnosticMessageType.Warn);
+        PostDiagnosticMessage(string.Format("The following script is not supported and won't be run: '{0}'.", keyToRemove), DiagnosticMessageType.Warn);
       }
     }
 
