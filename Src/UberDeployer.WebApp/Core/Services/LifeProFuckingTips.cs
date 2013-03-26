@@ -32,8 +32,8 @@ namespace UberDeployer.WebApp.Core.Services
           "Don’t spend more money than you fucking earn.",
           "Spend holidays with your goddamn family.",
           "Tailor your fucking dress clothes.",
-          "The vast majority of people don’t give a fuck about you.",
           "Pictures on the internet are forever. think twice before posting that shit.",
+          "The vast majority of people don’t give a fuck about you.",
         };
 
     public static string GetTodayTip()
