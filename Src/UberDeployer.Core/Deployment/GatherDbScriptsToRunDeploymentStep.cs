@@ -62,6 +62,11 @@ namespace UberDeployer.Core.Deployment
 
     #region Private methods
 
+    private static bool IsScriptSupported(DbVersion scriptVersion)
+    {
+      return string.IsNullOrEmpty(scriptVersion.Tail);
+    }
+
     private IEnumerable<string> GetScriptsToRun()
     {
       // get db versions
@@ -102,6 +107,11 @@ namespace UberDeployer.Core.Deployment
 
       foreach (DbVersion dbVersion in scriptsToRunOlderThanCurrentVersion)
       {
+        if (!IsScriptSupported(dbVersion))
+        {
+          continue;
+        }
+
         PostDiagnosticMessage(string.Format("This script should be run but it's older than the current version so we won't run it: '{0}'.", dbVersion), DiagnosticMessageType.Warn);
       }
 
@@ -118,18 +128,18 @@ namespace UberDeployer.Core.Deployment
     /// <summary>
     /// Removes script versions with tail - hotfixes etc.
     /// </summary>
-    /// <param name="scriptsToRun"></param>
-    private void RemoveNotSupportedScripts(Dictionary<DbVersion, string> scriptsToRun)
+    /// <param name="scripts"></param>
+    private void RemoveNotSupportedScripts(IDictionary<DbVersion, string> scripts)
     {
       List<DbVersion> keysToRemove =
-        (from scriptToRun in scriptsToRun
-         where !string.IsNullOrEmpty(scriptToRun.Key.Tail)
+        (from scriptToRun in scripts
+         where !IsScriptSupported(scriptToRun.Key)
          select scriptToRun.Key)
           .ToList();
 
       foreach (DbVersion keyToRemove in keysToRemove)
       {
-        scriptsToRun.Remove(keyToRemove);
+        scripts.Remove(keyToRemove);
 
         PostDiagnosticMessage(string.Format("The following script is not supported and won't be run: '{0}'.", keyToRemove), DiagnosticMessageType.Warn);
       }

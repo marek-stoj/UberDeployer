@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Management.Db;
 
@@ -39,17 +40,28 @@ namespace UberDeployer.Core.Deployment
 
       try
       {
-        foreach (string scriptPathToRun in _scriptPathsToRunEnumerable)
+        List<string> scriptPathsToRunList = _scriptPathsToRunEnumerable.ToList();
+
+        if (scriptPathsToRunList.Count <= 0)
         {
-          executedScriptName = Path.GetFileName(scriptPathToRun);
+          PostDiagnosticMessage("There are no scripts to run.", DiagnosticMessageType.Info);
+        }
+        else
+        {
+          PostDiagnosticMessage(string.Format("Will run '{0}' scripts.", scriptPathsToRunList.Count), DiagnosticMessageType.Info);
 
-          using (var sr = new StreamReader(scriptPathToRun))
+          foreach (string scriptPathToRun in scriptPathsToRunList)
           {
-            string script = sr.ReadToEnd();
+            executedScriptName = Path.GetFileName(scriptPathToRun);
 
-            _dbScriptRunner.Execute(script);
+            using (var sr = new StreamReader(scriptPathToRun))
+            {
+              string script = sr.ReadToEnd();
 
-            PostDiagnosticMessage("Script executed successfully: " + executedScriptName, DiagnosticMessageType.Info);
+              _dbScriptRunner.Execute(script);
+
+              PostDiagnosticMessage("Script executed successfully: " + executedScriptName, DiagnosticMessageType.Info);
+            }
           }
         }
       }
