@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
 using UberDeployer.Core.Management.ScheduledTasks;
@@ -46,11 +48,17 @@ namespace UberDeployer.Core.Tests.Domain
         };
 
     private Mock<IObjectFactory> _objectFactoryFake;
+    private Mock<IDirectoryAdapter> _directoryAdapterFake;
 
     [SetUp]
     public void SetUp()
     {
       _objectFactoryFake = new Mock<IObjectFactory>(MockBehavior.Loose);
+
+      _directoryAdapterFake = new Mock<IDirectoryAdapter>(MockBehavior.Loose);
+
+      _objectFactoryFake.Setup(of => of.CreateDirectoryAdapter())
+        .Returns(_directoryAdapterFake.Object);
     }
 
     [Test]
@@ -209,22 +217,32 @@ namespace UberDeployer.Core.Tests.Domain
           _ProjectToFailoverClusterGroupMappings,
           "terminalAppsShortcutFolder");
 
-      var projectInfo = new TerminalAppProjectInfo(
-            _Name,
-            _ArtifactsRepositoryName,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _TerminalAppName,
-            _TerminalAppDirName,
-            _TerminalAppExeName);
+      var projectInfo =
+        new TerminalAppProjectInfo(
+          _Name,
+          _ArtifactsRepositoryName,
+          _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvirionmentSpecific,
+          _TerminalAppName,
+          _TerminalAppDirName,
+          _TerminalAppExeName);
 
+      string terminalServerNetworkPath =
+        envInfo.GetTerminalServerNetworkPath(
+          string.Format("{0}{1}\\1.0.0.0", envInfo.TerminalAppsBaseDirPath, projectInfo.TerminalAppDirName));
+
+      _directoryAdapterFake.Setup(
+        da => da.GetDirectories(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
+        .Returns(new[] { terminalServerNetworkPath });
+
+      // act
       List<string> targetFolders =
-              projectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo)
-                .ToList();
+        projectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo)
+          .ToList();
 
       Assert.IsNotNull(targetFolders);
       Assert.AreEqual(1, targetFolders.Count);
-      Assert.AreEqual("\\\\" + terminalmachine + "\\c$\\terminal\\" + _TerminalAppDirName, targetFolders[0]);
+      Assert.AreEqual(terminalServerNetworkPath, targetFolders[0]);
     }
 
     [Test]

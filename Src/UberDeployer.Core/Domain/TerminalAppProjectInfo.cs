@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain.Input;
@@ -103,7 +104,9 @@ namespace UberDeployer.Core.Domain
           Path.Combine(environmentInfo.TerminalAppsBaseDirPath, TerminalAppDirName));
 
       string latestVersionDirPath =
-        FindLatestVersionDirPath(baseDirPath);
+        FindLatestVersionDirPath(
+          objectFactory.CreateDirectoryAdapter(),
+          baseDirPath);
 
       return
         !string.IsNullOrEmpty(latestVersionDirPath)
@@ -120,15 +123,13 @@ namespace UberDeployer.Core.Domain
 
     #region Private methods
 
-    private static string FindLatestVersionDirPath(string baseDirPath)
+    private static string FindLatestVersionDirPath(IDirectoryAdapter directoryAdapter, string baseDirPath)
     {
-      if (string.IsNullOrEmpty(baseDirPath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "baseDirPath");
-      }
-
+      Guard.NotNull(directoryAdapter, "directoryAdapter");
+      Guard.NotNullNorEmpty(baseDirPath, "baseDirPath");
+      
       string[] subDirs =
-        Directory.GetDirectories(baseDirPath, "*.*", SearchOption.TopDirectoryOnly);
+        directoryAdapter.GetDirectories(baseDirPath, "*.*", SearchOption.TopDirectoryOnly);
 
       var versionedFolders = new List<Tuple<VersionedFolder, string>>();
 
