@@ -206,7 +206,7 @@ namespace UberDeployer.Core.DbDiff
     {
       var sortedDbVersions = new List<string>(allDbVersions);
 
-      // TODO IMM HI: sort by major, minor etc.
+      // TODO IMM HI: this sort is probably not consistent and may result in an exception - one has to use Equals here to return consistent results
       sortedDbVersions.Sort(
         (dbVersion1String, dbVersion2String) =>
           {

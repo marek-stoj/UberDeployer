@@ -16,7 +16,7 @@ namespace UberDeployer.Core.Domain
 
     #region Nested types
 
-    class VersionedFolder
+    private class VersionedFolder
     {
       public VersionedFolder(int major, int minor, int revision, int build, int? marker = null)
       {
@@ -37,6 +37,32 @@ namespace UberDeployer.Core.Domain
             || (Revision == other.Revision && Build < other.Build)
             || (Build == other.Build && !Marker.HasValue && other.Marker.HasValue)
             || (Build == other.Build && Marker.HasValue && other.Marker.HasValue && Marker.Value < other.Marker.Value);
+      }
+
+      private bool Equals(VersionedFolder other)
+      {
+        return Major == other.Major && Minor == other.Minor && Revision == other.Revision && Build == other.Build && Marker == other.Marker;
+      }
+
+      public override bool Equals(object obj)
+      {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((VersionedFolder)obj);
+      }
+
+      public override int GetHashCode()
+      {
+        unchecked
+        {
+          int hashCode = Major;
+          hashCode = (hashCode * 397) ^ Minor;
+          hashCode = (hashCode * 397) ^ Revision;
+          hashCode = (hashCode * 397) ^ Build;
+          hashCode = (hashCode * 397) ^ Marker.GetHashCode();
+          return hashCode;
+        }
       }
 
       public int Major { get; private set; }
@@ -161,7 +187,12 @@ namespace UberDeployer.Core.Domain
       }
 
       versionedFolders.Sort(
-        (folder, otherFolder) => folder.Item1.IsSmallerThan(otherFolder.Item1) ? 1 : -1);
+        (folder, otherFolder) =>
+        Equals(folder.Item1, otherFolder.Item1)
+          ? 0
+          : folder.Item1.IsSmallerThan(otherFolder.Item1)
+              ? 1
+              : -1);
 
       Tuple<VersionedFolder, string> latestVersionedFolder =
         versionedFolders.FirstOrDefault();
