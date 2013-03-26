@@ -1,14 +1,56 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain.Input;
+using System.Linq;
 
 namespace UberDeployer.Core.Domain
 {
   public class TerminalAppProjectInfo : ProjectInfo
   {
+    private static readonly Regex _VersionedFoldeRegex = new Regex("^(?<Major>[0-9]+)\\.(?<Minor>[0-9]+)\\.(?<Revision>[0-9]+)\\.(?<Build>[0-9]+)(\\.(?<Marker>[0-9]+))?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    #region Nested types
+
+    class VersionedFolder
+    {
+      public VersionedFolder(int major, int minor, int revision, int build, int? marker = null)
+      {
+        Major = major;
+        Minor = minor;
+        Revision = revision;
+        Build = build;
+        Marker = marker;
+      }
+
+      public bool IsSmallerThan(VersionedFolder other)
+      {
+        Guard.NotNull(other, "other");
+
+        return Major < other.Major
+            || (Major == other.Major && Minor < other.Minor)
+            || (Minor == other.Minor && Revision < other.Revision)
+            || (Revision == other.Revision && Build < other.Build)
+            || (Build == other.Build && !Marker.HasValue && other.Marker.HasValue)
+            || (Build == other.Build && Marker.HasValue && other.Marker.HasValue && Marker.Value < other.Marker.Value);
+      }
+
+      public int Major { get; private set; }
+
+      public int Minor { get; private set; }
+
+      public int Revision { get; private set; }
+
+      public int Build { get; private set; }
+
+      public int? Marker { get; private set; }
+    }
+
+    #endregion
+
     #region Constructor(s)
 
     public TerminalAppProjectInfo(string name, string artifactsRepositoryName, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string terminalAppName, string terminalAppDirName, string terminalAppExeName)
@@ -56,17 +98,77 @@ namespace UberDeployer.Core.Domain
       Guard.NotNull(objectFactory, "objectFactory");
       Guard.NotNull(environmentInfo, "environmentInfo");
 
+      string baseDirPath =
+        environmentInfo.GetTerminalServerNetworkPath(
+          Path.Combine(environmentInfo.TerminalAppsBaseDirPath, TerminalAppDirName));
+
+      string latestVersionDirPath =
+        FindLatestVersionDirPath(baseDirPath);
+
       return
-        new List<string>
-          {
-            environmentInfo.GetTerminalServerNetworkPath(
-              Path.Combine(environmentInfo.TerminalAppsBaseDirPath, TerminalAppDirName))
-          };
+        !string.IsNullOrEmpty(latestVersionDirPath)
+          ? new[] { latestVersionDirPath }
+          : new[] { baseDirPath };
     }
 
     public override string GetMainAssemblyFileName()
     {
       return TerminalAppExeName;
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private static string FindLatestVersionDirPath(string baseDirPath)
+    {
+      if (string.IsNullOrEmpty(baseDirPath))
+      {
+        throw new ArgumentException("Argument can't be null nor empty.", "baseDirPath");
+      }
+
+      string[] subDirs =
+        Directory.GetDirectories(baseDirPath, "*.*", SearchOption.TopDirectoryOnly);
+
+      var versionedFolders = new List<Tuple<VersionedFolder, string>>();
+
+      foreach (string subDirPath in subDirs)
+      {
+        string subDir = Path.GetFileName(subDirPath) ?? "";
+        Match match = _VersionedFoldeRegex.Match(subDir);
+
+        if (!match.Success)
+        {
+          continue;
+        }
+
+        string majorStr = match.Groups["Major"].Value;
+        string minorStr = match.Groups["Minor"].Value;
+        string revisionStr = match.Groups["Revision"].Value;
+        string buildStr = match.Groups["Build"].Value;
+        string markerStr = match.Groups["Marker"].Value;
+
+        var versionedFolder =
+          new VersionedFolder(
+            int.Parse(majorStr),
+            int.Parse(minorStr),
+            int.Parse(revisionStr),
+            int.Parse(buildStr),
+            !string.IsNullOrEmpty(markerStr) ? int.Parse(markerStr) : 0);
+
+        versionedFolders.Add(new Tuple<VersionedFolder, string>(versionedFolder, subDirPath));
+      }
+
+      versionedFolders.Sort(
+        (folder, otherFolder) => folder.Item1.IsSmallerThan(otherFolder.Item1) ? 1 : -1);
+
+      Tuple<VersionedFolder, string> latestVersionedFolder =
+        versionedFolders.FirstOrDefault();
+
+      return
+        latestVersionedFolder != null
+          ? latestVersionedFolder.Item2
+          : null;
     }
 
     #endregion
