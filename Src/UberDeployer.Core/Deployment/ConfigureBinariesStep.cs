@@ -6,6 +6,8 @@ namespace UberDeployer.Core.Deployment
 {
   public class ConfigureBinariesStep : DeploymentStep
   {
+    private const int _ChildProcessTimeoutInMilliseconds = 60 * 1000;
+
     private readonly string _templateConfigurationName;
     private readonly string _artifactsDirPath;
 
@@ -27,7 +29,12 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      Execute(Path.Combine(_artifactsDirPath, string.Format("Config_{0}.bat", _templateConfigurationName)), _artifactsDirPath, null);
+      Execute(
+        Path.Combine(
+          _artifactsDirPath,
+          string.Format("Config_{0}.bat", _templateConfigurationName)),
+        _artifactsDirPath,
+        "--no-pause");
     }
 
     public override string Description
@@ -81,11 +88,16 @@ namespace UberDeployer.Core.Deployment
           exeProcess.BeginErrorReadLine();
           exeProcess.BeginOutputReadLine();
 
-          exeProcess.WaitForExit();
+          bool finished = exeProcess.WaitForExit(_ChildProcessTimeoutInMilliseconds);
+
+          if (!finished)
+          {
+            throw new InternalException(string.Format("Timed out while waiting for the child process to finish (waited for '{0}' seconds).", (_ChildProcessTimeoutInMilliseconds / 1000)));
+          }
 
           if (exeProcess.ExitCode > 0 || errorOccured)
           {
-            throw new InvalidOperationException("Error on executing command line.");
+            throw new InternalException("Error on executing command line.");
           }
         }
       }

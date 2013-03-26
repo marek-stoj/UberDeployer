@@ -73,8 +73,9 @@ namespace UberDeployer.Core.Deployment
 
       var prepareVersionedFolderDeploymentStep =
         new PrepareVersionedFolderDeploymentStep(
-          environmentInfo.GetTerminalServerNetworkPath(environmentInfo.TerminalAppsBaseDirPath),
           DeploymentInfo.ProjectName,
+          environmentInfo.GetTerminalServerNetworkPath(environmentInfo.TerminalAppsBaseDirPath),
+          projectInfo.TerminalAppDirName,
           new Lazy<string>(() => extractVersionDeploymentStep.Version));
 
       AddSubTask(prepareVersionedFolderDeploymentStep);

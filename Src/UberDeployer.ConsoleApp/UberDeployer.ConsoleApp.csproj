@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\GetVersionCommand.cs" />
     <Compile Include="Commands\DeployCommand.cs" />
     <Compile Include="Commands\DeployLatestCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />

@@ -80,7 +80,7 @@ namespace UberDeployer.ConsoleApp.Commands
       OutputWriter.WriteLine("Usage: {0} project projectConfiguration buildId targetEnvironment", CommandName);
     }
 
-    private void LogMessage(string message)
+    protected void LogMessage(string message)
     {
       OutputWriter.WriteLine(message);
     }

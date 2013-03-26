@@ -13,6 +13,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       var step =
         new PrepareVersionedFolderDeploymentStep(
+          "TestProject",
           "TestData/VersionedFolders",
           "TestProject",
           new Lazy<string>(() => "1.0.3.4"));
@@ -28,6 +29,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void created_folder_is_named_after_version_with_suffix_if_folder_exists()
     {
       var step = new PrepareVersionedFolderDeploymentStep(
+        "TestProject",
         "TestData/VersionedFolders",
         "TestProject",
         new Lazy<string>(() => "1.0.3.5"));

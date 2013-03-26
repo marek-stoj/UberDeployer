@@ -136,11 +136,6 @@ namespace UberDeployer.ConsoleApp.Commands
       OutputWriter.WriteLine("Usage: {0} project projectConfiguration targetEnvironment", CommandName);
     }
 
-    private void LogMessage(string message)
-    {
-      OutputWriter.WriteLine(message);
-    }
-
     private static string RequesterIdentity
     {
       get

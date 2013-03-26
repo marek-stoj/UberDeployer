@@ -6,20 +6,23 @@ namespace UberDeployer.Core.Deployment
 {
   public class PrepareVersionedFolderDeploymentStep : DeploymentStep
   {
-    private readonly string _terminalAppsBaseDirPath;
     private readonly string _projectName;
+    private readonly string _baseDirPath;
+    private readonly string _dirName;
     private readonly Lazy<string> _version;
 
     private string _createdVersionedFolderPath;
 
-    public PrepareVersionedFolderDeploymentStep(string terminalAppsBaseDirPath, string projectName, Lazy<string> version)
+    public PrepareVersionedFolderDeploymentStep(string projectName, string baseDirPath, string dirName, Lazy<string> version)
     {
-      Guard.NotNullNorEmpty(terminalAppsBaseDirPath, "terminalAppsBaseDirPath");
       Guard.NotNullNorEmpty(projectName, "projectName");
+      Guard.NotNullNorEmpty(baseDirPath, "baseDirPath");
+      Guard.NotNullNorEmpty(dirName, "dirName");
       Guard.NotNull(version, "version");
 
-      _terminalAppsBaseDirPath = terminalAppsBaseDirPath;
       _projectName = projectName;
+      _dirName = dirName;
+      _baseDirPath = baseDirPath;
       _version = version;
     }
 
@@ -27,24 +30,24 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
-        return string.Format("Prepare folder for project '{0}' in base path '{1}' for version '{2}'.", _projectName, _terminalAppsBaseDirPath, _version.Value);
+        return string.Format("Prepare folder for project '{0}' in path '{1}\\{2}' for version '{3}'.", _projectName, _baseDirPath, _dirName, _version.Value);
       }
     }
 
     protected override void DoExecute()
     {
-      string path = Path.Combine(_terminalAppsBaseDirPath, _projectName, _version.Value);
+      string path = Path.Combine(_baseDirPath, _dirName, _version.Value);
 
-      if (!Directory.Exists(_terminalAppsBaseDirPath))
+      if (!Directory.Exists(_baseDirPath))
       {
-        throw new DeploymentTaskException(string.Format("Terminal apps base folder '{0}' does not exist!", _terminalAppsBaseDirPath));
+        throw new DeploymentTaskException(string.Format("Terminal apps base folder '{0}' does not exist!", _baseDirPath));
       }
 
       int uniqueMarker = 1;
 
       while (Directory.Exists(path))
       {
-        path = Path.Combine(_terminalAppsBaseDirPath, _projectName, _version.Value + "." + (uniqueMarker++));
+        path = Path.Combine(_baseDirPath, _dirName, _version.Value + "." + (uniqueMarker++));
       }
 
       Directory.CreateDirectory(path);
@@ -64,6 +67,5 @@ namespace UberDeployer.Core.Deployment
         return _createdVersionedFolderPath;
       }
     }    
-
   }
 }

@@ -33,11 +33,12 @@ namespace UberDeployer.Core.Deployment
     {
       get
       {
-        return string.Format("Update application shortcut for application '{0}' in folder '{1}' to '{2}/{3}'.",
-                             _projectName,
-                             _terminalAppsShortcutFolder,
-                             _versionDeploymentDirPath.Value,
-                             _terminalAppExeName);
+        return string.Format(
+          "Update application shortcut for application '{0}' in folder '{1}' to '{2}\\{3}'.",
+          _projectName,
+          _terminalAppsShortcutFolder,
+          _versionDeploymentDirPath.Value,
+          _terminalAppExeName);
       }
     }
 
