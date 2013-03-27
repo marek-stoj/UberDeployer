@@ -56,8 +56,8 @@
     <Reference Include="Microsoft.Win32.TaskScheduler">
       <HintPath>..\..\Lib\TaskScheduler\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json.Net35">
-      <HintPath>..\..\Lib\Newtonsoft.Json\Newtonsoft.Json.Net35.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\Lib\NHibernate\NHibernate.dll</HintPath>

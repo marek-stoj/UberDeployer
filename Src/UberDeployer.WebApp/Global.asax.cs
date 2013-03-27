@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using UberDeployer.Common;
+using UberDeployer.WebApp.Core.Connectivity;
 using log4net;
 using log4net.Config;
 
@@ -32,6 +33,8 @@ namespace UberDeployer.WebApp
     {
       GlobalContext.Properties["applicationName"] = "UberDeployer.WebApp";
       XmlConfigurator.Configure();
+
+      RouteTable.Routes.MapConnection<MyPersistentConnection>("SignalR", "SignalR");
 
       AreaRegistration.RegisterAllAreas();
 

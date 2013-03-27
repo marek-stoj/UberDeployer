@@ -4,7 +4,8 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
-  <h1>Deployment
+  <h1>
+    Deployment
   </h1>
 
   <hr />
@@ -90,3 +91,32 @@
     initializeDeploymentPage();
   })
 </script>
+
+
+
+
+
+
+
+
+
+
+@* // TODO IMM HI: xxx remove *@
+<script type="text/javascript">
+  $(function () {
+    var connection = $.connection('SignalR');
+
+    connection.received(function (data) {
+      $('#messages').append('<li>' + data + '</li>');
+    });
+
+    connection.start().done(function () {
+      $("#broadcast").click(function () {
+        connection.send($('#msg').val());
+      });
+    });
+  });
+</script>
+<input type="text" id="msg" />
+<input type="button" id="broadcast" value="broadcast" />
+<ul id="messages"></ul>
