@@ -10,6 +10,7 @@ using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Agent.Proxy.Dto.Input;
 using UberDeployer.Agent.Proxy.Dto.Metadata;
 using UberDeployer.Agent.Proxy.Faults;
+using UberDeployer.WebApp.Core.Connectivity;
 using UberDeployer.WebApp.Core.Models.Api;
 using UberDeployer.WebApp.Core.Services;
 using UberDeployer.WebApp.Core.Utils;
@@ -204,6 +205,9 @@ namespace UberDeployer.WebApp.Core.Controllers
     [HttpPost]
     public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
     {
+      // TODO IMM HI: xxx remove
+      DeploymentHub.Send(UserIdentity, "Test!");
+
       return
         DoDeployOrSimulate(
           false,

@@ -39,6 +39,8 @@ function Project(name, type) {
 }
 
 function initializeDeploymentPage() {
+  setupSignalR();
+
   $.ajaxSetup({
     'error': function (xhr) {
       domHelper.showError(xhr);
@@ -563,6 +565,21 @@ function kickAss() {
   s.type = 'text/javascript';
   document.body.appendChild(s);
   s.src = '//hi.kickassapp.com/kickass.js';
+}
+
+function setupSignalR() {
+  var deploymentHub = $.connection.deploymentHub;
+
+  deploymentHub.client.connected = function () { };
+  deploymentHub.client.disconnected = function () { };
+
+  deploymentHub.client.send =
+    function(message) {
+      // TODO IMM HI: xxx
+      alert(message);
+    };
+  
+  $.connection.hub.start();
 }
 
 $(document).ready(function() {
