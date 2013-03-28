@@ -101,6 +101,7 @@
     <Compile Include="Core\Models\BaseViewModel.cs" />
     <Compile Include="Core\Models\Deployment\IndexViewModel.cs" />
     <Compile Include="Core\Models\History\IndexViewModel.cs" />
+    <Compile Include="Core\Services\DevLife.cs" />
     <Compile Include="Core\Services\DeploymentState.cs" />
     <Compile Include="Core\Services\DeploymentStateProvider.cs" />
     <Compile Include="Core\Services\IDeploymentStateProvider.cs" />
@@ -150,6 +151,7 @@
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Deployment\Index.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

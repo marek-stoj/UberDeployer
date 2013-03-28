@@ -8,5 +8,9 @@
     }
 
     public string TipOfTheDay { get; set; }
+
+    public string TodayDevLifeGifUrl { get; set; }
+    
+    public string TodayDevLifeGifDescription { get; set; }
   }
 }

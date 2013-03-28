@@ -80,3 +80,12 @@ button.pull-left {
 #dlg-collect-credentials-password {
   width: 320px;
 }
+
+#dev-life-container {
+  text-align: center;
+}
+
+.dev-life-description {
+  font-weight: bold;
+  font-size: 18px;
+}
