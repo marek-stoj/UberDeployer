@@ -186,8 +186,11 @@ namespace UberDeployer.WinApp.Forms
 
         var projectDeploymentInfo = (ProjectDeploymentInfo)e.Argument;
 
+        Guid deploymentId = Guid.NewGuid();
+
         var deploymentInfo = new DeploymentInfo
           {
+            DeploymentId = deploymentId,
             ProjectName = projectDeploymentInfo.ProjectInfo.Name,
             ProjectConfigurationName = projectDeploymentInfo.ProjectConfiguration.Name,
             ProjectConfigurationBuildId = projectDeploymentInfo.ProjectConfigurationBuild.Id,
@@ -204,8 +207,11 @@ namespace UberDeployer.WinApp.Forms
 
         diagnosticMessagesPoller.Start();
 
+        deploymentId = Guid.NewGuid();
+
         _agentService
           .Deploy(
+            deploymentId,
             Program.UniqueClientId,
             RequesterIdentity,
             deploymentInfo);

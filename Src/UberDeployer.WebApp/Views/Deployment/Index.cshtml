@@ -86,6 +86,35 @@
   </div>
 </div>
 
+<div id="dlg-collect-credentials" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Enter credentials</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      Credentials are needed to perform deployment of project <strong id="dlg-collect-credentials-project-name"></strong>
+      (configuration: <strong id="dlg-collect-credentials-project-configuration-name"></strong>)
+      to environment <strong id="dlg-collect-credentials-target-environment-name"></strong>.
+    </p>
+    <p>
+      <label for="dlg-collect-credentials-username">Username:</label>
+      <input type="text" id="dlg-collect-credentials-username" name="dlg-collect-credentials-username" readonly="readonly" />
+      <br />
+      <label for="dlg-collect-credentials-machine-name">Machine:</label>
+      <input type="text" id="dlg-collect-credentials-machine-name" name="dlg-collect-credentials-machine-name" readonly="readonly" />
+      <br />
+      <label for="dlg-collect-credentials-password">Password:</label>
+      <input type="password" id="dlg-collect-credentials-password" name="dlg-collect-credentials-password" />
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button id="dlg-collect-credentials-ok" class="btn btn-primary">OK</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+  </div>
+  <input type="hidden" id="dlg-collect-credentials-deployment-id" name="dlg-collect-credentials-deployment-id" value="" />
+</div>
+
 <script type="text/javascript">
   $(document).ready(function () {
     initializeDeploymentPage();

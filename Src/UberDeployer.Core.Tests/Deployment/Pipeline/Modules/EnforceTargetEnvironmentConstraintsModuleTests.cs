@@ -25,6 +25,7 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
 
       DeploymentInfo deploymentInfo =
         new DeploymentInfo(
+          Guid.NewGuid(),
           false,
           "project_name",
           "branch",

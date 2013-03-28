@@ -20,8 +20,10 @@ namespace UberDeployer.CommonConfiguration
   public class ObjectFactory : IObjectFactory
   {
     private static WindsorContainer _container;
-
     private static IObjectFactory _instance;
+
+    private static string _webAppInternalApiEndpointUrl;
+    private static int _webAsynchronousPasswordCollectorMaxWaitTimeInSeconds;
 
     #region Constructor(s)
 
@@ -91,7 +93,19 @@ namespace UberDeployer.CommonConfiguration
 
     public IPasswordCollector CreatePasswordCollector()
     {
-      return new DialogPromptPasswordCollector();
+      if (string.IsNullOrEmpty(_webAppInternalApiEndpointUrl))
+      {
+        IApplicationConfiguration applicationConfiguration =
+          CreateApplicationConfiguration();
+
+        _webAppInternalApiEndpointUrl = applicationConfiguration.WebAppInternalApiEndpointUrl;
+        _webAsynchronousPasswordCollectorMaxWaitTimeInSeconds = applicationConfiguration.WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds;
+      }
+
+      return
+        new AsynchronousWebPasswordCollector(
+          _webAppInternalApiEndpointUrl,
+          _webAsynchronousPasswordCollectorMaxWaitTimeInSeconds);
     }
 
     public IDbScriptRunnerFactory CreateDbScriptRunnerFactory()

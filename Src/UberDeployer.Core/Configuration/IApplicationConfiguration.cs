@@ -15,5 +15,9 @@
     string ScExePath { get; set; }
 
     string ConnectionString { get; set; }
+    
+    string WebAppInternalApiEndpointUrl { get; set; }
+    
+    int WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds { get; set; }
   }
 }

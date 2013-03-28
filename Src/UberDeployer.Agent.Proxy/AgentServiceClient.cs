@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Agent.Proxy.Dto.Metadata;
 using UberDeployer.Agent.Proxy.Dto.TeamCity;
-using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Agent.Proxy
 {
@@ -11,14 +10,14 @@ namespace UberDeployer.Agent.Proxy
   {
     #region IAgentService Members
 
-    public void Deploy(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
+    public void Deploy(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
-      Exec(@as => @as.Deploy(uniqueClientId, requesterIdentity, deploymentInfo));
+      Exec(@as => @as.Deploy(deploymentId, uniqueClientId, requesterIdentity, deploymentInfo));
     }
 
-    public void DeployAsync(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
+    public void DeployAsync(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
-      Exec(@as => @as.DeployAsync(uniqueClientId, requesterIdentity, deploymentInfo));
+      Exec(@as => @as.DeployAsync(deploymentId, uniqueClientId, requesterIdentity, deploymentInfo));
     }
 
     public List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter)
@@ -69,6 +68,11 @@ namespace UberDeployer.Agent.Proxy
     public ProjectMetadata GetProjectMetadata(string projectName, string environmentName)
     {
       return Exec(@as => @as.GetProjectMetadata(projectName, environmentName));
+    }
+
+    public void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password)
+    {
+      Exec(@as => @as.SetCollectedCredentialsForAsynchronousWebCredentialsCollector(deploymentId, password));
     }
 
     #endregion

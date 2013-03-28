@@ -13,11 +13,11 @@ namespace UberDeployer.Agent.Proxy
   {
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
-    void Deploy(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo);
+    void Deploy(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
-    void DeployAsync(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo);
+    void DeployAsync(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo);
 
     [OperationContract]
     List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter);
@@ -59,5 +59,8 @@ namespace UberDeployer.Agent.Proxy
     // TODO IMM HI: separate interface?
     [OperationContract]
     ProjectMetadata GetProjectMetadata(string projectName, string environmentName);
+
+    [OperationContract]
+    void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password);
   }
 }

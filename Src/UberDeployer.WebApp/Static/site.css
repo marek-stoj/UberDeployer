@@ -75,3 +75,8 @@ button.pull-right {
 button.pull-left {
   margin-right: 10px;
 }
+
+#dlg-collect-credentials-username,
+#dlg-collect-credentials-password {
+  width: 320px;
+}

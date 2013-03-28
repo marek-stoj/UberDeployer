@@ -137,7 +137,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(runningTaskDetails);
 
       _passwordCollectorFake
-        .Setup(x => x.CollectPasswordForUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .Setup(x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .Returns("password");
 
       // act
@@ -156,7 +156,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((ScheduledTaskDetails)null);
 
       _passwordCollectorFake
-        .Setup(x => x.CollectPasswordForUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .Setup(x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .Returns("password");
 
       // act
@@ -178,7 +178,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(runningTaskDetails);
 
       _passwordCollectorFake
-        .Setup(x => x.CollectPasswordForUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .Setup(x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .Returns("password");
 
       // act
@@ -197,7 +197,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns((ScheduledTaskDetails)null);
 
       _passwordCollectorFake
-        .Setup(x => x.CollectPasswordForUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .Setup(x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .Returns("password");
 
       // act

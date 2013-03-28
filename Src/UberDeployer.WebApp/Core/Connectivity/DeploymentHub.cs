@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.WebApp.Core.Services;
 
 namespace UberDeployer.WebApp.Core.Connectivity
 {
@@ -11,29 +12,61 @@ namespace UberDeployer.WebApp.Core.Connectivity
   {
     private static readonly Dictionary<string, string> _connectionIdUserIdentityDict = new Dictionary<string, string>();
 
-    public static void Send(string userIdentity, object message)
+    private readonly IDeploymentStateProvider _deploymentStateProvider;
+
+    public DeploymentHub(IDeploymentStateProvider deploymentStateProvider)
     {
+      Guard.NotNull(deploymentStateProvider, "deploymentStateProvider");
+
+      _deploymentStateProvider = deploymentStateProvider;
+    }
+
+    public DeploymentHub()
+      : this(new DeploymentStateProvider())
+    {
+    }
+
+    public static void PromptForCredentials(Guid deploymentId, string userIdentity, string projectName, string projectConfigurationName, string targetEnvironmentName, string machineName, string username)
+    {
+      Guard.NotEmpty(deploymentId, "deploymentId");
       Guard.NotNullNorEmpty(userIdentity, "userIdentity");
-      Guard.NotNull(message, "message");
+      Guard.NotNullNorEmpty(projectName, "projectName");
+      Guard.NotNullNorEmpty(projectConfigurationName, "projectConfigurationName");
+      Guard.NotNullNorEmpty(targetEnvironmentName, "targetEnvironmentName");
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(username, "username");
 
-      string connectionId;
-
-      if (!_connectionIdUserIdentityDict.TryGetValue(userIdentity, out connectionId))
-      {
-        throw new ClientNotConnectedException(userIdentity);
-      }
-
-      // TODO IMM HI: xxx remove
-      IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<DeploymentHub>();
-
-      dynamic client = hubContext.Clients.Client(connectionId);
+      dynamic client = GetClient(userIdentity);
 
       if (client == null)
       {
         throw new ClientNotConnectedException(userIdentity);
       }
 
-      client.send(message);
+      client.promptForCredentials(
+        new
+        {
+          deploymentId = deploymentId,
+          projectName = projectName,
+          projectConfigurationName = projectConfigurationName,
+          targetEnvironmentName = targetEnvironmentName,
+          machineName,
+          username = username,
+        });
+    }
+
+    public static void CancelPromptForCredentials(string userIdentity)
+    {
+      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
+
+      dynamic client = GetClient(userIdentity);
+
+      if (client == null)
+      {
+        throw new ClientNotConnectedException(userIdentity);
+      }
+
+      client.cancelPromptForCredentials(new object());
     }
 
     public override Task OnConnected()
@@ -46,8 +79,25 @@ namespace UberDeployer.WebApp.Core.Connectivity
     public override Task OnDisconnected()
     {
       _connectionIdUserIdentityDict.Remove(UserIdentity);
+      _deploymentStateProvider.RemoveAllDeploymentStates(UserIdentity);
 
       return base.OnDisconnected();
+    }
+
+    private static dynamic GetClient(string userIdentity)
+    {
+      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
+
+      string connectionId;
+
+      if (!_connectionIdUserIdentityDict.TryGetValue(userIdentity, out connectionId))
+      {
+        throw new ClientNotConnectedException(userIdentity);
+      }
+
+      IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<DeploymentHub>();
+
+      return hubContext.Clients.Client(connectionId);
     }
 
     private static string UserIdentity

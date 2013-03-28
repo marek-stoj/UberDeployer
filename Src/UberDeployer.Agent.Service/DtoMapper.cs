@@ -56,6 +56,7 @@ namespace UberDeployer.Agent.Service
 
       return
         new Core.Domain.DeploymentInfo(
+          deploymentInfo.DeploymentId,
           deploymentInfo.IsSimulation,
           deploymentInfo.ProjectName,
           deploymentInfo.ProjectConfigurationName,

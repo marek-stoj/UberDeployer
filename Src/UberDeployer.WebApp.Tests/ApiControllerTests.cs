@@ -14,16 +14,19 @@ namespace UberDeployer.WebApp.Tests
   public class ApiControllerTests
   {
     private ApiController _apiController;
-    private Mock<ISessionService> _sessionService;
-    private Mock<IAgentService> _agentService;
+    
+    private Mock<ISessionService> _sessionServiceFake;
+    private Mock<IAgentService> _agentServiceFake;
+    private Mock<IDeploymentStateProvider> _deploymentStateProviderFake;
 
     [SetUp]
     public void SetUp()
     {
-      _sessionService = new Mock<ISessionService>();
-      _agentService = new Mock<IAgentService>();
+      _sessionServiceFake = new Mock<ISessionService>();
+      _agentServiceFake = new Mock<IAgentService>();
+      _deploymentStateProviderFake = new Mock<IDeploymentStateProvider>();
 
-      _apiController = new ApiController(_sessionService.Object, _agentService.Object);      
+      _apiController = new ApiController(_sessionServiceFake.Object, _agentServiceFake.Object, _deploymentStateProviderFake.Object);
     }
 
     [Test]
@@ -33,7 +36,7 @@ namespace UberDeployer.WebApp.Tests
       const string envName = "envName";
       var expectedMachineNames = new List<string> {"name1", "name2"};
 
-      _agentService.Setup(x => x.GetWebMachineNames(envName)).Returns(expectedMachineNames);
+      _agentServiceFake.Setup(x => x.GetWebMachineNames(envName)).Returns(expectedMachineNames);
 
       // act
       var machineNamesJson = _apiController.GetWebMachineNames(envName) as JsonResult;
@@ -76,7 +79,7 @@ namespace UberDeployer.WebApp.Tests
               EnvironmentName = environmentName
             });
 
-      _agentService.Setup(x => x.GetWebMachineNames(environmentName)).Throws(faultException);
+      _agentServiceFake.Setup(x => x.GetWebMachineNames(environmentName)).Throws(faultException);
 
       // act
       var httpStatusCodeResult = _apiController.GetWebMachineNames(string.Empty) as HttpStatusCodeResult;

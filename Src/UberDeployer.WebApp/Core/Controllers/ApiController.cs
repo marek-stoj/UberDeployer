@@ -10,7 +10,7 @@ using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Agent.Proxy.Dto.Input;
 using UberDeployer.Agent.Proxy.Dto.Metadata;
 using UberDeployer.Agent.Proxy.Faults;
-using UberDeployer.WebApp.Core.Connectivity;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.WebApp.Core.Models.Api;
 using UberDeployer.WebApp.Core.Services;
 using UberDeployer.WebApp.Core.Utils;
@@ -28,6 +28,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 
     private readonly ISessionService _sessionService;
     private readonly IAgentService _agentService;
+    private readonly IDeploymentStateProvider _deploymentStateProvider;
 
     static ApiController()
     {
@@ -49,24 +50,19 @@ namespace UberDeployer.WebApp.Core.Controllers
       _allowedProjectConfigurations = ParseAppSettingSet(allowedProjectConfigurationsStr);
     }
 
-    public ApiController(ISessionService sessionService, IAgentService agentService)
+    public ApiController(ISessionService sessionService, IAgentService agentService, IDeploymentStateProvider deploymentStateProvider)
     {
-      if (sessionService == null)
-      {
-        throw new ArgumentNullException("sessionService");
-      }
-
-      if (agentService == null)
-      {
-        throw new ArgumentNullException("agentService");
-      }
+      Guard.NotNull(sessionService, "sessionService");
+      Guard.NotNull(agentService, "agentService");
+      Guard.NotNull(deploymentStateProvider, "deploymentStateProvider");
 
       _sessionService = sessionService;
       _agentService = agentService;
+      _deploymentStateProvider = deploymentStateProvider;
     }
 
     public ApiController()
-      : this(new SessionService(), new AgentServiceClient())
+      : this(new SessionService(), new AgentServiceClient(), new DeploymentStateProvider())
     {
     }
 
@@ -205,9 +201,6 @@ namespace UberDeployer.WebApp.Core.Controllers
     [HttpPost]
     public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
     {
-      // TODO IMM HI: xxx remove
-      DeploymentHub.Send(UserIdentity, "Test!");
-
       return
         DoDeployOrSimulate(
           false,
@@ -333,10 +326,27 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       try
       {
+        Guid deploymentId = Guid.NewGuid();
+
+        var deploymentState =
+          new DeploymentState(
+            deploymentId,
+            UserIdentity,
+            projectName,
+            projectConfigurationName,
+            projectConfigurationBuildId,
+            targetEnvironmentName);
+
+        _deploymentStateProvider.SetDeploymentState(
+          deploymentId,
+          deploymentState);
+
         _agentService.DeployAsync(
+          deploymentId,
           _sessionService.UniqueClientId,
           SecurityUtils.CurrentUsername,
           CreateDeploymentInfo(
+            deploymentId,  
             isSimulation,
             projectName,
             projectConfigurationName,
@@ -358,11 +368,12 @@ namespace UberDeployer.WebApp.Core.Controllers
       return Json(new { Status = "FAIL", ErrorMessage = exception.Message }, JsonRequestBehavior.AllowGet);
     }
 
-    private DeploymentInfo CreateDeploymentInfo(bool isSimulation, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType projectType, IEnumerable<string> targetMachines = null)
+    private DeploymentInfo CreateDeploymentInfo(Guid deploymentId, bool isSimulation, string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType projectType, IEnumerable<string> targetMachines = null)
     {
       return
         new DeploymentInfo
         {
+          DeploymentId = deploymentId,
           IsSimulation = isSimulation,
           ProjectName = projectName,
           ProjectConfigurationName = projectConfigurationName,

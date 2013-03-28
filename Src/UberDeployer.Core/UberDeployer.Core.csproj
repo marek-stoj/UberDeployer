@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
+    <Compile Include="Deployment\AsynchronousWebPasswordCollector.cs" />
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\ToggleSchedulerAppEnabledStep.cs" />
     <Compile Include="Domain\WebAppProjectConfiguration.cs" />

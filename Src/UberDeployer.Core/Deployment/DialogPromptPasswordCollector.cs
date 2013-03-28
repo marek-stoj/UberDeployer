@@ -1,29 +1,22 @@
 using System;
 using System.Windows.Forms;
+using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Core.Deployment
 {
   // TODO IMM HI: move to WinApp (after using real DI solution)
   public class DialogPromptPasswordCollector : IPasswordCollector
   {
+    public event EventHandler<DiagnosticMessageEventArgs> DiagnosticMessagePosted;
+
     #region IPasswordCollector members
 
-    public string CollectPasswordForUser(string environmentName, string machineName, string userName)
+    public string CollectPasswordForUser(Guid deploymentId, string environmentName, string machineName, string userName)
     {
-      if (string.IsNullOrEmpty(environmentName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "environmentName");
-      }
-
-      if (string.IsNullOrEmpty(machineName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "machineName");
-      }
-
-      if (string.IsNullOrEmpty(userName))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "userName");
-      }
+      Guard.NotEmpty(deploymentId, "deploymentId");
+      Guard.NotNullNorEmpty(environmentName, "environmentName");
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(userName, "userName");
 
       var passwordPromptForm =
         new PasswordPromptForm

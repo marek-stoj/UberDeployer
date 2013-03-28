@@ -34,8 +34,11 @@ namespace UberDeployer.NAnt
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
+        Guid deploymentId = Guid.NewGuid();
+
         var deploymentInfo =
           new DeploymentInfo(
+            deploymentId,
             IsSimulation,
             ProjectName,
             ConfigurationName,

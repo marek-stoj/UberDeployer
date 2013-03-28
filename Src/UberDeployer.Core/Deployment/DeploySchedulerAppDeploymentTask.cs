@@ -132,9 +132,11 @@ namespace UberDeployer.Core.Deployment
         environmentUserPassword =
           PasswordCollectorHelper.CollectPasssword(
             _passwordCollector,
+            DeploymentInfo.DeploymentId,
             environmentInfo,
             environmentInfo.SchedulerServerMachineName,
             _projectInfo.SchedulerAppUserId,
+            OnDiagnosticMessagePosted,
             out environmentUser);
       }
 

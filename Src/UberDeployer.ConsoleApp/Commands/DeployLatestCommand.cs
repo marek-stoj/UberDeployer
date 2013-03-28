@@ -102,8 +102,11 @@ namespace UberDeployer.ConsoleApp.Commands
         DeploymentTask deploymentTask =
           projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
 
+        Guid deploymentId = Guid.NewGuid();
+
         var deploymentInfo =
           new DeploymentInfo(
+            deploymentId,
             isSimulation,
             projectName,
             projectConfigurationName,

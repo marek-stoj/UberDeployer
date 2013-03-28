@@ -41,8 +41,11 @@ namespace UberDeployer.ConsoleApp.Commands
         return 1;
       }
 
+      Guid deploymentId = Guid.NewGuid();
+
       var deploymentInfo =
         new DeploymentInfo(
+          deploymentId,
           isSimulation,
           projectName,
           projectConfigurationName,

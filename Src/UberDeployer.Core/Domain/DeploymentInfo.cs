@@ -1,4 +1,5 @@
-﻿using UberDeployer.Common.SyntaxSugar;
+﻿using System;
+using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
@@ -6,6 +7,7 @@ namespace UberDeployer.Core.Domain
   public class DeploymentInfo
   {
     public DeploymentInfo(
+      Guid deploymentId,
       bool isSimulation,
       string projectName,
       string projectConfigurationName,
@@ -13,12 +15,14 @@ namespace UberDeployer.Core.Domain
       string targetEnvironmentName,
       InputParams inputParams)
     {
+      Guard.NotEmpty(deploymentId, "deploymentId");
       Guard.NotNullNorEmpty(projectName, "projectName");
       Guard.NotNullNorEmpty(projectConfigurationName, "projectConfigurationName");
       Guard.NotNullNorEmpty(projectConfigurationBuildId, "projectConfigurationBuildId");
       Guard.NotNullNorEmpty(targetEnvironmentName, "targetEnvironmentName");
       Guard.NotNull(inputParams, "inputParams");
 
+      DeploymentId = deploymentId;
       IsSimulation = isSimulation;
       ProjectName = projectName;
       ProjectConfigurationName = projectConfigurationName;
@@ -26,6 +30,8 @@ namespace UberDeployer.Core.Domain
       TargetEnvironmentName = targetEnvironmentName;
       InputParams = inputParams;
     }
+
+    public Guid DeploymentId { get; private set; }
 
     public bool IsSimulation { get; private set; }
 

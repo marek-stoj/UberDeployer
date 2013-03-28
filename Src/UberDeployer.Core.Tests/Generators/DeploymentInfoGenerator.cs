@@ -1,4 +1,5 @@
-﻿using UberDeployer.Core.Domain;
+﻿using System;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Tests.Generators
@@ -39,6 +40,7 @@ namespace UberDeployer.Core.Tests.Generators
     {
       return
         new DeploymentInfo(
+          Guid.NewGuid(),
           false,
           "project_name",
           "project_configuration_name",

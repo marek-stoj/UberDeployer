@@ -86,6 +86,7 @@
     <Compile Include="Core\Connectivity\ClientNotConnectedException.cs" />
     <Compile Include="Core\Connectivity\DeploymentHub.cs" />
     <Compile Include="Core\Controllers\ApiController.cs" />
+    <Compile Include="Core\Controllers\InternalApiController.cs" />
     <Compile Include="Core\Models\Api\MachineSpecificProjectVersionViewModel.cs" />
     <Compile Include="Core\Models\Api\ProjectMetadataViewModel.cs" />
     <Compile Include="Core\InternalException.cs" />
@@ -100,6 +101,9 @@
     <Compile Include="Core\Models\BaseViewModel.cs" />
     <Compile Include="Core\Models\Deployment\IndexViewModel.cs" />
     <Compile Include="Core\Models\History\IndexViewModel.cs" />
+    <Compile Include="Core\Services\DeploymentState.cs" />
+    <Compile Include="Core\Services\DeploymentStateProvider.cs" />
+    <Compile Include="Core\Services\IDeploymentStateProvider.cs" />
     <Compile Include="Core\Services\LifeProFuckingTips.cs" />
     <Compile Include="Core\Services\SessionService.cs" />
     <Compile Include="Core\Services\ISessionService.cs" />

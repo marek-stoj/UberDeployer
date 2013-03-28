@@ -40,6 +40,7 @@ function Project(name, type) {
 
 function initializeDeploymentPage() {
   setupSignalR();
+  setupCollectCredentialsDialog();
 
   $.ajaxSetup({
     'error': function (xhr) {
@@ -573,13 +574,79 @@ function setupSignalR() {
   deploymentHub.client.connected = function () { };
   deploymentHub.client.disconnected = function () { };
 
-  deploymentHub.client.send =
+  deploymentHub.client.promptForCredentials =
     function(message) {
-      // TODO IMM HI: xxx
-      alert(message);
+      showCollectCredentialsDialog(
+        message.deploymentId,
+        message.projectName,
+        message.projectConfigurationName,
+        message.targetEnvironmentName,
+        message.machineName,
+        message.username);
+    };
+  
+  deploymentHub.client.cancelPromptForCredentials =
+    function() {
+      closeCollectCredentialsDialog();
     };
   
   $.connection.hub.start();
+}
+
+function showCollectCredentialsDialog(deploymentId, projectName, projectConfigurationName, targetEnvironmentName, machineName, username) {
+  $('#dlg-collect-credentials-deployment-id').val(deploymentId);
+  $('#dlg-collect-credentials-project-name').html(projectName);
+  $('#dlg-collect-credentials-project-configuration-name').html(projectConfigurationName);
+  $('#dlg-collect-credentials-target-environment-name').html(targetEnvironmentName);
+  $('#dlg-collect-credentials-machine-name').val(machineName);
+  $('#dlg-collect-credentials-username').val(username);
+  $('#dlg-collect-credentials-password').val('');
+
+  $('#dlg-collect-credentials').modal('show');
+}
+
+function closeCollectCredentialsDialog() {
+  $('#dlg-collect-credentials-deployment-id').val('');
+  $('#dlg-collect-credentials-project-name').html('');
+  $('#dlg-collect-credentials-project-configuration-name').html('');
+  $('#dlg-collect-credentials-target-environment-name').html('');
+  $('#dlg-collect-credentials-machine-name').val('');
+  $('#dlg-collect-credentials-username').val('');
+  $('#dlg-collect-credentials-password').val('');
+
+  $('#dlg-collect-credentials').modal('hide');
+}
+
+function setupCollectCredentialsDialog() {
+  $('#dlg-collect-credentials-ok')
+    .click(function () {
+      var deploymentId = $('#dlg-collect-credentials-deployment-id').val();
+      var password = $('#dlg-collect-credentials-password').val();
+
+      if (password === '') {
+        alert('You have to enter the password.');
+        return;
+      }
+
+      $.ajax({
+        url: g_AppPrefix + 'InternalApi/OnCredentialsCollected',
+        type: "POST",
+        data: {
+          deploymentId: deploymentId,
+          password: password,
+        },
+        traditional: true
+      });
+
+      closeCollectCredentialsDialog();
+    });
+
+  $('#dlg-collect-credentials')
+    .on(
+      'shown',
+      function() {
+        $('#dlg-collect-credentials-password').focus();
+      });
 }
 
 $(document).ready(function() {

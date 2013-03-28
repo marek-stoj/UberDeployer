@@ -137,9 +137,11 @@ namespace UberDeployer.Core.Deployment
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(
               _passwordCollector,
+              DeploymentInfo.DeploymentId,
               environmentInfo,
               environmentInfo.AppServerMachineName,
               _projectInfo.NtServiceUserId,
+              OnDiagnosticMessagePosted,
               out environmentUser);
 
           return
@@ -214,9 +216,11 @@ namespace UberDeployer.Core.Deployment
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(
               _passwordCollector,
+              DeploymentInfo.DeploymentId,
               environmentInfo,
               machineName,
               _projectInfo.NtServiceUserId,
+              OnDiagnosticMessagePosted,
               out environmentUser);
 
           cachedCollectedCredentials =

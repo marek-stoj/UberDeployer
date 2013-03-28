@@ -21,6 +21,10 @@ namespace UberDeployer.Core.Configuration
       public string ScExePath { get; set; }
 
       public string ConnectionString { get; set; }
+
+      public string WebAppInternalApiEndpointUrl { get; set; }
+
+      public int WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds { get; set; }
     }
 
     private readonly string _xmlFilePath;
@@ -159,6 +163,40 @@ namespace UberDeployer.Core.Configuration
         LoadXmlIfNeeded();
 
         _applicationConfigurationXml.ConnectionString = value;
+      }
+    }
+
+    public string WebAppInternalApiEndpointUrl
+    {
+      get
+      {
+        LoadXmlIfNeeded();
+
+        return _applicationConfigurationXml.WebAppInternalApiEndpointUrl;
+      }
+
+      set
+      {
+        LoadXmlIfNeeded();
+
+        _applicationConfigurationXml.WebAppInternalApiEndpointUrl = value;
+      }
+    }
+
+    public int WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds
+    {
+      get
+      {
+        LoadXmlIfNeeded();
+
+        return _applicationConfigurationXml.WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds;
+      }
+
+      set
+      {
+        LoadXmlIfNeeded();
+
+        _applicationConfigurationXml.WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds = value;
       }
     }
 

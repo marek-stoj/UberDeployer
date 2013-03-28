@@ -83,21 +83,14 @@ namespace UberDeployer.Agent.Service
 
     #region IAgentService Members
 
-    public void Deploy(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
+    public void Deploy(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
-      Guard.NotNull(deploymentInfo, "DeploymentInfo");
-
       try
       {
-        if (uniqueClientId == Guid.Empty)
-        {
-          throw new ArgumentException("Argument can't be Guid.Empty.", "uniqueClientId");
-        }
-
-        if (string.IsNullOrEmpty(requesterIdentity))
-        {
-          throw new ArgumentException("Argument can't be null nor empty.", "requesterIdentity");
-        }
+        Guard.NotEmpty(deploymentId, "deploymentId");
+        Guard.NotEmpty(uniqueClientId, "uniqueClientId");
+        Guard.NotNullNorEmpty(requesterIdentity, "requesterIdentity");
+        Guard.NotNull(deploymentInfo, "DeploymentInfo");
 
         ProjectInfo projectInfo =
           _projectInfoRepository.FindByName(deploymentInfo.ProjectName);
@@ -115,12 +108,14 @@ namespace UberDeployer.Agent.Service
       }
     }
 
-    public void DeployAsync(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
+    public void DeployAsync(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
       try
       {
-        Guard.NotNull(deploymentInfo, "DeploymentInfo");
-        Guard.NotNullNorEmpty(deploymentInfo.ProjectName, "DeploymentInfo.ProjectName");
+        Guard.NotEmpty(deploymentId, "deploymentId");
+        Guard.NotEmpty(uniqueClientId, "uniqueClientId");
+        Guard.NotNullNorEmpty(requesterIdentity, "requesterIdentity");
+        Guard.NotNull(deploymentInfo, "deploymentInfo");
 
         ProjectInfo projectInfo =
           _projectInfoRepository.FindByName(deploymentInfo.ProjectName);
@@ -452,6 +447,14 @@ namespace UberDeployer.Agent.Service
         
         throw;
       }
+    }
+
+    public void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password)
+    {
+      Guard.NotEmpty(deploymentId, "deploymentId");
+      Guard.NotNullNorEmpty(password, "password");
+
+      AsynchronousWebPasswordCollector.SetCollectedCredentials(deploymentId, password);
     }
 
     #endregion
