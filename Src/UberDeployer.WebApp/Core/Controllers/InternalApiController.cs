@@ -9,23 +9,20 @@ namespace UberDeployer.WebApp.Core.Controllers
 {
   public class InternalApiController : UberDeployerWebAppController
   {
-    private readonly ISessionService _sessionService;
     private readonly IAgentService _agentService;
     private readonly IDeploymentStateProvider _deploymentStateProvider;
 
-    public InternalApiController(ISessionService sessionService, IAgentService agentService, IDeploymentStateProvider deploymentStateProvider)
+    public InternalApiController(IAgentService agentService, IDeploymentStateProvider deploymentStateProvider)
     {
-      Guard.NotNull(sessionService, "sessionService");
       Guard.NotNull(agentService, "agentService");
       Guard.NotNull(deploymentStateProvider, "deploymentStateProvider");
 
-      _sessionService = sessionService;
       _agentService = agentService;
       _deploymentStateProvider = deploymentStateProvider;
     }
 
     public InternalApiController()
-      : this(new SessionService(), new AgentServiceClient(), new DeploymentStateProvider())
+      : this(new AgentServiceClient(), new DeploymentStateProvider())
     {
     }
 

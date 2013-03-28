@@ -40,7 +40,7 @@ namespace UberDeployer.Core.Deployment
       Guard.NotNullNorEmpty(machineName, "machineName");
       Guard.NotNullNorEmpty(userName, "userName");
 
-      using (var webClient = new WebClient())
+      using (var webClient = CreateWebClient())
       {
         string result =
           webClient.DownloadString(
@@ -79,7 +79,7 @@ namespace UberDeployer.Core.Deployment
 
       if (string.IsNullOrEmpty(password))
       {
-        using (var webClient = new WebClient())
+        using (var webClient = CreateWebClient())
         {
           webClient.DownloadString(string.Format("{0}/OnCollectCredentialsTimedOut?deploymentId={1}", _internalApiEndpointUrl, deploymentId));
         }
@@ -90,6 +90,15 @@ namespace UberDeployer.Core.Deployment
       PostDiagnosticMessage("Credentials were provided - we'll continue.", DiagnosticMessageType.Trace);
 
       return password;
+    }
+
+    private static WebClient CreateWebClient()
+    {
+      var webClient = new WebClient();
+
+      webClient.Credentials = CredentialCache.DefaultCredentials;
+
+      return webClient;
     }
 
     private void PostDiagnosticMessage(string message, DiagnosticMessageType diagnosticMessageType)
