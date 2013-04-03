@@ -56,7 +56,6 @@
   </target>
 	
   <target name="run">
-    <echo message="Using snapshot: ${snapshot.path}" />
     <call target="clean" />
     <call target="configure" />
     <call target="build" />
