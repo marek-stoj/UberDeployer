@@ -55,8 +55,12 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      // artifacts downloaded by previous executed html api (not REST!) are packed one more time in zip archive :/
-      // move to separate step?
+      // artifacts downloaded by previous executed html api (not REST!) are packed one more time in zip archive :/ move to separate step?
+      if (!File.Exists(_artifactsFilePath))
+      {
+        throw new InvalidOperationException(string.Format("Couldn't extract ZIP archive because it doesn't exist: '{0}'.", _artifactsFilePath));
+      }
+
       using (var zipFile = new ZipFile(_artifactsFilePath))
       {
         zipFile.ExtractAll(_targetArtifactsDirPath, ExtractExistingFileAction.OverwriteSilently);
@@ -71,6 +75,11 @@ namespace UberDeployer.Core.Deployment
       string archivePath = Path.Combine(_targetArtifactsDirPath, projectArchiveFileName);
 
       // unpacking internal zip package, true is that inside are packed artifacts with name like [Project_BuildConfigName.zip]
+      if (!File.Exists(archivePath))
+      {
+        throw new InvalidOperationException(string.Format("Couldn't extract internal ZIP archive because it doesn't exist: '{0}'.", archivePath));
+      }
+
       using (var zipFile = new ZipFile(archivePath))
       {
         zipFile.ExtractAll(_targetArtifactsDirPath, ExtractExistingFileAction.OverwriteSilently);
