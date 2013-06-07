@@ -96,7 +96,7 @@ namespace UberDeployer.Core.Deployment
     {
       var webClient = new WebClient();
 
-      webClient.Credentials = CredentialCache.DefaultCredentials;
+      webClient.UseDefaultCredentials = true;
 
       return webClient;
     }
