@@ -12,18 +12,19 @@ namespace UberDeployer.Core.Domain
 {
   public class TerminalAppProjectInfo : ProjectInfo
   {
-    private static readonly Regex _VersionedFoldeRegex = new Regex("^(?<Major>[0-9]+)\\.(?<Minor>[0-9]+)\\.(?<Revision>[0-9]+)\\.(?<Build>[0-9]+)(\\.(?<Marker>[0-9]+))?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex _VersionedFoldeRegex = new Regex("^(?<Major>[0-9]+)\\.(?<Minor>[0-9]+)\\.(?<Revision>[0-9]+)\\.(?<Build>[0-9]+)(\\s*)?(?<Custom>.*?)(\\s*)?(\\.(?<Marker>[0-9]+))?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     #region Nested types
 
     private class VersionedFolder
     {
-      public VersionedFolder(int major, int minor, int revision, int build, int? marker = null)
+      public VersionedFolder(int major, int minor, int revision, int build, string custom, int? marker = null)
       {
         Major = major;
         Minor = minor;
         Revision = revision;
         Build = build;
+        Custom = custom;
         Marker = marker;
       }
 
@@ -41,7 +42,7 @@ namespace UberDeployer.Core.Domain
 
       private bool Equals(VersionedFolder other)
       {
-        return Major == other.Major && Minor == other.Minor && Revision == other.Revision && Build == other.Build && Marker == other.Marker;
+        return Major == other.Major && Minor == other.Minor && Revision == other.Revision && Build == other.Build && string.Equals(Custom, other.Custom) && Marker == other.Marker;
       }
 
       public override bool Equals(object obj)
@@ -60,10 +61,13 @@ namespace UberDeployer.Core.Domain
           hashCode = (hashCode * 397) ^ Minor;
           hashCode = (hashCode * 397) ^ Revision;
           hashCode = (hashCode * 397) ^ Build;
+          hashCode = (hashCode * 397) ^ (Custom != null ? Custom.GetHashCode() : 0);
           hashCode = (hashCode * 397) ^ Marker.GetHashCode();
           return hashCode;
         }
       }
+
+      // ReSharper disable MemberCanBePrivate.Local
 
       public int Major { get; private set; }
 
@@ -73,7 +77,11 @@ namespace UberDeployer.Core.Domain
 
       public int Build { get; private set; }
 
+      public string Custom { get; private set; }
+
       public int? Marker { get; private set; }
+
+      // ReSharper restore MemberCanBePrivate.Local
     }
 
     #endregion
@@ -153,7 +161,7 @@ namespace UberDeployer.Core.Domain
     {
       Guard.NotNull(directoryAdapter, "directoryAdapter");
       Guard.NotNullNorEmpty(baseDirPath, "baseDirPath");
-      
+
       string[] subDirs =
         directoryAdapter.GetDirectories(baseDirPath, "*.*", SearchOption.TopDirectoryOnly);
 
@@ -173,6 +181,7 @@ namespace UberDeployer.Core.Domain
         string minorStr = match.Groups["Minor"].Value;
         string revisionStr = match.Groups["Revision"].Value;
         string buildStr = match.Groups["Build"].Value;
+        string customStr = match.Groups["Custom"].Value;
         string markerStr = match.Groups["Marker"].Value;
 
         var versionedFolder =
@@ -181,6 +190,7 @@ namespace UberDeployer.Core.Domain
             int.Parse(minorStr),
             int.Parse(revisionStr),
             int.Parse(buildStr),
+            customStr,
             !string.IsNullOrEmpty(markerStr) ? int.Parse(markerStr) : 0);
 
         versionedFolders.Add(new Tuple<VersionedFolder, string>(versionedFolder, subDirPath));
