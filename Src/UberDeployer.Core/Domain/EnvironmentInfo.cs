@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Common;
 
 namespace UberDeployer.Core.Domain
 {
@@ -110,21 +111,24 @@ namespace UberDeployer.Core.Domain
 
     #region Public methods
 
-    public static string GetNetworkPath(string machineName, string absoluteLocalPath)
+    public static string GetNetworkPath(string machineName, string absolutePath)
     {
       Guard.NotNullNorEmpty(machineName, "machineName");
-      Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
+      Guard.NotNullNorEmpty(absolutePath, "absolutePath");
 
-      if (absoluteLocalPath.StartsWith(@"\\"))
+      absolutePath = absolutePath.ExpandVariables(CreatePathVariables(machineName));
+
+      if (absolutePath.StartsWith(@"\\"))
       {
-        throw new ArgumentException(string.Format("The path is already a network path. Absolute local path: '{0}'.", absoluteLocalPath), "absoluteLocalPath");
+        // the path is already a network path - just return it
+        return absolutePath;
       }
 
-      Match driveLetterMatch = _DriveLetterRegex.Match(absoluteLocalPath);
+      Match driveLetterMatch = _DriveLetterRegex.Match(absolutePath);
 
       if (!driveLetterMatch.Success)
       {
-        throw new ArgumentException(string.Format("The path is not an absolute local path, ie. it doesn't start with a drive letter followed by a colon and a backslash. Absolute local path: '{0}'.", absoluteLocalPath), "absoluteLocalPath");
+        throw new ArgumentException(string.Format("The path is not an absolute local path, ie. it doesn't start with a drive letter followed by a colon and a backslash. Absolute local path: '{0}'.", absolutePath), "absolutePath");
       }
 
       string driveLetter = driveLetterMatch.Groups["DriveLetter"].Value;
@@ -134,36 +138,86 @@ namespace UberDeployer.Core.Domain
           "\\\\{0}\\{1}$\\{2}",
           machineName,
           driveLetter,
-          absoluteLocalPath.Substring(driveLetterMatch.Length));
+          absolutePath.Substring(driveLetterMatch.Length));
     }
 
-    public string GetAppServerNetworkPath(string absoluteLocalPath)
+    public string GetAppServerNetworkPath(string absolutePath)
     {
-      Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
+      Guard.NotNullNorEmpty(absolutePath, "absolutePath");
 
-      return GetNetworkPath(AppServerMachineName, absoluteLocalPath);
+      return GetNetworkPath(AppServerMachineName, absolutePath);
     }
 
-    public string GetSchedulerServerNetworkPath(string absoluteLocalPath)
+    public string GetSchedulerServerNetworkPath(string absolutePath)
     {
-      Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
+      Guard.NotNullNorEmpty(absolutePath, "absolutePath");
 
-      return GetNetworkPath(SchedulerServerMachineName, absoluteLocalPath);
+      return GetNetworkPath(SchedulerServerMachineName, absolutePath);
     }
 
-    public string GetWebServerNetworkPath(string webServerMachineName, string absoluteLocalPath)
+    public string GetWebServerNetworkPath(string webServerMachineName, string absolutePath)
     {
       Guard.NotNullNorEmpty(webServerMachineName, "webServerMachineName");
-      Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
+      Guard.NotNullNorEmpty(absolutePath, "absolutePath");
 
-      return GetNetworkPath(webServerMachineName, absoluteLocalPath);
+      return GetNetworkPath(webServerMachineName, absolutePath);
     }
 
-    public string GetTerminalServerNetworkPath(string absoluteLocalPath)
+    public string GetTerminalServerNetworkPath(string absolutePath)
     {
-      Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
+      Guard.NotNullNorEmpty(absolutePath, "absolutePath");
 
-      return GetNetworkPath(TerminalServerMachineName, absoluteLocalPath);
+      return GetNetworkPath(TerminalServerMachineName, absolutePath);
+    }
+
+    public string GetNtServicesBaseDirPath(string machineName)
+    {
+      Guard.NotNullNorEmpty(machineName, "machineName");
+
+      Dictionary<string, string> pathVariables =
+        CreatePathVariables(machineName);
+
+      return NtServicesBaseDirPath.ExpandVariables(pathVariables);
+    }
+
+    public string GetWebAppsBaseDirPath(string machineName)
+    {
+      Guard.NotNullNorEmpty(machineName, "machineName");
+
+      Dictionary<string, string> pathVariables =
+        CreatePathVariables(machineName);
+
+      return WebAppsBaseDirPath.ExpandVariables(pathVariables);
+    }
+
+    public string GetSchedulerAppsBaseDirPath(string machineName)
+    {
+      Guard.NotNullNorEmpty(machineName, "machineName");
+
+      Dictionary<string, string> pathVariables =
+        CreatePathVariables(machineName);
+
+      return SchedulerAppsBaseDirPath.ExpandVariables(pathVariables);
+    }
+
+    public string GetTerminalAppsBaseDirPath(string machineName)
+    {
+      Guard.NotNullNorEmpty(machineName, "machineName");
+
+      Dictionary<string, string> pathVariables =
+        CreatePathVariables(machineName);
+
+      return TerminalAppsBaseDirPath.ExpandVariables(pathVariables);
+    }
+
+    public string GetTerminalAppsShortcutFolder(string machineName)
+    {
+      Guard.NotNullNorEmpty(machineName, "machineName");
+
+      Dictionary<string, string> pathVariables =
+        CreatePathVariables(machineName);
+
+      return TerminalAppsShortcutFolder.ExpandVariables(pathVariables);
     }
 
     public EnvironmentUser GetEnvironmentUserByName(string environmentUserName)
@@ -224,6 +278,21 @@ namespace UberDeployer.Core.Domain
 
     #endregion
 
+    #region Private methods
+
+    private static Dictionary<string, string> CreatePathVariables(string machineName)
+    {
+      Guard.NotNullNorEmpty(machineName, "machineName");
+
+      return
+        new Dictionary<string, string>
+        {
+          { "MachineName", machineName },
+        };
+    }
+
+    #endregion
+
     #region Properties
 
     public string Name { get; private set; }
@@ -245,17 +314,17 @@ namespace UberDeployer.Core.Domain
 
     public string DatabaseServerMachineName { get; private set; }
 
-    public string NtServicesBaseDirPath { get; private set; }
+    public string NtServicesBaseDirPath { get; set; }
 
-    public string WebAppsBaseDirPath { get; private set; }
+    public string WebAppsBaseDirPath { get; set; }
 
-    public string SchedulerAppsBaseDirPath { get; private set; }
+    public string SchedulerAppsBaseDirPath { get; set; }
 
-    public string TerminalAppsBaseDirPath { get; private set; }
+    public string TerminalAppsBaseDirPath { get; set; }
+
+    public string TerminalAppsShortcutFolder { get; set; }
 
     public bool EnableFailoverClusteringForNtServices { get; private set; }
-
-    public string TerminalAppsShortcutFolder { get; private set; }
 
     public IEnumerable<EnvironmentUser> EnvironmentUsers
     {

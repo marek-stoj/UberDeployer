@@ -229,7 +229,7 @@ namespace UberDeployer.Core.Tests.Domain
 
       string terminalServerNetworkPath =
         envInfo.GetTerminalServerNetworkPath(
-          string.Format("{0}{1}\\1.0.0.0", envInfo.TerminalAppsBaseDirPath, projectInfo.TerminalAppDirName));
+          string.Format("{0}{1}\\1.0.0.0", envInfo.GetTerminalAppsBaseDirPath(envInfo.TerminalServerMachineName), projectInfo.TerminalAppDirName));
 
       _directoryAdapterFake.Setup(
         da => da.GetDirectories(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))

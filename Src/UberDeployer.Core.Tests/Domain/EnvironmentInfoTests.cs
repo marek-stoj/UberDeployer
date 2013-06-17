@@ -104,33 +104,6 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void Test_GetAppServerNetworkPath_Throws_When_path_startswithbackslashes()
-    {
-      var envInfo = new EnvironmentInfo(
-        _EnvironmentName,
-        _ConfigurationTemplateName,
-        _AppServerMachine,
-        _FailoverClusterMachineName,
-        _WebMachineNames,
-        _TerminalMachineName,
-        _SchedulerMachineName,
-        _DatabaseMachineName,
-        _NtServicesBaseDirPath,
-        _WebAppsBaseDirPath,
-        _SchedulerAppsBaseDirPath,
-        _TerminalAppsBaseDirPath,
-        false,
-        _EnvironmentUsers,
-        _AppPoolInfos,
-        _WebAppProjectConfigurations,
-        _ProjectToFailoverClusterGroupMappings,
-        _TerminalAppsShortcutFolder);
-
-      Assert.Throws<ArgumentException>(
-        () => envInfo.GetAppServerNetworkPath(@"\\kasjdkasdj"));
-    }
-
-    [Test]
     public void Test_GetAppServerNetworkPath_Throws_When_path_doesntstartwithdriveletter()
     {
       var envInfo =
@@ -159,7 +132,7 @@ namespace UberDeployer.Core.Tests.Domain
     }
 
     [Test]
-    public void GetWebServerNetworkPath_WhenAbsoluteLocalPathIsCorrect_ReturnCorrectPath()
+    public void GetWebServerNetworkPath_WhenLocalPathIsCorrect_ReturnCorrectPath()
     {
       var envInfo =
         new EnvironmentInfo(

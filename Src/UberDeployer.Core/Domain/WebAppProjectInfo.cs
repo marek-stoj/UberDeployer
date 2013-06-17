@@ -59,7 +59,7 @@ namespace UberDeployer.Core.Domain
             wsmn =>
             environmentInfo.GetWebServerNetworkPath(
               wsmn,
-              Path.Combine(environmentInfo.WebAppsBaseDirPath, configuration.WebAppDirName)))
+              Path.Combine(environmentInfo.GetWebAppsBaseDirPath(wsmn), configuration.WebAppDirName)))
           .ToList();
     }
 

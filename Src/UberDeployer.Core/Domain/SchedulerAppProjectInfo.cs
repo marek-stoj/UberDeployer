@@ -83,7 +83,7 @@ namespace UberDeployer.Core.Domain
         new List<string>
           {
             environmentInfo.GetSchedulerServerNetworkPath(
-              Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, SchedulerAppDirName))
+              Path.Combine(environmentInfo.GetSchedulerAppsBaseDirPath(environmentInfo.SchedulerServerMachineName), SchedulerAppDirName))
           };
     }
 

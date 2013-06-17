@@ -43,7 +43,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(_projectInfo);
 
       _appExePath = Path.Combine(
-        _environmentInfo.SchedulerAppsBaseDirPath,
+        _environmentInfo.GetSchedulerAppsBaseDirPath(_environmentInfo.SchedulerServerMachineName),
         _projectInfo.SchedulerAppDirName,
         _projectInfo.SchedulerAppExeName);
 
