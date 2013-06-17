@@ -88,15 +88,18 @@ namespace UberDeployer.Core.Tests.Deployment
     }
 
     [Test]
-    public void Prepare_should_fail_when_target_directory_doesnt_exist()
+    public void Prepare_should_not_create_any_backups_when_target_directory_doesnt_exist()
     {
       // arrange  
       _directoryAdapterFake
         .Setup(x => x.Exists(It.IsAny<string>()))
         .Returns(false);
 
-      // act assert
-      Assert.Throws<DeploymentTaskException>(() => _deployTask.Prepare());
+      // act
+      _deployTask.Prepare();
+
+      // assert
+      Assert.IsFalse(_deployTask.SubTasks.Any(t => t is BackupFilesDeploymentStep));
     }
 
     [Test]
@@ -227,7 +230,7 @@ namespace UberDeployer.Core.Tests.Deployment
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is CopyFilesDeploymentStep));
     }
 
-    private ScheduledTaskDetails GetTaskDetails(SchedulerAppProjectInfo projectInfo, string exeAbsolutePath, bool isRunning)
+    private static ScheduledTaskDetails GetTaskDetails(SchedulerAppProjectInfo projectInfo, string exeAbsolutePath, bool isRunning)
     {
       return new ScheduledTaskDetails(
         projectInfo.SchedulerAppName,
@@ -240,7 +243,7 @@ namespace UberDeployer.Core.Tests.Deployment
         projectInfo.ExecutionTimeLimitInMinutes);
     }
 
-    private void AssertStepIsBefore(Type stepBeforeType, Type stepAfterType, DeploymentTaskBase[] subTasks)
+    private static void AssertStepIsBefore(Type stepBeforeType, Type stepAfterType, DeploymentTaskBase[] subTasks)
     {
       int i = 0;
       while (i < subTasks.Length && subTasks[i].GetType() != stepBeforeType)

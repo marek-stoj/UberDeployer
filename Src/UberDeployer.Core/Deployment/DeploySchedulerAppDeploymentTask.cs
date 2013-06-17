@@ -54,11 +54,6 @@ namespace UberDeployer.Core.Deployment
       string targetDirNetworkPath = environmentInfo.GetSchedulerServerNetworkPath(targetDirPath);
       string executablePath = Path.Combine(targetDirPath, _projectInfo.SchedulerAppExeName);
 
-      if (!_directoryAdapter.Exists(targetDirNetworkPath))
-      {
-        throw new DeploymentTaskException(string.Format("Target directory does not exist: {0}", targetDirNetworkPath));
-      }
-
       ScheduledTaskDetails taskDetails = _taskScheduler.GetScheduledTaskDetails(machineName, _projectInfo.SchedulerAppName);
 
       CheckIfTaskIsRunning(taskDetails, environmentInfo);
@@ -71,9 +66,11 @@ namespace UberDeployer.Core.Deployment
 
       Lazy<string> binariesDirPathProvider = AddStepsToObtainBinaries(environmentInfo);
 
-      AddSubTask(
-        new BackupFilesDeploymentStep(
-          targetDirNetworkPath));
+      if (_directoryAdapter.Exists(targetDirNetworkPath))
+      {
+        AddSubTask(
+          new BackupFilesDeploymentStep(targetDirNetworkPath));
+      }
 
       // create a step for copying the binaries to the target machine
       AddSubTask(
