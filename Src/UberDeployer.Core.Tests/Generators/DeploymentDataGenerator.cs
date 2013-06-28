@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Tests.Generators
@@ -12,30 +11,6 @@ namespace UberDeployer.Core.Tests.Generators
 
     public static EnvironmentInfo GetEnvironmentInfo(EnvironmentUser user)
     {
-      var environmentUsers =
-        new List<EnvironmentUser>()
-        {          
-          user
-        };
-
-      var appPoolInfos =
-        new List<IisAppPoolInfo>()
-        {
-          new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
-        };
-
-      var webAppProjectConfigurations =
-        new List<WebAppProjectConfiguration>
-        {
-          new WebAppProjectConfiguration("name", "apppool", "website", "dir", "name"),
-        };
-
-      var projectToFailoverClusterGroupMappings =
-        new List<ProjectToFailoverClusterGroupMapping>
-        {
-          new ProjectToFailoverClusterGroupMapping("name", "cg1"),
-        };
-
       return
         new EnvironmentInfo(
           "env_name",
@@ -45,16 +20,17 @@ namespace UberDeployer.Core.Tests.Generators
           new[] { "web_server_machine_name" },
           "terminal_server_machine_name",
           "schedulerServerMachineName",
-          "database_server_machine_name",
           "nt_service_base_dir_path",
           "web_apps_base_dir_path",
           "X:\\scheduler_apps_base_dir_path",
           "X:\\terminal_apps_base_dir_path",
           false,
-          environmentUsers,
-          appPoolInfos,
-          webAppProjectConfigurations,
-          projectToFailoverClusterGroupMappings,
+          new[] { user, },
+          TestData._AppPoolInfos,
+          TestData._DatabaseServers,
+          TestData._WebAppProjectConfigurations,
+          TestData._ProjectToFailoverClusterGroupMappings,
+          TestData._DbProjectConfigurations,
           "X:\\terminal_apps_shortcut_folder");
     }
 

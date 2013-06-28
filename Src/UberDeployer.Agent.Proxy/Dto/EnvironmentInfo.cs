@@ -18,8 +18,6 @@ namespace UberDeployer.Agent.Proxy.Dto
 
     public string SchedulerServerMachineName { get; set; }
 
-    public string DatabaseServerMachineName { get; set; }
-
     public string NtServicesBaseDirPath { get; set; }
 
     public string WebAppsBaseDirPath { get; set; }
@@ -33,9 +31,13 @@ namespace UberDeployer.Agent.Proxy.Dto
     public List<EnvironmentUser> EnvironmentUsers { get; set; }
 
     public List<IisAppPoolInfo> AppPoolInfos { get; set; }
+    
+    public List<DatabaseServer> DatabaseServers { get; set; }
 
     public List<WebAppProjectConfiguration> WebAppProjectConfigurations { get; set; }
 
     public List<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings { get; set; }
+
+    public List<DbProjectConfiguration> DbProjectConfigurations { get; set; }
   }
 }

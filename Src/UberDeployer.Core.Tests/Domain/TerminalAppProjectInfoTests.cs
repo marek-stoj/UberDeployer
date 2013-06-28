@@ -23,30 +23,6 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _TerminalAppDirName = "terminalAppDirName";
     private const string _TerminalAppExeName = "terminalAppExeName";
 
-    private static readonly List<EnvironmentUser> _EnvironmentUsers =
-      new List<EnvironmentUser>
-        {
-          new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
-        };
-
-    private static readonly List<IisAppPoolInfo> _AppPoolInfos =
-      new List<IisAppPoolInfo>()
-      {
-        new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
-      };
-
-    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
-      new List<WebAppProjectConfiguration>
-      {
-        new WebAppProjectConfiguration("prj1", "website", "apppool", "dir", "prj1"),
-      };
-
-    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
-      new List<ProjectToFailoverClusterGroupMapping>
-        {
-          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
-        };
-
     private Mock<IObjectFactory> _objectFactoryFake;
     private Mock<IDirectoryAdapter> _directoryAdapterFake;
 
@@ -205,16 +181,17 @@ namespace UberDeployer.Core.Tests.Domain
           new[] { "webmachine" },
           terminalmachine,
           "schedulermachine",
-          "databasemachine",
           baseDirPath,
           "webbasedir",
           "c:\\scheduler",
           "c:\\terminal",
           false,
-          _EnvironmentUsers,
-          _AppPoolInfos,
-          _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings,
+          TestData._EnvironmentUsers,
+          TestData._AppPoolInfos,
+          TestData._DatabaseServers,
+          TestData._WebAppProjectConfigurations,
+          TestData._ProjectToFailoverClusterGroupMappings,
+          TestData._DbProjectConfigurations,
           "terminalAppsShortcutFolder");
 
       var projectInfo =

@@ -29,10 +29,8 @@ namespace UberDeployer.Core.DataAccess.Xml
       public List<string> WebServerMachineNames { get; set; }
 
       public string TerminalServerMachineName { get; set; }
-      
-      public string SchedulerServerMachineName { get; set; }
 
-      public string DatabaseServerMachineName { get; set; }
+      public string SchedulerServerMachineName { get; set; }
 
       public string NtServicesBaseDirPath { get; set; }
 
@@ -48,9 +46,13 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public List<AppPoolInfoXml> AppPoolInfos { get; set; }
 
+      public List<DatabaseServerXml> DatabaseServers { get; set; }
+
       public List<WebAppProjectConfigurationXml> WebAppProjectConfigurations { get; set; }
 
       public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; }
+
+      public List<DbProjectConfigurationXml> DbProjectConfigurations { get; set; }
 
       public string TerminalAppsShortcutFolder { get; set; }
     }
@@ -69,6 +71,13 @@ namespace UberDeployer.Core.DataAccess.Xml
       public IisAppPoolVersion Version { get; set; }
 
       public IisAppPoolMode Mode { get; set; }
+    }
+
+    public class DatabaseServerXml
+    {
+      public string Id { get; set; }
+
+      public string MachineName { get; set; }
     }
 
     public class WebAppProjectConfigurationXml
@@ -90,6 +99,14 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string ProjectName { get; set; }
 
       public string ClusterGroupName { get; set; }
+    }
+
+    public class DbProjectConfigurationXml
+    {
+      [XmlAttribute("projectName")]
+      public string ProjectName { get; set; }
+
+      public string DatabaseServerId { get; set; }
     }
 
     #endregion
@@ -172,38 +189,47 @@ namespace UberDeployer.Core.DataAccess.Xml
               eiXml.WebServerMachineNames,
               eiXml.TerminalServerMachineName,
               eiXml.SchedulerServerMachineName,
-              eiXml.DatabaseServerMachineName,
               eiXml.NtServicesBaseDirPath,
               eiXml.WebAppsBaseDirPath,
               eiXml.SchedulerAppsBaseDirPath,
               eiXml.TerminalAppsBaseDirPath,
               eiXml.EnableFailoverClusteringForNtServices,
               eiXml.EnvironmentUsers.Select(
-                eu =>
+                e =>
                 new EnvironmentUser(
-                  eu.Id,
-                  eu.UserName)),
+                  e.Id,
+                  e.UserName)),
               eiXml.AppPoolInfos.Select(
-                ap =>
+                e =>
                 new IisAppPoolInfo(
-                  ap.Name,
-                  ap.Version,
-                  ap.Mode)),
+                  e.Name,
+                  e.Version,
+                  e.Mode)),
+              eiXml.DatabaseServers.Select(
+                e =>
+                new DatabaseServer(
+                  e.Id,
+                  e.MachineName)),
               eiXml.WebAppProjectConfigurations.Select(
-                wapc =>
+                e =>
                 new WebAppProjectConfiguration(
-                  wapc.ProjectName,
-                  wapc.AppPoolId,
-                  wapc.WebSiteName,
-                  wapc.WebAppDirName,
-                  wapc.WebAppName)),
+                  e.ProjectName,
+                  e.AppPoolId,
+                  e.WebSiteName,
+                  e.WebAppDirName,
+                  e.WebAppName)),
               eiXml.ProjectToFailoverClusterGroupMappings.Select(
-                ptfcgm =>
+                e =>
                 new ProjectToFailoverClusterGroupMapping(
-                  ptfcgm.ProjectName,
-                  ptfcgm.ClusterGroupName)),
+                  e.ProjectName,
+                  e.ClusterGroupName)),
+              eiXml.DbProjectConfigurations.Select(
+                e =>
+                new DbProjectConfiguration(
+                  e.ProjectName,
+                  e.DatabaseServerId)),
               eiXml.TerminalAppsShortcutFolder
-                  ))
+              ))
           .ToDictionary(ei => ei.Name);
     }
 

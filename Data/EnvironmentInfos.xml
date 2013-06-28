@@ -13,7 +13,6 @@
       </WebServerMachineNames>
       <TerminalServerMachineName>localhost</TerminalServerMachineName>
       <SchedulerServerMachineName>localhost</SchedulerServerMachineName>
-      <DatabaseServerMachineName>localhost</DatabaseServerMachineName>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
@@ -34,13 +33,25 @@
           <Mode>Integrated</Mode>
         </AppPoolInfoXml>
       </AppPoolInfos>
+      <DatabaseServers>
+        <DatabaseServerXml>
+          <Id>Default</Id>
+          <MachineName>localhost</MachineName>
+        </DatabaseServerXml>
+      </DatabaseServers>
       <WebAppProjectConfigurations>
         <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
           <AppPoolId>ASP.NET v4.0</AppPoolId>
           <WebSiteName>Default Web Site</WebSiteName>
+          <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
           <WebAppName>UberDeployer.SampleWebApp</WebAppName>
         </WebAppProjectConfigurationXml>
       </WebAppProjectConfigurations>
+      <DbProjectConfigurations>
+        <DbProjectConfigurationXml projectName="UberDeployer.SampleDb">
+          <DatabaseServerId>Default</DatabaseServerId>
+        </DbProjectConfigurationXml>
+      </DbProjectConfigurations>
     </EnvironmentInfoXml>
 
     <!-- Remote -->
@@ -54,7 +65,6 @@
       </WebServerMachineNames>
       <TerminalServerMachineName>REMOTE</TerminalServerMachineName>
       <SchedulerServerMachineName>REMOTE</SchedulerServerMachineName>
-      <DatabaseServerMachineName>REMOTE</DatabaseServerMachineName>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
@@ -75,10 +85,17 @@
           <Mode>Integrated</Mode>
         </AppPoolInfoXml>
       </AppPoolInfos>
+      <DatabaseServers>
+        <DatabaseServerXml>
+          <Id>Default</Id>
+          <MachineName>REMOTE</MachineName>
+        </DatabaseServerXml>
+      </DatabaseServers>
       <WebAppProjectConfigurations>
         <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
           <AppPoolId>ASP.NET v4.0</AppPoolId>
           <WebSiteName>Default Web Site</WebSiteName>
+          <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
           <WebAppName>UberDeployer.SampleWebApp</WebAppName>
         </WebAppProjectConfigurationXml>
       </WebAppProjectConfigurations>
@@ -88,6 +105,11 @@
           <ClusterGroupName>UD_SAMPLE</ClusterGroupName>
         </ProjectToFailoverClusterGroupMappingXml>
       </ProjectToFailoverClusterGroupMappings>
+      <DbProjectConfigurations>
+        <DbProjectConfigurationXml projectName="UberDeployer.SampleDb">
+          <DatabaseServerId>Default</DatabaseServerId>
+        </DbProjectConfigurationXml>
+      </DbProjectConfigurations>
     </EnvironmentInfoXml>
   </EnvironmentInfos>
 

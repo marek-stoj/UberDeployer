@@ -50,7 +50,7 @@ namespace UberDeployer.Core.Domain
       Guard.NotNull(environmentInfo, "environmentInfo");
 
       WebAppProjectConfiguration configuration =
-        environmentInfo.GetWebProjectConfiguration(Name);
+        environmentInfo.GetWebAppProjectConfiguration(Name);
 
       return
         environmentInfo
@@ -71,7 +71,7 @@ namespace UberDeployer.Core.Domain
       }
 
       WebAppProjectConfiguration webAppProjectConfiguration =
-        environmentInfo.GetWebProjectConfiguration(Name);
+        environmentInfo.GetWebAppProjectConfiguration(Name);
 
       // TODO IMM HI: what about https vs http?
       return

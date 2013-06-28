@@ -45,6 +45,15 @@
       <TerminalAppDirName>UberDeployer.SampleTerminalApp</TerminalAppDirName>
       <TerminalAppExeName>UberDeployer.SampleTerminalApp.exe</TerminalAppExeName>
     </ProjectInfoXml>
+
+    <!-- Db projects -->
+    <ProjectInfoXml xsi:type="DbProjectInfoXml">
+      <Name>UberDeployer.SampleDb</Name>
+      <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>DbScripts</ArtifactsRepositoryDirName>
+      <ArtifactsAreNotEnvironmentSpecific>true</ArtifactsAreNotEnvironmentSpecific>
+      <DbName>UberDeployerSample</DbName>
+    </ProjectInfoXml>
   </ProjectInfos>
 
 </ProjectInfosXml>

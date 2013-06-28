@@ -14,34 +14,10 @@ namespace UberDeployer.Core.Tests.Domain
   [TestFixture]
   public class WebAppProjectInfoTests
   {
-    private const string Name = "prj1";
+    private const string Name = "webappprj";
     private const string ArtifactsRepositoryName = "repoName";
     private const string ArtifactsRepositoryDirName = "repoDirName";
     private const bool ArtifactsAreNotEnvironmentSpecific = false;
-
-    private static readonly List<EnvironmentUser> _EnvironmentUsers =
-      new List<EnvironmentUser>
-        {
-          new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
-        };
-
-    private static readonly List<IisAppPoolInfo> _AppPoolInfos =
-      new List<IisAppPoolInfo>()
-      {
-        new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
-      };
-
-    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
-      new List<WebAppProjectConfiguration>
-      {
-        new WebAppProjectConfiguration("prj1", "website", "apppool", "dir", "prj1"),
-      };
-
-    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
-      new List<ProjectToFailoverClusterGroupMapping>
-        {
-          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
-        };
 
     private Mock<IObjectFactory> _objectFactoryFake;
 
@@ -93,16 +69,17 @@ namespace UberDeployer.Core.Tests.Domain
           new[] { "webmachine" },
           "terminalmachine",
           "schedulermachine",
-          "databasemachine",
           "C:\\basedir",
           "C:\\basedir",
           "c:\\scheduler",
           "terminal",
           false,
-          _EnvironmentUsers,
-          _AppPoolInfos,
-          _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings,
+          TestData._EnvironmentUsers,
+          TestData._AppPoolInfos,
+          TestData._DatabaseServers,
+          TestData._WebAppProjectConfigurations,
+          TestData._ProjectToFailoverClusterGroupMappings,
+          TestData._DbProjectConfigurations,
           "terminalAppsShortcutFolder");
 
       var projectInfo =
@@ -120,7 +97,7 @@ namespace UberDeployer.Core.Tests.Domain
     {
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
-      
+
       var envInfo =
         new EnvironmentInfo(
           "name",
@@ -130,16 +107,17 @@ namespace UberDeployer.Core.Tests.Domain
           new[] { "webmachine" },
           "terminalmachine",
           "schedulermachine",
-          "databasemachine",
           baseDirPath,
           "webbasedir",
           "c:\\scheduler",
           "terminal",
           false,
-          _EnvironmentUsers,
-          _AppPoolInfos,
-          _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings,
+          TestData._EnvironmentUsers,
+          TestData._AppPoolInfos,
+          TestData._DatabaseServers,
+          TestData._WebAppProjectConfigurations,
+          TestData._ProjectToFailoverClusterGroupMappings,
+          TestData._DbProjectConfigurations,
           "terminalAppsShortcutFolder");
 
       var projectInfo =
@@ -155,7 +133,7 @@ namespace UberDeployer.Core.Tests.Domain
 
       Assert.IsNotNull(targetUrls);
       Assert.AreEqual(1, targetUrls.Count);
-      Assert.AreEqual("http://webmachine/" + "prj1", targetUrls[0]);
+      Assert.AreEqual("http://webmachine/" + "webapp", targetUrls[0]);
     }
 
     [Test]

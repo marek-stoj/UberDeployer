@@ -235,7 +235,7 @@ namespace UberDeployer.WinApp.Forms
 
               foreach (EnvironmentInfo selectedEnvironment in selectedEnvironments)
               {
-                string databaseServerMachineName = selectedEnvironment.DatabaseServerMachineName;
+                string databaseServerMachineName = selectedEnvironment.DatabaseServers.First().MachineName;
                 string connectionString = string.Format("Server={0};Integrated Security=SSPI", databaseServerMachineName);
 
                 using (var dbConnection = new SqlConnection(connectionString))
@@ -436,7 +436,7 @@ namespace UberDeployer.WinApp.Forms
 
       public string Server
       {
-        get { return EnvironmentInfo.DatabaseServerMachineName; }
+        get { return EnvironmentInfo.DatabaseServers.First().MachineName; }
       }
 
       // ReSharper restore UnusedMember.Local

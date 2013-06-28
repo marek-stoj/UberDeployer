@@ -26,30 +26,6 @@ namespace UberDeployer.Core.Tests.Domain
     private const int _ScheduledHour = 1;
     private const int _ScheduledMinute = 1;
 
-    private static readonly List<EnvironmentUser> _EnvironmentUsers =
-      new List<EnvironmentUser>
-        {
-          new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
-        };
-
-    private static readonly List<IisAppPoolInfo> _AppPoolInfos =
-      new List<IisAppPoolInfo>()
-      {
-        new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
-      };
-
-    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
-      new List<WebAppProjectConfiguration>
-      {
-        new WebAppProjectConfiguration("prj1", "website", "apppool", "dir", "prj1"),
-      };
-
-    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
-      new List<ProjectToFailoverClusterGroupMapping>
-        {
-          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
-        };
-
     private Mock<IObjectFactory> _objectFactoryFake;
 
     [SetUp]
@@ -203,7 +179,7 @@ namespace UberDeployer.Core.Tests.Domain
     {
       string machine = Environment.MachineName;
       const string baseDirPath = "c:\\basedir";
-      
+
       var envInfo =
         new EnvironmentInfo(
           "name",
@@ -213,16 +189,17 @@ namespace UberDeployer.Core.Tests.Domain
           new[] { "webmachine" },
           "terminalmachine",
           machine,
-          "databasemachine",
           baseDirPath,
           "webbasedir",
           "c:\\scheduler",
           "terminal",
           false,
-          _EnvironmentUsers,
-          _AppPoolInfos,
-          _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings,
+          TestData._EnvironmentUsers,
+          TestData._AppPoolInfos,
+          TestData._DatabaseServers,
+          TestData._WebAppProjectConfigurations,
+          TestData._ProjectToFailoverClusterGroupMappings,
+          TestData._DbProjectConfigurations,
           "terminalAppsShortcutFolder");
 
       var schedulerAppProjectInfo =

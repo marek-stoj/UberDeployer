@@ -25,12 +25,15 @@ namespace UberDeployer.Agent.Service
 
       Mapper.CreateMap<Core.Domain.IisAppPoolInfo, Proxy.Dto.IisAppPoolInfo>();
 
+      Mapper.CreateMap<Core.Domain.DatabaseServer, Proxy.Dto.DatabaseServer>();
+
       Mapper.CreateMap<Core.Domain.EnvironmentInfo, Proxy.Dto.EnvironmentInfo>();
 
       Mapper.CreateMap<Core.Domain.EnvironmentUser, Proxy.Dto.EnvironmentUser>();
 
       Mapper.CreateMap<Core.Domain.WebAppProjectConfiguration, Proxy.Dto.WebAppProjectConfiguration>();
       Mapper.CreateMap<Core.Domain.ProjectToFailoverClusterGroupMapping, Proxy.Dto.ProjectToFailoverClusterGroupMapping>();
+      Mapper.CreateMap<Core.Domain.DbProjectConfiguration, Proxy.Dto.DbProjectConfiguration>();
 
       Mapper.CreateMap<Core.TeamCity.Models.ProjectConfiguration, Proxy.Dto.TeamCity.ProjectConfiguration>();
 

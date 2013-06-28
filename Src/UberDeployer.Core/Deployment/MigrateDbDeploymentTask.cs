@@ -39,6 +39,14 @@ namespace UberDeployer.Core.Deployment
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
       DbProjectInfo projectInfo = GetProjectInfo<DbProjectInfo>();
 
+      DbProjectConfiguration dbProjectConfiguration =
+        environmentInfo.GetDbProjectConfiguration(projectInfo.Name);
+
+      DatabaseServer databaseServer =
+        environmentInfo.GetDatabaseServer(dbProjectConfiguration.DatabaseServerId);
+
+      string databaseServerMachineName = databaseServer.MachineName;
+
       // create a step for downloading the artifacts
       var downloadArtifactsDeploymentStep =
         new DownloadArtifactsDeploymentStep(
@@ -60,14 +68,12 @@ namespace UberDeployer.Core.Deployment
       
       AddSubTask(extractArtifactsDeploymentStep);
 
-      //var bin = new Func<ExtractArtifactsDeploymentStep, string>(e => e.BinariesDirPath);
-
       // create a step for gathering scripts to run
       var gatherDbScriptsToRunDeploymentStep =
         new GatherDbScriptsToRunDeploymentStep(
           projectInfo.DbName,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
-          environmentInfo.DatabaseServerMachineName,
+          databaseServerMachineName,
           environmentInfo.Name,
           _dbVersionProvider);
 
@@ -76,8 +82,8 @@ namespace UberDeployer.Core.Deployment
       // create a step for running scripts
       var runDbScriptsDeploymentStep =
         new RunDbScriptsDeploymentStep(
-          GetScriptRunner(environmentInfo.DatabaseServerMachineName),
-          environmentInfo.DatabaseServerMachineName,
+          GetScriptRunner(databaseServerMachineName),
+          databaseServerMachineName,
           new DeferredEnumerable<string>(() => gatherDbScriptsToRunDeploymentStep.ScriptsToRun));
 
       AddSubTask(runDbScriptsDeploymentStep);

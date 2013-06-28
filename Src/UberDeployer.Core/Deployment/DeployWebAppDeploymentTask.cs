@@ -97,7 +97,7 @@ namespace UberDeployer.Core.Deployment
       }
 
       WebAppProjectConfiguration configuration =
-        environmentInfo.GetWebProjectConfiguration(projectInfo.Name);
+        environmentInfo.GetWebAppProjectConfiguration(projectInfo.Name);
 
       string webSiteName = configuration.WebSiteName;
       string webAppName = configuration.WebAppName;

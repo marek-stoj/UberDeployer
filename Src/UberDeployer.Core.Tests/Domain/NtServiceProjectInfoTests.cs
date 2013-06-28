@@ -40,9 +40,14 @@ namespace UberDeployer.Core.Tests.Domain
     private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
       new List<WebAppProjectConfiguration>
       {
-        new WebAppProjectConfiguration("prj1", "website", "apppool", "dir", "prj1"),
+        new WebAppProjectConfiguration("webappprj", "website", "apppool", "dir", "webapp"),
       };
 
+    private static readonly List<DbProjectConfiguration> _DbProjectConfigurations =
+      new List<DbProjectConfiguration>
+      {
+        new DbProjectConfiguration("dbprj", "db_server"),
+      };
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
       new List<ProjectToFailoverClusterGroupMapping>
@@ -108,16 +113,17 @@ namespace UberDeployer.Core.Tests.Domain
           new[] { "webmachine" },
           "terminalmachine",
           "schedulermachine",
-          "databasemachine",
           baseDirPath,
           "webbasedir",
           "c:\\scheduler",
           "terminal",
           false,
-          _EnvironmentUsers,
-          _AppPoolInfos,
-          _WebAppProjectConfigurations,
-          _ProjectToFailoverClusterGroupMappings,
+          TestData._EnvironmentUsers,
+          TestData._AppPoolInfos,
+          TestData._DatabaseServers,
+          TestData._WebAppProjectConfigurations,
+          TestData._ProjectToFailoverClusterGroupMappings,
+          TestData._DbProjectConfigurations,
           "terminalAppsShortcutFolder");
 
       var projectInfo =

@@ -14,8 +14,10 @@ namespace UberDeployer.Core.Domain
     private readonly List<String> _webServerMachines;
     private readonly Dictionary<string, EnvironmentUser> _environmentUsersDict;
     private readonly Dictionary<string, IisAppPoolInfo> _appPoolInfosDict;
+    private readonly Dictionary<string, DatabaseServer> _databaseServersDict;
     private readonly Dictionary<string, WebAppProjectConfiguration> _webAppProjectConfigurationsDict;
     private readonly Dictionary<string, ProjectToFailoverClusterGroupMapping> _projectToFailoverClusterGroupMappingsDict;
+    private readonly Dictionary<string, DbProjectConfiguration> _dbProjectConfigurationsDict;
 
     #region Constructor(s)
 
@@ -27,7 +29,6 @@ namespace UberDeployer.Core.Domain
       IEnumerable<string> webServerMachineNames,
       string terminalServerMachineName,
       string schedulerServerMachineName,
-      string databaseServerMachineName,
       string ntServicesBaseDirPath,
       string webAppsBaseDirPath,
       string schedulerAppsBaseDirPath,
@@ -35,8 +36,10 @@ namespace UberDeployer.Core.Domain
       bool enableFailoverClusteringForNtServices,
       IEnumerable<EnvironmentUser> environmentUsers,
       IEnumerable<IisAppPoolInfo> appPoolInfos,
+      IEnumerable<DatabaseServer> databaseServers,
       IEnumerable<WebAppProjectConfiguration> webAppProjectConfigurations,
       IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings,
+      IEnumerable<DbProjectConfiguration> dbProjectConfigurations,
       string terminalAppShortcutFolder
       )
     {
@@ -52,7 +55,6 @@ namespace UberDeployer.Core.Domain
 
       Guard.NotNullNorEmpty(terminalServerMachineName, "terminalServerMachineName");
       Guard.NotNullNorEmpty(schedulerServerMachineName, "schedulerServerMachineName");
-      Guard.NotNullNorEmpty(databaseServerMachineName, "databaseServerMachineName");
       Guard.NotNullNorEmpty(ntServicesBaseDirPath, "ntServicesBaseDirPath");
       Guard.NotNullNorEmpty(webAppsBaseDirPath, "webAppsBaseDirPath");
       Guard.NotNullNorEmpty(schedulerAppsBaseDirPath, "schedulerAppsBaseDirPath");
@@ -83,6 +85,11 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("projectToFailoverClusterGroupMappings");
       }
 
+      if (dbProjectConfigurations == null)
+      {
+        throw new ArgumentNullException("dbProjectConfigurations");
+      }
+
       Guard.NotNullNorEmpty(name, "terminalAppShortcutPath");
 
       Name = name;
@@ -92,18 +99,20 @@ namespace UberDeployer.Core.Domain
       _webServerMachines = new List<string>(webServerMachineNames);
       TerminalServerMachineName = terminalServerMachineName;
       SchedulerServerMachineName = schedulerServerMachineName;
-      DatabaseServerMachineName = databaseServerMachineName;
       NtServicesBaseDirPath = ntServicesBaseDirPath;
       WebAppsBaseDirPath = webAppsBaseDirPath;
       SchedulerAppsBaseDirPath = schedulerAppsBaseDirPath;
       TerminalAppsBaseDirPath = terminalAppsBaseDirPath;
       EnableFailoverClusteringForNtServices = enableFailoverClusteringForNtServices;
 
-      _environmentUsersDict = environmentUsers.ToDictionary(eu => eu.Id);
-      _appPoolInfosDict = appPoolInfos.ToDictionary(api => api.Name);
+      _environmentUsersDict = environmentUsers.ToDictionary(e => e.Id);
+      _appPoolInfosDict = appPoolInfos.ToDictionary(e => e.Name);
+      _databaseServersDict = databaseServers.ToDictionary(e => e.Id);
 
-      _webAppProjectConfigurationsDict = webAppProjectConfigurations.ToDictionary(ptfcgm => ptfcgm.ProjectName);
-      _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(ptfcgm => ptfcgm.ProjectName);
+      _webAppProjectConfigurationsDict = webAppProjectConfigurations.ToDictionary(e => e.ProjectName);
+      _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(e => e.ProjectName);
+      _dbProjectConfigurationsDict = dbProjectConfigurations.ToDictionary(e => e.ProjectName);
+
       TerminalAppsShortcutFolder = terminalAppShortcutFolder;
     }
 
@@ -234,7 +243,7 @@ namespace UberDeployer.Core.Domain
       return null;
     }
 
-    public WebAppProjectConfiguration GetWebProjectConfiguration(string projectName)
+    public WebAppProjectConfiguration GetWebAppProjectConfiguration(string projectName)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
 
@@ -245,7 +254,7 @@ namespace UberDeployer.Core.Domain
         return configuration;
       }
 
-      throw new ArgumentException(string.Format("Project named '{0}' has no configuration for environment '{1}'.", projectName, Name));
+      throw new ArgumentException(string.Format("Web app project named '{0}' has no configuration for environment '{1}'.", projectName, Name));
     }
 
     public string GetFailoverClusterGroupNameForProject(string projectName)
@@ -262,6 +271,20 @@ namespace UberDeployer.Core.Domain
       return null;
     }
 
+    public DbProjectConfiguration GetDbProjectConfiguration(string projectName)
+    {
+      Guard.NotNullNorEmpty(projectName, "projectName");
+
+      DbProjectConfiguration configuration;
+
+      if (_dbProjectConfigurationsDict.TryGetValue(projectName, out configuration))
+      {
+        return configuration;
+      }
+
+      throw new ArgumentException(string.Format("Db project named '{0}' has no configuration for environment '{1}'.", projectName, Name));
+    }
+
     public IisAppPoolInfo GetAppPoolInfo(string appPoolId)
     {
       Guard.NotNullNorEmpty(appPoolId, "appPoolId");
@@ -274,6 +297,20 @@ namespace UberDeployer.Core.Domain
       }
 
       throw new ArgumentException(string.Format("App pool with id '{0}' is not defined for environment '{1}'.", appPoolId, Name));
+    }
+
+    public DatabaseServer GetDatabaseServer(string databaseServerId)
+    {
+      Guard.NotNullNorEmpty(databaseServerId, "databaseServerId");
+
+      DatabaseServer databaseServer;
+
+      if (_databaseServersDict.TryGetValue(databaseServerId, out databaseServer))
+      {
+        return databaseServer;
+      }
+
+      throw new ArgumentException(string.Format("Database server with id '{0}' is not defined for environment '{1}'.", databaseServerId, Name));
     }
 
     #endregion
@@ -312,8 +349,6 @@ namespace UberDeployer.Core.Domain
 
     public string SchedulerServerMachineName { get; private set; }
 
-    public string DatabaseServerMachineName { get; private set; }
-
     public string NtServicesBaseDirPath { get; set; }
 
     public string WebAppsBaseDirPath { get; set; }
@@ -344,6 +379,11 @@ namespace UberDeployer.Core.Domain
     public IEnumerable<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings
     {
       get { return _projectToFailoverClusterGroupMappingsDict.Values; }
+    }
+
+    public IEnumerable<DbProjectConfiguration> DbProjectConfigurations
+    {
+      get { return _dbProjectConfigurationsDict.Values; }
     }
 
     #endregion

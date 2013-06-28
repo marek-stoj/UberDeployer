@@ -104,7 +104,6 @@ namespace UberDeployer.Agent.Service.Tests
         expectedWebMachineNames,
         "terminalServerMachineName",
         "schedulerServerMachineName",
-        "databaseServerMachineName",
         "ntServiceDirPath",
         "webAppsBaseDirPath",
         "schedulerAppsBaseDirPath",
@@ -112,8 +111,10 @@ namespace UberDeployer.Agent.Service.Tests
         false,
         new[] { new EnvironmentUser("id", "user") },
         new[] { new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated), },
-        new[] { new WebAppProjectConfiguration("prj1", "website", "apppool", "dir", "prj1"), },
+        new[] { new DatabaseServer("db_server_id", "db_server"), },
+        new[] { new WebAppProjectConfiguration("webappprj", "website", "apppool", "dir", "webapp"), },
         new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") },
+        new[] { new DbProjectConfiguration("dbprj", "db_server"), },
         "terminalAppsShortcutFolder");
     }
   }

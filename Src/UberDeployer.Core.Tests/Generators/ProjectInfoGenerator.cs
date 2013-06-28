@@ -23,7 +23,7 @@ namespace UberDeployer.Core.Tests.Generators
     {
       return
         new WebAppProjectInfo(
-          "name",
+          "webappprj",
           "artifacts_repository_name",
           "artifacts_repository_dir_name",
           true);
@@ -43,7 +43,7 @@ namespace UberDeployer.Core.Tests.Generators
     {
       return
         new DbProjectInfo(
-          "name",
+          "dbprj",
           "artifacts_repository_name",
           "artifacts_repository_dir_name",
           !areEnvironmentSpecific,
