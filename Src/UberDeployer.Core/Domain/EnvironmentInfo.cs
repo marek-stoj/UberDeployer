@@ -371,6 +371,11 @@ namespace UberDeployer.Core.Domain
       get { return _appPoolInfosDict.Values; }
     }
 
+    public IEnumerable<DatabaseServer> DatabaseServers
+    {
+      get { return _databaseServersDict.Values; }
+    }
+
     public IEnumerable<WebAppProjectConfiguration> WebAppProjectConfigurations
     {
       get { return _webAppProjectConfigurationsDict.Values; }
