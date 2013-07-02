@@ -91,16 +91,17 @@ namespace UberDeployer.Core.Tests.Domain
         _WebMachineNames,
         _TerminalMachineName,
         _SchedulerMachineName,
-        _DatabaseMachineName,
         _NtServicesBaseDirPath,
         _WebAppsBaseDirPath,
         _SchedulerAppsBaseDirPath,
         _TerminalAppsBaseDirPath,
         false,
-        _EnvironmentUsers,
-        _AppPoolInfos,
-        _WebAppProjectConfigurations,
-        _ProjectToFailoverClusterGroupMappings,
+        TestData._EnvironmentUsers,
+        TestData._AppPoolInfos,
+        TestData._DatabaseServers,
+        TestData._WebAppProjectConfigurations,
+        TestData._ProjectToFailoverClusterGroupMappings,
+        TestData._DbProjectConfigurations,
         _TerminalAppsShortcutFolder);
 
       Assert.Throws<ArgumentException>(
