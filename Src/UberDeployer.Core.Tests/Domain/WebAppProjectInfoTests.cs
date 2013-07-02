@@ -74,12 +74,12 @@ namespace UberDeployer.Core.Tests.Domain
           "c:\\scheduler",
           "terminal",
           false,
-          TestData._EnvironmentUsers,
-          TestData._AppPoolInfos,
-          TestData._DatabaseServers,
-          TestData._WebAppProjectConfigurations,
-          TestData._ProjectToFailoverClusterGroupMappings,
-          TestData._DbProjectConfigurations,
+          TestData.EnvironmentUsers,
+          TestData.AppPoolInfos,
+          TestData.DatabaseServers,
+          TestData.WebAppProjectConfigurations,
+          TestData.ProjectToFailoverClusterGroupMappings,
+          TestData.DbProjectConfigurations,
           "terminalAppsShortcutFolder");
 
       var projectInfo =
@@ -112,12 +112,12 @@ namespace UberDeployer.Core.Tests.Domain
           "c:\\scheduler",
           "terminal",
           false,
-          TestData._EnvironmentUsers,
-          TestData._AppPoolInfos,
-          TestData._DatabaseServers,
-          TestData._WebAppProjectConfigurations,
-          TestData._ProjectToFailoverClusterGroupMappings,
-          TestData._DbProjectConfigurations,
+          TestData.EnvironmentUsers,
+          TestData.AppPoolInfos,
+          TestData.DatabaseServers,
+          TestData.WebAppProjectConfigurations,
+          TestData.ProjectToFailoverClusterGroupMappings,
+          TestData.DbProjectConfigurations,
           "terminalAppsShortcutFolder");
 
       var projectInfo =

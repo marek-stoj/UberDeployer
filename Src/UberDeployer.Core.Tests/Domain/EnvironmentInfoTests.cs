@@ -41,12 +41,12 @@ namespace UberDeployer.Core.Tests.Domain
             _SchedulerAppsBaseDirPath,
             _TerminalAppsBaseDirPath,
             false,
-            TestData._EnvironmentUsers,
-            TestData._AppPoolInfos,
-            TestData._DatabaseServers,
-            TestData._WebAppProjectConfigurations,
-            TestData._ProjectToFailoverClusterGroupMappings,
-            TestData._DbProjectConfigurations,
+            TestData.EnvironmentUsers,
+            TestData.AppPoolInfos,
+            TestData.DatabaseServers,
+            TestData.WebAppProjectConfigurations,
+            TestData.ProjectToFailoverClusterGroupMappings,
+            TestData.DbProjectConfigurations,
             _TerminalAppsShortcutFolder);
         });
     }
@@ -70,12 +70,12 @@ namespace UberDeployer.Core.Tests.Domain
             _SchedulerAppsBaseDirPath,
             _TerminalAppsBaseDirPath,
             false,
-            TestData._EnvironmentUsers,
-            TestData._AppPoolInfos,
-            TestData._DatabaseServers,
-            TestData._WebAppProjectConfigurations,
-            TestData._ProjectToFailoverClusterGroupMappings,
-            TestData._DbProjectConfigurations,
+            TestData.EnvironmentUsers,
+            TestData.AppPoolInfos,
+            TestData.DatabaseServers,
+            TestData.WebAppProjectConfigurations,
+            TestData.ProjectToFailoverClusterGroupMappings,
+            TestData.DbProjectConfigurations,
             _TerminalAppsShortcutFolder);
         });
     }
@@ -96,12 +96,12 @@ namespace UberDeployer.Core.Tests.Domain
         _SchedulerAppsBaseDirPath,
         _TerminalAppsBaseDirPath,
         false,
-        TestData._EnvironmentUsers,
-        TestData._AppPoolInfos,
-        TestData._DatabaseServers,
-        TestData._WebAppProjectConfigurations,
-        TestData._ProjectToFailoverClusterGroupMappings,
-        TestData._DbProjectConfigurations,
+        TestData.EnvironmentUsers,
+        TestData.AppPoolInfos,
+        TestData.DatabaseServers,
+        TestData.WebAppProjectConfigurations,
+        TestData.ProjectToFailoverClusterGroupMappings,
+        TestData.DbProjectConfigurations,
         _TerminalAppsShortcutFolder);
 
       Assert.Throws<ArgumentException>(
@@ -125,12 +125,12 @@ namespace UberDeployer.Core.Tests.Domain
           _SchedulerAppsBaseDirPath,
           _TerminalAppsBaseDirPath,
           false,
-          TestData._EnvironmentUsers,
-          TestData._AppPoolInfos,
-          TestData._DatabaseServers,
-          TestData._WebAppProjectConfigurations,
-          TestData._ProjectToFailoverClusterGroupMappings,
-          TestData._DbProjectConfigurations,
+          TestData.EnvironmentUsers,
+          TestData.AppPoolInfos,
+          TestData.DatabaseServers,
+          TestData.WebAppProjectConfigurations,
+          TestData.ProjectToFailoverClusterGroupMappings,
+          TestData.DbProjectConfigurations,
           _TerminalAppsShortcutFolder);
 
       Assert.Throws<ArgumentException>(
@@ -154,12 +154,12 @@ namespace UberDeployer.Core.Tests.Domain
           _SchedulerAppsBaseDirPath,
           _TerminalAppsBaseDirPath,
           false,
-          TestData._EnvironmentUsers,
-          TestData._AppPoolInfos,
-          TestData._DatabaseServers,
-          TestData._WebAppProjectConfigurations,
-          TestData._ProjectToFailoverClusterGroupMappings,
-          TestData._DbProjectConfigurations,
+          TestData.EnvironmentUsers,
+          TestData.AppPoolInfos,
+          TestData.DatabaseServers,
+          TestData.WebAppProjectConfigurations,
+          TestData.ProjectToFailoverClusterGroupMappings,
+          TestData.DbProjectConfigurations,
           _TerminalAppsShortcutFolder);
 
       Assert.AreEqual(

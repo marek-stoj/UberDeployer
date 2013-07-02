@@ -26,11 +26,11 @@ namespace UberDeployer.Core.Tests.Generators
           "X:\\terminal_apps_base_dir_path",
           false,
           new[] { user, },
-          TestData._AppPoolInfos,
-          TestData._DatabaseServers,
-          TestData._WebAppProjectConfigurations,
-          TestData._ProjectToFailoverClusterGroupMappings,
-          TestData._DbProjectConfigurations,
+          TestData.AppPoolInfos,
+          TestData.DatabaseServers,
+          TestData.WebAppProjectConfigurations,
+          TestData.ProjectToFailoverClusterGroupMappings,
+          TestData.DbProjectConfigurations,
           "X:\\terminal_apps_shortcut_folder");
     }
 
