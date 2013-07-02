@@ -135,7 +135,7 @@ namespace UberDeployer.Core.Domain
 
       string baseDirPath =
         environmentInfo.GetTerminalServerNetworkPath(
-          Path.Combine(environmentInfo.GetTerminalAppsBaseDirPath(environmentInfo.TerminalServerMachineName), TerminalAppDirName));
+          Path.Combine(environmentInfo.TerminalAppsBaseDirPath, TerminalAppDirName));
 
       string latestVersionDirPath =
         FindLatestVersionDirPath(

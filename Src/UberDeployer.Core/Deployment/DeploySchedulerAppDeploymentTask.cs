@@ -49,8 +49,7 @@ namespace UberDeployer.Core.Deployment
       _projectInfo = GetProjectInfo<SchedulerAppProjectInfo>();
 
       string machineName = environmentInfo.SchedulerServerMachineName;
-      string schedulerAppsBaseDirPath = environmentInfo.GetSchedulerAppsBaseDirPath(environmentInfo.SchedulerServerMachineName);
-      string targetDirPath = Path.Combine(schedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
+      string targetDirPath = Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, _projectInfo.SchedulerAppDirName);
       string targetDirNetworkPath = environmentInfo.GetSchedulerServerNetworkPath(targetDirPath);
       string executablePath = Path.Combine(targetDirPath, _projectInfo.SchedulerAppExeName);
 
