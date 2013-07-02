@@ -73,7 +73,7 @@ namespace UberDeployer.Core.Domain
 
         return
           possibleNodeNames
-            .Select(node => EnvironmentInfo.GetNetworkPath(node, Path.Combine(environmentInfo.GetNtServicesBaseDirPath(node), NtServiceDirName)))
+            .Select(node => EnvironmentInfo.GetNetworkPath(node, Path.Combine(environmentInfo.NtServicesBaseDirPath, NtServiceDirName)))
             .ToList();
       }
       else
@@ -82,7 +82,7 @@ namespace UberDeployer.Core.Domain
           new List<string>
           {
             environmentInfo.GetAppServerNetworkPath(
-              Path.Combine(environmentInfo.GetNtServicesBaseDirPath(environmentInfo.AppServerMachineName), NtServiceDirName))
+              Path.Combine(environmentInfo.NtServicesBaseDirPath, NtServiceDirName))
           };
       }
     }

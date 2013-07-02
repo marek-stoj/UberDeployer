@@ -244,7 +244,7 @@ namespace UberDeployer.Core.Deployment
           _projectInfo.NtServiceName,
           machineName,
           environmentInfo.NtServicesBaseDirPath,
-          absolutePath => EnvironmentInfo.GetNetworkPath(machineName, absolutePath),
+          absoluteLocalPath => EnvironmentInfo.GetNetworkPath(machineName, absoluteLocalPath),
           artifactsBinariesDirPathProvider,
           collectCredentialsFunc(machineName),
           false);
@@ -275,7 +275,7 @@ namespace UberDeployer.Core.Deployment
         _projectInfo.NtServiceName,
         previousMachineName,
         environmentInfo.NtServicesBaseDirPath,
-        absolutePath => EnvironmentInfo.GetNetworkPath(previousMachineName, absolutePath),
+        absoluteLocalPath => EnvironmentInfo.GetNetworkPath(previousMachineName, absoluteLocalPath),
         artifactsBinariesDirPathProvider,
         collectCredentialsFunc(previousMachineName),
         false);
