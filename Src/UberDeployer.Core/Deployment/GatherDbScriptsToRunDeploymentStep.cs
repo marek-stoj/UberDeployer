@@ -88,8 +88,14 @@ namespace UberDeployer.Core.Deployment
       var dbVersionsSet = new HashSet<DbVersion>(dbVersionsList);
 
       // collect scripts that weren't executed on database
+      string[] scriptFilePaths =
+        Directory.GetFiles(
+          _scriptsDirectoryPathProvider.Value,
+          "*.sql",
+          SearchOption.TopDirectoryOnly);
+
       Dictionary<DbVersion, string> scriptsToRunDict =
-        (from filePath in Directory.GetFiles(_scriptsDirectoryPathProvider.Value, "*.sql", SearchOption.TopDirectoryOnly)
+        (from filePath in scriptFilePaths
          let dbVersion = DbVersion.FromString(Path.GetFileNameWithoutExtension(filePath))
          where !dbVersionsSet.Contains(dbVersion)
          select new { dbVersion, filePath })
