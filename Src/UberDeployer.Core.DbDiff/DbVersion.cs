@@ -50,13 +50,19 @@ namespace UberDeployer.Core.DbDiff
 
     public bool IsSmallerThan(DbVersion otherVersion)
     {
-      if (otherVersion == null) throw new ArgumentNullException("otherVersion");
+      if (otherVersion == null)
+      {
+        throw new ArgumentNullException("otherVersion");
+      }
 
-      return Major < otherVersion.Major
+      bool isSmaller =
+              Major < otherVersion.Major
           || (Major == otherVersion.Major && Minor < otherVersion.Minor)
           || (Minor == otherVersion.Minor && Revision < otherVersion.Revision)
           || (Revision == otherVersion.Revision && Build < otherVersion.Build)
           || (Build == otherVersion.Build && String.CompareOrdinal(Tail, otherVersion.Tail) < 0);
+
+      return isSmaller;
     }
 
     public bool IsEqualTo(DbVersion otherVersion)
@@ -76,6 +82,11 @@ namespace UberDeployer.Core.DbDiff
     // TODO IMM HI: what about nulls?
     public int CompareTo(DbVersion other)
     {
+      if (Equals(this, other))
+      {
+        return 0;
+      }
+
       return IsSmallerThan(other) ? -1 : 1;
     }
 

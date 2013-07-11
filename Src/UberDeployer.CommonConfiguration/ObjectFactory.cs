@@ -130,7 +130,7 @@ namespace UberDeployer.CommonConfiguration
 
     public IProjectMetadataExplorer CreateProjectMetadataExplorer()
     {
-      return new ProjectMetadataExplorer(this, CreateProjectInfoRepository(), CreateEnvironmentInfoRepository());
+      return new ProjectMetadataExplorer(this, CreateProjectInfoRepository(), CreateEnvironmentInfoRepository(), CreateDbVersionProvider());
     }
 
     #endregion

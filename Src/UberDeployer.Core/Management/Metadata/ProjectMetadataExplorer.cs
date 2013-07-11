@@ -5,9 +5,12 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.DbDiff;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Management.Db;
 using log4net;
 using UberDeployer.Common;
+using System.Linq;
 
 namespace UberDeployer.Core.Management.Metadata
 {
@@ -20,16 +23,19 @@ namespace UberDeployer.Core.Management.Metadata
     private readonly IObjectFactory _objectFactory;
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IEnvironmentInfoRepository _environmentInfoRepository;
+    private readonly IDbVersionProvider _dbVersionProvider;
 
-    public ProjectMetadataExplorer(IObjectFactory objectFactory, IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository)
+    public ProjectMetadataExplorer(IObjectFactory objectFactory, IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository, IDbVersionProvider dbVersionProvider)
     {
       Guard.NotNull(objectFactory, "objectFactory");
       Guard.NotNull(projectInfoRepository, "projectInfoRepository");
       Guard.NotNull(environmentInfoRepository, "environmentInfoRepository");
+      Guard.NotNull(dbVersionProvider, "dbVersionProvider");
 
       _objectFactory = objectFactory;
       _projectInfoRepository = projectInfoRepository;
       _environmentInfoRepository = environmentInfoRepository;
+      _dbVersionProvider = dbVersionProvider;
     }
 
     public ProjectMetadata GetProjectMetadata(string projectName, string environmentName)
@@ -55,6 +61,36 @@ namespace UberDeployer.Core.Management.Metadata
         throw new ArgumentException(string.Format("Environment named '{0}' doesn't exist.", environmentName));
       }
 
+      if (projectInfo is DbProjectInfo)
+      {
+        return GetDbProjectMetadata((DbProjectInfo)projectInfo, environmentInfo);
+      }
+      else
+      {
+        return GetOrdinaryProjectMetadata(projectInfo, environmentInfo);
+      }
+    }
+
+    private static bool TryExtractMachineName(string targetFolder, out string machineName)
+    {
+      Guard.NotNullNorEmpty(targetFolder, "targetFolder");
+
+      Match match = _MachineNameInNetworkPathRegex.Match(targetFolder);
+
+      if (match.Success)
+      {
+        machineName = match.Groups["MachineName"].Value;
+
+        return true;
+      }
+
+      machineName = null;
+
+      return false;
+    }
+
+    private ProjectMetadata GetOrdinaryProjectMetadata(ProjectInfo projectInfo, EnvironmentInfo environmentInfo)
+    {
       var projectVersions = new List<MachineSpecificProjectVersion>();
 
       IEnumerable<string> targetFolders =
@@ -94,25 +130,36 @@ namespace UberDeployer.Core.Management.Metadata
             projectVersion));
       }
 
-      return new ProjectMetadata(projectName, environmentName, projectVersions);
+      return new ProjectMetadata(projectInfo.Name, environmentInfo.Name, projectVersions);
     }
 
-    private static bool TryExtractMachineName(string targetFolder, out string machineName)
+    private ProjectMetadata GetDbProjectMetadata(DbProjectInfo dbProjectInfo, EnvironmentInfo environmentInfo)
     {
-      Guard.NotNullNorEmpty(targetFolder, "targetFolder");
+      var projectVersions = new List<MachineSpecificProjectVersion>();
 
-      Match match = _MachineNameInNetworkPathRegex.Match(targetFolder);
+      DbProjectConfiguration dbProjectConfiguration =
+        environmentInfo.GetDbProjectConfiguration(dbProjectInfo.Name);
 
-      if (match.Success)
+      DatabaseServer databaseServer =
+        environmentInfo.GetDatabaseServer(dbProjectConfiguration.DatabaseServerId);
+
+      IEnumerable<string> dbVersions =
+        _dbVersionProvider.GetVersions(
+          dbProjectInfo.DbName,
+          databaseServer.MachineName);
+
+      DbVersion latestDbVersion =
+        dbVersions
+          .Select(DbVersion.FromString)
+          .OrderByDescending(v => v)
+          .FirstOrDefault();
+
+      if (latestDbVersion != null)
       {
-        machineName = match.Groups["MachineName"].Value;
-
-        return true;
+        projectVersions.Add(new MachineSpecificProjectVersion(databaseServer.MachineName, latestDbVersion.ToString()));
       }
 
-      machineName = null;
-
-      return false;
+      return new ProjectMetadata(dbProjectInfo.Name, environmentInfo.Name, projectVersions);
     }
   }
 }

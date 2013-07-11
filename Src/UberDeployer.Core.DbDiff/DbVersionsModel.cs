@@ -206,7 +206,6 @@ namespace UberDeployer.Core.DbDiff
     {
       var sortedDbVersions = new List<string>(allDbVersions);
 
-      // TODO IMM HI: this sort is probably not consistent and may result in an exception - one has to use Equals here to return consistent results
       sortedDbVersions.Sort(
         (dbVersion1String, dbVersion2String) =>
           {
@@ -246,7 +245,7 @@ namespace UberDeployer.Core.DbDiff
               return 1;
             }
 
-            return dbVersion1.IsSmallerThan(dbVersion2) ? -1 : 1;
+            return dbVersion1.CompareTo(dbVersion2);
           });
 
       return sortedDbVersions;
