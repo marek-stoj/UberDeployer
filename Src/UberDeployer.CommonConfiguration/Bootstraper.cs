@@ -31,7 +31,7 @@ namespace UberDeployer.CommonConfiguration
     private static readonly string _ProjectInfoPath = Path.Combine(_BaseDirPath, @"Data\ProjectInfos.xml");
     private static readonly string _EnvironmentInfoPath = Path.Combine(_BaseDirPath, @"Data\EnvironmentInfos.xml");
 
-    private static readonly TimeSpan _NtServiceManagerOperationsTimeout = TimeSpan.FromMinutes(1);
+    private static readonly TimeSpan _NtServiceManagerOperationsTimeout = TimeSpan.FromMinutes(2);
 
     private static ISessionFactory _sessionFactory;
 
