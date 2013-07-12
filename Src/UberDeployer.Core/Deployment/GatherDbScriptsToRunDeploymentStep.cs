@@ -109,7 +109,8 @@ namespace UberDeployer.Core.Deployment
           .ToDictionary(x => x.Key, x => x.Value);
 
       IEnumerable<DbVersion> scriptsToRunOlderThanCurrentVersion =
-        scriptsToRunDict.Keys.Except(scriptsNewerThanCurrentVersion.Keys);
+        scriptsToRunDict.Keys.Except(scriptsNewerThanCurrentVersion.Keys)
+          .OrderBy(v => v);
 
       foreach (DbVersion dbVersion in scriptsToRunOlderThanCurrentVersion)
       {

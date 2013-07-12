@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{42554C30-1E25-4ABC-814C-A4B624713212}</ProjectGuid>
+    <ProjectGuid>{B07F92E4-2B43-419D-981D-11BBBFC78352}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UberDeployer.Core.DbDiff</RootNamespace>
-    <AssemblyName>UberDeployer.Core.DbDiff</AssemblyName>
+    <RootNamespace>UberDeployer.Core.DbDiff.Tests</RootNamespace>
+    <AssemblyName>UberDeployer.Core.DbDiff.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Lib\NUnit\framework\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,17 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbVersion.cs" />
-    <Compile Include="DbVersionsModel.cs" />
+    <Compile Include="DbVersionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="README.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UberDeployer.Common\UberDeployer.Common.csproj">
-      <Project>{256FF6D7-F1B8-43E7-97CA-7A63455C0BE6}</Project>
-      <Name>UberDeployer.Common</Name>
+    <ProjectReference Include="..\UberDeployer.Core.DbDiff\UberDeployer.Core.DbDiff.csproj">
+      <Project>{42554C30-1E25-4ABC-814C-A4B624713212}</Project>
+      <Name>UberDeployer.Core.DbDiff</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

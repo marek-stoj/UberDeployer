@@ -62,7 +62,7 @@ namespace UberDeployer.ConsoleApp.Commands
           ObjectFactory.Instance.CreateDeploymentPipeline();
 
         deploymentPipeline.DiagnosticMessagePosted +=
-          (sender, tmpArgs) => LogMessage(tmpArgs.Message);
+          (sender, tmpArgs) => LogMessage(tmpArgs.Message, tmpArgs.MessageType);
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
@@ -72,7 +72,7 @@ namespace UberDeployer.ConsoleApp.Commands
       }
       catch (Exception exc)
       {
-        LogMessage("Error: " + exc);
+        LogMessage("Error: " + exc, DiagnosticMessageType.Error);
 
         return 1;
       }
@@ -83,9 +83,9 @@ namespace UberDeployer.ConsoleApp.Commands
       OutputWriter.WriteLine("Usage: {0} project projectConfiguration buildId targetEnvironment", CommandName);
     }
 
-    protected void LogMessage(string message)
+    protected void LogMessage(string message, DiagnosticMessageType messageType)
     {
-      OutputWriter.WriteLine(message);
+      OutputWriter.WriteLine("[{0}] {1}", messageType.ToString(), message);
     }
 
     public override string CommandName

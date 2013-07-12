@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Core.DbDiff
 {
@@ -50,19 +51,46 @@ namespace UberDeployer.Core.DbDiff
 
     public bool IsSmallerThan(DbVersion otherVersion)
     {
-      if (otherVersion == null)
+      Guard.NotNull(otherVersion, "otherVersion");
+      
+      if (Major < otherVersion.Major)
       {
-        throw new ArgumentNullException("otherVersion");
+        return true;
       }
 
-      bool isSmaller =
-              Major < otherVersion.Major
-          || (Major == otherVersion.Major && Minor < otherVersion.Minor)
-          || (Minor == otherVersion.Minor && Revision < otherVersion.Revision)
-          || (Revision == otherVersion.Revision && Build < otherVersion.Build)
-          || (Build == otherVersion.Build && String.CompareOrdinal(Tail, otherVersion.Tail) < 0);
+      if (Major == otherVersion.Major)
+      {
+        if (Minor < otherVersion.Minor)
+        {
+          return true;
+        }
 
-      return isSmaller;
+        if (Minor == otherVersion.Minor)
+        {
+          if (Revision < otherVersion.Revision)
+          {
+            return true;
+          }
+
+          if (Revision == otherVersion.Revision)
+          {
+            if (Build < otherVersion.Build)
+            {
+              return true;
+            }
+
+            if (Build == otherVersion.Build)
+            {
+              if (String.CompareOrdinal(Tail, otherVersion.Tail) < 0)
+              {
+                return true;
+              }
+            }
+          }
+        }
+      }
+
+      return false;
     }
 
     public bool IsEqualTo(DbVersion otherVersion)
@@ -79,9 +107,10 @@ namespace UberDeployer.Core.DbDiff
 
     #region IComparable<DbVersion> members
 
-    // TODO IMM HI: what about nulls?
     public int CompareTo(DbVersion other)
     {
+      Guard.NotNull(other, "other");
+
       if (Equals(this, other))
       {
         return 0;

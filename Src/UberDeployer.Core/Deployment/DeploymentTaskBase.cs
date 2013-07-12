@@ -8,6 +8,12 @@ namespace UberDeployer.Core.Deployment
 
     #region Public methods
 
+    public void PrepareAndExecute()
+    {
+      Prepare();
+      Execute();
+    }
+
     public void Prepare()
     {
       if (IsPrepared)
@@ -30,12 +36,6 @@ namespace UberDeployer.Core.Deployment
       }
 
       DoExecute();
-    }
-
-    public void PrepareAndExecute()
-    {
-      Prepare();
-      Execute();
     }
 
     public abstract string Description { get; }

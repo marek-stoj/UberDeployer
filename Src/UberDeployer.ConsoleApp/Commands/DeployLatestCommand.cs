@@ -118,7 +118,7 @@ namespace UberDeployer.ConsoleApp.Commands
           ObjectFactory.Instance.CreateDeploymentPipeline();
 
         deploymentPipeline.DiagnosticMessagePosted +=
-          (eventSender, tmpArgs) => LogMessage(tmpArgs.Message);
+          (eventSender, tmpArgs) => LogMessage(tmpArgs.Message, tmpArgs.MessageType);
 
         var deploymentContext = new DeploymentContext(RequesterIdentity);
 
@@ -128,7 +128,7 @@ namespace UberDeployer.ConsoleApp.Commands
       }
       catch (Exception exc)
       {
-        LogMessage("Error: " + exc);
+        LogMessage("Error: " + exc, DiagnosticMessageType.Error);
 
         return 1;
       }

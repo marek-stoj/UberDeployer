@@ -111,7 +111,7 @@
     <Compile Include="Management\Db\IDbScriptRunner.cs" />
     <Compile Include="Management\Db\IDbScriptRunnerFactory.cs" />
     <Compile Include="Deployment\DiagnosticMessageType.cs" />
-    <Compile Include="Deployment\MigrateDbDeploymentTask.cs" />
+    <Compile Include="Deployment\DeployDbProjectDeploymentTask.cs" />
     <Compile Include="Management\Db\IDbVersionProvider.cs" />
     <Compile Include="Management\Db\MsSqlDbScriptRunnerFactory.cs" />
     <Compile Include="Deployment\RunDbScriptsDeploymentStep.cs" />

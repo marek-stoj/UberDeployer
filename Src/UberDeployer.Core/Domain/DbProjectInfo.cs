@@ -37,7 +37,7 @@ namespace UberDeployer.Core.Domain
       }
 
       return
-        new MigrateDbDeploymentTask(
+        new DeployDbProjectDeploymentTask(
           objectFactory.CreateProjectInfoRepository(),
           objectFactory.CreateEnvironmentInfoRepository(),
           objectFactory.CreateArtifactsRepository(),

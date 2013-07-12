@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Deployment
 {
-  public class MigrateDbDeploymentTask : DeploymentTask
+  public class DeployDbProjectDeploymentTask : DeploymentTask
   {
     protected readonly IArtifactsRepository _artifactsRepository;
     protected readonly IDbScriptRunnerFactory _dbScriptRunnerFactory;
@@ -13,7 +16,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Constructor(s)
 
-    public MigrateDbDeploymentTask(
+    public DeployDbProjectDeploymentTask(
       IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
@@ -32,7 +35,7 @@ namespace UberDeployer.Core.Deployment
 
     #endregion
 
-    #region Overrides of DeploymentTaskBase
+    #region Overrides of DeploymentTask
 
     protected override void DoPrepare()
     {
@@ -89,13 +92,44 @@ namespace UberDeployer.Core.Deployment
       AddSubTask(runDbScriptsDeploymentStep);
     }
 
+    protected override void Simulate()
+    {
+      foreach (DeploymentTaskBase subTask in SubTasks)
+      {
+        subTask.Execute();
+
+        if (subTask is GatherDbScriptsToRunDeploymentStep)
+        {
+          var gatherDbScriptsToRunDeploymentStep =
+            (GatherDbScriptsToRunDeploymentStep)subTask;
+
+          List<string> scriptsToRun =
+            gatherDbScriptsToRunDeploymentStep.ScriptsToRun
+              .Select(scriptPath => Path.GetFileNameWithoutExtension(scriptPath))
+              .ToList();
+
+          string diagnosticMessage =
+            string.Format(
+              "Will run {0} script(s): {1}.",
+              scriptsToRun.Count,
+              scriptsToRun.Count > 0 ? string.Join(", ", scriptsToRun) : "(none)");
+
+          PostDiagnosticMessage(
+            diagnosticMessage,
+            DiagnosticMessageType.Info);
+
+          break;
+        }
+      }
+    }
+
     public override string Description
     {
       get
       {
         return
           string.Format(
-            "Migrate db '{0} ({1}:{2})' on '{3}'.",
+            "Deploy db project '{0} ({1}:{2})' on '{3}'.",
             DeploymentInfo.ProjectName,
             DeploymentInfo.ProjectConfigurationName,
             DeploymentInfo.ProjectConfigurationBuildId,

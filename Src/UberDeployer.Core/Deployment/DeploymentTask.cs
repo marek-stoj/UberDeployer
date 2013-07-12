@@ -75,6 +75,11 @@ namespace UberDeployer.Core.Deployment
             subTask.Execute();
           }
         }
+
+        if (DeploymentInfo.IsSimulation)
+        {
+          Simulate();
+        }
       }
       finally
       {
@@ -135,6 +140,11 @@ namespace UberDeployer.Core.Deployment
 
       // this will cause the events raised by sub-tasks to bubble up
       subTask.DiagnosticMessagePosted += OnDiagnosticMessagePosted;
+    }
+
+    protected virtual void Simulate()
+    {
+      // do nothing
     }
 
     protected string GetTempDirPath()

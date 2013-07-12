@@ -13,7 +13,7 @@ using UberDeployer.Core.Tests.TestUtils;
 namespace UberDeployer.Core.Tests.Deployment
 {
   [TestFixture]
-  public class MigrateDbDeploymentTaskTests
+  public class DeployDbProjectDeploymentTaskTests
   {
     private Mock<IProjectInfoRepository> _projectInfoRepositoryFake;
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
@@ -21,7 +21,7 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<IDbScriptRunnerFactory> _dbScriptRunnerFactoryFake;
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
 
-    private MigrateDbDeploymentTask _deploymentTask;
+    private DeployDbProjectDeploymentTask _deploymentTask;
 
     [SetUp]
     public void SetUp()
@@ -45,7 +45,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(new Mock<IDbScriptRunner>(MockBehavior.Loose).Object);
 
       _deploymentTask =
-        new MigrateDbDeploymentTask(
+        new DeployDbProjectDeploymentTask(
           _projectInfoRepositoryFake.Object,
           _environmentInfoRepositoryFake.Object,
           _artifactsRepositoryFake.Object,
@@ -64,7 +64,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       Assert.Throws(
         expectedExceptionType,
-        () => ReflectionTestTools.CreateInstance<MigrateDbDeploymentTask>(GetConstructorDefaultParams(), nullParamName));
+        () => ReflectionTestTools.CreateInstance<DeployDbProjectDeploymentTask>(GetConstructorDefaultParams(), nullParamName));
     }
 
     [Test]

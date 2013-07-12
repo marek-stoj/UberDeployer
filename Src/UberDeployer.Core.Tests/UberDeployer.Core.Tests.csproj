@@ -80,7 +80,7 @@
     <Compile Include="Deployment\ExtractVersionDeploymentStepTests.cs" />
     <Compile Include="Deployment\GatherDbScriptsToRunDeploymentStepTests.cs" />
     <Compile Include="Deployment\InstallNtServiceDeploymentStepTests.cs" />
-    <Compile Include="Deployment\MigrateDbDeploymentTaskTests.cs" />
+    <Compile Include="Deployment\DeployDbProjectDeploymentTaskTests.cs" />
     <Compile Include="Deployment\NtServiceControlDeploymentStepTests.cs" />
     <Compile Include="Deployment\CopyFilesDeploymentStepTests.cs" />
     <Compile Include="Deployment\Pipeline\DeploymentPipelineTests.cs" />
@@ -199,7 +199,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DbDiff\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
