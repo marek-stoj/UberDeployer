@@ -87,7 +87,7 @@ namespace UberDeployer.Core.Deployment
         new RunDbScriptsDeploymentStep(
           GetScriptRunner(databaseServerMachineName),
           databaseServerMachineName,
-          new DeferredEnumerable<string>(() => gatherDbScriptsToRunDeploymentStep.ScriptsToRun));
+          new DeferredEnumerable<DbScriptToRun>(() => gatherDbScriptsToRunDeploymentStep.ScriptsToRun));
 
       AddSubTask(runDbScriptsDeploymentStep);
     }
@@ -105,7 +105,7 @@ namespace UberDeployer.Core.Deployment
 
           List<string> scriptsToRun =
             gatherDbScriptsToRunDeploymentStep.ScriptsToRun
-              .Select(scriptPath => Path.GetFileNameWithoutExtension(scriptPath))
+              .Select(str => Path.GetFileNameWithoutExtension(str.ScriptPath))
               .ToList();
 
           string diagnosticMessage =

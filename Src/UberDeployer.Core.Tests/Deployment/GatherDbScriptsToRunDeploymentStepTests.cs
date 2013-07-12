@@ -84,7 +84,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       // assert
       Assert.AreEqual(1, _deploymentStep.ScriptsToRun.Count());
-      Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == notExecutedScript));
+      Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == notExecutedScript));
     }
 
     [Test]
@@ -102,7 +102,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deploymentStep.PrepareAndExecute();
 
       // assert
-      Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == scriptOlderThanCurrent));
+      Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == scriptOlderThanCurrent));
     }
 
     [Test]
@@ -120,7 +120,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deploymentStep.PrepareAndExecute();
 
       // assert
-      Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x) == notSupportedScript));
+      Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == notSupportedScript));
     }
 
     private OrderedDictionary GetDefaultConstructorParams()

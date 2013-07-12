@@ -16,7 +16,7 @@ namespace UberDeployer.Core.Deployment
     private readonly string _environmentName;
     private readonly IDbVersionProvider _dbVersionProvider;
 
-    private IEnumerable<string> _scriptsToRun = new List<string>();
+    private IEnumerable<DbScriptToRun> _scriptsToRun = new List<DbScriptToRun>();
 
     #region Constructor(s)
 
@@ -27,14 +27,14 @@ namespace UberDeployer.Core.Deployment
       Guard.NotNullNorEmpty(sqlServerName, "sqlServerName");
       Guard.NotNullNorEmpty(environmentName, "environmentName");
       Guard.NotNull(dbVersionProvider, "dbVersionProvider");
-      
+
       _dbName = dbName;
       _scriptsDirectoryPathProvider = scriptsDirectoryPathProvider;
       _sqlServerName = sqlServerName;
       _environmentName = environmentName;
       _dbVersionProvider = dbVersionProvider;
 
-      _scriptsToRun = Enumerable.Empty<string>();
+      _scriptsToRun = Enumerable.Empty<DbScriptToRun>();
     }
 
     #endregion
@@ -67,7 +67,7 @@ namespace UberDeployer.Core.Deployment
       return string.IsNullOrEmpty(scriptVersion.Tail);
     }
 
-    private IEnumerable<string> GetScriptsToRun()
+    private IEnumerable<DbScriptToRun> GetScriptsToRun()
     {
       // get db versions
       IEnumerable<string> versions =
@@ -124,9 +124,9 @@ namespace UberDeployer.Core.Deployment
 
       RemoveNotSupportedScripts(scriptsNewerThanCurrentVersion);
 
-      List<string> scriptsToRun =
+      List<DbScriptToRun> scriptsToRun =
         scriptsNewerThanCurrentVersion
-          .Select(x => x.Value)
+          .Select(x => new DbScriptToRun(x.Key, x.Value))
           .ToList();
 
       return scriptsToRun;
@@ -156,7 +156,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Properties
 
-    public IEnumerable<string> ScriptsToRun
+    public IEnumerable<DbScriptToRun> ScriptsToRun
     {
       get { return _scriptsToRun; }
     }

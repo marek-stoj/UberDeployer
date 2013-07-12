@@ -174,7 +174,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>51534</DevelopmentServerPort>
+          <DevelopmentServerPort>63515</DevelopmentServerPort>
           <DevelopmentServerVPath>/UberDeployer</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

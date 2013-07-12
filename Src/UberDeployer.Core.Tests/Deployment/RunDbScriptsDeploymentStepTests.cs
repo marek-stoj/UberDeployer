@@ -9,16 +9,18 @@ using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Tests.Deployment
 {
+  using UberDeployer.Core.DbDiff;
+
   [TestFixture]
   public class RunDbScriptsDeploymentStepTests
   {
     private const string _DatabaseServerName = "server_name";
 
-    private static readonly IEnumerable<string> _ScriptsToRun =
-      new List<string>
+    private static readonly IEnumerable<DbScriptToRun> _ScriptsToRun =
+      new List<DbScriptToRun>
         {
-          "TestData/TestSqlScripts/1.3.sql",
-          "TestData/TestSqlScripts/1.4.sql"
+          new DbScriptToRun(DbVersion.FromString("1.3"), "TestData/TestSqlScripts/1.3.sql"),
+          new DbScriptToRun(DbVersion.FromString("1.4"), "TestData/TestSqlScripts/1.4.sql"),
         };
 
     private Mock<IDbScriptRunner> _dbScriptRunnerFake;
@@ -74,12 +76,24 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoExecute_fails_on_not_existing_script()
     {
       // arrange
-      IEnumerable<string> notExistingScripts = new List<string>() { "someScript.sql" };
+      IEnumerable<DbScriptToRun> notExistingScripts = new List<DbScriptToRun>() { new DbScriptToRun(DbVersion.FromString("1.0"), "someScript.sql") };
 
       _deploymentStep = new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, notExistingScripts);
 
       // act, assert
       Assert.Throws<FileNotFoundException>(() => _deploymentStep.PrepareAndExecute());
+    }
+
+    [Test]
+    public void DoExecute_fails_on_nonversioned_script()
+    {
+      // arrange
+      IEnumerable<DbScriptToRun> nonVersionedScript = new List<DbScriptToRun>() { new DbScriptToRun(DbVersion.FromString("1.0"), "TestData/NonVersionedScript/01.NonVersionedScript.sql") };
+
+      _deploymentStep = new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, nonVersionedScript);
+
+      // act, assert
+      Assert.Throws<DeploymentTaskException>(() => _deploymentStep.PrepareAndExecute());
     }
   }
 }
