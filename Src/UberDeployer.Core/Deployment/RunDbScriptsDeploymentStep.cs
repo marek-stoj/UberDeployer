@@ -65,8 +65,11 @@ namespace UberDeployer.Core.Deployment
             using (var sr = new StreamReader(scriptPathToRun.ScriptPath))
             {
               string script = sr.ReadToEnd();
-
-              EnsureVersionInsertIsPresent(scriptPathToRun.DbVersion, script);
+              
+              if (!DbScriptToRun.IsVersionInsertPresent(scriptPathToRun.DbVersion, script))
+              {
+                throw new DeploymentTaskException(string.Format("Script {0} that should be run does not have necessary version insert.", scriptPathToRun.DbVersion));
+              }
 
               _dbScriptRunner.Execute(script);
 
@@ -90,32 +93,6 @@ namespace UberDeployer.Core.Deployment
         return string.Format("Run db scripts on server '{0}'.", _databaseServerMachineName);
       }
     }
-
-    #endregion
-
-    #region Private methods
-
-    // ReSharper disable UnusedParameter.Local
-
-    /// <summary>
-    /// Checks if script makes insert into version history table
-    /// </summary>
-    private static void EnsureVersionInsertIsPresent(DbVersion dbVersion, string script)
-    {
-      var versionInsertRegexes = 
-        new[] {
-          string.Format("insert (into)? version(history)?(.*?){0}\\.{1}", dbVersion.Major, dbVersion.Minor),
-          string.Format("insert into #temp (.*?)VALUES(.*?){0}\\.{1}", dbVersion.Major, dbVersion.Minor),
-        }
-      .Select(pattern => new Regex(pattern, RegexOptions.IgnoreCase));
-
-      if (!versionInsertRegexes.Any(r => r.IsMatch(script)))
-      {
-        throw new DeploymentTaskException(string.Format("Script {0} that should be run does not have necessary version insert.", dbVersion));
-      }
-    }
-    
-    // ReSharper restore UnusedParameter.Local
 
     #endregion
   }
