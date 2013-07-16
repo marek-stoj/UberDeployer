@@ -29,12 +29,32 @@ namespace UberDeployer.Core.Deployment
     {
       var versionInsertRegexes =
         new[] {
-          string.Format("insert\\s+(into)?\\s+\\[?version(history)?\\]?(.*?){0}\\.{1}", dbVersion.Major, dbVersion.Minor),
-          string.Format("insert\\s+into\\s+#temp\\s+(.*?)VALUES(.*?){0}\\.{1}", dbVersion.Major, dbVersion.Minor),
+          string.Format("insert\\s+(into)?\\s+\\[?version(history)?\\]?(.*?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
+          string.Format("insert\\s+into\\s+#temp\\s+(.*?)VALUES(.*?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
         }
       .Select(pattern => new Regex(pattern, RegexOptions.IgnoreCase));
 
       return versionInsertRegexes.Any(r => r.IsMatch(script));
+    }
+
+    private static object RevisionRegex(DbVersion dbVersion)
+    {
+      if (dbVersion.Revision == 0 && dbVersion.Build == 0)
+      {
+        return "(\\.0)?";
+      }
+
+      return "\\." + dbVersion.Revision;
+    }
+
+    private static object BuildRegex(DbVersion dbVersion)
+    {
+      if (dbVersion.Build == 0)
+      {
+        return "(\\.0)?";
+      }
+
+      return "\\." + dbVersion.Build;
     }
 
     // ReSharper restore UnusedParameter.Local
