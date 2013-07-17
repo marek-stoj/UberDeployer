@@ -59,7 +59,7 @@
     </div>
     <div class="row">
       <div class="span12">
-        <button id="btn-deploy" name="btn-deploy" class="btn btn-primary pull-right">
+        <button id="btn-deploy" name="btn-deploy" class="btn btn-primary pull-right" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
           Deploy
         </button>
         <button id="btn-simulate" name="btn-simulate" class="btn pull-right">

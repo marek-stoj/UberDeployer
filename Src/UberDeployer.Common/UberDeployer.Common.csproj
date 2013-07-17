@@ -36,6 +36,7 @@
       <HintPath>..\..\Lib\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSettingsUtils.cs" />
     <Compile Include="CollectionsExtensions.cs" />
     <Compile Include="IO\DirectoryAdapter.cs" />
     <Compile Include="IO\IDirectoryAdapter.cs" />
