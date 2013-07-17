@@ -207,6 +207,11 @@ namespace UberDeployer.WebApp.Core.Controllers
     [HttpPost]
     public ActionResult Deploy(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
     {
+      if (!SecurityUtils.CanDeploy)
+      {
+        return AccessDenied();
+      }
+
       return
         DoDeployOrSimulate(
           false,

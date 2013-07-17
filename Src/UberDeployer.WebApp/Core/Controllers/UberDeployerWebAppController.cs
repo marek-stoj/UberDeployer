@@ -11,6 +11,11 @@ namespace UberDeployer.WebApp.Core.Controllers
       return new HttpStatusCodeResult(400, "400 - Bad Request");
     }
 
+    protected HttpStatusCodeResult AccessDenied()
+    {
+      return new HttpStatusCodeResult(401, "401 - Unauthorized");
+    }
+
     protected static string UserIdentity
     {
       get
