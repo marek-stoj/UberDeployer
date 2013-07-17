@@ -29,8 +29,8 @@ namespace UberDeployer.Core.Deployment
     {
       var versionInsertRegexes =
         new[] {
-          string.Format("insert\\s+(into)?\\s+\\[?version(history)?\\]?(.*?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
-          string.Format("insert\\s+into\\s+#temp\\s+(.*?)VALUES(.*?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
+          string.Format("insert\\s+(into)?\\s+\\[?version(history)?\\]?(.+?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
+          string.Format("insert\\s+into\\s+#temp(.+?)VALUES(.*?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
         }
       .Select(pattern => new Regex(pattern, RegexOptions.IgnoreCase));
 
