@@ -10,6 +10,7 @@ namespace UberDeployer.Core.Tests.Generators
         new NtServiceProjectInfo(
           "name",
           "artifacts_repository_name",
+          new[] { "env_name" },
           "artifacts_repository_dir_name",
           !areEnvironmentSpecific,
           "nt_service_name",
@@ -25,6 +26,7 @@ namespace UberDeployer.Core.Tests.Generators
         new WebAppProjectInfo(
           "webappprj",
           "artifacts_repository_name",
+          new[] { "env_name" },
           "artifacts_repository_dir_name",
           true);
     }
@@ -35,6 +37,7 @@ namespace UberDeployer.Core.Tests.Generators
         new WebServiceProjectInfo(
           "name",
           "artifacts_repository_name",
+          new[] { "env_name" },
           "artifacts_repository_dir_name",
           true);
     }
@@ -45,6 +48,7 @@ namespace UberDeployer.Core.Tests.Generators
         new DbProjectInfo(
           "dbprj",
           "artifacts_repository_name",
+          new[] { "env_name" },
           "artifacts_repository_dir_name",
           !areEnvironmentSpecific,
           "database_name");
@@ -56,6 +60,7 @@ namespace UberDeployer.Core.Tests.Generators
         new TerminalAppProjectInfo(
           "name",
           "artifacts_repository_name",
+          new[] { "env_name" },
           "artifacts_repository_dir_name",
           true,
           "terminal_app_name",
@@ -69,6 +74,7 @@ namespace UberDeployer.Core.Tests.Generators
         new SchedulerAppProjectInfo(
           "name",
           "artifacts_repository_name",
+          new[] { "env_name" },
           "artifacts_repository_dir_name",
           true,
           "scheduler_app_name",

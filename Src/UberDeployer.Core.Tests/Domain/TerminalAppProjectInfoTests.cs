@@ -22,6 +22,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _TerminalAppName = "terminalAppName";
     private const string _TerminalAppDirName = "terminalAppDirName";
     private const string _TerminalAppExeName = "terminalAppExeName";
+    private static readonly string[] _AllowedEnvironmentNames = new[] { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
     private Mock<IDirectoryAdapter> _directoryAdapterFake;
@@ -42,16 +43,17 @@ namespace UberDeployer.Core.Tests.Domain
     {
       Assert.Throws<ArgumentException>(
         () =>
-          {
-            new TerminalAppProjectInfo(
+        {
+          new TerminalAppProjectInfo(
             null,
             _ArtifactsRepositoryName,
+            _AllowedEnvironmentNames,
             _ArtifactsRepositoryDirName,
             _ArtifactsAreNotEnvirionmentSpecific,
             _TerminalAppName,
             _TerminalAppDirName,
             _TerminalAppExeName);
-          });
+        });
     }
 
     [Test]
@@ -61,13 +63,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new TerminalAppProjectInfo(
-          _Name,
-          null,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvirionmentSpecific,
-          _TerminalAppName,
-          _TerminalAppDirName,
-          _TerminalAppExeName);
+            _Name,
+            null,
+            _AllowedEnvironmentNames,
+            _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
+            _TerminalAppName,
+            _TerminalAppDirName,
+            _TerminalAppExeName);
         });
     }
 
@@ -78,13 +81,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new TerminalAppProjectInfo(
-          _Name,
-          _ArtifactsRepositoryName,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvirionmentSpecific,
-          null,
-          _TerminalAppDirName,
-          _TerminalAppExeName);
+            _Name,
+            _ArtifactsRepositoryName,
+            _AllowedEnvironmentNames,
+            _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
+            null,
+            _TerminalAppDirName,
+            _TerminalAppExeName);
         });
     }
 
@@ -95,13 +99,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new TerminalAppProjectInfo(
-          _Name,
-          _ArtifactsRepositoryName,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvirionmentSpecific,
-          _TerminalAppName,
-          null,
-          _TerminalAppExeName);
+            _Name,
+            _ArtifactsRepositoryName,
+            _AllowedEnvironmentNames,
+            _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
+            _TerminalAppName,
+            null,
+            _TerminalAppExeName);
         });
     }
 
@@ -112,13 +117,14 @@ namespace UberDeployer.Core.Tests.Domain
         () =>
         {
           new TerminalAppProjectInfo(
-          _Name,
-          _ArtifactsRepositoryName,
-          _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvirionmentSpecific,
-          _TerminalAppName,
-          _TerminalAppDirName,
-          null);
+            _Name,
+            _ArtifactsRepositoryName,
+            _AllowedEnvironmentNames,
+            _ArtifactsRepositoryDirName,
+            _ArtifactsAreNotEnvirionmentSpecific,
+            _TerminalAppName,
+            _TerminalAppDirName,
+            null);
         });
     }
 
@@ -126,15 +132,16 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_CreateDeployemntTask_Throws_WhenObjectFactory_null()
     {
       var projectInfo = new TerminalAppProjectInfo(
-            _Name,
-            _ArtifactsRepositoryName,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _TerminalAppName,
-            _TerminalAppDirName,
-            _TerminalAppExeName);
+        _Name,
+        _ArtifactsRepositoryName,
+        _AllowedEnvironmentNames,
+        _ArtifactsRepositoryDirName,
+        _ArtifactsAreNotEnvirionmentSpecific,
+        _TerminalAppName,
+        _TerminalAppDirName,
+        _TerminalAppExeName);
 
-      Assert.Throws<ArgumentNullException>(()=>projectInfo.CreateDeploymentTask(null));
+      Assert.Throws<ArgumentNullException>(() => projectInfo.CreateDeploymentTask(null));
     }
 
     [Test]
@@ -148,13 +155,14 @@ namespace UberDeployer.Core.Tests.Domain
       var projInfoRepository = new Mock<IProjectInfoRepository>(MockBehavior.Strict);
 
       var projectInfo = new TerminalAppProjectInfo(
-            _Name,
-            _ArtifactsRepositoryName,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _TerminalAppName,
-            _TerminalAppDirName,
-            _TerminalAppExeName);
+        _Name,
+        _ArtifactsRepositoryName,
+        _AllowedEnvironmentNames,
+        _ArtifactsRepositoryDirName,
+        _ArtifactsAreNotEnvirionmentSpecific,
+        _TerminalAppName,
+        _TerminalAppDirName,
+        _TerminalAppExeName);
 
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
       objectFactory.Setup(o => o.CreateArtifactsRepository()).Returns(artifactsRepository.Object);
@@ -198,6 +206,7 @@ namespace UberDeployer.Core.Tests.Domain
         new TerminalAppProjectInfo(
           _Name,
           _ArtifactsRepositoryName,
+          _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
           _ArtifactsAreNotEnvirionmentSpecific,
           _TerminalAppName,
@@ -226,13 +235,14 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_GetTargetFolders_Throws_EnvInfo_null()
     {
       var projectInfo = new TerminalAppProjectInfo(
-            _Name,
-            _ArtifactsRepositoryName,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _TerminalAppName,
-            _TerminalAppDirName,
-            _TerminalAppExeName);
+        _Name,
+        _ArtifactsRepositoryName,
+        _AllowedEnvironmentNames,
+        _ArtifactsRepositoryDirName,
+        _ArtifactsAreNotEnvirionmentSpecific,
+        _TerminalAppName,
+        _TerminalAppDirName,
+        _TerminalAppExeName);
 
       Assert.Throws<ArgumentNullException>(() => projectInfo.GetTargetFolders(_objectFactoryFake.Object, null));
     }

@@ -23,6 +23,7 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     public abstract class ProjectInfoXml
     {
+      private string _allowedEnvironments;
       public string Name { get; set; }
 
       public string Type { get; set; }
@@ -32,6 +33,13 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string ArtifactsRepositoryDirName { get; set; }
 
       public bool ArtifactsAreNotEnvironmentSpecific { get; set; }
+
+      [XmlAttribute("allowedEnvironments")]
+      public string AllowedEnvironments
+      {
+        get { return _allowedEnvironments; }
+        set { _allowedEnvironments = value; }
+      }
     }
 
     public class NtServiceProjectInfoXml : ProjectInfoXml
@@ -142,6 +150,11 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     private static ProjectInfo CreateProjectInfo(ProjectInfoXml projectInfoXml)
     {
+      List<string> allowedEnvironmentNames =
+        (projectInfoXml.AllowedEnvironments ?? "")
+          .Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+          .ToList();
+
       var ntServiceProjectInfoXml = projectInfoXml as NtServiceProjectInfoXml;
 
       if (ntServiceProjectInfoXml != null)
@@ -150,6 +163,7 @@ namespace UberDeployer.Core.DataAccess.Xml
           new NtServiceProjectInfo(
             ntServiceProjectInfoXml.Name,
             ntServiceProjectInfoXml.ArtifactsRepositoryName,
+            allowedEnvironmentNames,
             ntServiceProjectInfoXml.ArtifactsRepositoryDirName,
             ntServiceProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
             ntServiceProjectInfoXml.NtServiceName,
@@ -167,6 +181,7 @@ namespace UberDeployer.Core.DataAccess.Xml
           new WebAppProjectInfo(
             webAppProjectInfoXml.Name,
             webAppProjectInfoXml.ArtifactsRepositoryName,
+            allowedEnvironmentNames,
             webAppProjectInfoXml.ArtifactsRepositoryDirName,
             webAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific);
       }
@@ -179,6 +194,7 @@ namespace UberDeployer.Core.DataAccess.Xml
           new SchedulerAppProjectInfo(
             schedulerAppProjectInfoXml.Name,
             schedulerAppProjectInfoXml.ArtifactsRepositoryName,
+            allowedEnvironmentNames,
             schedulerAppProjectInfoXml.ArtifactsRepositoryDirName,
             schedulerAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
             schedulerAppProjectInfoXml.SchedulerAppName,
@@ -198,6 +214,7 @@ namespace UberDeployer.Core.DataAccess.Xml
           new TerminalAppProjectInfo(
             terminalAppProjectInfoXml.Name,
             terminalAppProjectInfoXml.ArtifactsRepositoryName,
+            allowedEnvironmentNames,
             terminalAppProjectInfoXml.ArtifactsRepositoryDirName,
             terminalAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
             terminalAppProjectInfoXml.TerminalAppName,
@@ -213,6 +230,7 @@ namespace UberDeployer.Core.DataAccess.Xml
           new DbProjectInfo(
             dbProjectInfoXml.Name,
             dbProjectInfoXml.ArtifactsRepositoryName,
+            allowedEnvironmentNames,
             dbProjectInfoXml.ArtifactsRepositoryDirName,
             dbProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
             dbProjectInfoXml.DbName);

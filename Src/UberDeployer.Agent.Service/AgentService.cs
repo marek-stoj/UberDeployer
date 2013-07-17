@@ -161,6 +161,13 @@ namespace UberDeployer.Agent.Service
             .Where(pi => !string.IsNullOrEmpty(pi.Name) && pi.Name.IndexOf(projectFilter.Name, StringComparison.CurrentCultureIgnoreCase) > -1);
       }
 
+      if (!string.IsNullOrEmpty(projectFilter.EnvironmentName))
+      {
+        projectInfos =
+          projectInfos
+            .Where(pi => pi.AllowedEnvironmentNames.Any(en => string.Compare(en, projectFilter.EnvironmentName, StringComparison.OrdinalIgnoreCase) == 0));
+      }
+
       return
         projectInfos
           .Select(DtoMapper.Map<ProjectInfo, Proxy.Dto.ProjectInfo>)

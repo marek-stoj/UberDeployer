@@ -36,7 +36,7 @@ namespace UberDeployer.Core.Tests.Generators
 
     public static ProjectInfo GetTerminalAppProjectInfo()
     {
-      return new TerminalAppProjectInfo("project_name", "artifactsRepositoryName", "artifactsRepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
+      return new TerminalAppProjectInfo("project_name", "artifactsRepositoryName", new[] { "env_name" }, "artifactsRepositoryDirName", false, "terminalAppName", "terminalAppDirName", "terminalAppExeName");
     }
   }
 }

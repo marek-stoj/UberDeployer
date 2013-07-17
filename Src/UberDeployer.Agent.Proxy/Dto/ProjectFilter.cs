@@ -10,5 +10,7 @@ namespace UberDeployer.Agent.Proxy.Dto
     }
 
     public string Name { get; set; }
+
+    public string EnvironmentName { get; set; }
   }
 }

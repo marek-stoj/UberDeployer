@@ -82,10 +82,16 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpGet]
-    public ActionResult GetProjects()
+    public ActionResult GetProjects(string environmentName)
     {
+      var projectFilter =
+        new ProjectFilter
+        {
+          EnvironmentName = environmentName,
+        };
+
       List<ProjectViewModel> projectViewModels =
-        _agentService.GetProjectInfos(ProjectFilter.Empty)
+        _agentService.GetProjectInfos(projectFilter)
           .Select(CreateProjectViewModel)
           .ToList();
 

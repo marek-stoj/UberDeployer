@@ -3,7 +3,7 @@
 
   <ProjectInfos>
     <!-- NT services -->
-    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml">
+    <ProjectInfoXml xsi:type="NtServiceProjectInfoXml" allowedEnvironments="Local,Remote">
       <Name>UberDeployer.SampleNtService</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleNtService</ArtifactsRepositoryDirName>
@@ -15,7 +15,7 @@
     </ProjectInfoXml>
 
     <!-- Web apps -->
-    <ProjectInfoXml xsi:type="WebAppProjectInfoXml">
+    <ProjectInfoXml xsi:type="WebAppProjectInfoXml" allowedEnvironments="Local,Remote">
       <Name>UberDeployer.SampleWebApp</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleWebApp</ArtifactsRepositoryDirName>
@@ -23,7 +23,7 @@
     </ProjectInfoXml>
 
     <!-- Scheduler apps -->
-    <ProjectInfoXml xsi:type="SchedulerAppProjectInfoXml">
+    <ProjectInfoXml xsi:type="SchedulerAppProjectInfoXml" allowedEnvironments="Local,Remote">
       <Name>UberDeployer.SampleSchedulerApp</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleSchedulerApp</ArtifactsRepositoryDirName>
@@ -37,7 +37,7 @@
     </ProjectInfoXml>
 
     <!-- Terminal apps -->
-    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml">
+    <ProjectInfoXml xsi:type="TerminalAppProjectInfoXml" allowedEnvironments="Local,Remote">
       <Name>UberDeployer.SampleTerminalApp</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleTerminalApp</ArtifactsRepositoryDirName>
@@ -47,7 +47,7 @@
     </ProjectInfoXml>
 
     <!-- Db projects -->
-    <ProjectInfoXml xsi:type="DbProjectInfoXml">
+    <ProjectInfoXml xsi:type="DbProjectInfoXml" allowedEnvironments="Local,Remote">
       <Name>UberDeployer.SampleDb</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>DbScripts</ArtifactsRepositoryDirName>

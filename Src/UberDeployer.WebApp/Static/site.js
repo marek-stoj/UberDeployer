@@ -1,4 +1,6 @@
- var g_AppPrefix = '/';
+// TODO IMM HI: xxx try to restore previously selected project when changing environments
+
+var g_AppPrefix = '/';
 
 var g_lastSeenMessageId = -1;
 var g_DiagnosticMessagesLoaderInterval = 500;
@@ -64,10 +66,8 @@ function initializeDeploymentPage() {
     }
 
     clearProjectConfigurationBuilds();
-
     loadProjectConfigurations(projectName);
-
-    domHelper.getEnvironmentsElement().trigger('change');
+    loadWebMachinesList();
   });
   
   domHelper.getProjectConfigsElement().change(function () {
@@ -92,21 +92,13 @@ function initializeDeploymentPage() {
       });
   });
 
-  loadProjects(function () {
-    //// select first element
-    domHelper.getProjectsElement()
-      .val($('#lst-projects option').eq(0).val());
-
-    domHelper.getProjectsElement().trigger('change');
-  });
-
   loadEnvironments(function () {
     restoreRememberedTargetEnvironmentName();
   });
 
   domHelper.getEnvironmentsElement().change(function () {
     rememberTargetEnvironmentName();
-    loadWebMachinesList();
+    loadProjectsForCurrentEnvironment();
   });
   
   startDiagnosticMessagesLoader();
@@ -200,6 +192,10 @@ function loadWebMachinesList() {
     { envName: $lstEnvironments.val() },
     function (machines) {
       var newSelectedProject = domHelper.getProjectsElement().val();
+      
+      if (!newSelectedProject) {
+        return;
+      }
 
       if (g_ProjectList[newSelectedProject].type != APP_TYPES.WebApp) {
         $lstMachines.attr('disabled', 'disabled');
@@ -220,11 +216,32 @@ function loadWebMachinesList() {
     });
 }
 
-function loadProjects(onFinishedCallback) {
+function loadProjectsForCurrentEnvironment() {
+  var selectedTargetEnvironmentName =
+    getSelectedTargetEnvironmentName();
+  
+  if (!selectedTargetEnvironmentName) {
+    return;
+  }
+
+  doLoadProjects(
+    selectedTargetEnvironmentName,
+    function() {
+      // select first element
+      domHelper.getProjectsElement()
+        .val($('#lst-projects option').eq(0).val());
+
+      domHelper.getProjectsElement().trigger('change');
+    });
+}
+
+function doLoadProjects(environmentName, onFinishedCallback) {
   clearProjects();
+  clearProjectConfigurations();
+  clearProjectConfigurationBuilds();
 
   $.getJSON(
-    g_AppPrefix + 'Api/GetProjects',
+    g_AppPrefix + 'Api/GetProjects?environmentName=' + environmentName,
     function(data) {
       g_ProjectList = [];
       clearProjects();

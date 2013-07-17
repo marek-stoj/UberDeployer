@@ -14,10 +14,11 @@ namespace UberDeployer.Core.Tests.Domain
   [TestFixture]
   public class WebAppProjectInfoTests
   {
-    private const string Name = "webappprj";
-    private const string ArtifactsRepositoryName = "repoName";
-    private const string ArtifactsRepositoryDirName = "repoDirName";
-    private const bool ArtifactsAreNotEnvironmentSpecific = false;
+    private const string _Name = "webappprj";
+    private const string _ArtifactsRepositoryName = "repoName";
+    private const string _ArtifactsRepositoryDirName = "repoDirName";
+    private const bool _ArtifactsAreNotEnvironmentSpecific = false;
+    private static readonly string[] _AllowedEnvironmentNames = new[] { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
 
@@ -40,10 +41,11 @@ namespace UberDeployer.Core.Tests.Domain
 
       var projectInfo =
         new WebAppProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          ArtifactsAreNotEnvironmentSpecific);
+          _Name,
+          _ArtifactsRepositoryName,
+          _AllowedEnvironmentNames,
+          _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvironmentSpecific);
 
       objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(prjInfoRepository.Object);
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
@@ -84,9 +86,10 @@ namespace UberDeployer.Core.Tests.Domain
 
       var projectInfo =
         new WebAppProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
+          _Name,
+          _ArtifactsRepositoryName,
+          _AllowedEnvironmentNames,
+          _ArtifactsRepositoryDirName,
           false);
 
       Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo).FirstOrDefault());
@@ -122,10 +125,11 @@ namespace UberDeployer.Core.Tests.Domain
 
       var projectInfo =
         new WebAppProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          ArtifactsAreNotEnvironmentSpecific);
+          _Name,
+          _ArtifactsRepositoryName,
+          _AllowedEnvironmentNames,
+          _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvironmentSpecific);
 
       List<string> targetUrls =
         projectInfo.GetTargetUrls(envInfo)
@@ -140,10 +144,11 @@ namespace UberDeployer.Core.Tests.Domain
     public void Test_WebServiceProjectInfoTests_RunsOK_WhenALLIZWELL()
     {
       new WebServiceProjectInfo(
-        Name,
-        ArtifactsRepositoryName,
-        ArtifactsRepositoryDirName,
-        ArtifactsAreNotEnvironmentSpecific);
+        _Name,
+        _ArtifactsRepositoryName,
+        _AllowedEnvironmentNames,
+        _ArtifactsRepositoryDirName,
+        _ArtifactsAreNotEnvironmentSpecific);
     }
 
     [Test]
@@ -151,10 +156,11 @@ namespace UberDeployer.Core.Tests.Domain
     {
       var info =
         new WebServiceProjectInfo(
-          Name,
-          ArtifactsRepositoryName,
-          ArtifactsRepositoryDirName,
-          ArtifactsAreNotEnvironmentSpecific);
+          _Name,
+          _ArtifactsRepositoryName,
+          _AllowedEnvironmentNames,
+          _ArtifactsRepositoryDirName,
+          _ArtifactsAreNotEnvironmentSpecific);
 
       Assert.AreEqual(ProjectType.WebService, info.Type);
     }

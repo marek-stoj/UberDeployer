@@ -24,12 +24,13 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _NtServiceDisplayName = "ntServiceDisplayName";
     private const string _NtServiceExeName = "ntServiceExeName";
     private const string _NtServiceUserId = "Sample.User";
+    private static readonly string[] _AllowedEnvironmentNames = new[] { "env_name" };
 
     private static readonly List<EnvironmentUser> _EnvironmentUsers =
       new List<EnvironmentUser>
-        {
-          new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
-        };
+      {
+        new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
+      };
 
     private static readonly List<IisAppPoolInfo> _AppPoolInfos =
       new List<IisAppPoolInfo>()
@@ -51,9 +52,9 @@ namespace UberDeployer.Core.Tests.Domain
 
     private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
       new List<ProjectToFailoverClusterGroupMapping>
-        {
-          new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
-        };
+      {
+        new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
+      };
 
     private Mock<IObjectFactory> _objectFactoryFake;
 
@@ -79,6 +80,7 @@ namespace UberDeployer.Core.Tests.Domain
         new NtServiceProjectInfo(
           _ProjectName,
           _ArtifactsRepositoryName,
+          _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
           _ArtifactsAreNotEnvironmentSpecific,
           _NtServiceName,
@@ -130,6 +132,7 @@ namespace UberDeployer.Core.Tests.Domain
         new NtServiceProjectInfo(
           _ProjectName,
           _ArtifactsRepositoryName,
+          _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
           _ArtifactsAreNotEnvironmentSpecific,
           _NtServiceName,

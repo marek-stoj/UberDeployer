@@ -19,6 +19,7 @@ namespace UberDeployer.Core.Tests.Deployment
       new NtServiceProjectInfo(
         "name",
         "artifactsRepo",
+        new[] { "env_name" },
         "artifactsRepoDir",
         false,
         "serviceName",
