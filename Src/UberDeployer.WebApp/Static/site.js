@@ -1,5 +1,3 @@
-// TODO IMM HI: xxx try to restore previously selected project when changing environments
-
 var g_AppPrefix = '/';
 
 var g_lastSeenMessageId = -1;
