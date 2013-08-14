@@ -71,24 +71,6 @@ namespace UberDeployer.Core.Management.Metadata
       }
     }
 
-    private static bool TryExtractMachineName(string targetFolder, out string machineName)
-    {
-      Guard.NotNullNorEmpty(targetFolder, "targetFolder");
-
-      Match match = _MachineNameInNetworkPathRegex.Match(targetFolder);
-
-      if (match.Success)
-      {
-        machineName = match.Groups["MachineName"].Value;
-
-        return true;
-      }
-
-      machineName = null;
-
-      return false;
-    }
-
     private ProjectMetadata GetOrdinaryProjectMetadata(ProjectInfo projectInfo, EnvironmentInfo environmentInfo)
     {
       var projectVersions = new List<MachineSpecificProjectVersion>();
@@ -111,6 +93,22 @@ namespace UberDeployer.Core.Management.Metadata
 
         string assemblyFilePath =
           Path.Combine(targetFolder, projectInfo.GetMainAssemblyFileName());
+
+        // TODO IMM HI: temporary solution for getting version of web projects with main assemblies of form XXX.Web.dll or XXX.WebApp.dll.
+        if (projectInfo is WebAppProjectInfo)
+        {
+          string originalAssemblyFilePath = assemblyFilePath;
+
+          if (!File.Exists(assemblyFilePath))
+          {
+            assemblyFilePath = AddSuffixToFileName(originalAssemblyFilePath, ".Web");
+          }
+
+          if (!File.Exists(assemblyFilePath))
+          {
+            assemblyFilePath = AddSuffixToFileName(originalAssemblyFilePath, ".WebApp");
+          }
+        }
 
         if (File.Exists(assemblyFilePath))
         {
@@ -160,6 +158,38 @@ namespace UberDeployer.Core.Management.Metadata
       }
 
       return new ProjectMetadata(dbProjectInfo.Name, environmentInfo.Name, projectVersions);
+    }
+
+    private static bool TryExtractMachineName(string targetFolder, out string machineName)
+    {
+      Guard.NotNullNorEmpty(targetFolder, "targetFolder");
+
+      Match match = _MachineNameInNetworkPathRegex.Match(targetFolder);
+
+      if (match.Success)
+      {
+        machineName = match.Groups["MachineName"].Value;
+
+        return true;
+      }
+
+      machineName = null;
+
+      return false;
+    }
+
+    private static string AddSuffixToFileName(string assemblyFilePath, string suffix)
+    {
+      string dirPath = Path.GetDirectoryName(assemblyFilePath) ?? "";
+
+      return
+        Path.Combine(
+          dirPath,
+          string.Format(
+            "{0}{1}{2}",
+            Path.GetFileNameWithoutExtension(assemblyFilePath),
+            suffix,
+            Path.GetExtension(assemblyFilePath)));
     }
   }
 }
