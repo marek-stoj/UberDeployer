@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Agent.Proxy.Faults;
 using UberDeployer.Agent.Service.Diagnostics;
+using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Domain;
@@ -24,6 +25,7 @@ namespace UberDeployer.Agent.Service.Tests
     private Mock<ITeamCityClient> _teamCityClientFake;
     private Mock<IDeploymentRequestRepository> _deploymentRequestRepositoryFake;
     private Mock<IProjectMetadataExplorer> _projectMetadataExplorerFake;
+    private Mock<IDirPathParamsResolver> _dirPathParamsResolver;
 
     [SetUp]
     public void SetUp()
@@ -35,6 +37,7 @@ namespace UberDeployer.Agent.Service.Tests
       _teamCityClientFake = new Mock<ITeamCityClient>();
       _deploymentRequestRepositoryFake = new Mock<IDeploymentRequestRepository>();
       _projectMetadataExplorerFake = new Mock<IProjectMetadataExplorer>();
+      _dirPathParamsResolver = new Mock<IDirPathParamsResolver>();
 
       _agentService =
         new AgentService(
@@ -44,7 +47,8 @@ namespace UberDeployer.Agent.Service.Tests
         _teamCityClientFake.Object,
         _deploymentRequestRepositoryFake.Object,
         _diagnositcMessagesLoggerFake.Object,
-        _projectMetadataExplorerFake.Object);
+        _projectMetadataExplorerFake.Object,
+        _dirPathParamsResolver.Object);
     }
 
     [Test]
@@ -115,7 +119,8 @@ namespace UberDeployer.Agent.Service.Tests
         new[] { new WebAppProjectConfiguration("webappprj", "website", "apppool", "dir", "webapp"), },
         new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") },
         new[] { new DbProjectConfiguration("dbprj", "db_server"), },
-        "terminalAppsShortcutFolder");
+        "terminalAppsShortcutFolder",
+        "artifactsDeploymentDirPath");
     }
   }
 }

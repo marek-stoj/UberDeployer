@@ -31,7 +31,8 @@ namespace UberDeployer.Core.Tests.Generators
           TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
           TestData.DbProjectConfigurations,
-          "X:\\terminal_apps_shortcut_folder");
+          "X:\\terminal_apps_shortcut_folder",
+          "X:\\artifacts_deployment_dir_path");
     }
 
     public static ProjectInfo GetTerminalAppProjectInfo()

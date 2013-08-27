@@ -7,6 +7,7 @@ using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Management.ScheduledTasks;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Domain
 {
@@ -82,7 +83,8 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
           TestData.DbProjectConfigurations,
-          "terminalAppsShortcutFolder");
+          "terminalAppsShortcutFolder",
+          "artifactsDeploymentDirPath");
 
       var projectInfo =
         new WebAppProjectInfo(
@@ -121,7 +123,8 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
           TestData.DbProjectConfigurations,
-          "terminalAppsShortcutFolder");
+          "terminalAppsShortcutFolder",
+          "artifactsDeploymentDirPath");
 
       var projectInfo =
         new WebAppProjectInfo(

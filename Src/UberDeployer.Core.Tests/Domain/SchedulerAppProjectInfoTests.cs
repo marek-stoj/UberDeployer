@@ -7,6 +7,7 @@ using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Domain
 {
@@ -207,7 +208,8 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
           TestData.DbProjectConfigurations,
-          "terminalAppsShortcutFolder");
+          "terminalAppsShortcutFolder",
+          "artifactsDeploymentDirPath");
 
       var schedulerAppProjectInfo =
         new SchedulerAppProjectInfo(

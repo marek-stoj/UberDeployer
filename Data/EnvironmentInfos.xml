@@ -19,6 +19,7 @@
       <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
       <TerminalAppsShortcutFolder>C:\AppShortcuts</TerminalAppsShortcutFolder>
       <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
+	  <ManualDeploymentPackageDirPath></ManualDeploymentPackageDirPath>
       <EnvironmentUsers>
         <EnvironmentUserXml>
           <Id>Sample.User</Id>
@@ -71,6 +72,7 @@
       <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
       <TerminalAppsShortcutFolder>C:\Users\Public\Desktop</TerminalAppsShortcutFolder>
       <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
+	  <ManualDeploymentPackageDirPath></ManualDeploymentPackageDirPath>
       <EnvironmentUsers>
         <EnvironmentUserXml>
           <Id>Sample.User</Id>

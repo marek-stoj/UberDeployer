@@ -21,6 +21,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _SchedulerAppsBaseDirPath = "C:\\SchedulerApps";
     private const string _TerminalAppsBaseDirPath = "C:\\TerminalApps";
     private const string _TerminalAppsShortcutFolder = "C:\\TerminalAppShortcuts";
+    private const string _ArtifactsDeploymentDirPath = "C:\\ArtifactsDeploymentDirPath";
 
     [Test]
     public void Test_EnvironmentInfoTests_Does_Not_Allow_Template_null()
@@ -47,7 +48,8 @@ namespace UberDeployer.Core.Tests.Domain
             TestData.WebAppProjectConfigurations,
             TestData.ProjectToFailoverClusterGroupMappings,
             TestData.DbProjectConfigurations,
-            _TerminalAppsShortcutFolder);
+            _TerminalAppsShortcutFolder,
+            _ArtifactsDeploymentDirPath);
         });
     }
 
@@ -76,7 +78,8 @@ namespace UberDeployer.Core.Tests.Domain
             TestData.WebAppProjectConfigurations,
             TestData.ProjectToFailoverClusterGroupMappings,
             TestData.DbProjectConfigurations,
-            _TerminalAppsShortcutFolder);
+            _TerminalAppsShortcutFolder,
+            _ArtifactsDeploymentDirPath);
         });
     }
 
@@ -102,7 +105,8 @@ namespace UberDeployer.Core.Tests.Domain
         TestData.WebAppProjectConfigurations,
         TestData.ProjectToFailoverClusterGroupMappings,
         TestData.DbProjectConfigurations,
-        _TerminalAppsShortcutFolder);
+        _TerminalAppsShortcutFolder,
+        _ArtifactsDeploymentDirPath);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath(@"\\kasjdkasdj"));
@@ -131,7 +135,8 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
           TestData.DbProjectConfigurations,
-          _TerminalAppsShortcutFolder);
+          _TerminalAppsShortcutFolder,
+          _ArtifactsDeploymentDirPath);
 
       Assert.Throws<ArgumentException>(
         () => envInfo.GetAppServerNetworkPath("qlwelqwelw"));
@@ -160,7 +165,8 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
           TestData.DbProjectConfigurations,
-          _TerminalAppsShortcutFolder);
+          _TerminalAppsShortcutFolder,
+          _ArtifactsDeploymentDirPath);
 
       Assert.AreEqual(
         "\\\\" + _WebMachineNames[0] + "\\c$\\",

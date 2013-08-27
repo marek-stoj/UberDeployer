@@ -8,6 +8,7 @@ using Castle.MicroKernel.Registration;
 using UberDeployer.Common.IO;
 using UberDeployer.Core.Configuration;
 using UberDeployer.Core.DataAccess.NHibernate;
+using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.DataAccess.Xml;
 using UberDeployer.Core.DataAccess;
@@ -158,6 +159,11 @@ namespace UberDeployer.CommonConfiguration
       container.Register(
         Component.For<IProjectMetadataExplorer>()
           .ImplementedBy<ProjectMetadataExplorer>()
+          .LifeStyle.Is(LifestyleType.Transient));
+
+      container.Register(
+        Component.For<IDirPathParamsResolver>()
+          .ImplementedBy<DirPathParamsResolver>()
           .LifeStyle.Is(LifestyleType.Transient));
     }
 

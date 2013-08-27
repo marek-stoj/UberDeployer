@@ -55,6 +55,8 @@ namespace UberDeployer.Core.DataAccess.Xml
       public List<DbProjectConfigurationXml> DbProjectConfigurations { get; set; }
 
       public string TerminalAppsShortcutFolder { get; set; }
+
+      public string ManualDeploymentPackageDirPath { get; set; }
     }
 
     public class EnvironmentUserXml
@@ -228,7 +230,8 @@ namespace UberDeployer.Core.DataAccess.Xml
                 new DbProjectConfiguration(
                   e.ProjectName,
                   e.DatabaseServerId)),
-              eiXml.TerminalAppsShortcutFolder
+              eiXml.TerminalAppsShortcutFolder,
+              eiXml.ManualDeploymentPackageDirPath
               ))
           .ToDictionary(ei => ei.Name);
     }

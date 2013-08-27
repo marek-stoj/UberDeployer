@@ -32,14 +32,15 @@ namespace UberDeployer.Core.Domain
       string webAppsBaseDirPath,
       string schedulerAppsBaseDirPath,
       string terminalAppsBaseDirPath,
-      bool enableFailoverClusteringForNtServices,
+      bool enableFailoverClusteringForNtServices,      
       IEnumerable<EnvironmentUser> environmentUsers,
       IEnumerable<IisAppPoolInfo> appPoolInfos,
       IEnumerable<DatabaseServer> databaseServers,
       IEnumerable<WebAppProjectConfiguration> webAppProjectConfigurations,
       IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings,
       IEnumerable<DbProjectConfiguration> dbProjectConfigurations,
-      string terminalAppShortcutFolder
+      string terminalAppShortcutFolder,
+      string manualDeploymentPackageDirPath
       )
     {
       Guard.NotNullNorEmpty(name, "name");
@@ -89,7 +90,7 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("dbProjectConfigurations");
       }
 
-      Guard.NotNullNorEmpty(name, "terminalAppShortcutPath");
+      Guard.NotNullNorEmpty(name, "terminalAppShortcutPath");      
 
       Name = name;
       ConfigurationTemplateName = configurationTemplateName;
@@ -113,6 +114,7 @@ namespace UberDeployer.Core.Domain
       _dbProjectConfigurationsDict = dbProjectConfigurations.ToDictionary(e => e.ProjectName);
 
       TerminalAppsShortcutFolder = terminalAppShortcutFolder;
+      ManualDeploymentPackageDirPath = manualDeploymentPackageDirPath;
     }
 
     #endregion
@@ -291,6 +293,8 @@ namespace UberDeployer.Core.Domain
     public bool EnableFailoverClusteringForNtServices { get; private set; }
 
     public string TerminalAppsShortcutFolder { get; private set; }
+
+    public string ManualDeploymentPackageDirPath { get; private set; }
 
     public IEnumerable<EnvironmentUser> EnvironmentUsers
     {

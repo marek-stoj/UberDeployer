@@ -20,6 +20,11 @@ namespace UberDeployer.Agent.Proxy
       Exec(@as => @as.DeployAsync(deploymentId, uniqueClientId, requesterIdentity, deploymentInfo));
     }
 
+    public void CreatePackageAsync(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo, string packageDirPath)
+    {
+      Exec(@as => @as.CreatePackageAsync(deploymentId, uniqueClientId, requesterIdentity, deploymentInfo, packageDirPath));
+    }
+
     public List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter)
     {
       return Exec(@as => @as.GetProjectInfos(projectFilter));
@@ -73,6 +78,11 @@ namespace UberDeployer.Agent.Proxy
     public void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password)
     {
       Exec(@as => @as.SetCollectedCredentialsForAsynchronousWebCredentialsCollector(deploymentId, password));
+    }
+
+    public string GetDefaultPackageDirPath(string environmentName, string projectName)
+    {
+      return Exec(@as => @as.GetDefaultPackageDirPath(environmentName, projectName));
     }
 
     #endregion

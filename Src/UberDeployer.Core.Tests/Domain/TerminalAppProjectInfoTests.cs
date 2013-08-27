@@ -8,6 +8,7 @@ using UberDeployer.Common.IO;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.NtServices;
 using UberDeployer.Core.Management.ScheduledTasks;
+using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Domain
 {
@@ -180,27 +181,28 @@ namespace UberDeployer.Core.Tests.Domain
       const string baseDirPath = "c:\\basedir";
       string terminalmachine = "terminalmachine";
 
-      var envInfo =
-        new EnvironmentInfo(
-          "name",
-          "templates",
-          machine,
-          "failover",
-          new[] { "webmachine" },
-          terminalmachine,
-          "schedulermachine",
-          baseDirPath,
-          "webbasedir",
-          "c:\\scheduler",
-          "c:\\terminal",
-          false,
-          TestData.EnvironmentUsers,
-          TestData.AppPoolInfos,
-          TestData.DatabaseServers,
-          TestData.WebAppProjectConfigurations,
-          TestData.ProjectToFailoverClusterGroupMappings,
-          TestData.DbProjectConfigurations,
-          "terminalAppsShortcutFolder");
+      var envInfo = DeploymentDataGenerator.GetEnvironmentInfo();
+
+        //new EnvironmentInfo(
+        //  "name",
+        //  "templates",
+        //  machine,
+        //  "failover",
+        //  new[] { "webmachine" },
+        //  terminalmachine,
+        //  "schedulermachine",
+        //  baseDirPath,
+        //  "webbasedir",
+        //  "c:\\scheduler",
+        //  "c:\\terminal",
+        //  false,
+        //  TestData.EnvironmentUsers,
+        //  TestData.AppPoolInfos,
+        //  TestData.DatabaseServers,
+        //  TestData.WebAppProjectConfigurations,
+        //  TestData.ProjectToFailoverClusterGroupMappings,
+        //  TestData.DbProjectConfigurations,
+        //  "terminalAppsShortcutFolder");
 
       var projectInfo =
         new TerminalAppProjectInfo(

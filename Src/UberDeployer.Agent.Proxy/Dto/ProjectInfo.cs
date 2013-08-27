@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace UberDeployer.Agent.Proxy.Dto
 {
@@ -19,5 +20,7 @@ namespace UberDeployer.Agent.Proxy.Dto
     public string ArtifactsRepositoryDirName { get; set; }
     
     public bool ArtifactsAreEnvironmentSpecific { get; set; }
+
+    public List<string> AllowedEnvironmentNames { get; set; }
   }
 }

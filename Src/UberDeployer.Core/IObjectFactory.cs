@@ -51,5 +51,7 @@ namespace UberDeployer.Core
     IDirectoryAdapter CreateDirectoryAdapter();
 
     IProjectMetadataExplorer CreateProjectMetadataExplorer();
+    
+    IDirPathParamsResolver CreateDirPathParamsResolver();
   }
 }

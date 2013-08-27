@@ -14,5 +14,7 @@
     public string TodayDevLifeGifDescription { get; set; }
 
     public bool CanDeploy { get; set; }
+
+    public bool ShowOnlyDeployable { get; set; }
   }
 }

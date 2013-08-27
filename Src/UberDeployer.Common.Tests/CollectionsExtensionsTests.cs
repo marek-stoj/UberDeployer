@@ -63,6 +63,6 @@ namespace UberDeployer.Common.Tests
       index = list.BinarySearch(i => Comparer<int>.Default.Compare(i, itemToSearchFor));
       Assert.AreEqual(-1, index);
       Assert.AreEqual(0, ~index);
-    }
+    }    
   }
 }

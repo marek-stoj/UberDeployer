@@ -133,6 +133,11 @@ namespace UberDeployer.CommonConfiguration
       return new ProjectMetadataExplorer(this, CreateProjectInfoRepository(), CreateEnvironmentInfoRepository(), CreateDbVersionProvider());
     }
 
+    public IDirPathParamsResolver CreateDirPathParamsResolver()
+    {
+      return _container.Resolve<IDirPathParamsResolver>();
+    }
+
     #endregion
 
     #region Properties

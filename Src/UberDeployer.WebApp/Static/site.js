@@ -7,6 +7,7 @@ var g_TargetEnvironmentCookieName = 'target-environment-name';
 var g_TargetEnvironmentCookieExpirationInDays = 365;
 
 var g_ProjectList = [];
+var g_EnvironmentList = [];
 
 var KICKASSVERSION = '2.0';
 
@@ -24,18 +25,27 @@ var APP_TYPES = {
   WebService: 6
 };
 
-function Project(name, type) {
+function Project(name, type, allowedEnvironmentNames) {
   var self = this;  
 
   self.name = '';
   self.type = '';
+  self.allowedEnvironmentNames = [];
 
-  self.update = function(projectName, projectType) {
+  self.update = function(projectName, projectType, allowedEnvironmentNamesForProject) {
     self.name = projectName;
     self.type = projectType;
+    self.allowedEnvironmentNames = allowedEnvironmentNamesForProject;
   };
 
-  self.update(name, type);
+  self.update(name, type, allowedEnvironmentNames);
+}
+
+function Environment(name, isDeployable) {
+  var self = this;
+
+  self.name = name;
+  self.isDeployable = isDeployable;
 }
 
 function initializeDeploymentPage() {
@@ -55,6 +65,29 @@ function initializeDeploymentPage() {
   $('#btn-simulate').click(function () {
     simulate();
   });
+  
+  $('#btn-create-package').click(function () {
+    promptPackageDirPath();
+  });
+
+  $('#btn-package-ok').click(function() {
+    var packageDir = $('#txt-package-dir')[0].value;
+    
+    if ($.trim(packageDir) === '') {
+      alert('You have to enter package dir path.');
+      return;
+    }
+
+    $('#package-dir-modal').modal('hide');
+    
+    createPackage(packageDir);    
+  });
+
+  $('#chb-deployable-projects').change(function() {
+    loadProjectsForCurrentEnvironment();
+    disableDeployButtonsForCurrentEnvironment();
+  });
+ 
 
   domHelper.getProjectsElement().change(function () {
     var projectName = getSelectedProjectName();
@@ -66,6 +99,7 @@ function initializeDeploymentPage() {
     clearProjectConfigurationBuilds();
     loadProjectConfigurations(projectName);
     loadWebMachinesList();
+    disableDeployButtonsForCurrentEnvironment();
   });
   
   domHelper.getProjectConfigsElement().change(function () {
@@ -88,7 +122,7 @@ function initializeDeploymentPage() {
 
         $('#lst-project-config-builds').trigger('change');
       });
-  });
+  });  
 
   loadEnvironments(function () {
     restoreRememberedTargetEnvironmentName();
@@ -97,23 +131,33 @@ function initializeDeploymentPage() {
   domHelper.getEnvironmentsElement().change(function () {
     rememberTargetEnvironmentName();
     loadProjectsForCurrentEnvironment();
+    disableDeployButtonsForCurrentEnvironment();
   });
   
   startDiagnosticMessagesLoader();
 }
 
-function doDeployOrSimulate(isSimulation) {
-  var projectName = getSelectedProjectName();
-  var projectConfigurationName = getSelectedProjectConfigurationName();
-  var projectConfigurationBuildId = getSelectedProjectConfigurationBuildId();
-  var targetEnvironmentName = getSelectedTargetEnvironmentName();
-  var targetMachines = getSelectedTargetMachines();
-
-  if (!projectName || !projectConfigurationName || !projectConfigurationBuildId || !targetEnvironmentName) {
+function getDeploymentInfo() {
+  var deploymentInfo = {
+    projectName: getSelectedProjectName(),
+    projectConfigurationName: getSelectedProjectConfigurationName(),
+    projectConfigurationBuildId: getSelectedProjectConfigurationBuildId(),
+    targetEnvironmentName: getSelectedTargetEnvironmentName(),
+    targetMachines: getSelectedTargetMachines()
+  };
+  
+  if (!deploymentInfo.projectName || !deploymentInfo.projectConfigurationName
+    || !deploymentInfo.projectConfigurationBuildId || !deploymentInfo.targetEnvironmentName) {
     alert('Select project, configuration, build and environment!');
-    return;
+    return null;
   }
 
+  return deploymentInfo;
+}
+
+function doDeployOrSimulate(isSimulation) {
+  var deploymentInfo = getDeploymentInfo();
+  
   if (g_ProjectList[projectName].type == APP_TYPES.WebApp && (!targetMachines || targetMachines.length == 0)) {
     alert('Select web machine for selected environment!');
     return;
@@ -125,12 +169,12 @@ function doDeployOrSimulate(isSimulation) {
     url: g_AppPrefix + action,
     type: "POST",
     data: {
-      projectName: projectName,
-      projectConfigurationName: projectConfigurationName,
-      projectConfigurationBuildId: projectConfigurationBuildId,
-      targetEnvironmentName: targetEnvironmentName,
-      projectType: g_ProjectList[projectName].type,
-      targetMachines: targetMachines
+      projectName: deploymentInfo.projectName,
+      projectConfigurationName: deploymentInfo.projectConfigurationName,
+      projectConfigurationBuildId: deploymentInfo.projectConfigurationBuildId,
+      targetEnvironmentName: deploymentInfo.targetEnvironmentName,
+      projectType: g_ProjectList[deploymentInfo.projectName].type,
+      targetMachines: deploymentInfo.targetMachines
     },
     traditional: true,
     success: function (data) {
@@ -147,6 +191,47 @@ function simulate() {
   doDeployOrSimulate(true);
 }
 
+function createPackage(packageDirPath) {
+  var deploymentInfo = getDeploymentInfo();
+
+  $.ajax({
+    url: g_AppPrefix + "Api/CreatePackage",
+    type: "POST",
+    data: {
+      projectName: deploymentInfo.projectName,
+      projectConfigurationName: deploymentInfo.projectConfigurationName,
+      projectConfigurationBuildId: deploymentInfo.projectConfigurationBuildId,
+      targetEnvironmentName: deploymentInfo.targetEnvironmentName,
+      projectType: g_ProjectList[deploymentInfo.projectName].type,
+      packageDirPath: packageDirPath
+    },
+    traditional: true,
+    success: function (data) {
+      handleApiErrorIfPresent(data);
+    }
+  });
+}
+
+function promptPackageDirPath() {
+  var deploymentInfo = getDeploymentInfo();
+  
+  $.get(
+   g_AppPrefix + "Api/GetDefaultPackageDirPath",
+   {
+     environmentName: deploymentInfo.targetEnvironmentName,
+     projectName: deploymentInfo.projectName
+   })
+   .done(
+     function (data) {       
+       $('#txt-package-dir')[0].value = data;
+       $('#package-dir-modal').modal('show');
+     })
+   .error(
+     function (data) {
+       handleApiErrorIfPresent(data);
+     });
+}
+
 function loadEnvironments(onFinishedCallback) {
   clearEnvironments();
 
@@ -154,8 +239,11 @@ function loadEnvironments(onFinishedCallback) {
     g_AppPrefix + 'Api/GetEnvironments',
     function(data) {
       clearEnvironments();
+      g_EnvironmentList = [];
 
-      $.each(data.environments, function(i, val) {
+      $.each(data.environments, function (i, val) {
+        g_EnvironmentList[val.Name] = new Environment(val.Name, val.IsDeployable);
+
         domHelper.getEnvironmentsElement()
           .append(
             $('<option></option>')
@@ -216,7 +304,7 @@ function loadWebMachinesList() {
 
 function loadProjectsForCurrentEnvironment() {
   var selectedTargetEnvironmentName =
-    getSelectedTargetEnvironmentName();
+    getSelectedTargetEnvironmentName();   
   
   if (!selectedTargetEnvironmentName) {
     return;
@@ -224,6 +312,7 @@ function loadProjectsForCurrentEnvironment() {
 
   doLoadProjects(
     selectedTargetEnvironmentName,
+    isOnlyDeployable(),
     function() {
       // select first element
       domHelper.getProjectsElement()
@@ -233,31 +322,53 @@ function loadProjectsForCurrentEnvironment() {
     });
 }
 
-function doLoadProjects(environmentName, onFinishedCallback) {
+function doLoadProjects(environmentName, onlyDeployable, onFinishedCallback) {
   clearProjects();
   clearProjectConfigurations();
   clearProjectConfigurationBuilds();
 
-  $.getJSON(
-    g_AppPrefix + 'Api/GetProjects?environmentName=' + environmentName,
-    function(data) {
-      g_ProjectList = [];
-      clearProjects();
+  $.getJSON(g_AppPrefix + 'Api/GetProjects', { environmentName: environmentName, onlyDeployable: onlyDeployable })
+    .done(
+      function(data) {
+        g_ProjectList = [];
+        clearProjects();
 
-      $.each(data.projects, function(i, val) {
-        g_ProjectList[val.Name] = new Project(val.Name, val.Type);
+        $.each(data.projects, function(i, val) {
+          g_ProjectList[val.Name] = new Project(val.Name, val.Type, val.AllowedEnvironmentNames);
 
-        domHelper.getProjectsElement()
-          .append(
-            $('<option></option>')
-              .attr('value', val.Name)
-              .text(val.Name));
+          domHelper.getProjectsElement()
+            .append(
+              $('<option></option>')
+                .attr('value', val.Name)
+                .text(val.Name));
+        });
+
+        if (onFinishedCallback) {
+          onFinishedCallback();
+        }
       });
+}
 
-      if (onFinishedCallback) {
-        onFinishedCallback();
-      }
-    });
+function disableDeployButtonsForCurrentEnvironment() {
+  var selectedEnvironmentName = getSelectedTargetEnvironmentName();
+  var projectName = getSelectedProjectName();
+  
+  if (!selectedEnvironmentName || !projectName) {
+    return;
+  }
+
+  var environment = g_EnvironmentList[selectedEnvironmentName];
+  var project = g_ProjectList[projectName];
+  
+  if (!environment || !project) {
+    return;
+  }
+
+  if (environment.isDeployable && $.inArray(selectedEnvironmentName, project.allowedEnvironmentNames) > -1) {
+    $('#btn-deploy').removeAttr('disabled');
+  } else {
+    $('#btn-deploy').attr('disabled', 'disabled');
+  }
 }
 
 function loadProjectConfigurations(projectName, onFinishedCallback) {
@@ -394,7 +505,11 @@ function getSelectedTargetMachines() {
   return domHelper.getSelectedMachines();
 }
 
-function clearEnvironments() {
+function isOnlyDeployable() {
+  return $('#chb-deployable-projects').is(':checked');
+}
+
+function clearEnvironments() {  
   $('#lst-environments').empty();
 }
 

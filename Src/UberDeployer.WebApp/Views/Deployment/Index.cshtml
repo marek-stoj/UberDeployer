@@ -28,6 +28,10 @@
     <div class="row" id="main-row">
       <div class="span3">
         <label for="lst-projects" class="lst-header">Projects:</label>
+        <div class="lst-filter">
+          <input type="checkbox" id="chb-deployable-projects" @(Model.ShowOnlyDeployable ? "checked=\"checked\"" : "") />
+          <label for="chb-deployable-projects">Only deployable</label>
+        </div>
         <br />
         <select id="lst-projects" size="10">
         </select>
@@ -64,6 +68,9 @@
         </button>
         <button id="btn-simulate" name="btn-simulate" class="btn pull-right">
           Simulate
+        </button>
+        <button id="btn-create-package" name="btn-create-package" class="btn pull-right" data-toggle="package-dir-modal">
+          Create Package
         </button>
         <button id="btn-version" class="btn pull-left" onclick="javascript: getProjectVersion();">
           Version?
@@ -119,6 +126,20 @@
     <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
   </div>
   <input type="hidden" id="dlg-collect-credentials-deployment-id" name="dlg-collect-credentials-deployment-id" value="" />
+</div>
+
+<div id="package-dir-modal" class="modal hide fade">
+  <div class="modal-header">
+    <h3>Enter directory path for manual deployment package.</h3>
+  </div>
+  <div class="modal-body">
+    <label for="txt-package-dir">Directory:</label>
+    <input type="text" id="txt-package-dir" required="required" />
+  </div>
+  <div class="modal-footer">
+    <button id="btn-package-ok" class="btn btn-primary">OK</button>
+    <button id="btn-package-cancel" data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>
+  </div>
 </div>
 
 <script type="text/javascript">

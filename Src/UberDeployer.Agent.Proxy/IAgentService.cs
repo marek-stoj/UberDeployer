@@ -20,6 +20,10 @@ namespace UberDeployer.Agent.Proxy
     void DeployAsync(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo);
 
     [OperationContract]
+    [FaultContract(typeof(ProjectNotFoundFault))]
+    void CreatePackageAsync(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo, string packageDirPath);
+
+    [OperationContract]
     List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter);
 
     [OperationContract]
@@ -62,5 +66,10 @@ namespace UberDeployer.Agent.Proxy
 
     [OperationContract]
     void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password);
+
+    [OperationContract]
+    [FaultContract(typeof(ProjectNotFoundFault))]
+    [FaultContract(typeof(EnvironmentNotFoundFault))]
+    string GetDefaultPackageDirPath(string environmentName, string projectName);
   }
 }

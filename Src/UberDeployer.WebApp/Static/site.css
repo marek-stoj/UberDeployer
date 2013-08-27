@@ -8,6 +8,15 @@ label.lst-header {
   font-weight: bold;
 }
 
+.lst-filter {
+  display: inline-block;
+  float: right;
+}
+
+.lst-filter label {
+  display: inline;
+}
+
 .container select {
   width: 100%;
 }
@@ -88,4 +97,12 @@ button.pull-left {
 .dev-life-description {
   font-weight: bold;
   font-size: 18px;
+}
+
+#txt-package-dir {
+  width: 97%;
+}
+
+#chb-deployable-projects {
+  margin-bottom: 5px;
 }

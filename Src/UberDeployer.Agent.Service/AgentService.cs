@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
@@ -39,6 +40,7 @@ namespace UberDeployer.Agent.Service
     private readonly IDeploymentRequestRepository _deploymentRequestRepository;
     private readonly IDiagnosticMessagesLogger _diagnosticMessagesLogger;
     private readonly IProjectMetadataExplorer _projectMetadataExplorer;
+    private readonly IDirPathParamsResolver _dirPathParamsResolver;
 
     #region Constructor(s)
 
@@ -49,7 +51,8 @@ namespace UberDeployer.Agent.Service
       ITeamCityClient teamCityClient,
       IDeploymentRequestRepository deploymentRequestRepository,
       IDiagnosticMessagesLogger diagnosticMessagesLogger,
-      IProjectMetadataExplorer projectMetadataExplorer)
+      IProjectMetadataExplorer projectMetadataExplorer,
+      IDirPathParamsResolver dirPathParamsResolver)
     {
       Guard.NotNull(deploymentPipeline, "deploymentPipeline");
       Guard.NotNull(projectInfoRepository, "projectInfoRepository");
@@ -57,6 +60,7 @@ namespace UberDeployer.Agent.Service
       Guard.NotNull(teamCityClient, "teamCityClient");
       Guard.NotNull(deploymentRequestRepository, "deploymentRequestRepository");
       Guard.NotNull(diagnosticMessagesLogger, "diagnosticMessagesLogger");
+      Guard.NotNull(dirPathParamsResolver, "dirPathParamsResolver");
 
       _projectInfoRepository = projectInfoRepository;
       _environmentInfoRepository = environmentInfoRepository;
@@ -65,6 +69,7 @@ namespace UberDeployer.Agent.Service
       _deploymentRequestRepository = deploymentRequestRepository;
       _diagnosticMessagesLogger = diagnosticMessagesLogger;
       _projectMetadataExplorer = projectMetadataExplorer;
+      _dirPathParamsResolver = dirPathParamsResolver;
     }
 
     public AgentService()
@@ -75,7 +80,8 @@ namespace UberDeployer.Agent.Service
         ObjectFactory.Instance.CreateTeamCityClient(),
         ObjectFactory.Instance.CreateDeploymentRequestRepository(),
         InMemoryDiagnosticMessagesLogger.Instance,
-        ObjectFactory.Instance.CreateProjectMetadataExplorer())
+        ObjectFactory.Instance.CreateProjectMetadataExplorer(),
+        ObjectFactory.Instance.CreateDirPathParamsResolver())
     {
     }
 
@@ -144,6 +150,42 @@ namespace UberDeployer.Agent.Service
       }
     }
 
+    public void CreatePackageAsync(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo, string packageDirPath)
+    {
+      try
+      {
+        Guard.NotEmpty(deploymentId, "deploymentId");
+        Guard.NotEmpty(uniqueClientId, "uniqueClientId");
+        Guard.NotNullNorEmpty(requesterIdentity, "requesterIdentity");
+        Guard.NotNull(deploymentInfo, "deploymentInfo");
+
+        ProjectInfo projectInfo =
+          _projectInfoRepository.FindByName(deploymentInfo.ProjectName);
+
+        if (projectInfo == null)
+        {
+          throw new FaultException<ProjectNotFoundFault>(new ProjectNotFoundFault { ProjectName = deploymentInfo.ProjectName });
+        }
+
+        ThreadPool.QueueUserWorkItem(
+          state =>
+          {
+            try
+            {
+              DoCreatePackage(uniqueClientId, requesterIdentity, deploymentInfo, projectInfo, packageDirPath);
+            }
+            catch (Exception exc)
+            {
+              HandleDeploymentException(exc, uniqueClientId);
+            }
+          });
+      }
+      catch (Exception exc)
+      {
+        HandleDeploymentException(exc, uniqueClientId);
+      }
+    }
+
     public List<Proxy.Dto.ProjectInfo> GetProjectInfos(Proxy.Dto.ProjectFilter projectFilter)
     {
       if (projectFilter == null)
@@ -159,13 +201,6 @@ namespace UberDeployer.Agent.Service
         projectInfos =
           projectInfos
             .Where(pi => !string.IsNullOrEmpty(pi.Name) && pi.Name.IndexOf(projectFilter.Name, StringComparison.CurrentCultureIgnoreCase) > -1);
-      }
-
-      if (!string.IsNullOrEmpty(projectFilter.EnvironmentName))
-      {
-        projectInfos =
-          projectInfos
-            .Where(pi => pi.AllowedEnvironmentNames.Any(en => string.Compare(en, projectFilter.EnvironmentName, StringComparison.OrdinalIgnoreCase) == 0));
       }
 
       return
@@ -464,6 +499,25 @@ namespace UberDeployer.Agent.Service
       AsynchronousWebPasswordCollector.SetCollectedCredentials(deploymentId, password);
     }
 
+    public string GetDefaultPackageDirPath(string environmentName, string projectName)
+    {
+      EnvironmentInfo environmentInfo = _environmentInfoRepository.FindByName(environmentName);
+
+      if (environmentInfo == null)
+      {
+        throw new FaultException<EnvironmentNotFoundFault>(new EnvironmentNotFoundFault { EnvironmentName = environmentName });
+      }
+
+      if (string.IsNullOrEmpty(environmentInfo.ManualDeploymentPackageDirPath))
+      {
+        return null;
+      }
+
+      string resultDirPath = _dirPathParamsResolver.ResolveProjectName(environmentInfo.ManualDeploymentPackageDirPath, projectName);
+      
+      return _dirPathParamsResolver.ResolveCurrentDate(resultDirPath, "yyyy.MM.dd");
+    }
+
     #endregion
 
     #region Private methods
@@ -483,12 +537,29 @@ namespace UberDeployer.Agent.Service
 
     private void DoDeploy(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfoDto, ProjectInfo projectInfo)
     {
+      DeploymentTask deploymentTask = projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
+
+      StartTask(deploymentTask, uniqueClientId, requesterIdentity, deploymentInfoDto, projectInfo);
+    }
+
+    private void DoCreatePackage(Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfoDto, ProjectInfo projectInfo, string packageDirPath)
+    {
+      var deploymentTask =
+        new CreateManualDeploymentPackageDeploymentTask(
+          ObjectFactory.Instance.CreateProjectInfoRepository(),
+          ObjectFactory.Instance.CreateEnvironmentInfoRepository(),
+          ObjectFactory.Instance.CreateArtifactsRepository(),
+          ObjectFactory.Instance.CreateDirPathParamsResolver(),
+          packageDirPath);
+
+      StartTask(deploymentTask, uniqueClientId, requesterIdentity, deploymentInfoDto, projectInfo);
+    }
+
+    private void StartTask(DeploymentTask deploymentTask, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfoDto, ProjectInfo projectInfo)
+    {
       Core.Domain.DeploymentInfo deploymentInfo =
         DtoMapper.ConvertDeploymentInfo(deploymentInfoDto, projectInfo);
-
-      DeploymentTask deploymentTask =
-        projectInfo.CreateDeploymentTask(ObjectFactory.Instance);
-
+      
       var deploymentContext =
         new DeploymentContext(requesterIdentity);
 

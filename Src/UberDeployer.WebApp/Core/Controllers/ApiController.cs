@@ -10,6 +10,7 @@ using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Agent.Proxy.Dto.Input;
 using UberDeployer.Agent.Proxy.Dto.Metadata;
 using UberDeployer.Agent.Proxy.Faults;
+using UberDeployer.Common;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.WebApp.Core.Models.Api;
 using UberDeployer.WebApp.Core.Services;
@@ -20,10 +21,12 @@ namespace UberDeployer.WebApp.Core.Controllers
   public class ApiController : UberDeployerWebAppController
   {
     private const int _MaxProjectConfigurationBuildsCount = 10;
-    private const string _AppSettingsKey_AllowedEnvironments = "AllowedEnvironments";
-    private const string _AppSettingsKey_AllowedProjectConfigurations = "AllowedProjectConfigurations";
+    private const string _AppSettingsKey_VisibleEnvironments = "VisibleEnvironments";
+    private const string _AppSettingsKey_DeployableEnvironments = "DeployableEnvironments";
+    private const string _AppSettingsKey_AllowedProjectConfigurations = "AllowedProjectConfigurations";    
 
-    private static readonly ISet<string> _allowedEnvironments;
+    private static readonly ISet<string> _visibleEnvironments;
+    private static readonly ISet<string> _deployableEnvironments;
     private static readonly ISet<string> _allowedProjectConfigurations;
 
     private readonly ISessionService _sessionService;
@@ -32,21 +35,12 @@ namespace UberDeployer.WebApp.Core.Controllers
 
     static ApiController()
     {
-      string allowedEnvironmentsStr = ConfigurationManager.AppSettings[_AppSettingsKey_AllowedEnvironments];
+      string visibleEnvironmentsStr = AppSettingsUtils.ReadAppSettingString(_AppSettingsKey_VisibleEnvironments);
+      string deployableEnvironmentsStr = AppSettingsUtils.ReadAppSettingString(_AppSettingsKey_DeployableEnvironments);
+      string allowedProjectConfigurationsStr = AppSettingsUtils.ReadAppSettingString(_AppSettingsKey_AllowedProjectConfigurations);
 
-      if (string.IsNullOrEmpty(allowedEnvironmentsStr))
-      {
-        throw new ConfigurationErrorsException(string.Format("Missing app setting. Key: {0}.", _AppSettingsKey_AllowedEnvironments));
-      }
-
-      string allowedProjectConfigurationsStr = ConfigurationManager.AppSettings[_AppSettingsKey_AllowedProjectConfigurations];
-
-      if (string.IsNullOrEmpty(allowedProjectConfigurationsStr))
-      {
-        throw new ConfigurationErrorsException(string.Format("Missing app setting. Key: {0}.", _AppSettingsKey_AllowedProjectConfigurations));
-      }
-
-      _allowedEnvironments = ParseAppSettingSet(allowedEnvironmentsStr);
+      _visibleEnvironments = ParseAppSettingSet(visibleEnvironmentsStr);
+      _deployableEnvironments = ParseAppSettingSet(deployableEnvironmentsStr);
       _allowedProjectConfigurations = ParseAppSettingSet(allowedProjectConfigurationsStr);
     }
 
@@ -71,8 +65,13 @@ namespace UberDeployer.WebApp.Core.Controllers
     {
       List<EnvironmentViewModel> environmentViewModels =
         _agentService.GetEnvironmentInfos()
-          .Where(pi => _allowedEnvironments.Count == 0 || _allowedEnvironments.Any(ae => Regex.IsMatch(pi.Name, ae, RegexOptions.IgnoreCase)))
-          .Select(pi => new EnvironmentViewModel { Name = pi.Name })
+          .Where(pi => _visibleEnvironments.Count == 0 || _visibleEnvironments.Any(ae => Regex.IsMatch(pi.Name, ae, RegexOptions.IgnoreCase)))
+          .Select(pi => 
+            new EnvironmentViewModel 
+            { 
+              Name = pi.Name, 
+              IsDeployable = _deployableEnvironments.Count == 0 || _deployableEnvironments.Any(reg => Regex.IsMatch(pi.Name, reg, RegexOptions.IgnoreCase))
+            })
           .ToList();
 
       return
@@ -82,7 +81,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpGet]
-    public ActionResult GetProjects(string environmentName)
+    public ActionResult GetProjects(string environmentName, bool onlyDeployable)
     {
       var projectFilter =
         new ProjectFilter
@@ -90,8 +89,16 @@ namespace UberDeployer.WebApp.Core.Controllers
           EnvironmentName = environmentName,
         };
 
+      if (onlyDeployable && !_deployableEnvironments.Any(reg => Regex.IsMatch(environmentName, reg, RegexOptions.IgnoreCase)))
+      {
+        return Json(null, JsonRequestBehavior.AllowGet);
+      }
+
+      var projectInfos = _agentService.GetProjectInfos(projectFilter);
+
       List<ProjectViewModel> projectViewModels =
-        _agentService.GetProjectInfos(projectFilter)
+        projectInfos
+          .Where(x => !onlyDeployable || x.AllowedEnvironmentNames.Contains(environmentName))
           .Select(CreateProjectViewModel)
           .ToList();
 
@@ -224,6 +231,63 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpPost]
+    public ActionResult CreatePackage(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, string packageDirPath)
+    {
+      if (string.IsNullOrEmpty(projectName)
+        || string.IsNullOrEmpty(projectConfigurationName)
+        || string.IsNullOrEmpty(projectConfigurationBuildId)
+        || string.IsNullOrEmpty(targetEnvironmentName)
+        || !projectType.HasValue)
+      {
+        return BadRequest();
+      }
+
+      try
+      {
+        Guid deploymentId = Guid.NewGuid();
+
+        _agentService.CreatePackageAsync(
+          deploymentId,
+          _sessionService.UniqueClientId,
+          SecurityUtils.CurrentUsername,
+          CreateDeploymentInfo(
+            deploymentId,
+            false,
+            projectName,
+            projectConfigurationName,
+            projectConfigurationBuildId,
+            targetEnvironmentName,
+            projectType.Value),
+          packageDirPath);
+
+        return Json(new { Status = "OK" });
+      }
+      catch (Exception exc)
+      {
+        return HandleAjaxError(exc);
+      }      
+    }
+
+    [HttpGet]
+    public ActionResult GetDefaultPackageDirPath(string environmentName, string projectName)
+    {
+      if (string.IsNullOrEmpty(environmentName)
+          || string.IsNullOrEmpty(projectName))
+      {
+        return BadRequest();
+      }
+
+      try
+      {
+        return new ContentResult {Content = _agentService.GetDefaultPackageDirPath(environmentName, projectName)};
+      }
+      catch (Exception exc)
+      {
+        return HandleAjaxError(exc);
+      }
+    }
+
+    [HttpPost]
     public ActionResult Simulate(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, List<string> targetMachines = null)
     {
       return
@@ -305,6 +369,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       {
         Name = pi.Name,
         Type = (ProjectTypeViewModel)Enum.Parse(typeof(ProjectTypeViewModel), pi.Type.ToString(), true),
+        AllowedEnvironmentNames = pi.AllowedEnvironmentNames,
       };
     }
 
@@ -466,6 +531,29 @@ namespace UberDeployer.WebApp.Core.Controllers
       }
 
       return projectInfo.Type;
+    }
+
+    private static string GetAppSettingsStringValue(string key)
+    {
+      string appSettingsValue = ConfigurationManager.AppSettings[key];
+
+      if (string.IsNullOrEmpty(appSettingsValue))
+      {
+        throw new ConfigurationErrorsException(string.Format("Missing app setting. Key: {0}.", key));
+      }
+
+      return appSettingsValue;
+    }
+
+    private static bool GetAppSettingsBoolValue(string key)
+    {
+      bool result;
+      if (bool.TryParse(GetAppSettingsStringValue(key), out result))
+      {
+        return result;
+      }
+       
+      throw new ConfigurationErrorsException(string.Format("Incorrect bool value in app setting. Key: {0}.", key));
     }
   }
 }
