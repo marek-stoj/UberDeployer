@@ -25,6 +25,8 @@ namespace UberDeployer.Core.Configuration
       public string WebAppInternalApiEndpointUrl { get; set; }
 
       public int WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds { get; set; }
+
+      public string ManualDeploymentPackageCurrentDateFormat { get; set; }
     }
 
     private readonly string _xmlFilePath;
@@ -197,6 +199,23 @@ namespace UberDeployer.Core.Configuration
         LoadXmlIfNeeded();
 
         _applicationConfigurationXml.WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds = value;
+      }
+    }
+
+    public string ManualDeploymentPackageCurrentDateFormat
+    {
+      get
+      {
+        LoadXmlIfNeeded();
+
+        return _applicationConfigurationXml.ManualDeploymentPackageCurrentDateFormat;
+      }
+
+      set
+      {
+        LoadXmlIfNeeded();
+
+        _applicationConfigurationXml.ManualDeploymentPackageCurrentDateFormat = value;
       }
     }
 

@@ -19,5 +19,7 @@
     string WebAppInternalApiEndpointUrl { get; set; }
     
     int WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds { get; set; }
+    
+    string ManualDeploymentPackageCurrentDateFormat { get; set; }
   }
 }

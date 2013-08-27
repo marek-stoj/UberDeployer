@@ -163,7 +163,12 @@ namespace UberDeployer.CommonConfiguration
 
       container.Register(
         Component.For<IDirPathParamsResolver>()
-          .ImplementedBy<DirPathParamsResolver>()
+          .UsingFactoryMethod(
+            () =>
+              {
+                var appConfig = container.Resolve<IApplicationConfiguration>();
+                return new DirPathParamsResolver(appConfig.ManualDeploymentPackageCurrentDateFormat);
+              })
           .LifeStyle.Is(LifestyleType.Transient));
     }
 

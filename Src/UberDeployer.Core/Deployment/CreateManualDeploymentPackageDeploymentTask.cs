@@ -88,9 +88,12 @@ namespace UberDeployer.Core.Deployment
 
     private string PreparePackageDirPath(string packageDirPath)
     {
-      packageDirPath = _dirPathParamsResolver.ResolveOrderNumber(packageDirPath);
+      if (Directory.Exists(packageDirPath))
+      {
+        throw new DeploymentTaskException(string.Format("Target directory already exists: '{0}'", packageDirPath));
+      }
 
-      Directory.CreateDirectory(packageDirPath);                  
+      Directory.CreateDirectory(packageDirPath);
 
       return packageDirPath;
     }    

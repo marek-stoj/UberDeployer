@@ -513,9 +513,7 @@ namespace UberDeployer.Agent.Service
         return null;
       }
 
-      string resultDirPath = _dirPathParamsResolver.ResolveProjectName(environmentInfo.ManualDeploymentPackageDirPath, projectName);
-      
-      return _dirPathParamsResolver.ResolveCurrentDate(resultDirPath, "yyyy.MM.dd");
+      return _dirPathParamsResolver.ResolveParams(environmentInfo.ManualDeploymentPackageDirPath, projectName);           
     }
 
     #endregion

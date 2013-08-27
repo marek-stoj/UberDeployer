@@ -5,16 +5,35 @@ using UberDeployer.Common.SyntaxSugar;
 namespace UberDeployer.Core.Deployment
 {
   public class DirPathParamsResolver : IDirPathParamsResolver
-  {
+  {    
     private const string _OrderNumberParam = "${order.number}";
 
     private const string _CurrentDateParam = "${current.date}";
 
-    private const string _ProjectNameParam = "${project.name}";    
+    private const string _ProjectNameParam = "${project.name}";
+
+    private readonly string _dateFormat;
+
+    public DirPathParamsResolver(string dateFormat)
+    {
+      _dateFormat = dateFormat;
+    }
+
+    public string ResolveParams(string dirPath, string projectName)
+    {
+      Guard.NotNull(dirPath, "dirPath");
+      Guard.NotNullNorEmpty(projectName, "projectName");
+
+      dirPath = ResolveProjectName(dirPath, projectName);
+      dirPath = ResolveCurrentDate(dirPath, _dateFormat);
+      dirPath = ResolveOrderNumber(dirPath);
+
+      return dirPath;
+    }
 
     /// <param name="dirPath">Can be empty.</param>
     /// <param name="projectName"></param>
-    public string ResolveProjectName(string dirPath, string projectName)
+    private string ResolveProjectName(string dirPath, string projectName)
     {
       Guard.NotNull(dirPath, "dirPath");
       Guard.NotNullNorEmpty(projectName, "projectName");
@@ -24,7 +43,7 @@ namespace UberDeployer.Core.Deployment
                : dirPath;
     }
 
-    public string ResolveCurrentDate(string dirPath, string dateFormat)
+    private string ResolveCurrentDate(string dirPath, string dateFormat)
     {
       if (dirPath.Contains(_CurrentDateParam))
       {
@@ -39,7 +58,7 @@ namespace UberDeployer.Core.Deployment
       return dirPath;
     }
 
-    public string ResolveOrderNumber(string packageDirPath)
+    private string ResolveOrderNumber(string packageDirPath)
     {
       CheckOrderNumberParam(packageDirPath);
 
