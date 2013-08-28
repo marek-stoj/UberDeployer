@@ -158,7 +158,7 @@ function getDeploymentInfo() {
 function doDeployOrSimulate(isSimulation) {
   var deploymentInfo = getDeploymentInfo();
   
-  if (g_ProjectList[projectName].type == APP_TYPES.WebApp && (!targetMachines || targetMachines.length == 0)) {
+  if (g_ProjectList[deploymentInfo.projectName].type == APP_TYPES.WebApp && (!deploymentInfo.targetMachines || deploymentInfo.targetMachines.length == 0)) {
     alert('Select web machine for selected environment!');
     return;
   }
