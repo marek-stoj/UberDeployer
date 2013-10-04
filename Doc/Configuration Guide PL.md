@@ -247,8 +247,8 @@ które wymagają podania użytkownika, w kontekście którego dana aplikacja ma 
   Opis elementów:
   
   * `Id` &mdash; wewnętrzny identyfikator puli aplikacji IIS. Patrz również element `WebAppProjectConfigurations`.
-  * `Name` &mdash; nazwa puli aplikacji IIS.
-  * `Version` &mdash; Wersja frameworka .NET używanego przez pulę aplikacji IIS.
+  * `Name` &mdash; nazwa puli aplikacji w IIS.
+  * `Version` &mdash; wersja frameworka .NET używanego przez pulę aplikacji IIS.
   * `Mode` &mdash; Tryb działania puli aplikacji IIS.
 
 - `DatabaseServers` &mdash; definiuje mapowanie wewnętrznych identyfikatorów serwerów bazodanowych na właściwe nazwy tychże serwerów. Przykład:
