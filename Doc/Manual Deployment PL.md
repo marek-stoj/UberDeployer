@@ -1,13 +1,13 @@
-# Przygotowywanie paczek do rêcznego wdra¿ania
+ï»¿# Przygotowywanie paczek do rÄ™cznego wdraÅ¼ania
 
-W webowym kliencie ÜberDeployera znajduje siê przycisk `Create Package` umo¿liwiaj¹cy przygotowanie paczki gotowej do rêcznego wdro¿enia aplikacji.
-Podobnie jak przy zwyk³ym wdra¿aniu nale¿y wybraæ projekt, który chcemy wdro¿yæ, konfiguracjê, build i œrodowisko.
-Po klikniêciu w przycisk `Create Package` otwiera siê okno dialogowe z domyœln¹ œcie¿k¹ do katalogu do którego ma trafiæ paczka.
+W webowym kliencie ÃœberDeployera znajduje siÄ™ przycisk `Create Package` umoÅ¼liwiajÄ…cy przygotowanie paczki gotowej do rÄ™cznego wdroÅ¼enia aplikacji.
+Podobnie jak przy zwykÅ‚ym wdraÅ¼aniu naleÅ¼y wybraÄ‡ projekt, ktÃ³ry chcemy wdroÅ¼yÄ‡, konfiguracjÄ™, build i Å›rodowisko.
+Po klikniÄ™ciu w przycisk `Create Package` otwiera siÄ™ okno dialogowe z domyÅ›lnÄ… Å›cieÅ¼kÄ… do katalogu do ktÃ³rego ma trafiÄ‡ paczka.
 
-Domyœlna œcie¿ka jest ustawiana per œrodowisko (`EvironmentInfos.xml` - parametr `ManualDeploymentPackageDirPath`, wiêcej info w [Configuration Guide](Configuration Guide PL.md)).
+DomyÅ›lna Å›cieÅ¼ka jest ustawiana per Å›rodowisko (`EvironmentInfos.xml` - parametr `ManualDeploymentPackageDirPath`, wiÄ™cej info w [Configuration Guide](Configuration Guide PL.md)).
 
-Proces przygotowania paczki sk³ada siê z:
-- pobrania artefaktów z TeamCity
-- rozpakowania artefaktów
-- przygotowania konfiguracji na wybrane œrodowisko
-- przekopiowania plików do wybranej lokalizacji
+Proces przygotowania paczki skÅ‚ada siÄ™ z:
+- pobrania artefaktÃ³w z TeamCity
+- rozpakowania artefaktÃ³w
+- przygotowania konfiguracji na wybrane Å›rodowisko
+- przekopiowania plikÃ³w do wybranej lokalizacji
