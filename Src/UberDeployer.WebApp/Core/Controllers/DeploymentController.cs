@@ -11,12 +11,19 @@ namespace UberDeployer.WebApp.Core.Controllers
   {
     private const string _AppSettingsKey_OnlyDeployableCheckedByDefault = "OnlyDeployableCheckedByDefault";
 
+    private const string _AppSettingsKey_IsCreatePackageVisible = "IsCreatePackageVisible";
+
     private static readonly bool _onlyDeployableCheckedByDefault;
+
+    private static readonly bool _isCreatePackageVisible;
 
     static DeploymentController()
     {
       _onlyDeployableCheckedByDefault =
         AppSettingsUtils.ReadAppSettingBool(_AppSettingsKey_OnlyDeployableCheckedByDefault);
+
+      _isCreatePackageVisible =
+        AppSettingsUtils.ReadAppSettingBool(_AppSettingsKey_IsCreatePackageVisible);
     }
 
     [HttpGet]
@@ -32,6 +39,7 @@ namespace UberDeployer.WebApp.Core.Controllers
             TodayDevLifeGifDescription = todayDevLifeGif.Item2,
             CanDeploy = SecurityUtils.CanDeploy,
             ShowOnlyDeployable = _onlyDeployableCheckedByDefault,
+            IsCreatePackageVisible = _isCreatePackageVisible
           };
 
       return View(viewModel);

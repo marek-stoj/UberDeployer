@@ -69,9 +69,12 @@
         <button id="btn-simulate" name="btn-simulate" class="btn pull-right">
           Simulate
         </button>
-        <button id="btn-create-package" name="btn-create-package" class="btn pull-right" data-toggle="package-dir-modal">
-          Create Package
-        </button>
+        @if (Model.IsCreatePackageVisible)
+        {
+          <button id="btn-create-package" name="btn-create-package" class="btn pull-right" data-toggle="package-dir-modal">
+            Create Package
+          </button>
+        }
         <button id="btn-version" class="btn pull-left" onclick="javascript: getProjectVersion();">
           Version?
         </button>

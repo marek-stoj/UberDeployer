@@ -16,5 +16,7 @@
     public bool CanDeploy { get; set; }
 
     public bool ShowOnlyDeployable { get; set; }
+
+    public bool IsCreatePackageVisible { get; set; }
   }
 }
