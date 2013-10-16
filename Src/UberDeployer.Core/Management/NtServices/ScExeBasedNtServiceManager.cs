@@ -44,7 +44,7 @@ namespace UberDeployer.Core.Management.NtServices
 
       string args =
         string.Format(
-          "\\\\\"{0}\" query \"{1}\"",
+          "\"\\\\{0}\" query \"{1}\"",
           machineName,
           serviceName);
 
