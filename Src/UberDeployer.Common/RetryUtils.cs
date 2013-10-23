@@ -54,7 +54,7 @@ namespace UberDeployer.Common
 
           if (currentRetry > retriesCount)
           {
-            break;
+            throw;
           }
 
           if (retryDelay > 0)

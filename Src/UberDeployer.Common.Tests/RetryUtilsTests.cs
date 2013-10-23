@@ -102,5 +102,33 @@ namespace UberDeployer.Common.Tests
 
       Assert.AreEqual(1, triesCount);
     }
+
+    [Test]
+    public void RetryOnException_throws_after_retries_count_is_exceeded()
+    {
+      // arrange
+      int triesCount = 0;
+
+      Action action =
+        () =>
+        {
+          triesCount++;
+
+          throw new ArgumentOutOfRangeException();
+        };
+
+      // act & assert
+      Assert.Throws<ArgumentOutOfRangeException>(
+        () =>
+        {
+          RetryUtils.RetryOnException(
+            new[] { typeof(ArgumentOutOfRangeException) },
+            1,
+            0,
+            action);
+        });
+
+      Assert.AreEqual(2, triesCount);
+    }
   }
 }
