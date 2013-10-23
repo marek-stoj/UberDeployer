@@ -64,7 +64,6 @@ namespace UberDeployer.Core.Tests.Deployment
       }
     }
 
-
     [Test]
     public void Test_copying_all_files_throws_when_no_src()
     {

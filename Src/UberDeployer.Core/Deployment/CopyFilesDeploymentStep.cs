@@ -1,12 +1,16 @@
 using System;
 using System.IO;
 using System.Linq;
+using UberDeployer.Common;
 using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Core.Deployment
 {
   public class CopyFilesDeploymentStep : DeploymentStep
   {
+    private const int _DeleteDstDirRetriesCount = 4;
+    private const int _DeleteDstDirRetryDelay = 500;
+
     private readonly Lazy<string> _srcDirPathProvider;
     private readonly Lazy<string> _dstDirPath;
 
@@ -34,13 +38,20 @@ namespace UberDeployer.Core.Deployment
 
       if (Directory.Exists(_dstDirPath.Value))
       {
-        Directory.GetDirectories(_dstDirPath.Value)
-          .ToList()
-          .ForEach(dirPath => Directory.Delete(dirPath, true));
+        RetryUtils.RetryOnException(
+          new[] { typeof(UnauthorizedAccessException) },
+          _DeleteDstDirRetriesCount,
+          _DeleteDstDirRetryDelay,
+          () =>
+          {
+            Directory.GetDirectories(_dstDirPath.Value)
+              .ToList()
+              .ForEach(dirPath => Directory.Delete(dirPath, true));
 
-        Directory.GetFiles(_dstDirPath.Value)
-          .ToList()
-          .ForEach(File.Delete);
+            Directory.GetFiles(_dstDirPath.Value)
+              .ToList()
+              .ForEach(File.Delete);
+          });
       }
       else
       {
@@ -59,7 +70,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Private helper methods
 
-    private void CopyAll(string srcDirPath, string dstDirPath)
+    private static void CopyAll(string srcDirPath, string dstDirPath)
     {
       foreach (string filePath in Directory.GetFiles(srcDirPath, "*.*", SearchOption.TopDirectoryOnly))
       {
