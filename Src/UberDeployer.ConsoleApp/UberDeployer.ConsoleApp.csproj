@@ -33,9 +33,6 @@
       <ExecutableExtension>.exe</ExecutableExtension>
       <HintPath>..\..\Lib\MsWebDeploy\msdeploy.exe</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.2.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\Lib\Newtonsoft.Json\Newtonsoft.Json.Net35.dll</HintPath>
-    </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
       <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
