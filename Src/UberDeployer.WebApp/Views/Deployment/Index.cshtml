@@ -146,7 +146,11 @@
 </div>
 
 <script type="text/javascript">
-  $(document).ready(function () {
-    initializeDeploymentPage();
+  $(document).ready(function() {
+    var initData = {
+      userCanDeploy: @(Model.CanDeploy ? "true" : "false")
+    };
+
+    initializeDeploymentPage(initData);
   })
 </script>

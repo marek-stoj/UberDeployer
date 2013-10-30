@@ -9,6 +9,8 @@ var g_TargetEnvironmentCookieExpirationInDays = 365;
 var g_ProjectList = [];
 var g_EnvironmentList = [];
 
+var g_userCanDeploy = false;
+
 var KICKASSVERSION = '2.0';
 
 function setAppPrefix(appPrefix) {
@@ -48,7 +50,9 @@ function Environment(name, isDeployable) {
   self.isDeployable = isDeployable;
 }
 
-function initializeDeploymentPage() {
+function initializeDeploymentPage(initData) {
+  g_userCanDeploy = initData.userCanDeploy;
+
   setupSignalR();
   setupCollectCredentialsDialog();
 
@@ -364,7 +368,7 @@ function disableDeployButtonsForCurrentEnvironment() {
     return;
   }
 
-  if (environment.isDeployable && $.inArray(selectedEnvironmentName, project.allowedEnvironmentNames) > -1) {
+  if (g_userCanDeploy && environment.isDeployable && $.inArray(selectedEnvironmentName, project.allowedEnvironmentNames) > -1) {
     $('#btn-deploy').removeAttr('disabled');
   } else {
     $('#btn-deploy').attr('disabled', 'disabled');
