@@ -108,6 +108,11 @@ namespace UberDeployer.Core.Management.Metadata
           {
             assemblyFilePath = AddSuffixToFileName(originalAssemblyFilePath, ".WebApp");
           }
+
+          if (!File.Exists(assemblyFilePath))
+          {
+            assemblyFilePath = AddSuffixToFileName(originalAssemblyFilePath, ".Host");
+          }
         }
 
         if (File.Exists(assemblyFilePath))
