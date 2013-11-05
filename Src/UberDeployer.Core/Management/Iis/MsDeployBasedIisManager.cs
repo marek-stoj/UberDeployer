@@ -223,15 +223,15 @@ namespace UberDeployer.Core.Management.Iis
 
     private static IisAppPoolVersion GetIisAppPoolVersion(string managedRuntimeVersionString)
     {
-      switch (managedRuntimeVersionString)
+      switch (managedRuntimeVersionString.ToUpper())
       {
-        case "v1.1":
+        case "V1.1":
           return IisAppPoolVersion.V1_1;
 
-        case "v2.0":
+        case "V2.0":
           return IisAppPoolVersion.V2_0;
 
-        case "v4.0":
+        case "V4.0":
           return IisAppPoolVersion.V4_0;
 
         default:
