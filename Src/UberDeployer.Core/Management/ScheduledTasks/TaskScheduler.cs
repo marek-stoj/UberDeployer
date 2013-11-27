@@ -37,7 +37,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
               WorkingDirectory = Path.GetDirectoryName(scheduledTaskSpecification.ExeAbsolutePath),
             };
 
-        DailyTrigger taskTrigger = CreateDailyTrigger(scheduledTaskSpecification);
+        DailyTrigger taskTrigger = CreateTaskTrigger(scheduledTaskSpecification);
         TaskDefinition taskDefinition = null;
         Task registeredTask = null;
 
@@ -117,9 +117,9 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 
           taskDefinition.Triggers.Clear();
 
-          Trigger dailyTrigger = CreateDailyTrigger(scheduledTaskSpecification);
+          Trigger taskTrigger = CreateTaskTrigger(scheduledTaskSpecification);
 
-          taskDefinition.Triggers.Add(dailyTrigger);
+          taskDefinition.Triggers.Add(taskTrigger);
 
           registeredTask =
             taskService.RootFolder.RegisterTaskDefinition(
@@ -226,7 +226,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
       return new TaskService(machineName);
     }
 
-    private static DailyTrigger CreateDailyTrigger(ScheduledTaskSpecification scheduledTaskSpecification)
+    private static DailyTrigger CreateTaskTrigger(ScheduledTaskSpecification scheduledTaskSpecification)
     {
       DateTime now = DateTime.Now;
 
@@ -236,18 +236,28 @@ namespace UberDeployer.Core.Management.ScheduledTasks
             DaysInterval = 1,
             StartBoundary =
               new DateTime(
-              now.Year,
-              now.Month,
-              now.Day,
-              scheduledTaskSpecification.ScheduledHour,
-              scheduledTaskSpecification.ScheduledMinute,
-              0),
+                now.Year,
+                now.Month,
+                now.Day,
+                scheduledTaskSpecification.ScheduledHour,
+                scheduledTaskSpecification.ScheduledMinute,
+                0),
           };
 
       if (scheduledTaskSpecification.ExecutionTimeLimitInMinutes > 0)
       {
         dailyTrigger.ExecutionTimeLimit =
           TimeSpan.FromMinutes(scheduledTaskSpecification.ExecutionTimeLimitInMinutes);
+      }
+
+      if (scheduledTaskSpecification.RepetitionSpecification != null)
+      {
+        RepetitionSpecification repetitionSpecification = scheduledTaskSpecification.RepetitionSpecification;
+        RepetitionPattern repetitionPattern = dailyTrigger.Repetition;
+
+        repetitionPattern.Duration = repetitionSpecification.Duration;
+        repetitionPattern.Interval = repetitionSpecification.Interval;
+        repetitionPattern.StopAtDurationEnd = repetitionSpecification.StopAtDurationEnd;
       }
 
       return dailyTrigger;

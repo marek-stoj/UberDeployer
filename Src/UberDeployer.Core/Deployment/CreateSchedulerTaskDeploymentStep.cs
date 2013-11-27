@@ -16,6 +16,7 @@ namespace UberDeployer.Core.Deployment
     private readonly int _scheduledHour;
     private readonly int _scheduledMinute;
     private readonly int _executionTimeLimitInMinutes;
+    private readonly RepetitionSpecification _repetitionSpecification;
 
     #region Constructor(s)
 
@@ -28,6 +29,7 @@ namespace UberDeployer.Core.Deployment
       int scheduledHour,
       int scheduledMinute,
       int executionTimeLimitInMinutes,
+      RepetitionSpecification repetitionSpecification,
       ITaskScheduler taskScheduler)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
@@ -36,6 +38,7 @@ namespace UberDeployer.Core.Deployment
       Guard.NotNullNorEmpty(executablePath, "executablePath");
       Guard.NotNullNorEmpty(userName, "userName");
       Guard.NotNullNorEmpty(password, "password");
+      Guard.NotNull(repetitionSpecification, "repetitionSpecification");
 
       if (!Path.IsPathRooted(executablePath))
       {
@@ -51,6 +54,7 @@ namespace UberDeployer.Core.Deployment
       _scheduledHour = scheduledHour;
       _scheduledMinute = scheduledMinute;
       _executionTimeLimitInMinutes = executionTimeLimitInMinutes;
+      _repetitionSpecification = repetitionSpecification;
     }
 
     #endregion
@@ -65,7 +69,8 @@ namespace UberDeployer.Core.Deployment
           _executablePath,
           _scheduledHour,
           _scheduledMinute,
-          _executionTimeLimitInMinutes);
+          _executionTimeLimitInMinutes,
+          _repetitionSpecification);
 
       _taskScheduler
         .ScheduleNewTask(

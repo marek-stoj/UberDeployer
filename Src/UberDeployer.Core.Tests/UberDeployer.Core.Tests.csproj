@@ -110,8 +110,6 @@
     <Compile Include="Management\NtServices\ScExeBasedNtServiceManagerTests.cs" />
     <Compile Include="Management\Iis\MsDeployBasedIisManagerTests.cs" />
     <Compile Include="Management\NtServices\NtServiceDescriptorTests.cs" />
-    <Compile Include="Management\TaskScheduler\ScheduledTaskSpecificationTests.cs" />
-    <Compile Include="Management\TaskScheduler\TaskSchedulerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCity\ModelsTests.cs" />
     <Compile Include="TestData.cs" />

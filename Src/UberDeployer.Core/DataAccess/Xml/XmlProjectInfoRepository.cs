@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using UberDeployer.Core.Domain;
+using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.DataAccess.Xml
 {
@@ -84,6 +85,19 @@ namespace UberDeployer.Core.DataAccess.Xml
       /// 0 - no limit.
       /// </summary>
       public int ExecutionTimeLimitInMinutes { get; set; }
+
+      public RepetitionSpecificationXml RepetitionSpecification { get; set; }
+    }
+
+    public class RepetitionSpecificationXml
+    {
+      public bool Enabled { get; set; }
+
+      public TimeSpan Interval { get; set; }
+
+      public TimeSpan Duration { get; set; }
+
+      public bool StopAtDurationEnd { get; set; }
     }
 
     public class TerminalAppProjectInfoXml : ProjectInfoXml
@@ -215,7 +229,13 @@ namespace UberDeployer.Core.DataAccess.Xml
                     x.UserId,
                     x.ScheduledHour,
                     x.ScheduledMinute,
-                    x.ExecutionTimeLimitInMinutes)));
+                    x.ExecutionTimeLimitInMinutes,
+                    x.RepetitionSpecification.Enabled
+                      ? RepetitionSpecification.CreateEnabled(
+                        x.RepetitionSpecification.Interval,
+                        x.RepetitionSpecification.Duration,
+                        x.RepetitionSpecification.StopAtDurationEnd)
+                      : RepetitionSpecification.CreatedDisabled())));
       }
 
       var terminalAppProjectInfoXml = projectInfoXml as TerminalAppProjectInfoXml;

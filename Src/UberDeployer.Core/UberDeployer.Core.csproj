@@ -172,6 +172,7 @@
     <Compile Include="Management\MsDeploy\MsDeploy.cs" />
     <Compile Include="Management\MsDeploy\MsDeployException.cs" />
     <Compile Include="Management\ScheduledTasks\ITaskScheduler.cs" />
+    <Compile Include="Management\ScheduledTasks\RepetitionSpecification.cs" />
     <Compile Include="Management\ScheduledTasks\ScheduledTaskDetails.cs" />
     <Compile Include="Management\ScheduledTasks\ScheduledTaskSpecification.cs" />
     <Compile Include="Management\ScheduledTasks\TaskScheduler.cs" />

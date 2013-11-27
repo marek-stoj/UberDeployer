@@ -1,15 +1,17 @@
 using System;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Domain
 {
   public class SchedulerAppTask
   {
-    public SchedulerAppTask(string name, string executableName, string userId, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
+    public SchedulerAppTask(string name, string executableName, string userId, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes, RepetitionSpecification repetitionSpecification)
     {
       Guard.NotNullNorEmpty(name, "name");
       Guard.NotNullNorEmpty(executableName, "executableName");
       Guard.NotNullNorEmpty(userId, "userId");
+      Guard.NotNull(repetitionSpecification, "repetitionSpecification");
 
       if (scheduledHour < 0 || scheduledHour > 23)
       {
@@ -32,6 +34,7 @@ namespace UberDeployer.Core.Domain
       ScheduledHour = scheduledHour;
       ScheduledMinute = scheduledMinute;
       ExecutionTimeLimitInMinutes = executionTimeLimitInMinutes;
+      RepetitionSpecification = repetitionSpecification;
     }
 
     public string Name { get; private set; }
@@ -51,5 +54,7 @@ namespace UberDeployer.Core.Domain
     /// 0 - no limit.
     /// </summary>
     public int ExecutionTimeLimitInMinutes { get; private set; }
+
+    public RepetitionSpecification RepetitionSpecification { get; set; }
   }
 }

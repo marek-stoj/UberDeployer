@@ -13,7 +13,6 @@ namespace UberDeployer.Core.Tests.Domain
   [TestFixture]
   public class SchedulerAppProjectInfoTests
   {
-    private const int _ExecutionTimeLimitInMinutes = 1;
     private const string _ProjectName = "name";
     private const string _ArtifactsRepositoryName = "repoName";
     private const string _ArtifactsRepositoryDirName = "repoDirName";
@@ -24,6 +23,8 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _SchedulerAppUserId = "appUser";
     private const int _ScheduledHour = 1;
     private const int _ScheduledMinute = 1;
+    private const int _ExecutionTimeLimitInMinutes = 1;
+    private static readonly RepetitionSpecification _RepetitionSpecification = RepetitionSpecification.CreateEnabled(TimeSpan.FromMinutes(15.0), TimeSpan.FromDays(1.0), true);
     private static readonly string[] _AllowedEnvironmentNames = { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
@@ -62,7 +63,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppUserId,
               _ScheduledHour,
               _ScheduledMinute,
-              _ExecutionTimeLimitInMinutes)
+              _ExecutionTimeLimitInMinutes,
+              _RepetitionSpecification)
           });
 
       objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(prjInfoRepository.Object);
@@ -121,7 +123,8 @@ namespace UberDeployer.Core.Tests.Domain
               _SchedulerAppUserId,
               _ScheduledHour,
               _ScheduledMinute,
-              _ExecutionTimeLimitInMinutes)
+              _ExecutionTimeLimitInMinutes,
+              _RepetitionSpecification)
           });
 
       List<string> targetFolders =

@@ -174,6 +174,7 @@ namespace UberDeployer.Core.Deployment
             schedulerAppTask.ScheduledHour,
             schedulerAppTask.ScheduledMinute,
             schedulerAppTask.ExecutionTimeLimitInMinutes,
+            schedulerAppTask.RepetitionSpecification,
             _taskScheduler));
       }
       else if (hasSettingsChanged)
@@ -189,6 +190,7 @@ namespace UberDeployer.Core.Deployment
             schedulerAppTask.ScheduledHour,
             schedulerAppTask.ScheduledMinute,
             schedulerAppTask.ExecutionTimeLimitInMinutes,
+            schedulerAppTask.RepetitionSpecification,
             _taskScheduler));
       }
     }

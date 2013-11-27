@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Core.Management.ScheduledTasks
 {
@@ -7,17 +8,11 @@ namespace UberDeployer.Core.Management.ScheduledTasks
   {
     #region Constructor(s)
 
-    public  ScheduledTaskSpecification(string name, string exeAbsolutePath, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
+    public  ScheduledTaskSpecification(string name, string exeAbsolutePath, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes, RepetitionSpecification repetitionSpecification)
     {
-      if (string.IsNullOrEmpty(name))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "name");
-      }
-
-      if (string.IsNullOrEmpty(exeAbsolutePath))
-      {
-        throw new ArgumentException("Argument can't be null nor empty.", "exeAbsolutePath");
-      }
+      Guard.NotNullNorEmpty(name, "name");
+      Guard.NotNullNorEmpty(exeAbsolutePath, "exeAbsolutePath");
+      Guard.NotNull(repetitionSpecification, "repetitionSpecification");
 
       if (!Path.IsPathRooted(exeAbsolutePath))
       {
@@ -44,6 +39,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
       ScheduledHour = scheduledHour;
       ScheduledMinute = scheduledMinute;
       ExecutionTimeLimitInMinutes = executionTimeLimitInMinutes;
+      RepetitionSpecification = repetitionSpecification;
     }
 
     #endregion
@@ -61,7 +57,9 @@ namespace UberDeployer.Core.Management.ScheduledTasks
     /// <summary>
     /// 0 - no limit.
     /// </summary>
-    public int ExecutionTimeLimitInMinutes { get; set; }
+    public int ExecutionTimeLimitInMinutes { get; private set; }
+
+    public RepetitionSpecification RepetitionSpecification { get; private set; }
 
     #endregion
   }
