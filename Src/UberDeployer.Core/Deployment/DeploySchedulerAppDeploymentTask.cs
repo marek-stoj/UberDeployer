@@ -55,7 +55,7 @@ namespace UberDeployer.Core.Deployment
 
       var taskDetailsByName = new Dictionary<string, ScheduledTaskDetails>();
 
-      _projectInfo.SchedulerTasks
+      _projectInfo.SchedulerAppTasks
         .ForEach(
           schedulerAppTask =>
           {
@@ -87,7 +87,7 @@ namespace UberDeployer.Core.Deployment
           binariesDirPathProvider,
           new Lazy<string>(() => targetDirNetworkPath)));
 
-      _projectInfo.SchedulerTasks
+      _projectInfo.SchedulerAppTasks
         .ForEach(
           schedulerAppTask =>
           {

@@ -37,8 +37,8 @@ namespace UberDeployer.Core.Tests.Deployment
 
       _projectInfo = ProjectInfoGenerator.GetSchedulerAppProjectInfo();
 
-      SchedulerAppTask schedulerAppTask1 = _projectInfo.SchedulerTasks[0];
-      SchedulerAppTask schedulerAppTask2 = _projectInfo.SchedulerTasks[1];
+      SchedulerAppTask schedulerAppTask1 = _projectInfo.SchedulerAppTasks[0];
+      SchedulerAppTask schedulerAppTask2 = _projectInfo.SchedulerAppTasks[1];
 
       _environmentInfo =
         DeploymentDataGenerator.GetEnvironmentInfo(
@@ -102,7 +102,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange  
       SchedulerAppTask schedulerAppTask =
-        _projectInfo.SchedulerTasks[1];
+        _projectInfo.SchedulerAppTasks[1];
 
       ScheduledTaskDetails runningTaskDetails =
         GetTaskDetails(
@@ -167,7 +167,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange  
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerTasks[0], exePath, false);
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks[0], exePath, false);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -208,7 +208,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerTasks[0], exePath, false);
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks[0], exePath, false);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))

@@ -12,20 +12,28 @@ namespace UberDeployer.Core.Domain
   {
     #region Constructor(s)
 
-    public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string schedulerAppDirName, string schedulerAppExeName, IEnumerable<SchedulerAppTask> schedulerTasks)
+    public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string schedulerAppDirName, string schedulerAppExeName, IEnumerable<SchedulerAppTask> schedulerAppTasks)
       : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
       Guard.NotNullNorEmpty(schedulerAppDirName, "schedulerAppDirName");
       Guard.NotNullNorEmpty(schedulerAppExeName, "schedulerAppExeName");
 
-      if (schedulerTasks == null)
+      if (schedulerAppTasks == null)
       {
-        throw new ArgumentNullException("schedulerTasks");
+        throw new ArgumentNullException("schedulerAppTasks");
+      }
+
+      List<SchedulerAppTask> schedulerAppTasksList =
+        schedulerAppTasks.ToList();
+
+      if (schedulerAppTasksList.Count == 0)
+      {
+        throw new ArgumentException("At least one scheduler app task must be specified.", "schedulerAppTasks");
       }
       
       SchedulerAppDirName = schedulerAppDirName;
       SchedulerAppExeName = schedulerAppExeName;
-      SchedulerTasks = schedulerTasks.ToList();
+      SchedulerAppTasks = schedulerAppTasksList;
     }
 
     #endregion
@@ -85,7 +93,7 @@ namespace UberDeployer.Core.Domain
 
     public string SchedulerAppExeName { get; private set; }
 
-    public List<SchedulerAppTask> SchedulerTasks { get; private set; }
+    public List<SchedulerAppTask> SchedulerAppTasks { get; private set; }
 
     #endregion
   }

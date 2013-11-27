@@ -65,7 +65,7 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public string SchedulerAppExeName { get; set; }
 
-      public List<SchedulerAppTaskXml> SchedulerTasks { get; set; }
+      public List<SchedulerAppTaskXml> SchedulerAppTasks { get; set; }
     }
 
     public class SchedulerAppTaskXml
@@ -206,7 +206,7 @@ namespace UberDeployer.Core.DataAccess.Xml
             schedulerAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
             schedulerAppProjectInfoXml.SchedulerAppDirName,
             schedulerAppProjectInfoXml.SchedulerAppExeName,
-            schedulerAppProjectInfoXml.SchedulerTasks
+            schedulerAppProjectInfoXml.SchedulerAppTasks
               .Select(
                 x =>
                   new SchedulerAppTask(

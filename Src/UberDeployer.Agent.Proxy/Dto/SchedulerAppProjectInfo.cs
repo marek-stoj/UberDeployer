@@ -8,6 +8,6 @@ namespace UberDeployer.Agent.Proxy.Dto
 
     public string SchedulerAppExeName { get; set; }
 
-    public List<SchedulerAppTask> SchedulerTasks { get; set; }
+    public List<SchedulerAppTask> SchedulerAppTasks { get; set; }
   }
 }
