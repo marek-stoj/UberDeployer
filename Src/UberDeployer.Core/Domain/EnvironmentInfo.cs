@@ -11,9 +11,9 @@ namespace UberDeployer.Core.Domain
     private static readonly Regex _DriveLetterRegex = new Regex(@"^(?<DriveLetter>[a-z]):\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private readonly List<String> _webServerMachines;
-    private readonly Dictionary<string, EnvironmentUser> _environmentUsersDict;
-    private readonly Dictionary<string, IisAppPoolInfo> _appPoolInfosDict;
-    private readonly Dictionary<string, DatabaseServer> _databaseServersDict;
+    private readonly Dictionary<string, EnvironmentUser> _environmentUsersByIdDict;
+    private readonly Dictionary<string, IisAppPoolInfo> _appPoolInfosByNameDict;
+    private readonly Dictionary<string, DatabaseServer> _databaseServersByIdDict;
     private readonly Dictionary<string, WebAppProjectConfiguration> _webAppProjectConfigurationsDict;
     private readonly Dictionary<string, ProjectToFailoverClusterGroupMapping> _projectToFailoverClusterGroupMappingsDict;
     private readonly Dictionary<string, DbProjectConfiguration> _dbProjectConfigurationsDict;
@@ -105,9 +105,9 @@ namespace UberDeployer.Core.Domain
       TerminalAppsBaseDirPath = terminalAppsBaseDirPath;
       EnableFailoverClusteringForNtServices = enableFailoverClusteringForNtServices;
 
-      _environmentUsersDict = environmentUsers.ToDictionary(e => e.Id);
-      _appPoolInfosDict = appPoolInfos.ToDictionary(e => e.Name);
-      _databaseServersDict = databaseServers.ToDictionary(e => e.Id);
+      _environmentUsersByIdDict = environmentUsers.ToDictionary(e => e.Id);
+      _appPoolInfosByNameDict = appPoolInfos.ToDictionary(e => e.Name);
+      _databaseServersByIdDict = databaseServers.ToDictionary(e => e.Id);
 
       _webAppProjectConfigurationsDict = webAppProjectConfigurations.ToDictionary(e => e.ProjectName);
       _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(e => e.ProjectName);
@@ -177,18 +177,18 @@ namespace UberDeployer.Core.Domain
       return GetNetworkPath(TerminalServerMachineName, absoluteLocalPath);
     }
 
-    public EnvironmentUser GetEnvironmentUserByName(string environmentUserName)
+    public EnvironmentUser GetEnvironmentUserById(string userId)
     {
-      Guard.NotNullNorEmpty(environmentUserName, "environmentUserName");
+      Guard.NotNullNorEmpty(userId, "userId");
 
       EnvironmentUser environmentUser;
 
-      if (_environmentUsersDict.TryGetValue(environmentUserName, out environmentUser))
+      if (_environmentUsersByIdDict.TryGetValue(userId, out environmentUser))
       {
         return environmentUser;
       }
 
-      return null;
+      throw new InvalidOperationException(string.Format("There's no environment user with id '{0}' defined in environment named '{1}'.", userId, Name));
     }
 
     public WebAppProjectConfiguration GetWebAppProjectConfiguration(string projectName)
@@ -239,7 +239,7 @@ namespace UberDeployer.Core.Domain
 
       IisAppPoolInfo iisAppPoolInfo;
 
-      if (_appPoolInfosDict.TryGetValue(appPoolId, out iisAppPoolInfo))
+      if (_appPoolInfosByNameDict.TryGetValue(appPoolId, out iisAppPoolInfo))
       {
         return iisAppPoolInfo;
       }
@@ -253,7 +253,7 @@ namespace UberDeployer.Core.Domain
 
       DatabaseServer databaseServer;
 
-      if (_databaseServersDict.TryGetValue(databaseServerId, out databaseServer))
+      if (_databaseServersByIdDict.TryGetValue(databaseServerId, out databaseServer))
       {
         return databaseServer;
       }
@@ -298,17 +298,17 @@ namespace UberDeployer.Core.Domain
 
     public IEnumerable<EnvironmentUser> EnvironmentUsers
     {
-      get { return _environmentUsersDict.Values; }
+      get { return _environmentUsersByIdDict.Values; }
     }
 
     public IEnumerable<IisAppPoolInfo> AppPoolInfos
     {
-      get { return _appPoolInfosDict.Values; }
+      get { return _appPoolInfosByNameDict.Values; }
     }
 
     public IEnumerable<DatabaseServer> DatabaseServers
     {
-      get { return _databaseServersDict.Values; }
+      get { return _databaseServersByIdDict.Values; }
     }
 
     public IEnumerable<WebAppProjectConfiguration> WebAppProjectConfigurations

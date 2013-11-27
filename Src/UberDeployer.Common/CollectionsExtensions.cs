@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UberDeployer.Common
 {
@@ -44,6 +45,19 @@ namespace UberDeployer.Common
       }
 
       return ~left;
+    }
+
+    public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
+    {
+      foreach (T element in collection)
+      {
+        action(element);
+      }
+    }
+
+    public static T Second<T>(this IEnumerable<T> collection)
+    {
+      return collection.Skip(1).First();
     }
   }
 }

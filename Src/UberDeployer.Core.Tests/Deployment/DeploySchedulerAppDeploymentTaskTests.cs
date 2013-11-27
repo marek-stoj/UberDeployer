@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common;
 using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
@@ -37,8 +39,8 @@ namespace UberDeployer.Core.Tests.Deployment
 
       _projectInfo = ProjectInfoGenerator.GetSchedulerAppProjectInfo();
 
-      SchedulerAppTask schedulerAppTask1 = _projectInfo.SchedulerAppTasks[0];
-      SchedulerAppTask schedulerAppTask2 = _projectInfo.SchedulerAppTasks[1];
+      SchedulerAppTask schedulerAppTask1 = _projectInfo.SchedulerAppTasks.First();
+      SchedulerAppTask schedulerAppTask2 = _projectInfo.SchedulerAppTasks.Second();
 
       _environmentInfo =
         DeploymentDataGenerator.GetEnvironmentInfo(
@@ -102,7 +104,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange  
       SchedulerAppTask schedulerAppTask =
-        _projectInfo.SchedulerAppTasks[1];
+        _projectInfo.SchedulerAppTasks.Second();
 
       ScheduledTaskDetails runningTaskDetails =
         GetTaskDetails(
@@ -137,7 +139,7 @@ namespace UberDeployer.Core.Tests.Deployment
     }
 
     [Test]
-    public void Prepare_should_add_step_to_disable_scheduled_task_before_copy_files_step()
+    public void Prepare_should_add_steps_to_disable_scheduled_tasks_before_copy_files_step()
     {
       // act
       _deployTask.Prepare();
@@ -145,29 +147,40 @@ namespace UberDeployer.Core.Tests.Deployment
       // assert
       AssertStepIsBefore(typeof(ToggleSchedulerAppEnabledStep), typeof(CopyFilesDeploymentStep), _deployTask.SubTasks.ToArray());
 
-      var disableTask = _deployTask.SubTasks.First(x => x is ToggleSchedulerAppEnabledStep) as ToggleSchedulerAppEnabledStep;
-      Assert.IsNotNull(disableTask);
-      Assert.IsFalse(disableTask.Enabled);
+      List<ToggleSchedulerAppEnabledStep> disableTasks =
+        _deployTask.SubTasks
+          .Where(x => x is ToggleSchedulerAppEnabledStep && !((ToggleSchedulerAppEnabledStep)x).Enabled)
+          .Cast<ToggleSchedulerAppEnabledStep>()
+          .ToList();
+      
+      Assert.AreEqual(2, disableTasks.Count);
     }
 
     [Test]
-    public void Prepare_should_add_step_to_enable_scheduled_task_as_the_last_one()
+    public void Prepare_should_add_steps_to_enable_scheduled_tasks_as_the_last_ones()
     {
       // act
       _deployTask.Prepare();
 
       // assert
-      DeploymentTaskBase lastTask = _deployTask.SubTasks.Last();
-      Assert.IsInstanceOf<ToggleSchedulerAppEnabledStep>(lastTask);
-      Assert.IsTrue(((ToggleSchedulerAppEnabledStep)lastTask).Enabled);
+      List<DeploymentTaskBase> subTasksList = _deployTask.SubTasks.ToList();
+
+      ToggleSchedulerAppEnabledStep nextToLastTask = subTasksList[subTasksList.Count - 2] as ToggleSchedulerAppEnabledStep;
+      ToggleSchedulerAppEnabledStep lastTask = subTasksList[subTasksList.Count - 1] as ToggleSchedulerAppEnabledStep;
+
+      Assert.IsNotNull(nextToLastTask);
+      Assert.IsNotNull(lastTask);
+
+      Assert.IsTrue(nextToLastTask.Enabled);
+      Assert.IsTrue(lastTask.Enabled);
     }
 
     [Test]
-    public void Prepare_should_collect_password_when_task_settings_has_changed()
+    public void Prepare_should_collect_password_when_tasks_settings_has_changed()
     {
       // arrange  
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks[0], exePath, false);
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks.First(), exePath, false);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -181,11 +194,52 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      _passwordCollectorFake.VerifyAll();
+      _passwordCollectorFake.Verify(
+        x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
+        Times.Exactly(2));
     }
 
     [Test]
-    public void Prepare_should_collect_password_when_task_doesnt_exist()
+    public void Prepare_should_collect_password_only_once_when_tasks_settings_has_changed_and_username_is_the_same()
+    {
+      // arrange
+      SchedulerAppTask schedulerAppTask1 = _projectInfo.SchedulerAppTasks.First();
+      SchedulerAppTask schedulerAppTask2 = _projectInfo.SchedulerAppTasks.Second();
+
+      EnvironmentInfo environmentInfo =
+        DeploymentDataGenerator.GetEnvironmentInfo(
+          new[]
+          {
+            new EnvironmentUser(schedulerAppTask1.UserId, "user_name"),
+            new EnvironmentUser(schedulerAppTask2.UserId, "user_name"),
+          });
+
+      _environmentInfoRepositoryFake
+        .Setup(x => x.FindByName(It.IsAny<string>()))
+        .Returns(environmentInfo);
+
+      const string exePath = "exe path has changed";
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks.First(), exePath, false);
+
+      _taskSchedulerFake
+        .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
+        .Returns(runningTaskDetails);
+
+      _passwordCollectorFake
+        .Setup(x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .Returns("password");
+
+      // act
+      _deployTask.Prepare();
+
+      // assert
+      _passwordCollectorFake.Verify(
+        x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
+        Times.Exactly(1));
+    }
+
+    [Test]
+    public void Prepare_should_collect_password_when_tasks_dont_exist()
     {
       // arrange  
       _taskSchedulerFake
@@ -200,15 +254,17 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      _passwordCollectorFake.VerifyAll();
+      _passwordCollectorFake.Verify(
+        x => x.CollectPasswordForUser(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
+        Times.Exactly(2));
     }
 
     [Test]
-    public void Prepare_should_add_step_to_update_scheduled_task_when_settings_has_changed()
+    public void Prepare_should_add_steps_to_update_scheduled_tasks_when_settings_has_changed()
     {
       // arrange
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks[0], exePath, false);
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks.Second(), exePath, false);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -222,11 +278,11 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      Assert.IsTrue(_deployTask.SubTasks.Any(x => x is UpdateSchedulerTaskDeploymentStep));
+      Assert.AreEqual(2, _deployTask.SubTasks.Count(x => x is UpdateSchedulerTaskDeploymentStep));
     }
 
     [Test]
-    public void Prepare_should_add_step_to_schedule_new_app_when_task_doesnt_exist()
+    public void Prepare_should_add_steps_to_schedule_new_tasks_when_tasks_dont_exist()
     {
       // arrange  
       _taskSchedulerFake
@@ -241,7 +297,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      Assert.IsTrue(_deployTask.SubTasks.Any(x => x is CreateSchedulerTaskDeploymentStep));
+      Assert.AreEqual(2, _deployTask.SubTasks.Count(x => x is CreateSchedulerTaskDeploymentStep));
     }
 
     [Test]

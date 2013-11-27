@@ -10,6 +10,8 @@ namespace UberDeployer.Core.Domain
 {
   public class SchedulerAppProjectInfo : ProjectInfo
   {
+    private List<SchedulerAppTask> _schedulerAppTasks;
+
     #region Constructor(s)
 
     public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string schedulerAppDirName, string schedulerAppExeName, IEnumerable<SchedulerAppTask> schedulerAppTasks)
@@ -33,7 +35,7 @@ namespace UberDeployer.Core.Domain
       
       SchedulerAppDirName = schedulerAppDirName;
       SchedulerAppExeName = schedulerAppExeName;
-      SchedulerAppTasks = schedulerAppTasksList;
+      _schedulerAppTasks = schedulerAppTasksList;
     }
 
     #endregion
@@ -93,7 +95,10 @@ namespace UberDeployer.Core.Domain
 
     public string SchedulerAppExeName { get; private set; }
 
-    public List<SchedulerAppTask> SchedulerAppTasks { get; private set; }
+    public IEnumerable<SchedulerAppTask> SchedulerAppTasks
+    {
+      get { return _schedulerAppTasks.AsReadOnly(); }
+    }
 
     #endregion
   }

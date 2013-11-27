@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using UberDeployer.Common;
 using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
@@ -17,6 +18,7 @@ namespace UberDeployer.Core.Deployment
     private readonly IDirectoryAdapter _directoryAdapter;
     
     private SchedulerAppProjectInfo _projectInfo;
+    private Dictionary<string, string> _collectedPasswordsByUserName;
 
     #region Constructor(s)
 
@@ -47,7 +49,9 @@ namespace UberDeployer.Core.Deployment
     protected override void DoPrepare()
     {
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+
       _projectInfo = GetProjectInfo<SchedulerAppProjectInfo>();
+      _collectedPasswordsByUserName = new Dictionary<string, string>();
 
       string machineName = environmentInfo.SchedulerServerMachineName;
       string targetDirPath = GetTargetDirPath(environmentInfo);
@@ -73,7 +77,8 @@ namespace UberDeployer.Core.Deployment
             }
           });
 
-      Lazy<string> binariesDirPathProvider = AddStepsToObtainBinaries(environmentInfo);
+      Lazy<string> binariesDirPathProvider =
+        AddStepsToObtainBinaries(environmentInfo);
 
       if (_directoryAdapter.Exists(targetDirNetworkPath))
       {
@@ -130,21 +135,27 @@ namespace UberDeployer.Core.Deployment
       bool hasSettingsChanged = HasSettingsChanged(taskDetails, schedulerAppTask, environmentInfo);
       bool taskExists = taskDetails != null;
 
-      EnvironmentUser environmentUser = null;
+      EnvironmentUser environmentUser =
+        environmentInfo.GetEnvironmentUserById(schedulerAppTask.UserId);
+
       string environmentUserPassword = null;
 
       if (!taskExists || hasSettingsChanged)
       {
-        // collect password
-        environmentUserPassword =
-          PasswordCollectorHelper.CollectPasssword(
-            _passwordCollector,
-            DeploymentInfo.DeploymentId,
-            environmentInfo,
-            environmentInfo.SchedulerServerMachineName,
-            schedulerAppTask.UserId,
-            OnDiagnosticMessagePosted,
-            out environmentUser);
+        // collect password if not already collected
+        if (!_collectedPasswordsByUserName.TryGetValue(environmentUser.UserName, out environmentUserPassword))
+        {
+          environmentUserPassword =
+            PasswordCollectorHelper.CollectPasssword(
+              _passwordCollector,
+              DeploymentInfo.DeploymentId,
+              environmentInfo,
+              environmentInfo.SchedulerServerMachineName,
+              environmentUser,
+              OnDiagnosticMessagePosted);
+
+          _collectedPasswordsByUserName.Add(environmentUser.UserName, environmentUserPassword);
+        }
       }
 
       string taskExecutablePath =

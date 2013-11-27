@@ -6,20 +6,13 @@ namespace UberDeployer.Core.Deployment
 {
   public static class PasswordCollectorHelper
   {
-    public static string CollectPasssword(IPasswordCollector passwordCollector, Guid deploymentId, EnvironmentInfo environmentInfo, string machineName, string userId, EventHandler<DiagnosticMessageEventArgs> onDiagnosticMessagePostedAction, out EnvironmentUser environmentUser)
+    public static string CollectPasssword(IPasswordCollector passwordCollector, Guid deploymentId, EnvironmentInfo environmentInfo, string machineName, EnvironmentUser environmentUser, EventHandler<DiagnosticMessageEventArgs> onDiagnosticMessagePostedAction)
     {
       Guard.NotEmpty(deploymentId, "deploymentId");
       Guard.NotNull(passwordCollector, "passwordCollector");
       Guard.NotNull(environmentInfo, "environmentInfo");
       Guard.NotNullNorEmpty(machineName, "machineName");
-      Guard.NotNullNorEmpty(userId, "userId");
-
-      environmentUser = environmentInfo.GetEnvironmentUserByName(userId);
-
-      if (environmentUser == null)
-      {
-        throw new InvalidOperationException(string.Format("There's no environment user with id '{0}' defined in environment named '{1}'.", userId, environmentInfo.Name));
-      }
+      Guard.NotNull(environmentUser, "environmentUser");
 
       passwordCollector.DiagnosticMessagePosted += onDiagnosticMessagePostedAction;
 

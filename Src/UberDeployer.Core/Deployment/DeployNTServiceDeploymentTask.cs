@@ -132,7 +132,8 @@ namespace UberDeployer.Core.Deployment
       Func<CollectedCredentials> collectCredentialsFunc =
         () =>
         {
-          EnvironmentUser environmentUser;
+          EnvironmentUser environmentUser =
+            environmentInfo.GetEnvironmentUserById(_projectInfo.NtServiceUserId);
 
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(
@@ -140,9 +141,8 @@ namespace UberDeployer.Core.Deployment
               DeploymentInfo.DeploymentId,
               environmentInfo,
               environmentInfo.AppServerMachineName,
-              _projectInfo.NtServiceUserId,
-              OnDiagnosticMessagePosted,
-              out environmentUser);
+              environmentUser, 
+              OnDiagnosticMessagePosted);
 
           return
             new CollectedCredentials(
@@ -211,7 +211,8 @@ namespace UberDeployer.Core.Deployment
           }
           // ReSharper restore AccessToModifiedClosure
 
-          EnvironmentUser environmentUser;
+          EnvironmentUser environmentUser =
+            environmentInfo.GetEnvironmentUserById(_projectInfo.NtServiceUserId);
 
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(
@@ -219,9 +220,8 @@ namespace UberDeployer.Core.Deployment
               DeploymentInfo.DeploymentId,
               environmentInfo,
               machineName,
-              _projectInfo.NtServiceUserId,
-              OnDiagnosticMessagePosted,
-              out environmentUser);
+              environmentUser,
+              OnDiagnosticMessagePosted);
 
           cachedCollectedCredentials =
             new CollectedCredentials(

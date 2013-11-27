@@ -71,7 +71,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\DataAccess\Xml\XmlEnvironmentInfoRepositoryTests.cs" />
     <Compile Include="DataAccess\TeamCityArtifactsRepositoryTests.cs" />
     <Compile Include="Deployment\DbScriptToRunTests.cs" />
     <Compile Include="Deployment\DeployNtServiceDeploymentTaskTests.cs" />
