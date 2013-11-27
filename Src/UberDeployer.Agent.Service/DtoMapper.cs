@@ -30,6 +30,8 @@ namespace UberDeployer.Agent.Service
       Mapper.CreateMap<Core.Domain.EnvironmentInfo, Proxy.Dto.EnvironmentInfo>();
 
       Mapper.CreateMap<Core.Domain.EnvironmentUser, Proxy.Dto.EnvironmentUser>();
+      
+      Mapper.CreateMap<Core.Domain.SchedulerAppTask, Proxy.Dto.SchedulerAppTask>();
 
       Mapper.CreateMap<Core.Domain.WebAppProjectConfiguration, Proxy.Dto.WebAppProjectConfiguration>();
       Mapper.CreateMap<Core.Domain.ProjectToFailoverClusterGroupMapping, Proxy.Dto.ProjectToFailoverClusterGroupMapping>();
