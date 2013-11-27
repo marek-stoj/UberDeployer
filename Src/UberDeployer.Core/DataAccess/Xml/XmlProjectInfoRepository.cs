@@ -93,9 +93,9 @@ namespace UberDeployer.Core.DataAccess.Xml
     {
       public bool Enabled { get; set; }
 
-      public TimeSpan Interval { get; set; }
+      public string Interval { get; set; }
 
-      public TimeSpan Duration { get; set; }
+      public string Duration { get; set; }
 
       public bool StopAtDurationEnd { get; set; }
     }
@@ -232,8 +232,8 @@ namespace UberDeployer.Core.DataAccess.Xml
                     x.ExecutionTimeLimitInMinutes,
                     x.RepetitionSpecification.Enabled
                       ? RepetitionSpecification.CreateEnabled(
-                        x.RepetitionSpecification.Interval,
-                        x.RepetitionSpecification.Duration,
+                        TimeSpan.Parse(x.RepetitionSpecification.Interval),
+                        TimeSpan.Parse(x.RepetitionSpecification.Duration),
                         x.RepetitionSpecification.StopAtDurationEnd)
                       : RepetitionSpecification.CreatedDisabled())));
       }

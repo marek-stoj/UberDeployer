@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Win32.TaskScheduler;
 using UberDeployer.Common;
 using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
@@ -283,6 +284,9 @@ namespace UberDeployer.Core.Deployment
           && taskDetails.ScheduledHour == schedulerAppTask.ScheduledHour
           && taskDetails.ScheduledMinute == schedulerAppTask.ScheduledMinute
           && taskDetails.ExecutionTimeLimitInMinutes == schedulerAppTask.ExecutionTimeLimitInMinutes
+          && taskDetails.Repetition.Interval == schedulerAppTask.RepetitionSpecification.Interval
+          && taskDetails.Repetition.Duration == schedulerAppTask.RepetitionSpecification.Duration
+          && taskDetails.Repetition.StopAtDurationEnd == schedulerAppTask.RepetitionSpecification.StopAtDurationEnd
           && taskDetails.ExeAbsolutePath == taskExecutablePath);
     }
 

@@ -164,38 +164,37 @@ namespace UberDeployer.Core.Management.ScheduledTasks
           return null;
         }
 
-        int executionTimeLimits = 0;
-        int? startHour = null;
-        int? startMinute = null;
-        string execPath = null;
+        ExecAction action =
+          (ExecAction)task.Definition.Actions
+            .Single(x => x is ExecAction);
 
-        if (task.Definition.Actions.Count > 0)
-        {
-          var action = task.Definition.Actions.FirstOrDefault(x => x is ExecAction) as ExecAction;
-          if (action != null)
-          {
-            execPath = action.Path;
-          }
-        }
+        string execPath = action.Path;
 
-        if (task.Definition.Triggers.Count > 0)
-        {
-          Trigger trigger = task.Definition.Triggers.First();
+        DailyTrigger trigger =
+          (DailyTrigger)task.Definition.Triggers
+            .Single();
 
-          executionTimeLimits = (int)trigger.ExecutionTimeLimit.TotalMinutes;
-          startHour = trigger.StartBoundary.Hour;
-          startMinute = trigger.StartBoundary.Minute;
-        }
+        int startHour = trigger.StartBoundary.Hour;
+        int startMinute = trigger.StartBoundary.Minute;
+        int executionTimeLimits = (int)trigger.ExecutionTimeLimit.TotalMinutes;
 
-        return new ScheduledTaskDetails(
-          task.Name,
-          task.State == TaskState.Running,
-          task.LastRunTime,
-          task.NextRunTime,
-          execPath,
-          startHour,
-          startMinute,
-          executionTimeLimits);
+        var repetition =
+          new ScheduledTaskRepetition(
+            trigger.Repetition.Interval,
+            trigger.Repetition.Duration,
+            trigger.Repetition.StopAtDurationEnd);
+
+        return
+          new ScheduledTaskDetails(
+            task.Name,
+            task.State == TaskState.Running,
+            task.LastRunTime,
+            task.NextRunTime,
+            execPath,
+            startHour,
+            startMinute,
+            executionTimeLimits,
+            repetition);
       }
     }
 
@@ -250,7 +249,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
           TimeSpan.FromMinutes(scheduledTaskSpecification.ExecutionTimeLimitInMinutes);
       }
 
-      if (scheduledTaskSpecification.RepetitionSpecification != null)
+      if (scheduledTaskSpecification.RepetitionSpecification.Enabled)
       {
         RepetitionSpecification repetitionSpecification = scheduledTaskSpecification.RepetitionSpecification;
         RepetitionPattern repetitionPattern = dailyTrigger.Repetition;

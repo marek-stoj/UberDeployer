@@ -14,7 +14,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 
     public static RepetitionSpecification CreatedDisabled()
     {
-      return new RepetitionSpecification(false, TimeSpan.MinValue, TimeSpan.MinValue, false);
+      return new RepetitionSpecification(false, TimeSpan.Zero, TimeSpan.Zero, false);
     }
 
     public static RepetitionSpecification CreateEnabled(TimeSpan interval, TimeSpan duration, bool stopAtDurationEnd)

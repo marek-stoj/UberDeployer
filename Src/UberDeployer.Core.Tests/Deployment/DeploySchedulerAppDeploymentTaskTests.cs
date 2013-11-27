@@ -60,7 +60,11 @@ namespace UberDeployer.Core.Tests.Deployment
             _environmentInfo.SchedulerAppsBaseDirPath,
             _projectInfo.SchedulerAppDirName,
             schedulerAppTask1.ExecutableName),
-          false);
+          false,
+          new ScheduledTaskRepetition(
+            schedulerAppTask1.RepetitionSpecification.Interval,
+            schedulerAppTask1.RepetitionSpecification.Duration,
+            schedulerAppTask1.RepetitionSpecification.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask1.Name))
@@ -73,7 +77,11 @@ namespace UberDeployer.Core.Tests.Deployment
             _environmentInfo.SchedulerAppsBaseDirPath,
             _projectInfo.SchedulerAppDirName,
             schedulerAppTask2.ExecutableName),
-          false);
+          false,
+          new ScheduledTaskRepetition(
+            schedulerAppTask2.RepetitionSpecification.Interval,
+            schedulerAppTask2.RepetitionSpecification.Duration,
+            schedulerAppTask2.RepetitionSpecification.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask2.Name))
@@ -113,7 +121,11 @@ namespace UberDeployer.Core.Tests.Deployment
             _environmentInfo.SchedulerAppsBaseDirPath,
             _projectInfo.SchedulerAppDirName,
             schedulerAppTask.ExecutableName),
-          true);
+          true,
+          new ScheduledTaskRepetition(
+            schedulerAppTask.RepetitionSpecification.Interval,
+            schedulerAppTask.RepetitionSpecification.Duration,
+            schedulerAppTask.RepetitionSpecification.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -180,7 +192,17 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange  
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks.First(), exePath, false);
+      SchedulerAppTask schedulerAppTask = _projectInfo.SchedulerAppTasks.First();
+
+      ScheduledTaskDetails runningTaskDetails =
+        GetTaskDetails(
+          schedulerAppTask,
+          exePath,
+          false,
+          new ScheduledTaskRepetition(
+            schedulerAppTask.RepetitionSpecification.Interval,
+            schedulerAppTask.RepetitionSpecification.Duration,
+            schedulerAppTask.RepetitionSpecification.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -219,7 +241,16 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(environmentInfo);
 
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks.First(), exePath, false);
+
+      ScheduledTaskDetails runningTaskDetails =
+        GetTaskDetails(
+          schedulerAppTask1,
+          exePath,
+          false,
+          new ScheduledTaskRepetition(
+            schedulerAppTask1.RepetitionSpecification.Interval,
+            schedulerAppTask1.RepetitionSpecification.Duration,
+            schedulerAppTask1.RepetitionSpecification.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -264,7 +295,19 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerAppTasks.Second(), exePath, false);
+      
+      SchedulerAppTask schedulerAppTask =
+        _projectInfo.SchedulerAppTasks.Second();
+
+      ScheduledTaskDetails runningTaskDetails =
+        GetTaskDetails(
+          schedulerAppTask,
+          exePath,
+          false,
+          new ScheduledTaskRepetition(
+            schedulerAppTask.RepetitionSpecification.Interval,
+            schedulerAppTask.RepetitionSpecification.Duration,
+            schedulerAppTask.RepetitionSpecification.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -320,18 +363,19 @@ namespace UberDeployer.Core.Tests.Deployment
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is CopyFilesDeploymentStep));
     }
 
-    private static ScheduledTaskDetails GetTaskDetails(SchedulerAppTask schedulerAppTask, string exeAbsolutePath, bool isRunning)
+    private static ScheduledTaskDetails GetTaskDetails(SchedulerAppTask schedulerAppTask, string exeAbsolutePath, bool isRunning, ScheduledTaskRepetition repetition)
     {
       return
-      new ScheduledTaskDetails(
-        schedulerAppTask.Name,
-        isRunning,
-        DateTime.Now,
-        DateTime.Now,
-        exeAbsolutePath,
-        schedulerAppTask.ScheduledHour,
-        schedulerAppTask.ScheduledMinute,
-        schedulerAppTask.ExecutionTimeLimitInMinutes);
+        new ScheduledTaskDetails(
+          schedulerAppTask.Name,
+          isRunning,
+          DateTime.Now,
+          DateTime.Now,
+          exeAbsolutePath,
+          schedulerAppTask.ScheduledHour,
+          schedulerAppTask.ScheduledMinute,
+          schedulerAppTask.ExecutionTimeLimitInMinutes,
+          repetition);
     }
 
     private static void AssertStepIsBefore(Type stepBeforeType, Type stepAfterType, DeploymentTaskBase[] subTasks)
