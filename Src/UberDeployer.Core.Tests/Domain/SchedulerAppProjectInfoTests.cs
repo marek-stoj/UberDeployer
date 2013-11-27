@@ -7,11 +7,9 @@ using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Domain
 {
-  // TODO IMM HI: formatting; code style
   [TestFixture]
   public class SchedulerAppProjectInfoTests
   {
@@ -26,7 +24,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _SchedulerAppUserId = "appUser";
     private const int _ScheduledHour = 1;
     private const int _ScheduledMinute = 1;
-    private static readonly string[] _AllowedEnvironmentNames = new[] { "env_name" };
+    private static readonly string[] _AllowedEnvironmentNames = { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
 
@@ -34,116 +32,6 @@ namespace UberDeployer.Core.Tests.Domain
     public void SetUp()
     {
       _objectFactoryFake = new Mock<IObjectFactory>(MockBehavior.Loose);
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_ScheduledHour_LessThan0()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new SchedulerAppProjectInfo(
-            _ProjectName,
-            _ArtifactsRepositoryName,
-            _AllowedEnvironmentNames,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _SchedulerAppName,
-            _SchedulerAppDirName,
-            _SchedulerAppExeName,
-            _SchedulerAppUserId,
-            -1,
-            _ScheduledMinute,
-            _ExecutionTimeLimitInMinutes);
-        });
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_ScheduledHour_GreaterThan23()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new SchedulerAppProjectInfo(
-            _ProjectName,
-            _ArtifactsRepositoryName,
-            _AllowedEnvironmentNames,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _SchedulerAppName,
-            _SchedulerAppDirName,
-            _SchedulerAppExeName,
-            _SchedulerAppUserId,
-            24,
-            _ScheduledMinute,
-            _ExecutionTimeLimitInMinutes);
-        });
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_ScheduledMinute_GreaterThan59()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new SchedulerAppProjectInfo(
-            _ProjectName,
-            _ArtifactsRepositoryName,
-            _AllowedEnvironmentNames,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _SchedulerAppName,
-            _SchedulerAppDirName,
-            _SchedulerAppExeName,
-            _SchedulerAppUserId,
-            _ScheduledHour,
-            60,
-            _ExecutionTimeLimitInMinutes);
-        });
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_ScheduledMinute_LessThan0()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new SchedulerAppProjectInfo(
-            _ProjectName,
-            _ArtifactsRepositoryName,
-            _AllowedEnvironmentNames,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _SchedulerAppName,
-            _SchedulerAppDirName,
-            _SchedulerAppExeName,
-            _SchedulerAppUserId,
-            _ScheduledHour,
-            -1,
-            _ExecutionTimeLimitInMinutes);
-        });
-    }
-
-    [Test]
-    public void Test_SchedulerAppProjectInfoTests_Throws_When_ExecutionTime_LessThan0()
-    {
-      Assert.Throws<ArgumentException>(
-        () =>
-        {
-          new SchedulerAppProjectInfo(
-            _ProjectName,
-            _ArtifactsRepositoryName,
-            _AllowedEnvironmentNames,
-            _ArtifactsRepositoryDirName,
-            _ArtifactsAreNotEnvirionmentSpecific,
-            _SchedulerAppName,
-            _SchedulerAppDirName,
-            _SchedulerAppExeName,
-            _SchedulerAppUserId,
-            _ScheduledHour,
-            _ScheduledMinute,
-            -1);
-        });
     }
 
     [Test]
@@ -164,13 +52,18 @@ namespace UberDeployer.Core.Tests.Domain
           _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
           _ArtifactsAreNotEnvirionmentSpecific,
-          _SchedulerAppName,
           _SchedulerAppDirName,
           _SchedulerAppExeName,
-          _SchedulerAppUserId,
-          _ScheduledHour,
-          _ScheduledMinute,
-          _ExecutionTimeLimitInMinutes);
+          new List<SchedulerAppTask>
+          {
+            new SchedulerAppTask(
+              _SchedulerAppName,
+              _SchedulerAppName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes)
+          });
 
       objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(prjInfoRepository.Object);
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
@@ -218,13 +111,18 @@ namespace UberDeployer.Core.Tests.Domain
           _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
           _ArtifactsAreNotEnvirionmentSpecific,
-          _SchedulerAppName,
           _SchedulerAppDirName,
           _SchedulerAppExeName,
-          _SchedulerAppUserId,
-          _ScheduledHour,
-          _ScheduledMinute,
-          _ExecutionTimeLimitInMinutes);
+          new List<SchedulerAppTask>
+          {
+            new SchedulerAppTask(
+              _SchedulerAppName,
+              _SchedulerAppName,
+              _SchedulerAppUserId,
+              _ScheduledHour,
+              _ScheduledMinute,
+              _ExecutionTimeLimitInMinutes)
+          });
 
       List<string> targetFolders =
         schedulerAppProjectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo)

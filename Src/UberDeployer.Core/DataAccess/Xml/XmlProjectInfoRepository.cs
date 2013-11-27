@@ -61,13 +61,20 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     public class SchedulerAppProjectInfoXml : ProjectInfoXml
     {
-      public string SchedulerAppName { get; set; }
-
       public string SchedulerAppDirName { get; set; }
 
       public string SchedulerAppExeName { get; set; }
 
-      public string SchedulerAppUserId { get; set; }
+      public List<SchedulerAppTaskXml> SchedulerTasks { get; set; }
+    }
+
+    public class SchedulerAppTaskXml
+    {
+      public string Name { get; set; }
+
+      public string ExecutableName { get; set; }
+
+      public string UserId { get; set; }
 
       public int ScheduledHour { get; set; }
 
@@ -197,13 +204,18 @@ namespace UberDeployer.Core.DataAccess.Xml
             allowedEnvironmentNames,
             schedulerAppProjectInfoXml.ArtifactsRepositoryDirName,
             schedulerAppProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
-            schedulerAppProjectInfoXml.SchedulerAppName,
             schedulerAppProjectInfoXml.SchedulerAppDirName,
             schedulerAppProjectInfoXml.SchedulerAppExeName,
-            schedulerAppProjectInfoXml.SchedulerAppUserId,
-            schedulerAppProjectInfoXml.ScheduledHour,
-            schedulerAppProjectInfoXml.ScheduledMinute,
-            schedulerAppProjectInfoXml.ExecutionTimeLimitInMinutes);
+            schedulerAppProjectInfoXml.SchedulerTasks
+              .Select(
+                x =>
+                  new SchedulerAppTask(
+                    x.Name,
+                    x.ExecutableName,
+                    x.UserId,
+                    x.ScheduledHour,
+                    x.ScheduledMinute,
+                    x.ExecutionTimeLimitInMinutes)));
       }
 
       var terminalAppProjectInfoXml = projectInfoXml as TerminalAppProjectInfoXml;

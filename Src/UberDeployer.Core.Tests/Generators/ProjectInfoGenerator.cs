@@ -1,4 +1,5 @@
-﻿using UberDeployer.Core.Domain;
+﻿using System.Collections.Generic;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Tests.Generators
 {
@@ -77,13 +78,25 @@ namespace UberDeployer.Core.Tests.Generators
           new[] { "env_name" },
           "artifacts_repository_dir_name",
           true,
-          "scheduler_app_name",
           "scheduler_app_dir_name",
           "scheduler_app_exe_name",
-          "scheduler_app_user_id",
-          0,
-          0,
-          0);
+          new List<SchedulerAppTask>
+          {
+            new SchedulerAppTask(
+              "task_name_1",
+              "task_executable_name_1",
+              "task_user_1",
+              0,
+              0,
+              0),
+            new SchedulerAppTask(
+              "task_name_2",
+              "task_executable_name_2",
+              "task_user_2",
+              0,
+              0,
+              0),
+          });
     }
   }
 }

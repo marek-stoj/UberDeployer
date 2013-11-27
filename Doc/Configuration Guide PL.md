@@ -86,26 +86,40 @@ Przykładowa konfiguracja:
   <Name>UberDeployer.SampleSchedulerApp</Name>
   <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
   <ArtifactsRepositoryDirName>SampleSchedulerApp</ArtifactsRepositoryDirName>
-  <SchedulerAppName>SampleSchedulerApp</SchedulerAppName>
   <SchedulerAppDirName>SampleSchedulerApp</SchedulerAppDirName>
   <SchedulerAppExeName>UberDeployerSamples.SampleSchedulerApp.exe</SchedulerAppExeName>
-  <SchedulerAppUserId>Sample.User</SchedulerAppUserId>
-  <ScheduledHour>12</ScheduledHour>
-  <ScheduledMinute>0</ScheduledMinute>
-  <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
+  <SchedulerAppTasks>
+    <SchedulerAppTaskXml>
+      <Name>SampleSchedulerApp</Name>
+      <ExecutableName>SampleSchedulerApp</ExecutableName>
+      <UserId>Sample.User</UserId>
+      <ScheduledHour>12</ScheduledHour>
+      <ScheduledMinute>0</ScheduledMinute>
+      <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
+    </SchedulerAppTaskXml>
+  </SchedulerAppTasks>
 </ProjectInfoXml>
 ```
 
 Omówienie elementów specyficznych dla aplikacji harmonogramu zadań:
 
-- `SchedulerAppName` &mdash; nazwa aplikacji na potrzeby wyświetlania na liście w harmonogramie zadań w systemie Windows.
 - `SchedulerAppDirName` &mdash; nazwa podkatalogu na docelowym serwerze, w którym zostaną umieszczone binarki.
-- `SchedulerAppExeName` &mdash; nazwa pliku wykonywalnego aplikacji.
-- `SchedulerAppUserId` &mdash; identyfikator użytkownika, na którym ma działać aplikacja. Jest to identyfikator wewnętrzny &mdash; używany tylko
-w obrębie ÜberDeployera.
-- `ScheduledHour` &mdash; o której godzinie aplikacja ma się uruchamiać.
-- `ScheduledMinute` &mdash; w której minucie (podanej wyżej godziny) aplikacja ma się uruchamiać.
-- `ExecutionTimeLimitInMinutes` &mdash; limit na czas jednorazowego działania aplikacji (0 oznacza brak limitu).
+
+- `SchedulerAppExeName` &mdash; nazwa pliku wykonywalnego aplikacji &mdash; używana tylko na potrzeby sprawdzania przez UberDeployera
+wersji wdrożonego komponentu; konfiguracja pliku wykonywalnego, który rzeczywiście będzie uruchamiany z harmonogramu zadań, znajduje się
+w elemencie konkretnego zadania.
+
+- `SchedulerAppTasks` - lista zadań harmonogramu zadań.
+
+  Opis elementów:
+
+  * `Name` &mdash; nazwa zadania na potrzeby wyświetlania na liście w harmonogramie zadań w systemie Windows.
+  * `UserId` &mdash; identyfikator użytkownika, na którym ma działać zadanie. Jest to identyfikator wewnętrzny &mdash; używany tylko
+  w obrębie ÜberDeployera.
+  * `ExecutableName` &mdash; nazwa pliku wykonywalnego.
+  * `ScheduledHour` &mdash; o której godzinie zadanie ma się uruchamiać.
+  * `ScheduledMinute` &mdash; w której minucie (podanej wyżej godziny) zadanie ma się uruchamiać.
+  * `ExecutionTimeLimitInMinutes` &mdash; limit na czas jednorazowego działania zadania (0 oznacza brak limitu).
 
 Uwagi:
 

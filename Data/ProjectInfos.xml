@@ -27,13 +27,18 @@
       <Name>UberDeployer.SampleSchedulerApp</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleSchedulerApp</ArtifactsRepositoryDirName>
-      <SchedulerAppName>SampleSchedulerApp</SchedulerAppName>
       <SchedulerAppDirName>SampleSchedulerApp</SchedulerAppDirName>
       <SchedulerAppExeName>UberDeployerSamples.SampleSchedulerApp.exe</SchedulerAppExeName>
-      <SchedulerAppUserId>Sample.User</SchedulerAppUserId>
-      <ScheduledHour>12</ScheduledHour>
-      <ScheduledMinute>0</ScheduledMinute>
-      <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
+      <SchedulerAppTasks>
+        <SchedulerAppTaskXml>
+          <Name>SampleSchedulerApp</Name>
+          <ExecutableName>SampleSchedulerApp</ExecutableName>
+          <UserId>Sample.User</UserId>
+          <ScheduledHour>12</ScheduledHour>
+          <ScheduledMinute>0</ScheduledMinute>
+          <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
+        </SchedulerAppTaskXml>
+      </SchedulerAppTasks>
     </ProjectInfoXml>
 
     <!-- Terminal apps -->

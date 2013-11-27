@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
 using System.IO;
@@ -11,36 +12,20 @@ namespace UberDeployer.Core.Domain
   {
     #region Constructor(s)
 
-    public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string schedulerAppName, string schedulerAppDirName, string schedulerAppExeName, string schedulerAppUserId, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes)
+    public SchedulerAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string schedulerAppDirName, string schedulerAppExeName, IEnumerable<SchedulerAppTask> schedulerTasks)
       : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
-      Guard.NotNullNorEmpty(schedulerAppName, "schedulerAppName");
       Guard.NotNullNorEmpty(schedulerAppDirName, "schedulerAppDirName");
       Guard.NotNullNorEmpty(schedulerAppExeName, "schedulerAppExeName");
-      Guard.NotNull(schedulerAppUserId, "schedulerAppUserId");
-      
-      if (scheduledHour < 0 || scheduledHour > 23)
-      {
-        throw new ArgumentException("Hour must be between 0 and 23 (inclusive).", "scheduledHour");
-      }
 
-      if (scheduledMinute < 0 || scheduledMinute > 59)
+      if (schedulerTasks == null)
       {
-        throw new ArgumentException("Minute must be between 0 and 59 (inclusive).", "scheduledMinute");
-      }
-
-      if (executionTimeLimitInMinutes < 0)
-      {
-        throw new ArgumentException("Execution time limit must be a non-negative integer.", "executionTimeLimitInMinutes");
+        throw new ArgumentNullException("schedulerTasks");
       }
       
-      SchedulerAppName = schedulerAppName;
       SchedulerAppDirName = schedulerAppDirName;
       SchedulerAppExeName = schedulerAppExeName;
-      ScheduledHour = scheduledHour;
-      ScheduledMinute = scheduledMinute;
-      ExecutionTimeLimitInMinutes = executionTimeLimitInMinutes;
-      SchedulerAppUserId = schedulerAppUserId;
+      SchedulerTasks = schedulerTasks.ToList();
     }
 
     #endregion
@@ -96,25 +81,11 @@ namespace UberDeployer.Core.Domain
 
     #region Properties
 
-    public string SchedulerAppName { get; private set; }
-
     public string SchedulerAppDirName { get; private set; }
 
     public string SchedulerAppExeName { get; private set; }
 
-    /// <summary>
-    /// A reference to a user that will be used to run the scheduled task. Users are defined in target environments.
-    /// </summary>
-    public string SchedulerAppUserId { get; private set; }
-
-    public int ScheduledHour { get; private set; }
-
-    public int ScheduledMinute { get; private set; }
-
-    /// <summary>
-    /// 0 - no limit.
-    /// </summary>
-    public int ExecutionTimeLimitInMinutes { get; private set; }
+    public List<SchedulerAppTask> SchedulerTasks { get; private set; }
 
     #endregion
   }

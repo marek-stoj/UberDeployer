@@ -24,7 +24,6 @@ namespace UberDeployer.Core.Tests.Deployment
 
     private EnvironmentInfo _environmentInfo;
     private SchedulerAppProjectInfo _projectInfo;
-    private string _appExePath;
 
     [SetUp]
     public void SetUp()
@@ -37,21 +36,46 @@ namespace UberDeployer.Core.Tests.Deployment
       _directoryAdapterFake = new Mock<IDirectoryAdapter>();
 
       _projectInfo = ProjectInfoGenerator.GetSchedulerAppProjectInfo();
-      _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo(new EnvironmentUser(_projectInfo.SchedulerAppUserId, "user_name"));
+
+      SchedulerAppTask schedulerAppTask1 = _projectInfo.SchedulerTasks[0];
+      SchedulerAppTask schedulerAppTask2 = _projectInfo.SchedulerTasks[1];
+
+      _environmentInfo =
+        DeploymentDataGenerator.GetEnvironmentInfo(
+          new[]
+          {
+            new EnvironmentUser(schedulerAppTask1.UserId, "user_name_1"),
+            new EnvironmentUser(schedulerAppTask2.UserId, "user_name_2"),
+          });
 
       _projectInfoRepositoryFake.Setup(pir => pir.FindByName(It.IsAny<string>()))
         .Returns(_projectInfo);
 
-      _appExePath = Path.Combine(
-        _environmentInfo.SchedulerAppsBaseDirPath,
-        _projectInfo.SchedulerAppDirName,
-        _projectInfo.SchedulerAppExeName);
-
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo, _appExePath, false);
+      ScheduledTaskDetails taskDetails1 =
+        GetTaskDetails(
+          schedulerAppTask1,
+          Path.Combine(
+            _environmentInfo.SchedulerAppsBaseDirPath,
+            _projectInfo.SchedulerAppDirName,
+            schedulerAppTask1.ExecutableName),
+          false);
 
       _taskSchedulerFake
-        .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
-        .Returns(runningTaskDetails);      
+        .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask1.Name))
+        .Returns(taskDetails1);
+
+      ScheduledTaskDetails taskDetails2 =
+        GetTaskDetails(
+          schedulerAppTask2,
+          Path.Combine(
+            _environmentInfo.SchedulerAppsBaseDirPath,
+            _projectInfo.SchedulerAppDirName,
+            schedulerAppTask2.ExecutableName),
+          false);
+
+      _taskSchedulerFake
+        .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask2.Name))
+        .Returns(taskDetails2);
 
       _environmentInfoRepositoryFake
         .Setup(x => x.FindByName(It.IsAny<string>()))
@@ -63,12 +87,12 @@ namespace UberDeployer.Core.Tests.Deployment
 
       _deployTask =
         new DeploySchedulerAppDeploymentTask(
-        _projectInfoRepositoryFake.Object,
-        _environmentInfoRepositoryFake.Object,
-        _artifactsRepositoryFake.Object,
-        _taskSchedulerFake.Object,
-        _passwordCollectorFake.Object,
-        _directoryAdapterFake.Object);
+          _projectInfoRepositoryFake.Object,
+          _environmentInfoRepositoryFake.Object,
+          _artifactsRepositoryFake.Object,
+          _taskSchedulerFake.Object,
+          _passwordCollectorFake.Object,
+          _directoryAdapterFake.Object);
 
       _deployTask.Initialize(DeploymentInfoGenerator.GetSchedulerAppDeploymentInfo());
     }
@@ -77,7 +101,17 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Prepare_should_fail_if_task_is_running()
     {
       // arrange  
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo, _appExePath, true);
+      SchedulerAppTask schedulerAppTask =
+        _projectInfo.SchedulerTasks[1];
+
+      ScheduledTaskDetails runningTaskDetails =
+        GetTaskDetails(
+          schedulerAppTask,
+          Path.Combine(
+            _environmentInfo.SchedulerAppsBaseDirPath,
+            _projectInfo.SchedulerAppDirName,
+            schedulerAppTask.ExecutableName),
+          true);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -109,12 +143,12 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      AssertStepIsBefore(typeof (ToggleSchedulerAppEnabledStep), typeof (CopyFilesDeploymentStep), _deployTask.SubTasks.ToArray());
+      AssertStepIsBefore(typeof(ToggleSchedulerAppEnabledStep), typeof(CopyFilesDeploymentStep), _deployTask.SubTasks.ToArray());
 
       var disableTask = _deployTask.SubTasks.First(x => x is ToggleSchedulerAppEnabledStep) as ToggleSchedulerAppEnabledStep;
       Assert.IsNotNull(disableTask);
       Assert.IsFalse(disableTask.Enabled);
-    }    
+    }
 
     [Test]
     public void Prepare_should_add_step_to_enable_scheduled_task_as_the_last_one()
@@ -133,7 +167,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange  
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo, exePath, false);
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerTasks[0], exePath, false);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -174,7 +208,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange
       const string exePath = "exe path has changed";
-      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo, exePath, false);
+      ScheduledTaskDetails runningTaskDetails = GetTaskDetails(_projectInfo.SchedulerTasks[0], exePath, false);
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -230,17 +264,18 @@ namespace UberDeployer.Core.Tests.Deployment
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is CopyFilesDeploymentStep));
     }
 
-    private static ScheduledTaskDetails GetTaskDetails(SchedulerAppProjectInfo projectInfo, string exeAbsolutePath, bool isRunning)
+    private static ScheduledTaskDetails GetTaskDetails(SchedulerAppTask schedulerAppTask, string exeAbsolutePath, bool isRunning)
     {
-      return new ScheduledTaskDetails(
-        projectInfo.SchedulerAppName,
+      return
+      new ScheduledTaskDetails(
+        schedulerAppTask.Name,
         isRunning,
         DateTime.Now,
         DateTime.Now,
         exeAbsolutePath,
-        projectInfo.ScheduledHour,
-        projectInfo.ScheduledMinute,
-        projectInfo.ExecutionTimeLimitInMinutes);
+        schedulerAppTask.ScheduledHour,
+        schedulerAppTask.ScheduledMinute,
+        schedulerAppTask.ExecutionTimeLimitInMinutes);
     }
 
     private static void AssertStepIsBefore(Type stepBeforeType, Type stepAfterType, DeploymentTaskBase[] subTasks)

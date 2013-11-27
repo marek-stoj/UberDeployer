@@ -51,6 +51,7 @@
     <Compile Include="Dto\DbProjectConfiguration.cs" />
     <Compile Include="Dto\Metadata\MachineSpecificProjectVersion.cs" />
     <Compile Include="Dto\Metadata\ProjectMetadata.cs" />
+    <Compile Include="Dto\SchedulerAppTask.cs" />
     <Compile Include="Dto\WebAppProjectConfiguration.cs" />
     <Compile Include="Dto\Input\DbInputParams.cs" />
     <Compile Include="Dto\Input\InputParams.cs" />

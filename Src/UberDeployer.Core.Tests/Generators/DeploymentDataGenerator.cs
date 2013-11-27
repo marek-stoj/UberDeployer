@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Tests.Generators
@@ -6,10 +7,10 @@ namespace UberDeployer.Core.Tests.Generators
   {
     public static EnvironmentInfo GetEnvironmentInfo()
     {
-      return GetEnvironmentInfo(new EnvironmentUser("id", "user_name"));
+      return GetEnvironmentInfo(new[] { new EnvironmentUser("id", "user_name"), });
     }
 
-    public static EnvironmentInfo GetEnvironmentInfo(EnvironmentUser user)
+    public static EnvironmentInfo GetEnvironmentInfo(IEnumerable<EnvironmentUser> users)
     {
       return
         new EnvironmentInfo(
@@ -25,7 +26,7 @@ namespace UberDeployer.Core.Tests.Generators
           "X:\\scheduler_apps_base_dir_path",
           "X:\\terminal_apps_base_dir_path",
           false,
-          new[] { user, },
+          users,
           TestData.AppPoolInfos,
           TestData.DatabaseServers,
           TestData.WebAppProjectConfigurations,
