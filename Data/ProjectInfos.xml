@@ -37,12 +37,12 @@
           <ScheduledHour>12</ScheduledHour>
           <ScheduledMinute>0</ScheduledMinute>
           <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
-          <RepetitionSpecification>
+          <Repetition>
             <Enabled>true</Enabled>
             <Interval>00:15:00</Interval>
             <Duration>1.00:00:00</Duration>
             <StopAtDurationEnd>true</StopAtDurationEnd>
-          </RepetitionSpecification>
+          </Repetition>
         </SchedulerAppTaskXml>
       </SchedulerAppTasks>
     </ProjectInfoXml>

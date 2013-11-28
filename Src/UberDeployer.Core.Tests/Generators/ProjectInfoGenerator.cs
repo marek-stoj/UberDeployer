@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UberDeployer.Core.Domain;
-using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Tests.Generators
 {
@@ -91,7 +90,7 @@ namespace UberDeployer.Core.Tests.Generators
               0,
               0,
               0,
-              RepetitionSpecification.CreatedDisabled()),
+              Repetition.CreatedDisabled()),
             new SchedulerAppTask(
               "task_name_2",
               "task_executable_name_2",
@@ -99,7 +98,7 @@ namespace UberDeployer.Core.Tests.Generators
               0,
               0,
               0,
-              RepetitionSpecification.CreateEnabled(
+              Repetition.CreateEnabled(
                 TimeSpan.FromMinutes(15.0),
                 TimeSpan.FromDays(1.0),
                 true)),

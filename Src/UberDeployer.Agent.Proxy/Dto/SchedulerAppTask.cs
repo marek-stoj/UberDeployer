@@ -16,5 +16,7 @@ namespace UberDeployer.Agent.Proxy.Dto
     /// 0 - no limit.
     /// </summary>
     public int ExecutionTimeLimitInMinutes { get; set; }
+
+    public Repetition Repetition { get; set; }
   }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 
 namespace UberDeployer.Core.Deployment
@@ -16,7 +17,7 @@ namespace UberDeployer.Core.Deployment
     private readonly int _scheduledHour;
     private readonly int _scheduledMinute;
     private readonly int _executionTimeLimitInMinutes;
-    private readonly RepetitionSpecification _repetitionSpecification;
+    private readonly Repetition _repetition;
 
     #region Constructor(s)
 
@@ -30,7 +31,7 @@ namespace UberDeployer.Core.Deployment
       int scheduledHour,
       int scheduledMinute,
       int executionTimeLimitInMinutes,
-      RepetitionSpecification repetitionSpecification,
+      Repetition repetition,
       ITaskScheduler taskScheduler)
     {
       Guard.NotNull(taskScheduler, "taskScheduler");
@@ -39,7 +40,7 @@ namespace UberDeployer.Core.Deployment
       Guard.NotNullNorEmpty(executablePath, "executablePath");
       Guard.NotNullNorEmpty(userName, "userName");
       Guard.NotNullNorEmpty(password, "password");
-      Guard.NotNull(repetitionSpecification, "repetitionSpecification");
+      Guard.NotNull(repetition, "repetition");
       
       if (!Path.IsPathRooted(executablePath))
       {
@@ -55,7 +56,7 @@ namespace UberDeployer.Core.Deployment
       _scheduledHour = scheduledHour;
       _scheduledMinute = scheduledMinute;
       _executionTimeLimitInMinutes = executionTimeLimitInMinutes;
-      _repetitionSpecification = repetitionSpecification;
+      _repetition = repetition;
     }
 
     #endregion
@@ -71,7 +72,7 @@ namespace UberDeployer.Core.Deployment
           _scheduledHour,
           _scheduledMinute,
           _executionTimeLimitInMinutes,
-          _repetitionSpecification);
+          Converter.CreateRepetitionSpecification(_repetition));
 
       _taskScheduler.UpdateTaskSchedule(
         _machineName,
@@ -93,8 +94,8 @@ namespace UberDeployer.Core.Deployment
             _scheduledMinute.ToString().PadLeft(2, '0'),
             _executionTimeLimitInMinutes,
             _userName,
-            _repetitionSpecification.Enabled
-              ? string.Format("enabled (interval: '{0}'; duration: '{1}'; stop at duration end: '{2}')", _repetitionSpecification.Interval, _repetitionSpecification.Duration, _repetitionSpecification.StopAtDurationEnd)
+            _repetition.Enabled
+              ? string.Format("enabled (interval: '{0}'; duration: '{1}'; stop at duration end: '{2}')", _repetition.Interval, _repetition.Duration, _repetition.StopAtDurationEnd)
               : "disabled");
       }
     }

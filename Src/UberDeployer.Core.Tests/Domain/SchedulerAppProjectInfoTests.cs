@@ -24,7 +24,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const int _ScheduledHour = 1;
     private const int _ScheduledMinute = 1;
     private const int _ExecutionTimeLimitInMinutes = 1;
-    private static readonly RepetitionSpecification _RepetitionSpecification = RepetitionSpecification.CreateEnabled(TimeSpan.FromMinutes(15.0), TimeSpan.FromDays(1.0), true);
+    private static readonly Repetition _Repetition = Repetition.CreateEnabled(TimeSpan.FromMinutes(15.0), TimeSpan.FromDays(1.0), true);
     private static readonly string[] _AllowedEnvironmentNames = { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
@@ -64,7 +64,7 @@ namespace UberDeployer.Core.Tests.Domain
               _ScheduledHour,
               _ScheduledMinute,
               _ExecutionTimeLimitInMinutes,
-              _RepetitionSpecification)
+              _Repetition)
           });
 
       objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(prjInfoRepository.Object);
@@ -124,7 +124,7 @@ namespace UberDeployer.Core.Tests.Domain
               _ScheduledHour,
               _ScheduledMinute,
               _ExecutionTimeLimitInMinutes,
-              _RepetitionSpecification)
+              _Repetition)
           });
 
       List<string> targetFolders =

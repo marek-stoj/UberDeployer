@@ -175,7 +175,7 @@ namespace UberDeployer.Core.Deployment
             schedulerAppTask.ScheduledHour,
             schedulerAppTask.ScheduledMinute,
             schedulerAppTask.ExecutionTimeLimitInMinutes,
-            schedulerAppTask.RepetitionSpecification,
+            schedulerAppTask.Repetition,
             _taskScheduler));
       }
       else if (hasSettingsChanged)
@@ -191,7 +191,7 @@ namespace UberDeployer.Core.Deployment
             schedulerAppTask.ScheduledHour,
             schedulerAppTask.ScheduledMinute,
             schedulerAppTask.ExecutionTimeLimitInMinutes,
-            schedulerAppTask.RepetitionSpecification,
+            schedulerAppTask.Repetition,
             _taskScheduler));
       }
     }
@@ -284,9 +284,9 @@ namespace UberDeployer.Core.Deployment
           && taskDetails.ScheduledHour == schedulerAppTask.ScheduledHour
           && taskDetails.ScheduledMinute == schedulerAppTask.ScheduledMinute
           && taskDetails.ExecutionTimeLimitInMinutes == schedulerAppTask.ExecutionTimeLimitInMinutes
-          && taskDetails.Repetition.Interval == schedulerAppTask.RepetitionSpecification.Interval
-          && taskDetails.Repetition.Duration == schedulerAppTask.RepetitionSpecification.Duration
-          && taskDetails.Repetition.StopAtDurationEnd == schedulerAppTask.RepetitionSpecification.StopAtDurationEnd
+          && taskDetails.Repetition.Interval == schedulerAppTask.Repetition.Interval
+          && taskDetails.Repetition.Duration == schedulerAppTask.Repetition.Duration
+          && taskDetails.Repetition.StopAtDurationEnd == schedulerAppTask.Repetition.StopAtDurationEnd
           && taskDetails.ExeAbsolutePath == taskExecutablePath);
     }
 

@@ -26,6 +26,9 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 
     public TimeSpan Interval { get; private set; }
 
+    /// <summary>
+    /// TimeSpan.Zero - indefinite duration.
+    /// </summary>
     public TimeSpan Duration { get; private set; }
 
     public bool StopAtDurationEnd { get; private set; }

@@ -62,9 +62,9 @@ namespace UberDeployer.Core.Tests.Deployment
             schedulerAppTask1.ExecutableName),
           false,
           new ScheduledTaskRepetition(
-            schedulerAppTask1.RepetitionSpecification.Interval,
-            schedulerAppTask1.RepetitionSpecification.Duration,
-            schedulerAppTask1.RepetitionSpecification.StopAtDurationEnd));
+            schedulerAppTask1.Repetition.Interval,
+            schedulerAppTask1.Repetition.Duration,
+            schedulerAppTask1.Repetition.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask1.Name))
@@ -79,9 +79,9 @@ namespace UberDeployer.Core.Tests.Deployment
             schedulerAppTask2.ExecutableName),
           false,
           new ScheduledTaskRepetition(
-            schedulerAppTask2.RepetitionSpecification.Interval,
-            schedulerAppTask2.RepetitionSpecification.Duration,
-            schedulerAppTask2.RepetitionSpecification.StopAtDurationEnd));
+            schedulerAppTask2.Repetition.Interval,
+            schedulerAppTask2.Repetition.Duration,
+            schedulerAppTask2.Repetition.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask2.Name))
@@ -123,9 +123,9 @@ namespace UberDeployer.Core.Tests.Deployment
             schedulerAppTask.ExecutableName),
           true,
           new ScheduledTaskRepetition(
-            schedulerAppTask.RepetitionSpecification.Interval,
-            schedulerAppTask.RepetitionSpecification.Duration,
-            schedulerAppTask.RepetitionSpecification.StopAtDurationEnd));
+            schedulerAppTask.Repetition.Interval,
+            schedulerAppTask.Repetition.Duration,
+            schedulerAppTask.Repetition.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -200,9 +200,9 @@ namespace UberDeployer.Core.Tests.Deployment
           exePath,
           false,
           new ScheduledTaskRepetition(
-            schedulerAppTask.RepetitionSpecification.Interval,
-            schedulerAppTask.RepetitionSpecification.Duration,
-            schedulerAppTask.RepetitionSpecification.StopAtDurationEnd));
+            schedulerAppTask.Repetition.Interval,
+            schedulerAppTask.Repetition.Duration,
+            schedulerAppTask.Repetition.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -248,9 +248,9 @@ namespace UberDeployer.Core.Tests.Deployment
           exePath,
           false,
           new ScheduledTaskRepetition(
-            schedulerAppTask1.RepetitionSpecification.Interval,
-            schedulerAppTask1.RepetitionSpecification.Duration,
-            schedulerAppTask1.RepetitionSpecification.StopAtDurationEnd));
+            schedulerAppTask1.Repetition.Interval,
+            schedulerAppTask1.Repetition.Duration,
+            schedulerAppTask1.Repetition.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
@@ -305,9 +305,9 @@ namespace UberDeployer.Core.Tests.Deployment
           exePath,
           false,
           new ScheduledTaskRepetition(
-            schedulerAppTask.RepetitionSpecification.Interval,
-            schedulerAppTask.RepetitionSpecification.Duration,
-            schedulerAppTask.RepetitionSpecification.StopAtDurationEnd));
+            schedulerAppTask.Repetition.Interval,
+            schedulerAppTask.Repetition.Duration,
+            schedulerAppTask.Repetition.StopAtDurationEnd));
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), It.IsAny<string>()))
