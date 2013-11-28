@@ -344,6 +344,7 @@ namespace UberDeployer.Core.Tests.Deployment
     }
 
     [Test]
+    [Ignore("We've disabled backups for now.")]
     public void Prepare_should_add_step_to_do_a_backup()
     {
       // act

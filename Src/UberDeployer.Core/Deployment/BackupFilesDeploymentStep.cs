@@ -3,7 +3,6 @@ using System.IO;
 using Ionic.Zip;
 using UberDeployer.Common.SyntaxSugar;
 
-// TODO IMM HI: review
 namespace UberDeployer.Core.Deployment
 {
   public class BackupFilesDeploymentStep : DeploymentStep

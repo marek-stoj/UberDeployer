@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
@@ -109,6 +108,7 @@ namespace UberDeployer.Core.Deployment
 
       foreach (string webServerMachineName in webMachinesToDeployTo)
       {
+/* // TODO IMM HI: xxx we don't need this for now - should we parameterize this somehow?
         string webApplicationPhysicalPath =
           _iisManager.GetWebApplicationPath(
             webServerMachineName,
@@ -132,13 +132,14 @@ namespace UberDeployer.Core.Deployment
             AddSubTask(backupFilesDeploymentStep);
           }
         }
+*/
 
         // create a step for creating a WebDeploy package
         // TODO IMM HI: add possibility to specify physical path on the target machine
         var createWebDeployPackageDeploymentStep =
           new CreateWebDeployPackageDeploymentStep(
             _msDeploy,
-            new Lazy<string>(() =>extractArtifactsDeploymentStep.BinariesDirPath),
+            new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
             webSiteName,
             webAppName);
 

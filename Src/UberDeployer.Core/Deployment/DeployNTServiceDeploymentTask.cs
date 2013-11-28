@@ -301,6 +301,7 @@ namespace UberDeployer.Core.Deployment
       // create a step for copying the binaries to the target machine
       string targetDirPath = Path.Combine(ntServicesBaseDirPath, _projectInfo.NtServiceDirName);
 
+/* // TODO IMM HI: xxx we don't need this for now - should we parameterize this somehow?
       // create a backup step if needed
       string targetDirNetworkPath = getAppServerNetworkPathFunc(targetDirPath);
 
@@ -310,6 +311,7 @@ namespace UberDeployer.Core.Deployment
           new BackupFilesDeploymentStep(
             targetDirNetworkPath));
       }
+*/
 
       AddSubTask(
         new CopyFilesDeploymentStep(

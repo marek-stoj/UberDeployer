@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Win32.TaskScheduler;
 using UberDeployer.Common;
 using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
@@ -16,7 +15,9 @@ namespace UberDeployer.Core.Deployment
     private readonly IArtifactsRepository _artifactsRepository;
     private readonly ITaskScheduler _taskScheduler;
     private readonly IPasswordCollector _passwordCollector;
+    // ReSharper disable NotAccessedField.Local
     private readonly IDirectoryAdapter _directoryAdapter;
+    // ReSharper restore NotAccessedField.Local
     
     private SchedulerAppProjectInfo _projectInfo;
     private Dictionary<string, string> _collectedPasswordsByUserName;
@@ -81,11 +82,14 @@ namespace UberDeployer.Core.Deployment
       Lazy<string> binariesDirPathProvider =
         AddStepsToObtainBinaries(environmentInfo);
 
+/* // TODO IMM HI: xxx we don't need this for now - should we parameterize this somehow?
       if (_directoryAdapter.Exists(targetDirNetworkPath))
       {
         AddSubTask(
-          new BackupFilesDeploymentStep(targetDirNetworkPath));
+          new BackupFilesDeploymentStep(
+            targetDirNetworkPath));
       }
+*/
 
       // create a step for copying the binaries to the target machine
       AddSubTask(
