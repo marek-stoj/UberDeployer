@@ -53,5 +53,9 @@ namespace UberDeployer.Core
     IProjectMetadataExplorer CreateProjectMetadataExplorer();
     
     IDirPathParamsResolver CreateDirPathParamsResolver();
+    
+    IFileAdapter CreateFileAdapter();
+    
+    IZipFileAdapter CreateZipFileAdapter();
   }
 }

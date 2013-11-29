@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.IO;
+using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Tests.Generators;
@@ -18,8 +19,8 @@ namespace UberDeployer.Core.Tests.Deployment
     private EnvironmentInfo _environmentInfo;
     private DeploymentInfo _deploymentInfo;
     private ProjectInfo _projectInfo;
-
-    private readonly OrderedDictionary _ConstructorDefaultParams = GetConstructorDefaultParams();
+    private Mock<IFileAdapter> _fileAdapterFake;
+    private Mock<IZipFileAdapter> _zipFileAdapterFake;
 
     private ExtractArtifactsDeploymentStep _deploymentStep;
 
@@ -31,6 +32,8 @@ namespace UberDeployer.Core.Tests.Deployment
       _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
       _deploymentInfo = DeploymentInfoGenerator.GetDbDeploymentInfo();
       _projectInfo = ProjectInfoGenerator.GetTerminalAppProjectInfo();
+      _fileAdapterFake = new Mock<IFileAdapter>(MockBehavior.Loose);
+      _zipFileAdapterFake = new Mock<IZipFileAdapter>(MockBehavior.Loose);
 
       _deploymentStep =
         new ExtractArtifactsDeploymentStep(
@@ -38,7 +41,9 @@ namespace UberDeployer.Core.Tests.Deployment
           _environmentInfo,
           _deploymentInfo,
           _ArtifactsFilePath,
-          _TargetArtifactsDirPath);
+          _TargetArtifactsDirPath,
+          _fileAdapterFake.Object,
+          _zipFileAdapterFake.Object);
     }
 
     #endregion
@@ -54,7 +59,7 @@ namespace UberDeployer.Core.Tests.Deployment
       // act, assert
       Assert.Throws(
         exceptionType,
-        () => ReflectionTestTools.CreateInstance<ExtractArtifactsDeploymentStep>(_ConstructorDefaultParams, nullArgumentName));
+        () => ReflectionTestTools.CreateInstance<ExtractArtifactsDeploymentStep>(GetConstructorDefaultParams(), nullArgumentName));
     }
 
     [Test]
@@ -82,7 +87,9 @@ namespace UberDeployer.Core.Tests.Deployment
           environmentInfo,
           _deploymentInfo,
           _ArtifactsFilePath,
-          _TargetArtifactsDirPath);
+          _TargetArtifactsDirPath,
+          _fileAdapterFake.Object,
+          _zipFileAdapterFake.Object);
 
       _deploymentStep.Prepare();
 
@@ -103,7 +110,9 @@ namespace UberDeployer.Core.Tests.Deployment
           _environmentInfo,
           _deploymentInfo,
           _ArtifactsFilePath,
-          _TargetArtifactsDirPath);
+          _TargetArtifactsDirPath,
+          _fileAdapterFake.Object,
+          _zipFileAdapterFake.Object);
 
       _deploymentStep.Prepare();
 
@@ -115,27 +124,23 @@ namespace UberDeployer.Core.Tests.Deployment
     public void DoExecute_extracts_artifacts()
     {
       // arrange
-      string expectedPath = Path.Combine(_TargetArtifactsDirPath, _projectInfo.ArtifactsRepositoryDirName);
-      const int filesCountInArtifacts = 2;
-
-      if (Directory.Exists(expectedPath))
-      {
-        Directory.Delete(_TargetArtifactsDirPath, true);
-      }
+      _fileAdapterFake.Setup(x => x.Exists(It.IsAny<string>()))
+        .Returns(true);
 
       // act
       _deploymentStep.PrepareAndExecute();
 
       // assert
-      Assert.True(Directory.Exists(expectedPath));
-      Assert.AreEqual(filesCountInArtifacts, Directory.GetFiles(expectedPath).Length);
+      _zipFileAdapterFake.Verify(
+        x => x.ExtractAll(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()),
+        Times.Exactly(2));
     }
 
     #endregion
 
     #region Private helper methods.
 
-    private static OrderedDictionary GetConstructorDefaultParams()
+    private OrderedDictionary GetConstructorDefaultParams()
     {
       OrderedDictionary defaultParams =
         new OrderedDictionary
@@ -144,7 +149,9 @@ namespace UberDeployer.Core.Tests.Deployment
           { "environmentInfo", DeploymentDataGenerator.GetEnvironmentInfo() },
           { "deploymentInfo", DeploymentInfoGenerator.GetTerminalAppDeploymentInfo() },
           { "artifactsFilePath", _ArtifactsFilePath },
-          { "targetArtifactsDirPath", _TargetArtifactsDirPath }
+          { "targetArtifactsDirPath", _TargetArtifactsDirPath },
+          { "fileAdapter", _fileAdapterFake.Object },
+          { "zipFileAdapter", _zipFileAdapterFake.Object },
         };
 
       return defaultParams;

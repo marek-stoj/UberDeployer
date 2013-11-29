@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.NtServices;
 using UberDeployer.Core.Management.ScheduledTasks;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Domain
 {
@@ -25,37 +24,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _NtServiceDisplayName = "ntServiceDisplayName";
     private const string _NtServiceExeName = "ntServiceExeName";
     private const string _NtServiceUserId = "Sample.User";
-    private static readonly string[] _AllowedEnvironmentNames = new[] { "env_name" };
-
-    private static readonly List<EnvironmentUser> _EnvironmentUsers =
-      new List<EnvironmentUser>
-      {
-        new EnvironmentUser("Sample.User", "some_user@centrala.kaczmarski.pl"),
-      };
-
-    private static readonly List<IisAppPoolInfo> _AppPoolInfos =
-      new List<IisAppPoolInfo>()
-      {
-        new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated),
-      };
-
-    private static readonly List<WebAppProjectConfiguration> _WebAppProjectConfigurations =
-      new List<WebAppProjectConfiguration>
-      {
-        new WebAppProjectConfiguration("webappprj", "website", "apppool", "dir", "webapp"),
-      };
-
-    private static readonly List<DbProjectConfiguration> _DbProjectConfigurations =
-      new List<DbProjectConfiguration>
-      {
-        new DbProjectConfiguration("dbprj", "db_server"),
-      };
-
-    private static readonly List<ProjectToFailoverClusterGroupMapping> _ProjectToFailoverClusterGroupMappings =
-      new List<ProjectToFailoverClusterGroupMapping>
-      {
-        new ProjectToFailoverClusterGroupMapping("prj1", "cg1"),
-      };
+    private static readonly string[] _AllowedEnvironmentNames = { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
 
@@ -76,6 +45,8 @@ namespace UberDeployer.Core.Tests.Domain
       var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Loose);
       var passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Loose);
       var failoverClusterManager = new Mock<IFailoverClusterManager>(MockBehavior.Loose);
+      var fileAdapter = new Mock<IFileAdapter>(MockBehavior.Loose);
+      var zipFileAdapter = new Mock<IZipFileAdapter>(MockBehavior.Loose);
 
       var projectInfo =
         new NtServiceProjectInfo(
@@ -97,6 +68,8 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateNtServiceManager()).Returns(ntServiceManager.Object);
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
       objectFactory.Setup(o => o.CreateFailoverClusterManager()).Returns(failoverClusterManager.Object);
+      objectFactory.Setup(o => o.CreateFileAdapter()).Returns(fileAdapter.Object);
+      objectFactory.Setup(o => o.CreateZipFileAdapter()).Returns(zipFileAdapter.Object);
 
       projectInfo.CreateDeploymentTask(objectFactory.Object);
     }

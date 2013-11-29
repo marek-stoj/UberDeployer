@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
@@ -10,9 +11,11 @@ namespace UberDeployer.Core.Deployment
 {
   public class DeployDbProjectDeploymentTask : DeploymentTask
   {
-    protected readonly IArtifactsRepository _artifactsRepository;
-    protected readonly IDbScriptRunnerFactory _dbScriptRunnerFactory;
-    protected readonly IDbVersionProvider _dbVersionProvider;
+    private readonly IArtifactsRepository _artifactsRepository;
+    private readonly IDbScriptRunnerFactory _dbScriptRunnerFactory;
+    private readonly IDbVersionProvider _dbVersionProvider;
+    private readonly IFileAdapter _fileAdapter;
+    private readonly IZipFileAdapter _zipFileAdapter;
 
     #region Constructor(s)
 
@@ -21,16 +24,22 @@ namespace UberDeployer.Core.Deployment
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
       IDbScriptRunnerFactory dbScriptRunnerFactory,
-      IDbVersionProvider dbVersionProvider)
+      IDbVersionProvider dbVersionProvider,
+      IFileAdapter fileAdapter,
+      IZipFileAdapter zipFileAdapter)
       : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
       Guard.NotNull(dbVersionProvider, "dbVersionProvider");
       Guard.NotNull(dbScriptRunnerFactory, "dbScriptRunnerFactory");
+      Guard.NotNull(fileAdapter, "fileAdapter");
+      Guard.NotNull(zipFileAdapter, "zipFileAdapter");
 
       _artifactsRepository = artifactsRepository;
       _dbScriptRunnerFactory = dbScriptRunnerFactory;
       _dbVersionProvider = dbVersionProvider;
+      _fileAdapter = fileAdapter;
+      _zipFileAdapter = zipFileAdapter;
     }
 
     #endregion
@@ -67,7 +76,9 @@ namespace UberDeployer.Core.Deployment
           environmentInfo,
           DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          GetTempDirPath());
+          GetTempDirPath(),
+          _fileAdapter,
+          _zipFileAdapter);
       
       AddSubTask(extractArtifactsDeploymentStep);
 

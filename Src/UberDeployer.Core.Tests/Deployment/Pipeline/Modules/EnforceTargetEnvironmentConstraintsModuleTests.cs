@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
@@ -13,16 +14,43 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
   [TestFixture]
   public class EnforceTargetEnvironmentConstraintsModuleTests
   {
+    private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
+    private Mock<IArtifactsRepository> _artifactsRepositoryFake;
+    private Mock<IProjectInfoRepository> _projectsInfoRepositoryFake;
+    private Mock<IDirectoryAdapter> _directoryAdapterFake;
+    private Mock<IFileAdapter> _fileAdapterFake;
+    private Mock<IZipFileAdapter> _zipFileAdapterFake;
+    private DeploymentContext _deploymentContext;
+    private DeployTerminalAppDeploymentTask _deploymentTask;
+
+    private EnforceTargetEnvironmentConstraintsModule _enforceTargetEnvironmentConstraintsModule;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
+      _artifactsRepositoryFake = new Mock<IArtifactsRepository>();
+      _projectsInfoRepositoryFake = new Mock<IProjectInfoRepository>();
+      _directoryAdapterFake = new Mock<IDirectoryAdapter>(MockBehavior.Loose);
+      _fileAdapterFake = new Mock<IFileAdapter>(MockBehavior.Loose);
+      _zipFileAdapterFake = new Mock<IZipFileAdapter>(MockBehavior.Loose);
+      _deploymentContext = new DeploymentContext("requester");
+
+      _deploymentTask =
+        new DeployTerminalAppDeploymentTask(
+          _projectsInfoRepositoryFake.Object,
+          _environmentInfoRepositoryFake.Object,
+          _artifactsRepositoryFake.Object,
+          _directoryAdapterFake.Object,
+          _fileAdapterFake.Object,
+          _zipFileAdapterFake.Object);
+
+      _enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
+    }
+
     [Test]
     public void OnDeploymentTaskStarting_WhenEnvironmentIsProductionAndConfigurationIsNot_ThrowsInvalidOperationException()
     {
-      var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
-      var environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
-      var artifactsRepository = new Mock<IArtifactsRepository>();
-      var projectsInfoRepositoryFake = new Mock<IProjectInfoRepository>();
-      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepositoryFake.Object, environmentInfoRepositoryFake.Object, artifactsRepository.Object);
-      var deploymentContext = new DeploymentContext("requester");
-
       DeploymentInfo deploymentInfo =
         new DeploymentInfo(
           Guid.NewGuid(),
@@ -33,46 +61,37 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
           EnforceTargetEnvironmentConstraintsModule.ProductionEnvironmentName,
           new TerminalAppInputParams());
 
-      Assert.Throws<InvalidOperationException>(() => enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext));
+      Assert.Throws<InvalidOperationException>(
+        () => _enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentInfo, _deploymentTask, _deploymentContext));
     }
 
     [Test]
     public void OnDeploymentTaskStarting_WhenEnvironmentAndConfigurationIsProduction_DoesNotThrows()
     {
-      var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
-      var projectsInfoRepositoryFake = new Mock<IProjectInfoRepository>();
-      var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
-      var artifactsRepository = new Mock<IArtifactsRepository>();
-      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepositoryFake.Object, environmentInfoRepository.Object, artifactsRepository.Object);
-      var deploymentContext = new DeploymentContext("requester");
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
-      environmentInfoRepository
+      _environmentInfoRepositoryFake
         .Setup(x => x.FindByName(It.IsAny<string>()))
         .Returns(DeploymentDataGenerator.GetEnvironmentInfo());
 
-      projectsInfoRepositoryFake
+      _projectsInfoRepositoryFake
         .Setup(pir => pir.FindByName(deploymentInfo.ProjectName))
         .Returns(DeploymentDataGenerator.GetTerminalAppProjectInfo());
 
-      deploymentTask.Initialize(DeploymentInfoGenerator.GetTerminalAppDeploymentInfo());
-      deploymentTask.Prepare();
+      _deploymentTask.Initialize(deploymentInfo);
+      _deploymentTask.Prepare();
 
-      Assert.DoesNotThrow(() => enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentInfo, deploymentTask, deploymentContext));
+      Assert.DoesNotThrow(
+        () => _enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskStarting(deploymentInfo, _deploymentTask, _deploymentContext));
     }
 
     [Test]
     public void OnDeploymentTaskFinished_DoNothing_SoDoesNotThrows()
     {
-      var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
-      var projectsInfoRepositoryFake = new Mock<IProjectInfoRepository>();
-      var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
-      var artifactsRepository = new Mock<IArtifactsRepository>();
-      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepositoryFake.Object, environmentInfoRepository.Object, artifactsRepository.Object);
-      var deploymentContext = new DeploymentContext("requester");
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
 
-      Assert.DoesNotThrow(() => enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskFinished(deploymentInfo, deploymentTask, deploymentContext));
+      Assert.DoesNotThrow(
+        () => _enforceTargetEnvironmentConstraintsModule.OnDeploymentTaskFinished(deploymentInfo, _deploymentTask, _deploymentContext));
     }
   }
 }

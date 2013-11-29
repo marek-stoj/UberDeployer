@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Domain.Input;
@@ -23,6 +24,8 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
     private Mock<IArtifactsRepository> _artifactsRepository;
     private Mock<IIisManager> _iisManager;
+    private Mock<IFileAdapter> _fileAdapterFake;
+    private Mock<IZipFileAdapter> _zipFileAdapterFake;
 
     private WebAppProjectInfo _projectInfo;
     private EnvironmentInfo _environmentInfo;
@@ -35,6 +38,8 @@ namespace UberDeployer.Core.Tests.Deployment
       _projectInfoRepositoryFake = new Mock<IProjectInfoRepository>(MockBehavior.Loose);
       _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
       _iisManager = new Mock<IIisManager>();
+      _fileAdapterFake = new Mock<IFileAdapter>(MockBehavior.Loose);
+      _zipFileAdapterFake = new Mock<IZipFileAdapter>(MockBehavior.Loose);
 
       _projectInfo = ProjectInfoGenerator.GetWebAppProjectInfo();
       _environmentInfo = DeploymentDataGenerator.GetEnvironmentInfo();
@@ -44,7 +49,10 @@ namespace UberDeployer.Core.Tests.Deployment
           _projectInfoRepositoryFake.Object,
           _environmentInfoRepositoryFake.Object,
           _msDeploy.Object,
-          _artifactsRepository.Object, _iisManager.Object);
+          _artifactsRepository.Object,
+          _iisManager.Object,
+          _fileAdapterFake.Object,
+          _zipFileAdapterFake.Object);
 
       _deployWebAppDeploymentTask.Initialize(DeploymentInfoGenerator.GetWebAppDeploymentInfo());
 
@@ -94,7 +102,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
     // ReSharper disable UnusedMethodReturnValue.Local
 
-    private IEnumerable<List<string>> GetInvalidWebMachineNames()
+    private static IEnumerable<List<string>> GetInvalidWebMachineNames()
     {
       yield return new List<string>();
       yield return new List<string> { "incorrectWebmachine" };

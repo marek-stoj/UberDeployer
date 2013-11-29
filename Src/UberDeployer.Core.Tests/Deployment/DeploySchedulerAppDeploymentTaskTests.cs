@@ -23,6 +23,8 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<ITaskScheduler> _taskSchedulerFake;
     private Mock<IPasswordCollector> _passwordCollectorFake;
     private Mock<IDirectoryAdapter> _directoryAdapterFake;
+    private Mock<IFileAdapter> _fileAdapterFake;
+    private Mock<IZipFileAdapter> _zipFileAdapterFake;
 
     private EnvironmentInfo _environmentInfo;
     private SchedulerAppProjectInfo _projectInfo;
@@ -36,6 +38,8 @@ namespace UberDeployer.Core.Tests.Deployment
       _taskSchedulerFake = new Mock<ITaskScheduler>();
       _passwordCollectorFake = new Mock<IPasswordCollector>();
       _directoryAdapterFake = new Mock<IDirectoryAdapter>();
+      _fileAdapterFake = new Mock<IFileAdapter>();
+      _zipFileAdapterFake = new Mock<IZipFileAdapter>();
 
       _projectInfo = ProjectInfoGenerator.GetSchedulerAppProjectInfo();
 
@@ -53,39 +57,83 @@ namespace UberDeployer.Core.Tests.Deployment
       _projectInfoRepositoryFake.Setup(pir => pir.FindByName(It.IsAny<string>()))
         .Returns(_projectInfo);
 
+      string exeAbsolutePath1 =
+        Path.Combine(
+          _environmentInfo.SchedulerAppsBaseDirPath,
+          _projectInfo.SchedulerAppDirName,
+          schedulerAppTask1.ExecutableName);
+
+      var scheduledTaskRepetition1 =
+        new ScheduledTaskRepetition(
+          schedulerAppTask1.Repetition.Interval,
+          schedulerAppTask1.Repetition.Duration,
+          schedulerAppTask1.Repetition.StopAtDurationEnd);
+
       ScheduledTaskDetails taskDetails1 =
-        GetTaskDetails(
-          schedulerAppTask1,
-          Path.Combine(
-            _environmentInfo.SchedulerAppsBaseDirPath,
-            _projectInfo.SchedulerAppDirName,
-            schedulerAppTask1.ExecutableName),
-          false,
-          new ScheduledTaskRepetition(
-            schedulerAppTask1.Repetition.Interval,
-            schedulerAppTask1.Repetition.Duration,
-            schedulerAppTask1.Repetition.StopAtDurationEnd));
+        GetTaskDetails(schedulerAppTask1, exeAbsolutePath1, true, false, scheduledTaskRepetition1);
+
+      ScheduledTaskDetails taskDetailsDisabled1 =
+        GetTaskDetails(schedulerAppTask1, exeAbsolutePath1, false, false, scheduledTaskRepetition1);
+
+      int timesCalled1 = 0;
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask1.Name))
-        .Returns(taskDetails1);
+        .Returns(() =>
+        {
+          timesCalled1++;
+
+          if (timesCalled1 == 1)
+          {
+            return taskDetails1;
+          }
+          
+          if (timesCalled1 == 2)
+          {
+            return taskDetailsDisabled1;
+          }
+
+          throw new Exception("Unexpected number of calls!");
+        });
+
+      string exeAbsolutePath2 =
+        Path.Combine(
+          _environmentInfo.SchedulerAppsBaseDirPath,
+          _projectInfo.SchedulerAppDirName,
+          schedulerAppTask2.ExecutableName);
+
+      var scheduledTaskRepetition2 =
+        new ScheduledTaskRepetition(
+          schedulerAppTask2.Repetition.Interval,
+          schedulerAppTask2.Repetition.Duration,
+          schedulerAppTask2.Repetition.StopAtDurationEnd);
 
       ScheduledTaskDetails taskDetails2 =
-        GetTaskDetails(
-          schedulerAppTask2,
-          Path.Combine(
-            _environmentInfo.SchedulerAppsBaseDirPath,
-            _projectInfo.SchedulerAppDirName,
-            schedulerAppTask2.ExecutableName),
-          false,
-          new ScheduledTaskRepetition(
-            schedulerAppTask2.Repetition.Interval,
-            schedulerAppTask2.Repetition.Duration,
-            schedulerAppTask2.Repetition.StopAtDurationEnd));
+        GetTaskDetails(schedulerAppTask2, exeAbsolutePath2, true, false, scheduledTaskRepetition2);
+
+      ScheduledTaskDetails taskDetailsDisabled2 =
+        GetTaskDetails(schedulerAppTask2, exeAbsolutePath2, false, false, scheduledTaskRepetition2);
+
+      int timesCalled2 = 0;
 
       _taskSchedulerFake
         .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask2.Name))
-        .Returns(taskDetails2);
+        .Returns(() =>
+        {
+          timesCalled2++;
+
+          if (timesCalled2 == 1)
+          {
+            return taskDetails2;
+          }
+
+          if (timesCalled2 == 2)
+          {
+            return taskDetailsDisabled2;
+          }
+
+          throw new Exception("Unexpected number of calls!");
+        });
 
       _environmentInfoRepositoryFake
         .Setup(x => x.FindByName(It.IsAny<string>()))
@@ -102,7 +150,9 @@ namespace UberDeployer.Core.Tests.Deployment
           _artifactsRepositoryFake.Object,
           _taskSchedulerFake.Object,
           _passwordCollectorFake.Object,
-          _directoryAdapterFake.Object);
+          _directoryAdapterFake.Object,
+          _fileAdapterFake.Object,
+          _zipFileAdapterFake.Object);
 
       _deployTask.Initialize(DeploymentInfoGenerator.GetSchedulerAppDeploymentInfo());
     }
@@ -121,6 +171,7 @@ namespace UberDeployer.Core.Tests.Deployment
             _environmentInfo.SchedulerAppsBaseDirPath,
             _projectInfo.SchedulerAppDirName,
             schedulerAppTask.ExecutableName),
+          true,
           true,
           new ScheduledTaskRepetition(
             schedulerAppTask.Repetition.Interval,
@@ -198,6 +249,7 @@ namespace UberDeployer.Core.Tests.Deployment
         GetTaskDetails(
           schedulerAppTask,
           exePath,
+          true,
           false,
           new ScheduledTaskRepetition(
             schedulerAppTask.Repetition.Interval,
@@ -246,6 +298,7 @@ namespace UberDeployer.Core.Tests.Deployment
         GetTaskDetails(
           schedulerAppTask1,
           exePath,
+          true,
           false,
           new ScheduledTaskRepetition(
             schedulerAppTask1.Repetition.Interval,
@@ -303,6 +356,7 @@ namespace UberDeployer.Core.Tests.Deployment
         GetTaskDetails(
           schedulerAppTask,
           exePath,
+          true,
           false,
           new ScheduledTaskRepetition(
             schedulerAppTask.Repetition.Interval,
@@ -364,11 +418,35 @@ namespace UberDeployer.Core.Tests.Deployment
       Assert.IsTrue(_deployTask.SubTasks.Any(x => x is CopyFilesDeploymentStep));
     }
 
-    private static ScheduledTaskDetails GetTaskDetails(SchedulerAppTask schedulerAppTask, string exeAbsolutePath, bool isRunning, ScheduledTaskRepetition repetition)
+    [Test]
+    public void Execute_should_make_sure_that_all_tasks_that_were_previously_enabled_will_still_be_enabled_even_if_something_goes_wrong()
+    {
+      // arrange
+      _fileAdapterFake.Setup(x => x.Exists(It.IsAny<string>()))
+        .Returns(true);
+
+      _directoryAdapterFake.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
+        .Throws(new InvalidOperationException())
+        .Verifiable();
+
+      // act
+      Assert.Throws<InvalidOperationException>(
+        () => _deployTask.PrepareAndExecute());
+
+      // assert
+      _fileAdapterFake.Verify();
+
+      _taskSchedulerFake.Verify(
+        x => x.ToggleTaskEnabled(It.IsAny<string>(), It.IsAny<string>(), true),
+        Times.Exactly(2));
+    }
+
+    private static ScheduledTaskDetails GetTaskDetails(SchedulerAppTask schedulerAppTask, string exeAbsolutePath, bool isEnabled, bool isRunning, ScheduledTaskRepetition repetition)
     {
       return
         new ScheduledTaskDetails(
           schedulerAppTask.Name,
+          isEnabled,
           isRunning,
           DateTime.Now,
           DateTime.Now,

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using UberDeployer.Common;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Core.Deployment
@@ -11,16 +12,22 @@ namespace UberDeployer.Core.Deployment
     private const int _DeleteDstDirRetriesCount = 4;
     private const int _DeleteDstDirRetryDelay = 500;
 
+    private readonly IDirectoryAdapter _directoryAdapter;
+    private readonly IFileAdapter _fileAdapter;
     private readonly Lazy<string> _srcDirPathProvider;
     private readonly Lazy<string> _dstDirPath;
 
     #region Constructor(s)
 
-    public CopyFilesDeploymentStep(Lazy<string> srcDirPathProvider, Lazy<string> dstDirPath)
+    public CopyFilesDeploymentStep(IDirectoryAdapter directoryAdapter, IFileAdapter fileAdapter, Lazy<string> srcDirPathProvider, Lazy<string> dstDirPath)
     {
+      Guard.NotNull(directoryAdapter, "directoryAdapter");
+      Guard.NotNull(fileAdapter, "fileAdapter");
       Guard.NotNull(srcDirPathProvider, "srcDirPathProvider");
-      Guard.NotNull(dstDirPath, "srcDirPathProvider");      
+      Guard.NotNull(dstDirPath, "srcDirPathProvider");
 
+      _directoryAdapter = directoryAdapter;
+      _fileAdapter = fileAdapter;
       _srcDirPathProvider = srcDirPathProvider;
       _dstDirPath = dstDirPath;
     }
@@ -31,12 +38,12 @@ namespace UberDeployer.Core.Deployment
 
     protected override void DoExecute()
     {
-      if (!Directory.Exists(_srcDirPathProvider.Value))
+      if (!_directoryAdapter.Exists(_srcDirPathProvider.Value))
       {
         throw new DeploymentTaskException(string.Format("Source directory doesn't exist: '{0}'.", _srcDirPathProvider));
       }
 
-      if (Directory.Exists(_dstDirPath.Value))
+      if (_directoryAdapter.Exists(_dstDirPath.Value))
       {
         RetryUtils.RetryOnException(
           new[] { typeof(UnauthorizedAccessException) },
@@ -44,18 +51,18 @@ namespace UberDeployer.Core.Deployment
           _DeleteDstDirRetryDelay,
           () =>
           {
-            Directory.GetDirectories(_dstDirPath.Value)
+            _directoryAdapter.GetDirectories(_dstDirPath.Value)
               .ToList()
-              .ForEach(dirPath => Directory.Delete(dirPath, true));
+              .ForEach(dirPath => _directoryAdapter.Delete(dirPath, true));
 
-            Directory.GetFiles(_dstDirPath.Value)
+            _directoryAdapter.GetFiles(_dstDirPath.Value)
               .ToList()
-              .ForEach(File.Delete);
+              .ForEach(_fileAdapter.Delete);
           });
       }
       else
       {
-        Directory.CreateDirectory(_dstDirPath.Value);
+        _directoryAdapter.CreateDirectory(_dstDirPath.Value);
       }
 
       CopyAll(_srcDirPathProvider.Value, _dstDirPath.Value);
@@ -70,9 +77,9 @@ namespace UberDeployer.Core.Deployment
 
     #region Private helper methods
 
-    private static void CopyAll(string srcDirPath, string dstDirPath)
+    private void CopyAll(string srcDirPath, string dstDirPath)
     {
-      foreach (string filePath in Directory.GetFiles(srcDirPath, "*.*", SearchOption.TopDirectoryOnly))
+      foreach (string filePath in _directoryAdapter.GetFiles(srcDirPath, "*.*", SearchOption.TopDirectoryOnly))
       {
         string fileName = Path.GetFileName(filePath);
 
@@ -83,10 +90,10 @@ namespace UberDeployer.Core.Deployment
 
         string dstFilePath = Path.Combine(dstDirPath, fileName);
 
-        File.Copy(filePath, dstFilePath);
+        _fileAdapter.Copy(filePath, dstFilePath);
       }
 
-      foreach (string dirPath in Directory.GetDirectories(srcDirPath, "*", SearchOption.TopDirectoryOnly))
+      foreach (string dirPath in _directoryAdapter.GetDirectories(srcDirPath, "*", SearchOption.TopDirectoryOnly))
       {
         string dirName = Path.GetFileName(dirPath);
 
@@ -97,7 +104,7 @@ namespace UberDeployer.Core.Deployment
 
         string dstSubDirPath = Path.Combine(dstDirPath, dirName);
 
-        Directory.CreateDirectory(dstSubDirPath);
+        _directoryAdapter.CreateDirectory(dstSubDirPath);
 
         CopyAll(dirPath, dstSubDirPath);
       }

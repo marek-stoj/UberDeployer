@@ -187,6 +187,7 @@ namespace UberDeployer.Core.Management.ScheduledTasks
         return
           new ScheduledTaskDetails(
             task.Name,
+            task.Enabled,
             task.State == TaskState.Running,
             task.LastRunTime,
             task.NextRunTime,

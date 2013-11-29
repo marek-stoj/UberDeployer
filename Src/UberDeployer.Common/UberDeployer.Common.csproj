@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\Lib\DotNetZip\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\log4net\log4net.dll</HintPath>
@@ -47,8 +50,12 @@
   <ItemGroup>
     <Compile Include="AppSettingsUtils.cs" />
     <Compile Include="CollectionsExtensions.cs" />
+    <Compile Include="IO\IZipFileAdapter.cs" />
     <Compile Include="IO\DirectoryAdapter.cs" />
+    <Compile Include="IO\FileAdapter.cs" />
+    <Compile Include="IO\IFileAdapter.cs" />
     <Compile Include="IO\IDirectoryAdapter.cs" />
+    <Compile Include="IO\ZipFileAdapter.cs" />
     <Compile Include="Log4NetExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetryUtils.cs" />

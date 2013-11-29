@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
@@ -547,7 +546,9 @@ namespace UberDeployer.Agent.Service
           ObjectFactory.Instance.CreateProjectInfoRepository(),
           ObjectFactory.Instance.CreateEnvironmentInfoRepository(),
           ObjectFactory.Instance.CreateArtifactsRepository(),
-          ObjectFactory.Instance.CreateDirPathParamsResolver(),
+          ObjectFactory.Instance.CreateDirectoryAdapter(),
+          ObjectFactory.Instance.CreateFileAdapter(),
+          ObjectFactory.Instance.CreateZipFileAdapter(),
           packageDirPath);
 
       StartTask(deploymentTask, uniqueClientId, requesterIdentity, deploymentInfoDto, projectInfo);

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Management.ScheduledTasks;
-using UberDeployer.Core.Tests.Generators;
 
 namespace UberDeployer.Core.Tests.Domain
 {
@@ -19,7 +19,7 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _ArtifactsRepositoryName = "repoName";
     private const string _ArtifactsRepositoryDirName = "repoDirName";
     private const bool _ArtifactsAreNotEnvironmentSpecific = false;
-    private static readonly string[] _AllowedEnvironmentNames = new[] { "env_name" };
+    private static readonly string[] _AllowedEnvironmentNames = { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
 
@@ -39,6 +39,8 @@ namespace UberDeployer.Core.Tests.Domain
       var taskScheduler = new Mock<ITaskScheduler>(MockBehavior.Strict);
       var imsDeploy = new Mock<IMsDeploy>(MockBehavior.Strict);
       var iisManager = new Mock<IIisManager>(MockBehavior.Strict);
+      var fileAdapter = new Mock<IFileAdapter>(MockBehavior.Loose);
+      var zipFileAdapter = new Mock<IZipFileAdapter>(MockBehavior.Loose);
 
       var projectInfo =
         new WebAppProjectInfo(
@@ -54,6 +56,8 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreateIMsDeploy()).Returns(imsDeploy.Object);
       objectFactory.Setup(o => o.CreateIIisManager()).Returns(iisManager.Object);
+      objectFactory.Setup(o => o.CreateFileAdapter()).Returns(fileAdapter.Object);
+      objectFactory.Setup(o => o.CreateZipFileAdapter()).Returns(zipFileAdapter.Object);
 
       projectInfo.CreateDeploymentTask(objectFactory.Object);
     }

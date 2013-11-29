@@ -5,12 +5,13 @@ namespace UberDeployer.Core.Management.ScheduledTasks
 {
   public class ScheduledTaskDetails
   {
-    public ScheduledTaskDetails(string name, bool isRunning, DateTime lastRunTime, DateTime nextRunTime, string exeAbsolutePath, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes, ScheduledTaskRepetition repetition)
+    public ScheduledTaskDetails(string name, bool isEnabled, bool isRunning, DateTime lastRunTime, DateTime nextRunTime, string exeAbsolutePath, int scheduledHour, int scheduledMinute, int executionTimeLimitInMinutes, ScheduledTaskRepetition repetition)
     {
       Guard.NotNullNorEmpty(name, "name");
       Guard.NotNull(repetition, "repetition");
 
       Name = name;
+      IsEnabled = isEnabled;
       IsRunning = isRunning;
       LastRunTime = lastRunTime;
       NextRunTime = nextRunTime;
@@ -22,6 +23,8 @@ namespace UberDeployer.Core.Management.ScheduledTasks
     }
 
     public string Name { get; private set; }
+
+    public bool IsEnabled { get; private set; }
 
     public bool IsRunning { get; private set; }
 

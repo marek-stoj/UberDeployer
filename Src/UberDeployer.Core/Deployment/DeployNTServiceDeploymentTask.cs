@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.FailoverCluster;
@@ -17,6 +18,9 @@ namespace UberDeployer.Core.Deployment
     private readonly INtServiceManager _ntServiceManager;
     private readonly IPasswordCollector _passwordCollector;
     private readonly IFailoverClusterManager _failoverClusterManager;
+    private readonly IDirectoryAdapter _directoryAdapter;
+    private readonly IFileAdapter _fileAdapter;
+    private readonly IZipFileAdapter _zipFileAdapter;
 
     private NtServiceProjectInfo _projectInfo;
 
@@ -28,18 +32,27 @@ namespace UberDeployer.Core.Deployment
       IArtifactsRepository artifactsRepository,
       INtServiceManager ntServiceManager,
       IPasswordCollector passwordCollector,
-      IFailoverClusterManager failoverClusterManager)
+      IFailoverClusterManager failoverClusterManager,
+      IDirectoryAdapter directoryAdapter,
+      IFileAdapter fileAdapter,
+      IZipFileAdapter zipFileAdapter)
       : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
       Guard.NotNull(ntServiceManager, "ntServiceManager");
       Guard.NotNull(passwordCollector, "passwordCollector");
       Guard.NotNull(failoverClusterManager, "failoverClusterManager");
+      Guard.NotNull(directoryAdapter, "directoryAdapter");
+      Guard.NotNull(fileAdapter, "fileAdapter");
+      Guard.NotNull(zipFileAdapter, "zipFileAdapter");
 
       _artifactsRepository = artifactsRepository;
       _ntServiceManager = ntServiceManager;
       _passwordCollector = passwordCollector;
       _failoverClusterManager = failoverClusterManager;
+      _directoryAdapter = directoryAdapter;
+      _fileAdapter = fileAdapter;
+      _zipFileAdapter = zipFileAdapter;
     }
 
     #endregion
@@ -69,7 +82,9 @@ namespace UberDeployer.Core.Deployment
           environmentInfo,
           DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          GetTempDirPath());
+          GetTempDirPath(),
+          _fileAdapter,
+          _zipFileAdapter);
 
       AddSubTask(extractArtifactsDeploymentStep);
 
@@ -315,6 +330,8 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
+          _directoryAdapter,
+          _fileAdapter,
           artifactsBinariesDirPathProvider,
           new Lazy<string>(() => getAppServerNetworkPathFunc(targetDirPath))));
 

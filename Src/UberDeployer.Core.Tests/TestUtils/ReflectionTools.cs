@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Reflection;
 
 namespace UberDeployer.Core.Tests.TestUtils
@@ -35,6 +37,13 @@ namespace UberDeployer.Core.Tests.TestUtils
       {
         throw e.InnerException ?? e;
       }
+    }
+
+    public static void SetPrivatePropertyValue(object obj, string propertyName, object value)
+    {
+      obj.GetType()
+        .GetProperty(propertyName)
+        .SetValue(obj, value, BindingFlags.NonPublic, Type.DefaultBinder, null, CultureInfo.InvariantCulture);
     }
   }
 }

@@ -138,6 +138,16 @@ namespace UberDeployer.CommonConfiguration
       return _container.Resolve<IDirPathParamsResolver>();
     }
 
+    public IFileAdapter CreateFileAdapter()
+    {
+      return new FileAdapter();
+    }
+
+    public IZipFileAdapter CreateZipFileAdapter()
+    {
+      return new ZipFileAdapter();
+    }
+
     #endregion
 
     #region Properties

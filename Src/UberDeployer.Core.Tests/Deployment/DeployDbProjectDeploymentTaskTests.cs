@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
@@ -20,6 +21,8 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<IArtifactsRepository> _artifactsRepositoryFake;
     private Mock<IDbScriptRunnerFactory> _dbScriptRunnerFactoryFake;
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
+    private Mock<IFileAdapter> _fileAdapterFake;
+    private Mock<IZipFileAdapter> _zipFileAdapterFake;
 
     private DeployDbProjectDeploymentTask _deploymentTask;
 
@@ -31,6 +34,8 @@ namespace UberDeployer.Core.Tests.Deployment
       _artifactsRepositoryFake = new Mock<IArtifactsRepository>(MockBehavior.Loose);
       _dbScriptRunnerFactoryFake = new Mock<IDbScriptRunnerFactory>(MockBehavior.Loose);
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
+      _fileAdapterFake = new Mock<IFileAdapter>();
+      _zipFileAdapterFake = new Mock<IZipFileAdapter>();
 
       _projectInfoRepositoryFake
         .Setup(x => x.FindByName(It.IsAny<string>()))
@@ -50,7 +55,9 @@ namespace UberDeployer.Core.Tests.Deployment
           _environmentInfoRepositoryFake.Object,
           _artifactsRepositoryFake.Object,
           _dbScriptRunnerFactoryFake.Object,
-          _dbVersionProviderFake.Object);
+          _dbVersionProviderFake.Object,
+          _fileAdapterFake.Object,
+          _zipFileAdapterFake.Object);
 
       _deploymentTask.Initialize(DeploymentInfoGenerator.GetDbDeploymentInfo());
     }
@@ -59,7 +66,7 @@ namespace UberDeployer.Core.Tests.Deployment
     [TestCase("environmentInfoRepository", typeof(ArgumentNullException))]
     [TestCase("artifactsRepository", typeof(ArgumentNullException))]
     [TestCase("dbScriptRunnerFactory", typeof(ArgumentNullException))]
-    [TestCase("dbVersionProvider", typeof(ArgumentNullException))]    
+    [TestCase("dbVersionProvider", typeof(ArgumentNullException))]
     public void Constructor_fails_when_parameter_is_null(string nullParamName, Type expectedExceptionType)
     {
       Assert.Throws(
@@ -73,7 +80,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deploymentTask.Prepare();
 
       Assert.IsNotNullOrEmpty(_deploymentTask.Description);
-    }    
+    }
 
     [Test]
     public void DoPrepare_calls_environment_info_repository()
@@ -138,13 +145,12 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // arrange
       Type[] stepsTypesOrder =
-        new[]
-          {
-            typeof(DownloadArtifactsDeploymentStep),
-            typeof(ExtractArtifactsDeploymentStep),
-            typeof(GatherDbScriptsToRunDeploymentStep),
-            typeof(RunDbScriptsDeploymentStep)
-          };
+      {
+        typeof(DownloadArtifactsDeploymentStep),
+        typeof(ExtractArtifactsDeploymentStep),
+        typeof(GatherDbScriptsToRunDeploymentStep),
+        typeof(RunDbScriptsDeploymentStep)
+      };
 
       // act
       _deploymentTask.Prepare();
@@ -185,13 +191,15 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       return
         new OrderedDictionary
-          {
-            { "projectInfoRepository", _projectInfoRepositoryFake.Object },
-            { "environmentInfoRepository", _environmentInfoRepositoryFake.Object },
-            { "artifactsRepository", _artifactsRepositoryFake.Object },
-            { "dbScriptRunnerFactory", _dbScriptRunnerFactoryFake.Object },
-            { "dbVersionProvider", _dbVersionProviderFake.Object },            
-          };
+        {
+          { "projectInfoRepository", _projectInfoRepositoryFake.Object },
+          { "environmentInfoRepository", _environmentInfoRepositoryFake.Object },
+          { "artifactsRepository", _artifactsRepositoryFake.Object },
+          { "dbScriptRunnerFactory", _dbScriptRunnerFactoryFake.Object },
+          { "dbVersionProvider", _dbVersionProviderFake.Object },
+          { "fileAdapter", _fileAdapterFake.Object },
+          { "zipFileAdapter", _zipFileAdapterFake.Object },
+        };
     }
 
     #endregion

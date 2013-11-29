@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Ionic.Zip;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
@@ -13,24 +13,30 @@ namespace UberDeployer.Core.Deployment
     private readonly DeploymentInfo _deploymentInfo;
     private readonly string _artifactsFilePath;
     private readonly string _targetArtifactsDirPath;
+    private readonly IFileAdapter _fileAdapter;
+    private readonly IZipFileAdapter _zipFileAdapter;
 
     private string _archiveSubPath;
 
     #region Constructor(s)
 
-    public ExtractArtifactsDeploymentStep(ProjectInfo projectInfo, EnvironmentInfo environmentInfo, DeploymentInfo deploymentInfo, string artifactsFilePath, string targetArtifactsDirPath)
+    public ExtractArtifactsDeploymentStep(ProjectInfo projectInfo, EnvironmentInfo environmentInfo, DeploymentInfo deploymentInfo, string artifactsFilePath, string targetArtifactsDirPath, IFileAdapter fileAdapter, IZipFileAdapter zipFileAdapter)
     {
       Guard.NotNull(projectInfo, "projectInfo");
       Guard.NotNull(environmentInfo, "environmentInfo");
       Guard.NotNull(deploymentInfo, "deploymentInfo");
       Guard.NotNullNorEmpty(artifactsFilePath, "artifactsFilePath");
       Guard.NotNullNorEmpty(targetArtifactsDirPath, "targetArtifactsDirPath");
+      Guard.NotNull(fileAdapter, "fileAdapter");
+      Guard.NotNull(zipFileAdapter, "zipFileAdapter");
 
       _projectInfo = projectInfo;
       _environmentInfo = environmentInfo;
       _deploymentInfo = deploymentInfo;
       _artifactsFilePath = artifactsFilePath;
       _targetArtifactsDirPath = targetArtifactsDirPath;
+      _fileAdapter = fileAdapter;
+      _zipFileAdapter = zipFileAdapter;
     }
 
     #endregion
@@ -56,15 +62,12 @@ namespace UberDeployer.Core.Deployment
     protected override void DoExecute()
     {
       // artifacts downloaded by previous executed html api (not REST!) are packed one more time in zip archive :/ move to separate step?
-      if (!File.Exists(_artifactsFilePath))
+      if (!_fileAdapter.Exists(_artifactsFilePath))
       {
         throw new InvalidOperationException(string.Format("Couldn't extract ZIP archive because it doesn't exist: '{0}'.", _artifactsFilePath));
       }
 
-      using (var zipFile = new ZipFile(_artifactsFilePath))
-      {
-        zipFile.ExtractAll(_targetArtifactsDirPath, ExtractExistingFileAction.OverwriteSilently);
-      }
+      _zipFileAdapter.ExtractAll(_artifactsFilePath, _targetArtifactsDirPath, true);
 
       string projectArchiveFileName =
         string.Format(
@@ -75,15 +78,12 @@ namespace UberDeployer.Core.Deployment
       string archivePath = Path.Combine(_targetArtifactsDirPath, projectArchiveFileName);
 
       // unpacking internal zip package, true is that inside are packed artifacts with name like [Project_BuildConfigName.zip]
-      if (!File.Exists(archivePath))
+      if (!_fileAdapter.Exists(archivePath))
       {
         throw new InvalidOperationException(string.Format("Couldn't extract internal ZIP archive because it doesn't exist: '{0}'.", archivePath));
       }
 
-      using (var zipFile = new ZipFile(archivePath))
-      {
-        zipFile.ExtractAll(_targetArtifactsDirPath, ExtractExistingFileAction.OverwriteSilently);
-      }
+      _zipFileAdapter.ExtractAll(archivePath, _targetArtifactsDirPath, true);
     }
 
     public override string Description

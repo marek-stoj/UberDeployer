@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
@@ -27,7 +28,10 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       var projectsInfoRepository = new Mock<IProjectInfoRepository>();
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
-      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepository.Object, environmentInfoRepository.Object, artifactsRepository.Object);
+      var directoryAdapter = new Mock<IDirectoryAdapter>();
+      var fileAdapter = new Mock<IFileAdapter>();
+      var zipFileAdapter = new Mock<IZipFileAdapter>();
+      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepository.Object, environmentInfoRepository.Object, artifactsRepository.Object, directoryAdapter.Object, fileAdapter.Object, zipFileAdapter.Object);
       var deploymentContext = new DeploymentContext("requester");
 
       DeploymentInfo deploymentInfo = DeploymentInfoGenerator.GetTerminalAppDeploymentInfo();
@@ -46,8 +50,11 @@ namespace UberDeployer.Core.Tests.Deployment.Pipeline.Modules
       var environmentInfoRepository = new Mock<IEnvironmentInfoRepository>();
       var artifactsRepository = new Mock<IArtifactsRepository>();
       var projectsInfoRepository = new Mock<IProjectInfoRepository>();
+      var directoryAdapter = new Mock<IDirectoryAdapter>();
+      var fileAdapter = new Mock<IFileAdapter>();
+      var zipFileAdapter = new Mock<IZipFileAdapter>();
 
-      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepository.Object, environmentInfoRepository.Object, artifactsRepository.Object);
+      var deploymentTask = new DeployTerminalAppDeploymentTask(projectsInfoRepository.Object, environmentInfoRepository.Object, artifactsRepository.Object, directoryAdapter.Object, fileAdapter.Object, zipFileAdapter.Object);
       var deploymentContext = new DeploymentContext("requester");
 
       deploymentRequestRepository

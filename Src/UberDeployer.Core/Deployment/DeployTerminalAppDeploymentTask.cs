@@ -1,4 +1,5 @@
 ﻿using System;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
@@ -8,19 +9,31 @@ namespace UberDeployer.Core.Deployment
   public class DeployTerminalAppDeploymentTask : DeploymentTask
   {
     private readonly IArtifactsRepository _artifactsRepository;
-    
+    private readonly IDirectoryAdapter _directoryAdapter;
+    private readonly IFileAdapter _fileAdapter;
+    private readonly IZipFileAdapter _zipFileAdapter;
+
     #region Constructor(s)
 
     public DeployTerminalAppDeploymentTask(
       IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
-      IArtifactsRepository artifactsRepository)
+      IArtifactsRepository artifactsRepository,
+      IDirectoryAdapter directoryAdapter,
+      IFileAdapter fileAdapter,
+      IZipFileAdapter zipFileAdapter)
       : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
       Guard.NotNull(projectInfoRepository, "projectInfoRepository");
+      Guard.NotNull(directoryAdapter, "directoryAdapter");
+      Guard.NotNull(fileAdapter, "fileAdapter");
+      Guard.NotNull(zipFileAdapter, "zipFileAdapter");
 
       _artifactsRepository = artifactsRepository;
+      _directoryAdapter = directoryAdapter;
+      _fileAdapter = fileAdapter;
+      _zipFileAdapter = zipFileAdapter;
     }
 
     #endregion
@@ -49,7 +62,9 @@ namespace UberDeployer.Core.Deployment
           environmentInfo,
           DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          GetTempDirPath());
+          GetTempDirPath(),
+          _fileAdapter,
+          _zipFileAdapter);
 
       AddSubTask(extractArtifactsDeploymentStep);
 
@@ -82,6 +97,8 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
+          _directoryAdapter,
+          _fileAdapter,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           new Lazy<string>(() => prepareVersionedFolderDeploymentStep.VersionDeploymentDirPath)));
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
@@ -8,8 +9,9 @@ namespace UberDeployer.Core.Deployment
   public class CreateManualDeploymentPackageDeploymentTask : DeploymentTask
   {
     private readonly IArtifactsRepository _artifactsRepository;
-    
-    private readonly IDirPathParamsResolver _dirPathParamsResolver;
+    private readonly IDirectoryAdapter _directoryAdapter;
+    private readonly IFileAdapter _fileAdapter;
+    private readonly IZipFileAdapter _zipFileAdapter;
 
     public string PackageDirPath { get; private set; }
 
@@ -17,16 +19,22 @@ namespace UberDeployer.Core.Deployment
       IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
       IArtifactsRepository artifactsRepository,
-      IDirPathParamsResolver dirPathParamsResolver,
+      IDirectoryAdapter directoryAdapter,
+      IFileAdapter fileAdapter,
+      IZipFileAdapter zipFileAdapter,
       string packageDirPath)
       : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
-      Guard.NotNull(dirPathParamsResolver, "dirPathParamsResolver");
       Guard.NotNullNorEmpty(packageDirPath, "packageDirPath");
+      Guard.NotNull(directoryAdapter, "directoryAdapter");
+      Guard.NotNull(fileAdapter, "fileAdapter");
+      Guard.NotNull(zipFileAdapter, "zipFileAdapter");
 
       _artifactsRepository = artifactsRepository;
-      _dirPathParamsResolver = dirPathParamsResolver;
+      _directoryAdapter = directoryAdapter;
+      _fileAdapter = fileAdapter;
+      _zipFileAdapter = zipFileAdapter;
       PackageDirPath = packageDirPath;
     }
 
@@ -53,7 +61,9 @@ namespace UberDeployer.Core.Deployment
           environmentInfo,
           DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          GetTempDirPath());
+          GetTempDirPath(),
+          _fileAdapter,
+          _zipFileAdapter);
 
       AddSubTask(extractArtifactsDeploymentStep);
 
@@ -69,6 +79,8 @@ namespace UberDeployer.Core.Deployment
 
       AddSubTask(
         new CopyFilesDeploymentStep(
+          _directoryAdapter,
+          _fileAdapter,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           new Lazy<string>(() => PreparePackageDirPath(PackageDirPath))));
     }
@@ -86,7 +98,7 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    private string PreparePackageDirPath(string packageDirPath)
+    private static string PreparePackageDirPath(string packageDirPath)
     {
       if (Directory.Exists(packageDirPath))
       {

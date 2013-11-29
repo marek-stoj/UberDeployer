@@ -18,9 +18,12 @@ namespace UberDeployer.Core.Deployment
     // ReSharper disable NotAccessedField.Local
     private readonly IDirectoryAdapter _directoryAdapter;
     // ReSharper restore NotAccessedField.Local
+    private readonly IFileAdapter _fileAdapter;
+    private readonly IZipFileAdapter _zipFileAdapter;
     
     private SchedulerAppProjectInfo _projectInfo;
     private Dictionary<string, string> _collectedPasswordsByUserName;
+    private Dictionary<string, ScheduledTaskDetails> _existingTaskDetailsByName;
 
     #region Constructor(s)
 
@@ -30,18 +33,24 @@ namespace UberDeployer.Core.Deployment
       IArtifactsRepository artifactsRepository,
       ITaskScheduler taskScheduler,
       IPasswordCollector passwordCollector,
-      IDirectoryAdapter directoryAdapter)
+      IDirectoryAdapter directoryAdapter,
+      IFileAdapter fileAdapter,
+      IZipFileAdapter zipFileAdapter)
       : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
       Guard.NotNull(taskScheduler, "taskScheduler");
       Guard.NotNull(passwordCollector, "passwordCollector");
       Guard.NotNull(directoryAdapter, "directoryAdapter");
+      Guard.NotNull(fileAdapter, "fileAdapter");
+      Guard.NotNull(zipFileAdapter, "zipFileAdapter");
 
       _artifactsRepository = artifactsRepository;
       _taskScheduler = taskScheduler;
       _passwordCollector = passwordCollector;
       _directoryAdapter = directoryAdapter;
+      _fileAdapter = fileAdapter;
+      _zipFileAdapter = zipFileAdapter;
     }
 
     #endregion
@@ -54,12 +63,11 @@ namespace UberDeployer.Core.Deployment
 
       _projectInfo = GetProjectInfo<SchedulerAppProjectInfo>();
       _collectedPasswordsByUserName = new Dictionary<string, string>();
+      _existingTaskDetailsByName = new Dictionary<string, ScheduledTaskDetails>();
 
-      string machineName = environmentInfo.SchedulerServerMachineName;
+      string machineName = GetSchedulerServerMachineName(environmentInfo);
       string targetDirPath = GetTargetDirPath(environmentInfo);
       string targetDirNetworkPath = environmentInfo.GetSchedulerServerNetworkPath(targetDirPath);
-
-      var taskDetailsByName = new Dictionary<string, ScheduledTaskDetails>();
 
       _projectInfo.SchedulerAppTasks
         .ForEach(
@@ -68,12 +76,12 @@ namespace UberDeployer.Core.Deployment
             ScheduledTaskDetails taskDetails =
               _taskScheduler.GetScheduledTaskDetails(machineName, schedulerAppTask.Name);
 
-            taskDetailsByName.Add(schedulerAppTask.Name, taskDetails);
+            _existingTaskDetailsByName.Add(schedulerAppTask.Name, taskDetails);
 
             EnsureTaskIsNotRunning(taskDetails, environmentInfo);
 
             // create a step to disable scheduler task
-            if (taskDetails != null)
+            if (taskDetails != null && taskDetails.IsEnabled)
             {
               AddToggleSchedulerAppTaskEnabledStep(machineName, taskDetails.Name, false);
             }
@@ -94,6 +102,8 @@ namespace UberDeployer.Core.Deployment
       // create a step for copying the binaries to the target machine
       AddSubTask(
         new CopyFilesDeploymentStep(
+          _directoryAdapter,
+          _fileAdapter,
           binariesDirPathProvider,
           new Lazy<string>(() => targetDirNetworkPath)));
 
@@ -101,20 +111,37 @@ namespace UberDeployer.Core.Deployment
         .ForEach(
           schedulerAppTask =>
           {
-            ScheduledTaskDetails taskDetails =
-              taskDetailsByName[schedulerAppTask.Name];
+            ScheduledTaskDetails existingTaskDetails =
+              _existingTaskDetailsByName[schedulerAppTask.Name];
 
             AddTaskConfigurationSteps(
               environmentInfo,
               schedulerAppTask,
-              taskDetails);
+              existingTaskDetails);
 
             // create a step to toggle scheduler task enabled
-            AddToggleSchedulerAppTaskEnabledStep(
-              machineName,
-              schedulerAppTask.Name,
-              true);
+            if (existingTaskDetails == null || existingTaskDetails.IsEnabled)
+            {
+              AddToggleSchedulerAppTaskEnabledStep(
+                machineName,
+                schedulerAppTask.Name,
+                true);
+            }
           });
+    }
+
+    protected override void DoExecute()
+    {
+      try
+      {
+        base.DoExecute();
+      }
+      catch
+      {
+        MakeSureTasksThatWereEnabledAreEnabled();
+
+        throw;
+      }
     }
 
     public override string Description
@@ -219,7 +246,9 @@ namespace UberDeployer.Core.Deployment
           environmentInfo,
           DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          GetTempDirPath());
+          GetTempDirPath(),
+          _fileAdapter,
+          _zipFileAdapter);
 
       AddSubTask(extractArtifactsDeploymentStep);
 
@@ -258,23 +287,6 @@ namespace UberDeployer.Core.Deployment
       return Path.Combine(targetDirPath, schedulerAppTask.ExecutableName);
     }
 
-    private static void EnsureTaskIsNotRunning(ScheduledTaskDetails taskDetails, EnvironmentInfo environmentInfo)
-    {
-      if (taskDetails == null || !taskDetails.IsRunning)
-      {
-        return;
-      }
-
-      throw
-        new DeploymentTaskException(
-          string.Format(
-            "Task: {0} on machine: {1} is already running. Deployment aborted. Last run time: {2}, next run time: {3}",
-            environmentInfo.SchedulerServerMachineName,
-            taskDetails.Name,
-            taskDetails.LastRunTime,
-            taskDetails.NextRunTime));
-    }
-
     private bool HasSettingsChanged(ScheduledTaskDetails taskDetails, SchedulerAppTask schedulerAppTask, EnvironmentInfo environmentInfo)
     {
       if (taskDetails == null)
@@ -292,6 +304,51 @@ namespace UberDeployer.Core.Deployment
           && taskDetails.Repetition.Duration == schedulerAppTask.Repetition.Duration
           && taskDetails.Repetition.StopAtDurationEnd == schedulerAppTask.Repetition.StopAtDurationEnd
           && taskDetails.ExeAbsolutePath == taskExecutablePath);
+    }
+
+    private void MakeSureTasksThatWereEnabledAreEnabled()
+    {
+      EnvironmentInfo environmentInfo = GetEnvironmentInfo();
+      string machineName = GetSchedulerServerMachineName(environmentInfo);
+
+      foreach (string taskName in _existingTaskDetailsByName.Keys)
+      {
+        ScheduledTaskDetails existingTaskDetails =
+          _existingTaskDetailsByName[taskName];
+
+        if (existingTaskDetails == null || existingTaskDetails.IsEnabled)
+        {
+          ScheduledTaskDetails currentTaskDetails =
+            _taskScheduler.GetScheduledTaskDetails(machineName, taskName);
+
+          if (currentTaskDetails != null && !currentTaskDetails.IsEnabled)
+          {
+            _taskScheduler.ToggleTaskEnabled(machineName, taskName, true);
+          }
+        }
+      }
+    }
+
+    private static string GetSchedulerServerMachineName(EnvironmentInfo environmentInfo)
+    {
+      return environmentInfo.SchedulerServerMachineName;
+    }
+
+    private static void EnsureTaskIsNotRunning(ScheduledTaskDetails taskDetails, EnvironmentInfo environmentInfo)
+    {
+      if (taskDetails == null || !taskDetails.IsRunning)
+      {
+        return;
+      }
+
+      throw
+        new DeploymentTaskException(
+          string.Format(
+            "Task: {0} on machine: {1} is already running. Deployment aborted. Last run time: {2}, next run time: {3}",
+            environmentInfo.SchedulerServerMachineName,
+            taskDetails.Name,
+            taskDetails.LastRunTime,
+            taskDetails.NextRunTime));
     }
 
     #endregion

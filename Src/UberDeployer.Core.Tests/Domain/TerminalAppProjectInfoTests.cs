@@ -46,6 +46,8 @@ namespace UberDeployer.Core.Tests.Domain
       var taskScheduler = new Mock<ITaskScheduler>(MockBehavior.Strict);
       var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Strict);
       var projInfoRepository = new Mock<IProjectInfoRepository>(MockBehavior.Strict);
+      var fileAdapter = new Mock<IFileAdapter>(MockBehavior.Loose);
+      var zipFileAdapter = new Mock<IZipFileAdapter>(MockBehavior.Loose);
 
       var projectInfo = new TerminalAppProjectInfo(
         _Name,
@@ -62,6 +64,8 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreateNtServiceManager()).Returns(ntServiceManager.Object);
       objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(projInfoRepository.Object);
+      objectFactory.Setup(o => o.CreateFileAdapter()).Returns(fileAdapter.Object);
+      objectFactory.Setup(o => o.CreateZipFileAdapter()).Returns(zipFileAdapter.Object);
 
       projectInfo.CreateDeploymentTask(objectFactory.Object);
     }

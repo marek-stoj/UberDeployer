@@ -45,6 +45,8 @@ namespace UberDeployer.Core.Tests.Domain
       var taskScheduler = new Mock<ITaskScheduler>(MockBehavior.Loose);
       var passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Loose);
       var directoryAdapter = new Mock<IDirectoryAdapter>(MockBehavior.Loose);
+      var fileAdapter = new Mock<IFileAdapter>(MockBehavior.Loose);
+      var zipFileAdapter = new Mock<IZipFileAdapter>(MockBehavior.Loose);
 
       var schedulerAppProjectInfo =
         new SchedulerAppProjectInfo(
@@ -73,6 +75,8 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateTaskScheduler()).Returns(taskScheduler.Object);
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
       objectFactory.Setup(o => o.CreateDirectoryAdapter()).Returns(directoryAdapter.Object);
+      objectFactory.Setup(o => o.CreateFileAdapter()).Returns(fileAdapter.Object);
+      objectFactory.Setup(o => o.CreateZipFileAdapter()).Returns(zipFileAdapter.Object);
 
       schedulerAppProjectInfo.CreateDeploymentTask(objectFactory.Object);
     }

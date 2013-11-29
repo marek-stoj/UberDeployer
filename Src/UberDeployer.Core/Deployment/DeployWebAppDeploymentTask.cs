@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Domain.Input;
@@ -13,22 +14,34 @@ namespace UberDeployer.Core.Deployment
   public class DeployWebAppDeploymentTask : DeploymentTask
   {
     private readonly IMsDeploy _msDeploy;
-    protected readonly IArtifactsRepository _artifactsRepository;
-
+    private readonly IArtifactsRepository _artifactsRepository;
     private readonly IIisManager _iisManager;
+    private readonly IFileAdapter _fileAdapter;
+    private readonly IZipFileAdapter _zipFileAdapter;
 
     #region Constructor(s)
 
-    public DeployWebAppDeploymentTask(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository, IMsDeploy msDeploy, IArtifactsRepository artifactsRepository, IIisManager iisManager)
+    public DeployWebAppDeploymentTask(
+      IProjectInfoRepository projectInfoRepository,
+      IEnvironmentInfoRepository environmentInfoRepository,
+      IMsDeploy msDeploy,
+      IArtifactsRepository artifactsRepository,
+      IIisManager iisManager,
+      IFileAdapter fileAdapter,
+      IZipFileAdapter zipFileAdapter)
       : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(msDeploy, "msDeploy");
       Guard.NotNull(artifactsRepository, "artifactsRepository");
       Guard.NotNull(iisManager, "iisManager");
+      Guard.NotNull(fileAdapter, "fileAdapter");
+      Guard.NotNull(zipFileAdapter, "zipFileAdapter");
 
       _msDeploy = msDeploy;
       _artifactsRepository = artifactsRepository;
       _iisManager = iisManager;
+      _fileAdapter = fileAdapter;
+      _zipFileAdapter = zipFileAdapter;
     }
 
     #endregion
@@ -81,7 +94,9 @@ namespace UberDeployer.Core.Deployment
           environmentInfo,
           DeploymentInfo,
           downloadArtifactsDeploymentStep.ArtifactsFilePath,
-          GetTempDirPath());
+          GetTempDirPath(),
+          _fileAdapter,
+          _zipFileAdapter);
 
       AddSubTask(extractArtifactsDeploymentStep);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using System.IO;
 
@@ -8,6 +9,16 @@ namespace UberDeployer.Core.Tests.Deployment
   [TestFixture]
   public class CopyFilesDeploymentStepTests
   {
+    private DirectoryAdapter _directoryAdapter;
+    private FileAdapter _fileAdapter;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _directoryAdapter = new DirectoryAdapter();
+      _fileAdapter = new FileAdapter();
+    }
+
     [Test]
     public void Test_copying_all_files()
     {
@@ -16,7 +27,12 @@ namespace UberDeployer.Core.Tests.Deployment
 
       try
       {
-        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(new Lazy<string>(() => srcDirPath), new Lazy<string>(() => dstDirPath));
+        var copyFilesDeploymentStep =
+          new CopyFilesDeploymentStep(
+            _directoryAdapter, 
+            _fileAdapter, 
+            new Lazy<string>(() => srcDirPath), 
+            new Lazy<string>(() => dstDirPath));
 
         copyFilesDeploymentStep.PrepareAndExecute();
 
@@ -45,7 +61,12 @@ namespace UberDeployer.Core.Tests.Deployment
       {
         Directory.CreateDirectory(dstDirPath);
 
-        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(new Lazy<string>(() => srcDirPath), new Lazy<string>(() => dstDirPath));
+        var copyFilesDeploymentStep =
+          new CopyFilesDeploymentStep(
+            _directoryAdapter, 
+            _fileAdapter,
+            new Lazy<string>(() => srcDirPath),
+            new Lazy<string>(() => dstDirPath));
 
         copyFilesDeploymentStep.PrepareAndExecute();
 
@@ -72,7 +93,12 @@ namespace UberDeployer.Core.Tests.Deployment
 
       try
       {
-        var copyFilesDeploymentStep = new CopyFilesDeploymentStep(new Lazy<string>(() => srcDirPath), new Lazy<string>(() => dstDirPath));
+        var copyFilesDeploymentStep =
+          new CopyFilesDeploymentStep(
+            _directoryAdapter, 
+            _fileAdapter, 
+            new Lazy<string>(() => srcDirPath),
+            new Lazy<string>(() => dstDirPath));
 
         Assert.Throws<DeploymentTaskException>(() => copyFilesDeploymentStep.PrepareAndExecute());
       }
@@ -83,22 +109,6 @@ namespace UberDeployer.Core.Tests.Deployment
           Directory.Delete(dstDirPath, true);
         }
       }
-    }
-
-    [Test]
-    public void Test_copying_all_files_throws_when_src_null()
-    {
-      const string dstDirPath = "TestData\\TestDstDir";
-
-      Assert.Throws<ArgumentNullException>(() => { new CopyFilesDeploymentStep(null, new Lazy<string>(() => dstDirPath)); });
-    }
-
-    [Test]
-    public void Test_copying_all_files_throws_when_dst_null()
-    {
-      const string srcDirPath = "TestData\\aoisdiasyd";
-
-      Assert.Throws<ArgumentNullException>(() => { new CopyFilesDeploymentStep(new Lazy<string>(() => srcDirPath), null); });
     }
   }
 }
