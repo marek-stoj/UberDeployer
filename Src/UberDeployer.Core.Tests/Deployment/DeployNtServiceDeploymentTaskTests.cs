@@ -35,6 +35,7 @@ namespace UberDeployer.Core.Tests.Deployment
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepository;
     private Mock<IPasswordCollector> _passwordCollector;
     private Mock<IFailoverClusterManager> _failoverClusterManager;
+    private Mock<IDirectoryAdapter> _directoryAdapter;
     private Mock<IFileAdapter> _fileAdapter;
     private Mock<IZipFileAdapter> _zipFileAdapter;
 
@@ -47,6 +48,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _environmentInfoRepository = new Mock<IEnvironmentInfoRepository>(MockBehavior.Strict);
       _passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Strict);
       _failoverClusterManager = new Mock<IFailoverClusterManager>(MockBehavior.Strict);
+      _directoryAdapter = new Mock<IDirectoryAdapter>(MockBehavior.Strict);
       _fileAdapter = new Mock<IFileAdapter>(MockBehavior.Strict);
       _zipFileAdapter = new Mock<IZipFileAdapter>(MockBehavior.Strict);
     }
@@ -64,6 +66,7 @@ namespace UberDeployer.Core.Tests.Deployment
             _ntServiceManager.Object,
             _passwordCollector.Object,
             _failoverClusterManager.Object,
+            _directoryAdapter.Object,
             _fileAdapter.Object,
             _zipFileAdapter.Object,
           }

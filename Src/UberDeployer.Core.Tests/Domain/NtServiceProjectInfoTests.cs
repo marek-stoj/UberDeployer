@@ -45,6 +45,7 @@ namespace UberDeployer.Core.Tests.Domain
       var ntServiceManager = new Mock<INtServiceManager>(MockBehavior.Loose);
       var passwordCollector = new Mock<IPasswordCollector>(MockBehavior.Loose);
       var failoverClusterManager = new Mock<IFailoverClusterManager>(MockBehavior.Loose);
+      var directoryAdapter = new Mock<IDirectoryAdapter>(MockBehavior.Loose);
       var fileAdapter = new Mock<IFileAdapter>(MockBehavior.Loose);
       var zipFileAdapter = new Mock<IZipFileAdapter>(MockBehavior.Loose);
 
@@ -68,6 +69,7 @@ namespace UberDeployer.Core.Tests.Domain
       objectFactory.Setup(o => o.CreateNtServiceManager()).Returns(ntServiceManager.Object);
       objectFactory.Setup(o => o.CreatePasswordCollector()).Returns(passwordCollector.Object);
       objectFactory.Setup(o => o.CreateFailoverClusterManager()).Returns(failoverClusterManager.Object);
+      objectFactory.Setup(o => o.CreateDirectoryAdapter()).Returns(directoryAdapter.Object);
       objectFactory.Setup(o => o.CreateFileAdapter()).Returns(fileAdapter.Object);
       objectFactory.Setup(o => o.CreateZipFileAdapter()).Returns(zipFileAdapter.Object);
 
