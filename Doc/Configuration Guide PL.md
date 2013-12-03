@@ -96,6 +96,12 @@ Przykładowa konfiguracja:
       <ScheduledHour>12</ScheduledHour>
       <ScheduledMinute>0</ScheduledMinute>
       <ExecutionTimeLimitInMinutes>1</ExecutionTimeLimitInMinutes>
+      <Repetition>
+        <Enabled>true</Enabled>
+        <Interval>00:15:00</Interval>
+        <Duration>1.00:00:00</Duration>
+        <StopAtDurationEnd>true</StopAtDurationEnd>
+      </Repetition>
     </SchedulerAppTaskXml>
   </SchedulerAppTasks>
 </ProjectInfoXml>
@@ -120,6 +126,11 @@ w elemencie konkretnego zadania.
   * `ScheduledHour` &mdash; o której godzinie zadanie ma się uruchamiać.
   * `ScheduledMinute` &mdash; w której minucie (podanej wyżej godziny) zadanie ma się uruchamiać.
   * `ExecutionTimeLimitInMinutes` &mdash; limit na czas jednorazowego działania zadania (0 oznacza brak limitu).
+  * `Repetition` &mdash; konfiguracja powtarzania danego zadania.
+    - `Enabled` &mdash; czy powtarzanie ma być włączone.
+    - `Interval` &mdash; częstotliwość powtarzania.
+    - `Duration` &mdash; przez jaki okres powtarzać zadanie.
+    - `StopAtDurationEnd` &mdash; czy zadanie ma być zatrzymane, gdy upłynie okres powtarzania.
 
 Uwagi:
 
