@@ -30,7 +30,9 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public string TerminalServerMachineName { get; set; }
 
-      public string SchedulerServerMachineName { get; set; }
+      public List<string> SchedulerServerTasksMachineNames { get; set; }       
+      
+      public List<string> SchedulerServerBinariesMachineNames { get; set; }       
 
       public string NtServicesBaseDirPath { get; set; }
 
@@ -190,7 +192,8 @@ namespace UberDeployer.Core.DataAccess.Xml
               eiXml.FailoverClusterMachineName,
               eiXml.WebServerMachineNames,
               eiXml.TerminalServerMachineName,
-              eiXml.SchedulerServerMachineName,
+              eiXml.SchedulerServerTasksMachineNames,
+              eiXml.SchedulerServerBinariesMachineNames,
               eiXml.NtServicesBaseDirPath,
               eiXml.WebAppsBaseDirPath,
               eiXml.SchedulerAppsBaseDirPath,

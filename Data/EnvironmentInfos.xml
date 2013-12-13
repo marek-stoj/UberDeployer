@@ -12,7 +12,12 @@
         <string>localhost</string>
       </WebServerMachineNames>
       <TerminalServerMachineName>localhost</TerminalServerMachineName>
-      <SchedulerServerMachineName>localhost</SchedulerServerMachineName>
+      <SchedulerServerTasksMachineNames>
+        <string>localhost</string>
+      </SchedulerServerTasksMachineNames>
+      <SchedulerServerBinariesMachineNames>
+        <string>localhost</string>
+      </SchedulerServerBinariesMachineNames>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
@@ -65,7 +70,12 @@
         <string>REMOTE</string>
       </WebServerMachineNames>
       <TerminalServerMachineName>REMOTE</TerminalServerMachineName>
-      <SchedulerServerMachineName>REMOTE</SchedulerServerMachineName>
+      <SchedulerServerTasksMachineNames>
+        <string>REMOTE</string>
+      </SchedulerServerTasksMachineNames>
+      <SchedulerServerBinariesMachineNames>
+        <string>REMOTE</string>
+      </SchedulerServerBinariesMachineNames>
       <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
       <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
       <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>

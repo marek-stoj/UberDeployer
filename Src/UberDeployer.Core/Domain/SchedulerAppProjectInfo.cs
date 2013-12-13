@@ -76,12 +76,13 @@ namespace UberDeployer.Core.Domain
       Guard.NotNull(objectFactory, "objectFactory");
       Guard.NotNull(environmentInfo, "environmentInfo");
 
+      string dirPath =
+        Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, SchedulerAppDirName);
+
       return
-        new List<string>
-          {
-            environmentInfo.GetSchedulerServerNetworkPath(
-              Path.Combine(environmentInfo.SchedulerAppsBaseDirPath, SchedulerAppDirName))
-          };
+        environmentInfo.SchedulerServerBinariesMachineNames
+          .Select(machineName => environmentInfo.GetSchedulerServerNetworkPath(machineName, dirPath))
+          .ToList();
     }
 
     public override string GetMainAssemblyFileName()

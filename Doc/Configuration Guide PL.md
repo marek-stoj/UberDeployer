@@ -214,7 +214,21 @@ jest włączone (patrz element `EnableFailoverClusteringForNtServices`).
 
 - `TerminalServerMachineName` &mdash; nazwa serwera terminalowego &mdash; na ten serwer wdrażane są aplikacje terminalowe.
 
-- `SchedulerServerMachineName` &mdash; nazwa serwera aplikacji harmonogramu zadań &mdash; na ten serwer wdrażane są aplikacje harmonogramu zadań.
+- `SchedulerServerTasksMachineNames` &mdash; lista nazw serwerów aplikacji harmonogramu zadań &mdash; na tych serwerach konfigurowane są aplikacje harmonogramu zadań. Przykład:
+
+    ```xml
+    <SchedulerServerTasksMachineNames>
+      <string>REMOTE</string>
+    </SchedulerServerTasksMachineNames>
+    ```
+
+- `SchedulerServerBinariesMachineNames` &mdash; lista nazw serwerów aplikacji harmonogramu zadań &mdash; na te serwery wdrażane są aplikacje harmonogramu zadań. Przykład:
+
+    ```xml
+    <SchedulerServerBinariesMachineNames>
+      <string>REMOTE</string>
+    </SchedulerServerBinariesMachineNames>
+    ```
 
 - `NtServicesBaseDirPath` &mdash; bezwględna ścieżka do katalogu na docelowym serwerze, w którym będą umieszczane binarki usług NT.
 

@@ -75,20 +75,41 @@ namespace UberDeployer.Core.Tests.Deployment
       ScheduledTaskDetails taskDetailsDisabled1 =
         GetTaskDetails(schedulerAppTask1, exeAbsolutePath1, false, false, scheduledTaskRepetition1);
 
-      int timesCalled1 = 0;
+      int timesCalled11 = 0;
 
       _taskSchedulerFake
-        .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask1.Name))
+        .Setup(x => x.GetScheduledTaskDetails(_environmentInfo.SchedulerServerTasksMachineNames.First(), schedulerAppTask1.Name))
         .Returns(() =>
         {
-          timesCalled1++;
+          timesCalled11++;
 
-          if (timesCalled1 == 1)
+          if (timesCalled11 == 1)
           {
             return taskDetails1;
           }
           
-          if (timesCalled1 == 2)
+          if (timesCalled11 == 2)
+          {
+            return taskDetailsDisabled1;
+          }
+
+          throw new Exception("Unexpected number of calls!");
+        });
+
+      int timesCalled21 = 0;
+
+      _taskSchedulerFake
+        .Setup(x => x.GetScheduledTaskDetails(_environmentInfo.SchedulerServerTasksMachineNames.Second(), schedulerAppTask1.Name))
+        .Returns(() =>
+        {
+          timesCalled21++;
+
+          if (timesCalled21 == 1)
+          {
+            return taskDetails1;
+          }
+          
+          if (timesCalled21 == 2)
           {
             return taskDetailsDisabled1;
           }
@@ -114,20 +135,41 @@ namespace UberDeployer.Core.Tests.Deployment
       ScheduledTaskDetails taskDetailsDisabled2 =
         GetTaskDetails(schedulerAppTask2, exeAbsolutePath2, false, false, scheduledTaskRepetition2);
 
-      int timesCalled2 = 0;
+      int timesCalled12 = 0;
 
       _taskSchedulerFake
-        .Setup(x => x.GetScheduledTaskDetails(It.IsAny<string>(), schedulerAppTask2.Name))
+        .Setup(x => x.GetScheduledTaskDetails(_environmentInfo.SchedulerServerTasksMachineNames.First(), schedulerAppTask2.Name))
         .Returns(() =>
         {
-          timesCalled2++;
+          timesCalled12++;
 
-          if (timesCalled2 == 1)
+          if (timesCalled12 == 1)
           {
             return taskDetails2;
           }
 
-          if (timesCalled2 == 2)
+          if (timesCalled12 == 2)
+          {
+            return taskDetailsDisabled2;
+          }
+
+          throw new Exception("Unexpected number of calls!");
+        });
+
+      int timesCalled22 = 0;
+
+      _taskSchedulerFake
+        .Setup(x => x.GetScheduledTaskDetails(_environmentInfo.SchedulerServerTasksMachineNames.Second(), schedulerAppTask2.Name))
+        .Returns(() =>
+        {
+          timesCalled22++;
+
+          if (timesCalled22 == 1)
+          {
+            return taskDetails2;
+          }
+
+          if (timesCalled22 == 2)
           {
             return taskDetailsDisabled2;
           }
@@ -216,7 +258,7 @@ namespace UberDeployer.Core.Tests.Deployment
           .Cast<ToggleSchedulerAppEnabledStep>()
           .ToList();
       
-      Assert.AreEqual(2, disableTasks.Count);
+      Assert.AreEqual(4, disableTasks.Count);
     }
 
     [Test]
@@ -375,7 +417,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      Assert.AreEqual(2, _deployTask.SubTasks.Count(x => x is UpdateSchedulerTaskDeploymentStep));
+      Assert.AreEqual(4, _deployTask.SubTasks.Count(x => x is UpdateSchedulerTaskDeploymentStep));
     }
 
     [Test]
@@ -394,7 +436,7 @@ namespace UberDeployer.Core.Tests.Deployment
       _deployTask.Prepare();
 
       // assert
-      Assert.AreEqual(2, _deployTask.SubTasks.Count(x => x is CreateSchedulerTaskDeploymentStep));
+      Assert.AreEqual(4, _deployTask.SubTasks.Count(x => x is CreateSchedulerTaskDeploymentStep));
     }
 
     [Test]
@@ -419,6 +461,19 @@ namespace UberDeployer.Core.Tests.Deployment
     }
 
     [Test]
+    public void Prepare_should_add_step_to_copy_application_files_to_all_binaries_machines()
+    {
+      // assert
+      Assert.AreEqual(2, _environmentInfo.SchedulerServerBinariesMachineNames.Count());
+
+      // act
+      _deployTask.Prepare();
+
+      // assert
+      Assert.AreEqual(2, _deployTask.SubTasks.Count(x => x is CopyFilesDeploymentStep));
+    }
+
+    [Test]
     public void Execute_should_make_sure_that_all_tasks_that_were_previously_enabled_will_still_be_enabled_even_if_something_goes_wrong()
     {
       // arrange
@@ -438,7 +493,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       _taskSchedulerFake.Verify(
         x => x.ToggleTaskEnabled(It.IsAny<string>(), It.IsAny<string>(), true),
-        Times.Exactly(2));
+        Times.Exactly(4));
     }
 
     private static ScheduledTaskDetails GetTaskDetails(SchedulerAppTask schedulerAppTask, string exeAbsolutePath, bool isEnabled, bool isRunning, ScheduledTaskRepetition repetition)

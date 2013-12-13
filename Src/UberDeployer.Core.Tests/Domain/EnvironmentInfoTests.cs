@@ -15,7 +15,8 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _ConfigurationTemplateName = "conf";
     private static readonly List<string> _WebMachineNames = new List<string> { "web1", "web2" };
     private const string _TerminalMachineName = "terminal_server";
-    private const string _SchedulerMachineName = "scheduler_server";
+    private static readonly List<string> _SchedulerServerTasksMachineNames = new List<string> { "scheduler_tasks_server", };
+    private static readonly List<string> _SchedulerServerBinariesMachineNames = new List<string> { "scheduler_binaries_server", };
     private const string _NtServicesBaseDirPath = "C:\\NtServices";
     private const string _WebAppsBaseDirPath = "C:\\WebApps";
     private const string _SchedulerAppsBaseDirPath = "C:\\SchedulerApps";
@@ -36,7 +37,8 @@ namespace UberDeployer.Core.Tests.Domain
             _FailoverClusterMachineName,
             _WebMachineNames,
             _TerminalMachineName,
-            _SchedulerMachineName,
+            _SchedulerServerTasksMachineNames,
+            _SchedulerServerBinariesMachineNames,
             _NtServicesBaseDirPath,
             _WebAppsBaseDirPath,
             _SchedulerAppsBaseDirPath,
@@ -66,7 +68,8 @@ namespace UberDeployer.Core.Tests.Domain
             _FailoverClusterMachineName,
             _WebMachineNames,
             _TerminalMachineName,
-            _SchedulerMachineName,
+            _SchedulerServerTasksMachineNames,
+            _SchedulerServerBinariesMachineNames,
             _NtServicesBaseDirPath,
             _WebAppsBaseDirPath,
             _SchedulerAppsBaseDirPath,
@@ -93,7 +96,8 @@ namespace UberDeployer.Core.Tests.Domain
         _FailoverClusterMachineName,
         _WebMachineNames,
         _TerminalMachineName,
-        _SchedulerMachineName,
+        _SchedulerServerTasksMachineNames,
+        _SchedulerServerBinariesMachineNames,
         _NtServicesBaseDirPath,
         _WebAppsBaseDirPath,
         _SchedulerAppsBaseDirPath,
@@ -123,7 +127,8 @@ namespace UberDeployer.Core.Tests.Domain
           _FailoverClusterMachineName,
           _WebMachineNames,
           _TerminalMachineName,
-          _SchedulerMachineName,
+          _SchedulerServerTasksMachineNames,
+          _SchedulerServerBinariesMachineNames,
           _NtServicesBaseDirPath,
           _WebAppsBaseDirPath,
           _SchedulerAppsBaseDirPath,
@@ -153,7 +158,8 @@ namespace UberDeployer.Core.Tests.Domain
           _FailoverClusterMachineName,
           _WebMachineNames,
           _TerminalMachineName,
-          _SchedulerMachineName,
+          _SchedulerServerTasksMachineNames,
+          _SchedulerServerBinariesMachineNames,
           _NtServicesBaseDirPath,
           _WebAppsBaseDirPath,
           _SchedulerAppsBaseDirPath,

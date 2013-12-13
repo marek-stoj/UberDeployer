@@ -23,7 +23,7 @@ namespace UberDeployer.Core.Deployment
     
     private SchedulerAppProjectInfo _projectInfo;
     private Dictionary<string, string> _collectedPasswordsByUserName;
-    private Dictionary<string, ScheduledTaskDetails> _existingTaskDetailsByName;
+    private Dictionary<Tuple<string, string>, ScheduledTaskDetails> _existingTaskDetailsByMachineNameAndTaskName;
 
     #region Constructor(s)
 
@@ -63,29 +63,32 @@ namespace UberDeployer.Core.Deployment
 
       _projectInfo = GetProjectInfo<SchedulerAppProjectInfo>();
       _collectedPasswordsByUserName = new Dictionary<string, string>();
-      _existingTaskDetailsByName = new Dictionary<string, ScheduledTaskDetails>();
+      _existingTaskDetailsByMachineNameAndTaskName = new Dictionary<Tuple<string, string>, ScheduledTaskDetails>();
 
-      string machineName = GetSchedulerServerMachineName(environmentInfo);
-      string targetDirPath = GetTargetDirPath(environmentInfo);
-      string targetDirNetworkPath = environmentInfo.GetSchedulerServerNetworkPath(targetDirPath);
+      foreach (string tmpSchedulerServerTasksMachineName in environmentInfo.SchedulerServerTasksMachineNames)
+      {
+        string schedulerServerTasksMachineName = tmpSchedulerServerTasksMachineName;
 
-      _projectInfo.SchedulerAppTasks
-        .ForEach(
-          schedulerAppTask =>
-          {
-            ScheduledTaskDetails taskDetails =
-              _taskScheduler.GetScheduledTaskDetails(machineName, schedulerAppTask.Name);
-
-            _existingTaskDetailsByName.Add(schedulerAppTask.Name, taskDetails);
-
-            EnsureTaskIsNotRunning(taskDetails, environmentInfo);
-
-            // create a step to disable scheduler task
-            if (taskDetails != null && taskDetails.IsEnabled)
+        _projectInfo.SchedulerAppTasks
+          .ForEach(
+            schedulerAppTask =>
             {
-              AddToggleSchedulerAppTaskEnabledStep(machineName, taskDetails.Name, false);
-            }
-          });
+              ScheduledTaskDetails taskDetails =
+                _taskScheduler.GetScheduledTaskDetails(schedulerServerTasksMachineName, schedulerAppTask.Name);
+
+              _existingTaskDetailsByMachineNameAndTaskName.Add(
+                Tuple.Create(schedulerServerTasksMachineName, schedulerAppTask.Name),
+                taskDetails);
+
+              EnsureTaskIsNotRunning(taskDetails, schedulerServerTasksMachineName);
+
+              // create a step to disable scheduler task
+              if (taskDetails != null && taskDetails.IsEnabled)
+              {
+                AddToggleSchedulerAppTaskEnabledStep(schedulerServerTasksMachineName, taskDetails.Name, false);
+              }
+            });
+      }
 
       Lazy<string> binariesDirPathProvider =
         AddStepsToObtainBinaries(environmentInfo);
@@ -99,35 +102,52 @@ namespace UberDeployer.Core.Deployment
       }
 */
 
-      // create a step for copying the binaries to the target machine
-      AddSubTask(
-        new CopyFilesDeploymentStep(
-          _directoryAdapter,
-          _fileAdapter,
-          binariesDirPathProvider,
-          new Lazy<string>(() => targetDirNetworkPath)));
+      // create steps for copying the binaries to target binaries machines
+      foreach (string schedulerServerBinariesMachineName in environmentInfo.SchedulerServerBinariesMachineNames)
+      {
+        string targetDirPath = GetTargetDirPath(environmentInfo);
+        string targetDirNetworkPath = environmentInfo.GetSchedulerServerNetworkPath(schedulerServerBinariesMachineName, targetDirPath);
 
-      _projectInfo.SchedulerAppTasks
-        .ForEach(
-          schedulerAppTask =>
-          {
-            ScheduledTaskDetails existingTaskDetails =
-              _existingTaskDetailsByName[schedulerAppTask.Name];
+        AddSubTask(
+          new CopyFilesDeploymentStep(
+            _directoryAdapter,
+            _fileAdapter,
+            binariesDirPathProvider,
+            new Lazy<string>(() => targetDirNetworkPath)));
+      }
 
-            AddTaskConfigurationSteps(
-              environmentInfo,
-              schedulerAppTask,
-              existingTaskDetails);
+      foreach (string tmpSchedulerServerTasksMachineName in environmentInfo.SchedulerServerTasksMachineNames)
+      {
+        string schedulerServerTasksMachineName = tmpSchedulerServerTasksMachineName;
 
-            // create a step to toggle scheduler task enabled
-            if (existingTaskDetails == null || existingTaskDetails.IsEnabled)
+        _projectInfo.SchedulerAppTasks
+          .ForEach(
+            schedulerAppTask =>
             {
-              AddToggleSchedulerAppTaskEnabledStep(
-                machineName,
-                schedulerAppTask.Name,
-                true);
-            }
-          });
+              string taskName = schedulerAppTask.Name;
+              
+              Tuple<string, string> machineNameAndTaskName =
+                Tuple.Create(schedulerServerTasksMachineName, taskName);
+
+              ScheduledTaskDetails existingTaskDetails =
+                _existingTaskDetailsByMachineNameAndTaskName[machineNameAndTaskName];
+
+              AddTaskConfigurationSteps(
+                environmentInfo,
+                schedulerServerTasksMachineName,
+                schedulerAppTask,
+                existingTaskDetails);
+
+              // create a step to toggle scheduler task enabled
+              if (existingTaskDetails == null || existingTaskDetails.IsEnabled)
+              {
+                AddToggleSchedulerAppTaskEnabledStep(
+                  schedulerServerTasksMachineName,
+                  taskName,
+                  true);
+              }
+            });
+      }
     }
 
     protected override void DoExecute()
@@ -162,7 +182,7 @@ namespace UberDeployer.Core.Deployment
 
     #region Private methods
 
-    private void AddTaskConfigurationSteps(EnvironmentInfo environmentInfo, SchedulerAppTask schedulerAppTask, ScheduledTaskDetails taskDetails = null)
+    private void AddTaskConfigurationSteps(EnvironmentInfo environmentInfo, string schedulerServerTasksMachineName, SchedulerAppTask schedulerAppTask, ScheduledTaskDetails taskDetails = null)
     {
       bool hasSettingsChanged = HasSettingsChanged(taskDetails, schedulerAppTask, environmentInfo);
       bool taskExists = taskDetails != null;
@@ -182,7 +202,7 @@ namespace UberDeployer.Core.Deployment
               _passwordCollector,
               DeploymentInfo.DeploymentId,
               environmentInfo,
-              environmentInfo.SchedulerServerMachineName,
+              schedulerServerTasksMachineName,
               environmentUser,
               OnDiagnosticMessagePosted);
 
@@ -198,7 +218,7 @@ namespace UberDeployer.Core.Deployment
         // create a step for scheduling a new app
         AddSubTask(
           new CreateSchedulerTaskDeploymentStep(
-            environmentInfo.SchedulerServerMachineName,
+            schedulerServerTasksMachineName,
             schedulerAppTask.Name,
             taskExecutablePath,
             environmentUser.UserName,
@@ -214,7 +234,7 @@ namespace UberDeployer.Core.Deployment
         // create a step for updating an existing scheduler app
         AddSubTask(
           new UpdateSchedulerTaskDeploymentStep(
-            environmentInfo.SchedulerServerMachineName,
+            schedulerServerTasksMachineName,
             schedulerAppTask.Name,
             taskExecutablePath,
             environmentUser.UserName,
@@ -308,33 +328,35 @@ namespace UberDeployer.Core.Deployment
 
     private void MakeSureTasksThatWereEnabledAreEnabled()
     {
-      EnvironmentInfo environmentInfo = GetEnvironmentInfo();
-      string machineName = GetSchedulerServerMachineName(environmentInfo);
-
-      foreach (string taskName in _existingTaskDetailsByName.Keys)
+      foreach (Tuple<string, string> machineNameAndTaskName in _existingTaskDetailsByMachineNameAndTaskName.Keys)
       {
-        ScheduledTaskDetails existingTaskDetails =
-          _existingTaskDetailsByName[taskName];
+        string schedulerServerTasksMachineName = machineNameAndTaskName.Item1;
+        string taskName = machineNameAndTaskName.Item2;
 
-        if (existingTaskDetails == null || existingTaskDetails.IsEnabled)
+        try
         {
-          ScheduledTaskDetails currentTaskDetails =
-            _taskScheduler.GetScheduledTaskDetails(machineName, taskName);
+          ScheduledTaskDetails existingTaskDetails =
+            _existingTaskDetailsByMachineNameAndTaskName[machineNameAndTaskName];
 
-          if (currentTaskDetails != null && !currentTaskDetails.IsEnabled)
+          if (existingTaskDetails == null || existingTaskDetails.IsEnabled)
           {
-            _taskScheduler.ToggleTaskEnabled(machineName, taskName, true);
+            ScheduledTaskDetails currentTaskDetails =
+              _taskScheduler.GetScheduledTaskDetails(schedulerServerTasksMachineName, taskName);
+
+            if (currentTaskDetails != null && !currentTaskDetails.IsEnabled)
+            {
+              _taskScheduler.ToggleTaskEnabled(schedulerServerTasksMachineName, taskName, true);
+            }
           }
+        }
+        catch (Exception exc)
+        {
+          PostDiagnosticMessage(string.Format("Error while making sure that tasks that were enabled are enabled on machine '{0}'. Exception: {1}", schedulerServerTasksMachineName, exc), DiagnosticMessageType.Error);
         }
       }
     }
 
-    private static string GetSchedulerServerMachineName(EnvironmentInfo environmentInfo)
-    {
-      return environmentInfo.SchedulerServerMachineName;
-    }
-
-    private static void EnsureTaskIsNotRunning(ScheduledTaskDetails taskDetails, EnvironmentInfo environmentInfo)
+    private static void EnsureTaskIsNotRunning(ScheduledTaskDetails taskDetails, string schedulerServerTasksMachineName)
     {
       if (taskDetails == null || !taskDetails.IsRunning)
       {
@@ -345,7 +367,7 @@ namespace UberDeployer.Core.Deployment
         new DeploymentTaskException(
           string.Format(
             "Task: {0} on machine: {1} is already running. Deployment aborted. Last run time: {2}, next run time: {3}",
-            environmentInfo.SchedulerServerMachineName,
+            schedulerServerTasksMachineName,
             taskDetails.Name,
             taskDetails.LastRunTime,
             taskDetails.NextRunTime));

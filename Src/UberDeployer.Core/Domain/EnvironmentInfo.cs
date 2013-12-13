@@ -11,6 +11,8 @@ namespace UberDeployer.Core.Domain
     private static readonly Regex _DriveLetterRegex = new Regex(@"^(?<DriveLetter>[a-z]):\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private readonly List<String> _webServerMachines;
+    private readonly List<String> _schedulerServerTasksMachineNames;
+    private readonly List<String> _schedulerServerBinariesMachineNames;
     private readonly Dictionary<string, EnvironmentUser> _environmentUsersByIdDict;
     private readonly Dictionary<string, IisAppPoolInfo> _appPoolInfosByNameDict;
     private readonly Dictionary<string, DatabaseServer> _databaseServersByIdDict;
@@ -27,7 +29,8 @@ namespace UberDeployer.Core.Domain
       string failoverClusterMachineName,
       IEnumerable<string> webServerMachineNames,
       string terminalServerMachineName,
-      string schedulerServerMachineName,
+      IEnumerable<string> schedulerServerTasksMachineNames,
+      IEnumerable<string> schedulerServerBinariesMachineNames,
       string ntServicesBaseDirPath,
       string webAppsBaseDirPath,
       string schedulerAppsBaseDirPath,
@@ -53,8 +56,17 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentNullException("webServerMachineNames");
       }
 
+      if (schedulerServerTasksMachineNames == null)
+      {
+        throw new ArgumentNullException("schedulerServerTasksMachineNames");
+      }
+
+      if (schedulerServerBinariesMachineNames == null)
+      {
+        throw new ArgumentNullException("schedulerServerBinariesMachineNames");
+      }
+
       Guard.NotNullNorEmpty(terminalServerMachineName, "terminalServerMachineName");
-      Guard.NotNullNorEmpty(schedulerServerMachineName, "schedulerServerMachineName");
       Guard.NotNullNorEmpty(ntServicesBaseDirPath, "ntServicesBaseDirPath");
       Guard.NotNullNorEmpty(webAppsBaseDirPath, "webAppsBaseDirPath");
       Guard.NotNullNorEmpty(schedulerAppsBaseDirPath, "schedulerAppsBaseDirPath");
@@ -96,9 +108,22 @@ namespace UberDeployer.Core.Domain
       ConfigurationTemplateName = configurationTemplateName;
       AppServerMachineName = appServerMachineName;
       FailoverClusterMachineName = failoverClusterMachineName;
-      _webServerMachines = new List<string>(webServerMachineNames);
+      _webServerMachines = webServerMachineNames.ToList();
       TerminalServerMachineName = terminalServerMachineName;
-      SchedulerServerMachineName = schedulerServerMachineName;
+      _schedulerServerTasksMachineNames = schedulerServerTasksMachineNames.ToList();
+
+      if (_schedulerServerTasksMachineNames.Count == 0)
+      {
+        throw new ArgumentException("At least one scheduler server tasks machine name must be present.", "schedulerServerTasksMachineNames");
+      }
+
+      _schedulerServerBinariesMachineNames = schedulerServerBinariesMachineNames.ToList();
+
+      if (_schedulerServerBinariesMachineNames.Count == 0)
+      {
+        throw new ArgumentException("At least one scheduler server binaries machine name must be present.", "schedulerServerTasksMachineNames");
+      }
+
       NtServicesBaseDirPath = ntServicesBaseDirPath;
       WebAppsBaseDirPath = webAppsBaseDirPath;
       SchedulerAppsBaseDirPath = schedulerAppsBaseDirPath;
@@ -155,11 +180,11 @@ namespace UberDeployer.Core.Domain
       return GetNetworkPath(AppServerMachineName, absoluteLocalPath);
     }
 
-    public string GetSchedulerServerNetworkPath(string absoluteLocalPath)
+    public string GetSchedulerServerNetworkPath(string schedulerServerMachineName, string absoluteLocalPath)
     {
       Guard.NotNullNorEmpty(absoluteLocalPath, "absoluteLocalPath");
 
-      return GetNetworkPath(SchedulerServerMachineName, absoluteLocalPath);
+      return GetNetworkPath(schedulerServerMachineName, absoluteLocalPath);
     }
 
     public string GetWebServerNetworkPath(string webServerMachineName, string absoluteLocalPath)
@@ -280,7 +305,15 @@ namespace UberDeployer.Core.Domain
 
     public string TerminalServerMachineName { get; private set; }
 
-    public string SchedulerServerMachineName { get; private set; }
+    public IEnumerable<string> SchedulerServerTasksMachineNames
+    {
+      get { return _schedulerServerTasksMachineNames.AsReadOnly(); }
+    }
+
+    public IEnumerable<string> SchedulerServerBinariesMachineNames
+    {
+      get { return _schedulerServerBinariesMachineNames.AsReadOnly(); }
+    }
 
     public string NtServicesBaseDirPath { get; private set; }
 
