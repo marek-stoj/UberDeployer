@@ -1,11 +1,16 @@
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Web.Mvc;
+using log4net;
+using UberDeployer.Common;
 
 namespace UberDeployer.WebApp.Core.Controllers
 {
   public abstract class UberDeployerWebAppController : Controller
   {
+    private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
     protected HttpStatusCodeResult BadRequest()
     {      
       return new HttpStatusCodeResult(400, "400 - Bad Request");
@@ -14,6 +19,11 @@ namespace UberDeployer.WebApp.Core.Controllers
     protected HttpStatusCodeResult AccessDenied()
     {
       return new HttpStatusCodeResult(401, "401 - Unauthorized");
+    }
+
+    protected override void OnException(ExceptionContext filterContext)
+    {
+      _log.ErrorIfEnabled(() => "Unhandled exception.", filterContext.Exception);
     }
 
     protected static string UserIdentity
