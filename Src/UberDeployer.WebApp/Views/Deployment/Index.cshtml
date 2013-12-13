@@ -148,7 +148,13 @@
 <script type="text/javascript">
   $(document).ready(function() {
     var initData = {
-      userCanDeploy: @(Model.CanDeploy ? "true" : "false")
+      userCanDeploy: @(Model.CanDeploy ? "true" : "false"),
+      initialSelection: {
+        targetEnvironmentName: @Html.Raw(Model.InitialSelection != null ? string.Format("'{0}'", Model.InitialSelection.TargetEnvironmentName) : "null"),
+        projectName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectName) ? string.Format("'{0}'", Model.InitialSelection.ProjectName) : "null"),
+        projectConfigurationName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationName) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationName) : "null"),
+        projectConfigurationBuildId: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationBuildId) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationBuildId) : "null")
+      }
     };
 
     initializeDeploymentPage(initData);

@@ -18,5 +18,10 @@
     public bool ShowOnlyDeployable { get; set; }
 
     public bool IsCreatePackageVisible { get; set; }
+
+    /// <summary>
+    /// Can be null.
+    /// </summary>
+    public InitialSelection InitialSelection { get; set; }
   }
 }

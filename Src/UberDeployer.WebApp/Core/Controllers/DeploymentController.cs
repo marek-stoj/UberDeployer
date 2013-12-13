@@ -27,20 +27,38 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpGet]
-    public ActionResult Index()
+    public ActionResult Index(string env = null, string prj = null, string prjCfg = null, string prjCfgBuild = null)
     {
+      if (!string.IsNullOrEmpty(env) || !string.IsNullOrEmpty(prj) || !string.IsNullOrEmpty(prjCfg) || !string.IsNullOrEmpty(prjCfgBuild))
+      {
+        if (string.IsNullOrEmpty(env) || string.IsNullOrEmpty(prj) || string.IsNullOrEmpty(prjCfg))
+        {
+          return BadRequest();
+        }
+      }
+
       Tuple<string, string> todayDevLifeGif = DevLife.GetTodayGif();
 
       var viewModel =
         new IndexViewModel
-          {
-            TipOfTheDay = LifeProFuckingTips.GetTodayTip(),
-            TodayDevLifeGifUrl = todayDevLifeGif.Item1,
-            TodayDevLifeGifDescription = todayDevLifeGif.Item2,
-            CanDeploy = SecurityUtils.CanDeploy,
-            ShowOnlyDeployable = _onlyDeployableCheckedByDefault,
-            IsCreatePackageVisible = _isCreatePackageVisible
-          };
+        {
+          TipOfTheDay = LifeProFuckingTips.GetTodayTip(),
+          TodayDevLifeGifUrl = todayDevLifeGif.Item1,
+          TodayDevLifeGifDescription = todayDevLifeGif.Item2,
+          CanDeploy = SecurityUtils.CanDeploy,
+          ShowOnlyDeployable = _onlyDeployableCheckedByDefault,
+          IsCreatePackageVisible = _isCreatePackageVisible,
+          InitialSelection =
+            !string.IsNullOrEmpty(env)
+              ? new InitialSelection
+              {
+                TargetEnvironmentName = env,
+                ProjectName = prj,
+                ProjectConfigurationName = prjCfg,
+                ProjectConfigurationBuildId = prjCfgBuild,
+              }
+              : null,
+        };
 
       return View(viewModel);
     }

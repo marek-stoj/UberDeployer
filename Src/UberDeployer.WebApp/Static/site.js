@@ -10,6 +10,7 @@ var g_ProjectList = [];
 var g_EnvironmentList = [];
 
 var g_userCanDeploy = false;
+var g_initialSelection = null;
 
 var KICKASSVERSION = '2.0';
 
@@ -52,6 +53,7 @@ function Environment(name, isDeployable) {
 
 function initializeDeploymentPage(initData) {
   g_userCanDeploy = initData.userCanDeploy;
+  g_initialSelection = initData.initialSelection;
 
   setupSignalR();
   setupCollectCredentialsDialog();
@@ -120,20 +122,44 @@ function initializeDeploymentPage(initData) {
       projectName,
       projectConfigurationName,
       function () {
-        // select first element
-        $('#lst-project-config-builds')
-          .val($('#lst-project-config-builds option').eq(0).val());
+        var valueToSelect;
 
-        $('#lst-project-config-builds').trigger('change');
+        if (g_initialSelection && g_initialSelection.projectConfigurationBuildId) {
+          valueToSelect = g_initialSelection.projectConfigurationBuildId;
+        }
+        else {
+          valueToSelect = $('#lst-project-config-builds option').eq(0).val();
+        }
+
+        g_initialSelection = null;
+
+        var projectConfigBuildsElement = $('#lst-project-config-builds');
+        
+        projectConfigBuildsElement.val(valueToSelect);
+        
+        if (projectConfigBuildsElement.val() === null) {
+          alert('No project configuration build with id \'' + valueToSelect + '\'.');
+          return;
+        }
+
+        projectConfigBuildsElement.trigger('change');
       });
   });  
 
   loadEnvironments(function () {
-    restoreRememberedTargetEnvironmentName();
+    if (g_initialSelection && g_initialSelection.targetEnvironmentName) {
+      selectEnvironment(g_initialSelection.targetEnvironmentName);
+    }
+    else {
+      restoreRememberedTargetEnvironmentName();
+    }
   });
 
   domHelper.getEnvironmentsElement().change(function () {
-    rememberTargetEnvironmentName();
+    if (!g_initialSelection || !g_initialSelection.targetEnvironmentName) {
+      rememberTargetEnvironmentName();
+    }
+    
     loadProjectsForCurrentEnvironment();
     disableDeployButtonsForCurrentEnvironment();
   });
@@ -317,12 +343,26 @@ function loadProjectsForCurrentEnvironment() {
   doLoadProjects(
     selectedTargetEnvironmentName,
     isOnlyDeployable(),
-    function() {
-      // select first element
-      domHelper.getProjectsElement()
-        .val($('#lst-projects option').eq(0).val());
+    function () {
+      var projectToSelect;
 
-      domHelper.getProjectsElement().trigger('change');
+      if (g_initialSelection && g_initialSelection.projectName) {
+        projectToSelect = g_initialSelection.projectName;
+      }
+      else {
+        projectToSelect = $('#lst-projects option').eq(0).val();
+      }
+      
+      var projectsElement = domHelper.getProjectsElement();
+      
+      projectsElement.val(projectToSelect);
+      
+      if (projectsElement.val() === null) {
+        alert('No project named \'' + projectToSelect + '\'.');
+        return;
+      }
+
+      projectsElement.trigger('change');
     });
 }
 
@@ -387,21 +427,35 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
 
         $.each(data.projectConfigurations, function(i, val) {
           var $lstProjectConfigs = $('#lst-project-configs');
+          var projectConfiguration = val.Name;
+          var projectConfigurationUpper = projectConfiguration.toUpperCase();
 
-          if (valueToSelect === null && (val.Name === 'Trunk' || val.Name === 'Production' || val.Name === 'Default' || val.Name === 'Master')) {
-            valueToSelect = val.Name;
+          if (valueToSelect === null && (projectConfigurationUpper === 'TRUNK' || projectConfigurationUpper === 'PRODUCTION' || projectConfigurationUpper === 'DEFAULT' || projectConfigurationUpper === 'MASTER')) {
+            valueToSelect = projectConfiguration;
           }
 
           $lstProjectConfigs
             .append(
               $('<option></option>')
-                .attr('value', val.Name)
-                .text(val.Name));
+                .attr('value', projectConfiguration)
+                .text(projectConfiguration));
         });
+        
+        if (g_initialSelection && g_initialSelection.projectConfigurationName) {
+          valueToSelect = g_initialSelection.projectConfigurationName;
+        }
 
         if (valueToSelect !== null) {
-          domHelper.getProjectConfigsElement().val(valueToSelect);
-          domHelper.getProjectConfigsElement().trigger('change');
+          var projectConfigsElement = domHelper.getProjectConfigsElement();
+          
+          projectConfigsElement.val(valueToSelect);
+          
+          if (projectConfigsElement.val() === null) {
+            alert('No project configuration named \'' + valueToSelect + '\'.');
+            return;
+          }
+
+          projectConfigsElement.trigger('change');
         }
 
         if (onFinishedCallback) {
@@ -544,6 +598,19 @@ function rememberTargetEnvironmentName() {
     g_TargetEnvironmentCookieName,
     targetEnvironmentName,
     g_TargetEnvironmentCookieExpirationInDays);
+}
+
+function selectEnvironment(environmentName) {
+  var environmentsElement = domHelper.getEnvironmentsElement();
+  
+  environmentsElement.val(environmentName);
+
+  if (domHelper.getEnvironmentsElement().val() === null) {
+    alert('No environment named \'' + environmentName + '\'.');
+    return;
+  }
+
+  environmentsElement.trigger('change');
 }
 
 function restoreRememberedTargetEnvironmentName() {
