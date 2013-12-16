@@ -20,7 +20,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 {
   public class ApiController : UberDeployerWebAppController
   {
-    private const int _MaxProjectConfigurationBuildsCount = 10;
+    private const int _MaxProjectConfigurationBuildsCount = 25;
     private const string _AppSettingsKey_VisibleEnvironments = "VisibleEnvironments";
     private const string _AppSettingsKey_DeployableEnvironments = "DeployableEnvironments";
     private const string _AppSettingsKey_AllowedProjectConfigurations = "AllowedProjectConfigurations";    

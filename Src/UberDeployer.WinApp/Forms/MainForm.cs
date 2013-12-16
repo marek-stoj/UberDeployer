@@ -20,7 +20,7 @@ namespace UberDeployer.WinApp.Forms
   // TODO IMM HI: multiple loads
   public partial class MainForm : UberDeployerForm
   {
-    private const int _MaxProjectConfigurationBuildsCount = 10;
+    private const int _MaxProjectConfigurationBuildsCount = 25;
 
     private bool _suppressProjectConfigurationsLoading;
 

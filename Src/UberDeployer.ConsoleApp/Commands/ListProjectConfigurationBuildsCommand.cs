@@ -9,7 +9,7 @@ namespace UberDeployer.ConsoleApp.Commands
 {
   public class ListProjectConfigurationBuildsCommand : ConsoleCommand
   {
-    private const int _MaxProjectConfigurationBuildsCount = 10;
+    private const int _MaxProjectConfigurationBuildsCount = 25;
 
     public ListProjectConfigurationBuildsCommand(CommandDispatcher commandDispatcher)
       : base(commandDispatcher)
