@@ -477,10 +477,7 @@ namespace UberDeployer.Core.Tests.Deployment
     public void Execute_should_make_sure_that_all_tasks_that_were_previously_enabled_will_still_be_enabled_even_if_something_goes_wrong()
     {
       // arrange
-      _fileAdapterFake.Setup(x => x.Exists(It.IsAny<string>()))
-        .Returns(true);
-
-      _directoryAdapterFake.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
+      _directoryAdapterFake.Setup(x => x.CopyAll(It.IsAny<string>(), It.IsAny<string>()))
         .Throws(new InvalidOperationException())
         .Verifiable();
 
