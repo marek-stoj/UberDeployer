@@ -9,6 +9,7 @@ namespace UberDeployer.Agent.Proxy.Dto
   [KnownType(typeof(TerminalAppProjectInfo))]
   [KnownType(typeof(SchedulerAppProjectInfo))]
   [KnownType(typeof(DbProjectInfo))]
+  [KnownType(typeof(UberDeployerAgentProjectInfo))]
   public class ProjectInfo
   {
     public string Name { get; set; }

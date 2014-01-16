@@ -23,7 +23,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     private const int _MaxProjectConfigurationBuildsCount = 25;
     private const string _AppSettingsKey_VisibleEnvironments = "VisibleEnvironments";
     private const string _AppSettingsKey_DeployableEnvironments = "DeployableEnvironments";
-    private const string _AppSettingsKey_AllowedProjectConfigurations = "AllowedProjectConfigurations";    
+    private const string _AppSettingsKey_AllowedProjectConfigurations = "AllowedProjectConfigurations";
 
     private static readonly ISet<string> _visibleEnvironments;
     private static readonly ISet<string> _deployableEnvironments;
@@ -66,10 +66,10 @@ namespace UberDeployer.WebApp.Core.Controllers
       List<EnvironmentViewModel> environmentViewModels =
         _agentService.GetEnvironmentInfos()
           .Where(pi => _visibleEnvironments.Count == 0 || _visibleEnvironments.Any(ae => Regex.IsMatch(pi.Name, ae, RegexOptions.IgnoreCase)))
-          .Select(pi => 
-            new EnvironmentViewModel 
-            { 
-              Name = pi.Name, 
+          .Select(pi =>
+            new EnvironmentViewModel
+            {
+              Name = pi.Name,
               IsDeployable = _deployableEnvironments.Count == 0 || _deployableEnvironments.Any(reg => Regex.IsMatch(pi.Name, reg, RegexOptions.IgnoreCase))
             })
           .ToList();
@@ -145,13 +145,13 @@ namespace UberDeployer.WebApp.Core.Controllers
         _agentService.GetProjectConfigurationBuilds(projectName, projectConfigurationName, _MaxProjectConfigurationBuildsCount, ProjectConfigurationBuildFilter.Empty)
           .Select(
             pcb =>
-            new ProjectConfigurationBuildViewModel
-            {
-              Id = pcb.Id,
-              Number = pcb.Number,
-              Status = pcb.Status.ToString(),
-              StartDateStr = pcb.StartDate
-            })
+              new ProjectConfigurationBuildViewModel
+              {
+                Id = pcb.Id,
+                Number = pcb.Number,
+                Status = pcb.Status.ToString(),
+                StartDateStr = pcb.StartDate
+              })
           .ToList();
 
       return
@@ -198,12 +198,12 @@ namespace UberDeployer.WebApp.Core.Controllers
           DiagnosticMessageType.Trace)
           .Select(
             dm =>
-            new DiagnosticMessageViewModel
-            {
-              MessageId = dm.MessageId,
-              Message = dm.Message,
-              Type = dm.Type.ToString(),
-            }).ToList();
+              new DiagnosticMessageViewModel
+              {
+                MessageId = dm.MessageId,
+                Message = dm.Message,
+                Type = dm.Type.ToString(),
+              }).ToList();
 
       return
         Json(
@@ -234,10 +234,10 @@ namespace UberDeployer.WebApp.Core.Controllers
     public ActionResult CreatePackage(string projectName, string projectConfigurationName, string projectConfigurationBuildId, string targetEnvironmentName, ProjectType? projectType, string packageDirPath)
     {
       if (string.IsNullOrEmpty(projectName)
-        || string.IsNullOrEmpty(projectConfigurationName)
-        || string.IsNullOrEmpty(projectConfigurationBuildId)
-        || string.IsNullOrEmpty(targetEnvironmentName)
-        || !projectType.HasValue)
+          || string.IsNullOrEmpty(projectConfigurationName)
+          || string.IsNullOrEmpty(projectConfigurationBuildId)
+          || string.IsNullOrEmpty(targetEnvironmentName)
+          || !projectType.HasValue)
       {
         return BadRequest();
       }
@@ -265,7 +265,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       catch (Exception exc)
       {
         return HandleAjaxError(exc);
-      }      
+      }
     }
 
     [HttpGet]
@@ -279,7 +279,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       try
       {
-        return new ContentResult {Content = _agentService.GetDefaultPackageDirPath(environmentName, projectName)};
+        return new ContentResult { Content = _agentService.GetDefaultPackageDirPath(environmentName, projectName) };
       }
       catch (Exception exc)
       {
@@ -328,11 +328,11 @@ namespace UberDeployer.WebApp.Core.Controllers
               projectMetadata.ProjectVersions
                 .Select(
                   pv =>
-                  new MachineSpecificProjectVersionViewModel
-                  {
-                    MachineName = pv.MachineName,
-                    ProjectVersion = pv.ProjectVersion,
-                  }).ToList(),
+                    new MachineSpecificProjectVersionViewModel
+                    {
+                      MachineName = pv.MachineName,
+                      ProjectVersion = pv.ProjectVersion,
+                    }).ToList(),
           };
 
         projectMetadataViewModel.Status = "OK";
@@ -422,7 +422,7 @@ namespace UberDeployer.WebApp.Core.Controllers
           _sessionService.UniqueClientId,
           SecurityUtils.CurrentUsername,
           CreateDeploymentInfo(
-            deploymentId,  
+            deploymentId,
             isSimulation,
             projectName,
             projectConfigurationName,
@@ -511,6 +511,11 @@ namespace UberDeployer.WebApp.Core.Controllers
           return new WebServiceInputParams();
         }
 
+        case ProjectType.UberDeployerAgent:
+        {
+          return new NtServiceInputParams();
+        }
+
         default:
         {
           throw new NotSupportedException(string.Format("Unknown project type: '{0}'.", projectType));
@@ -543,17 +548,6 @@ namespace UberDeployer.WebApp.Core.Controllers
       }
 
       return appSettingsValue;
-    }
-
-    private static bool GetAppSettingsBoolValue(string key)
-    {
-      bool result;
-      if (bool.TryParse(GetAppSettingsStringValue(key), out result))
-      {
-        return result;
-      }
-       
-      throw new ConfigurationErrorsException(string.Format("Incorrect bool value in app setting. Key: {0}.", key));
     }
   }
 }
