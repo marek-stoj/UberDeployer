@@ -58,6 +58,7 @@
     <Compile Include="IO\ZipFileAdapter.cs" />
     <Compile Include="Log4NetExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionUtils.cs" />
     <Compile Include="RetryUtils.cs" />
     <Compile Include="SyntaxSugar\Guard.cs" />
   </ItemGroup>

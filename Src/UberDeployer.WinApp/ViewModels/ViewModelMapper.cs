@@ -14,7 +14,8 @@ namespace UberDeployer.WinApp.ViewModels
         .Include<WebServiceProjectInfo, WebServiceProjectInfoInPropertyGridViewModel>()
         .Include<TerminalAppProjectInfo, TerminalAppProjectInfoInPropertyGridViewModel>()
         .Include<SchedulerAppProjectInfo, SchedulerAppProjectInfoInPropertyGridViewModel>()
-        .Include<DbProjectInfo, DbProjectInfoInPropertyGridViewModel>();
+        .Include<DbProjectInfo, DbProjectInfoInPropertyGridViewModel>()
+        .Include<UberDeployerAgentProjectInfo, UberDeployerAgentProjectInfoInPropertyGridViewModel>();
 
       Mapper.CreateMap<NtServiceProjectInfo, NtServiceProjectInfoInPropertyGridViewModel>();
       Mapper.CreateMap<WebAppProjectInfo, WebAppProjectInfoInPropertyGridViewModel>();
@@ -22,6 +23,7 @@ namespace UberDeployer.WinApp.ViewModels
       Mapper.CreateMap<TerminalAppProjectInfo, TerminalAppProjectInfoInPropertyGridViewModel>();
       Mapper.CreateMap<SchedulerAppProjectInfo, SchedulerAppProjectInfoInPropertyGridViewModel>();
       Mapper.CreateMap<DbProjectInfo, DbProjectInfoInPropertyGridViewModel>();
+      Mapper.CreateMap<UberDeployerAgentProjectInfo, UberDeployerAgentProjectInfoInPropertyGridViewModel>();
 
       Mapper.CreateMap<EnvironmentInfo, EnvironmentInfoInPropertyGridViewModel>();
       Mapper.CreateMap<EnvironmentUser, EnvironmentUserInPropertyGridVieModel>();

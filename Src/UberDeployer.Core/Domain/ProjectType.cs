@@ -9,5 +9,6 @@
     TerminalApp = 4,
     WebApp = 5,
     WebService = 6,
+    UberDeployerAgent = 7,
   }
 }

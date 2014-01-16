@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace UberDeployer.Common.IO
@@ -38,6 +39,39 @@ namespace UberDeployer.Common.IO
     public void CreateDirectory(string path)
     {
       Directory.CreateDirectory(path);
+    }
+
+    public void CopyAll(string srcPath, string dstPath)
+    {
+      foreach (string filePath in Directory.GetFiles(srcPath, "*.*", SearchOption.TopDirectoryOnly))
+      {
+        string fileName = Path.GetFileName(filePath);
+
+        if (string.IsNullOrEmpty(fileName))
+        {
+          throw new Exception(string.Format("Unexpected lack of a file name in a path. File path: '{0}'.", filePath));
+        }
+
+        string dstFilePath = Path.Combine(dstPath, fileName);
+
+        File.Copy(filePath, dstFilePath);
+      }
+
+      foreach (string dirPath in Directory.GetDirectories(srcPath, "*", SearchOption.TopDirectoryOnly))
+      {
+        string dirName = Path.GetFileName(dirPath);
+
+        if (string.IsNullOrEmpty(dirName))
+        {
+          throw new Exception(string.Format("Unexpected lack of a directory name in a path. Directory path: '{0}'.", dirPath));
+        }
+
+        string dstSubDirPath = Path.Combine(dstPath, dirName);
+
+        Directory.CreateDirectory(dstSubDirPath);
+
+        CopyAll(dirPath, dstSubDirPath);
+      }
     }
   }
 }

@@ -14,7 +14,8 @@ namespace UberDeployer.Agent.Service
         .Include<Core.Domain.WebServiceProjectInfo, Proxy.Dto.WebServiceProjectInfo>()
         .Include<Core.Domain.TerminalAppProjectInfo, Proxy.Dto.TerminalAppProjectInfo>()
         .Include<Core.Domain.SchedulerAppProjectInfo, Proxy.Dto.SchedulerAppProjectInfo>()
-        .Include<Core.Domain.DbProjectInfo, Proxy.Dto.DbProjectInfo>();
+        .Include<Core.Domain.DbProjectInfo, Proxy.Dto.DbProjectInfo>()
+        .Include<Core.Domain.UberDeployerAgentProjectInfo, Proxy.Dto.UberDeployerAgentProjectInfo>();
 
       Mapper.CreateMap<Core.Domain.NtServiceProjectInfo, Proxy.Dto.NtServiceProjectInfo>();
       Mapper.CreateMap<Core.Domain.WebAppProjectInfo, Proxy.Dto.WebAppProjectInfo>();
@@ -22,6 +23,7 @@ namespace UberDeployer.Agent.Service
       Mapper.CreateMap<Core.Domain.TerminalAppProjectInfo, Proxy.Dto.TerminalAppProjectInfo>();
       Mapper.CreateMap<Core.Domain.SchedulerAppProjectInfo, Proxy.Dto.SchedulerAppProjectInfo>();
       Mapper.CreateMap<Core.Domain.DbProjectInfo, Proxy.Dto.DbProjectInfo>();
+      Mapper.CreateMap<Core.Domain.UberDeployerAgentProjectInfo, Proxy.Dto.UberDeployerAgentProjectInfo>();
 
       Mapper.CreateMap<Core.Domain.IisAppPoolInfo, Proxy.Dto.IisAppPoolInfo>();
 

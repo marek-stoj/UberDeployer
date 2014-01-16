@@ -18,5 +18,7 @@ namespace UberDeployer.Common.IO
     IEnumerable<string> GetFiles(string path);
    
     void CreateDirectory(string path);
+
+    void CopyAll(string srcPath, string dstPath);
   }
 }

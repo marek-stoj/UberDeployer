@@ -16,6 +16,7 @@ namespace UberDeployer.Core.DataAccess.Xml
     [XmlInclude(typeof(SchedulerAppProjectInfoXml))]
     [XmlInclude(typeof(TerminalAppProjectInfoXml))]
     [XmlInclude(typeof(DbProjectInfoXml))]
+    [XmlInclude(typeof(UberDeployerAgentProjectInfoXml))]
     public class ProjectInfosXml
     {
       public List<ProjectInfoXml> ProjectInfos { get; set; }
@@ -113,6 +114,10 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string DbName { get; set; }
     }
 
+    public class UberDeployerAgentProjectInfoXml : NtServiceProjectInfoXml
+    {
+    }
+
     #endregion
 
     private readonly string _xmlFilePath;
@@ -174,6 +179,24 @@ namespace UberDeployer.Core.DataAccess.Xml
         (projectInfoXml.AllowedEnvironments ?? "")
           .Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
           .ToList();
+
+      var uberDeployerAgentProjectInfoXml = projectInfoXml as UberDeployerAgentProjectInfoXml;
+
+      if (uberDeployerAgentProjectInfoXml != null)
+      {
+        return
+          new UberDeployerAgentProjectInfo(
+            uberDeployerAgentProjectInfoXml.Name,
+            uberDeployerAgentProjectInfoXml.ArtifactsRepositoryName,
+            allowedEnvironmentNames,
+            uberDeployerAgentProjectInfoXml.ArtifactsRepositoryDirName,
+            uberDeployerAgentProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
+            uberDeployerAgentProjectInfoXml.NtServiceName,
+            uberDeployerAgentProjectInfoXml.NtServiceDirName,
+            uberDeployerAgentProjectInfoXml.NtServiceDisplayName,
+            uberDeployerAgentProjectInfoXml.NtServiceExeName,
+            uberDeployerAgentProjectInfoXml.NtServiceUserId);
+      }
 
       var ntServiceProjectInfoXml = projectInfoXml as NtServiceProjectInfoXml;
 

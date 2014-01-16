@@ -53,6 +53,7 @@
     <Compile Include="Dto\Metadata\ProjectMetadata.cs" />
     <Compile Include="Dto\Repetition.cs" />
     <Compile Include="Dto\SchedulerAppTask.cs" />
+    <Compile Include="Dto\UberDeployerAgentProjectInfo.cs" />
     <Compile Include="Dto\WebAppProjectConfiguration.cs" />
     <Compile Include="Dto\Input\DbInputParams.cs" />
     <Compile Include="Dto\Input\InputParams.cs" />

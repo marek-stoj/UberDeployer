@@ -25,7 +25,8 @@ var APP_TYPES = {
   SchedulerApp: 3,
   TerminalApp: 4,
   WebApp: 5,
-  WebService: 6
+  WebService: 6,
+  UberDeployerAgent: 7
 };
 
 function Project(name, type, allowedEnvironmentNames) {

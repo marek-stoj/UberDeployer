@@ -87,10 +87,11 @@
       <DependentUpon>ViewEnvironmentInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\PropertyGrids\DbProjectInfoInPropertyGridViewModel.cs" />
-    <Compile Include="ViewModels\PropertyGrids\NtServiceProjectInfo.cs" />
+    <Compile Include="ViewModels\PropertyGrids\NtServiceProjectInfoInPropertyGridViewModel.cs" />
     <Compile Include="ViewModels\PropertyGrids\ProjectInfoInPropertyGridViewModel.cs" />
     <Compile Include="ViewModels\PropertyGrids\SchedulerAppProjectInfo.cs" />
     <Compile Include="ViewModels\PropertyGrids\TerminalAppProjectInfo.cs" />
+    <Compile Include="ViewModels\PropertyGrids\UberDeployerAgentProjectInfoInPropertyGridViewModel.cs" />
     <Compile Include="ViewModels\PropertyGrids\WebAppProjectInfo.cs" />
     <Compile Include="ViewModels\PropertyGrids\WebServiceProjectInfo.cs" />
     <Compile Include="ViewModels\ViewModelMapper.cs" />

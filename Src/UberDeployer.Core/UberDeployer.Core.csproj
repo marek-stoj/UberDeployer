@@ -83,13 +83,16 @@
     <Compile Include="Deployment\Converter.cs" />
     <Compile Include="Deployment\CreateManualDeploymentPackageDeploymentTask.cs" />
     <Compile Include="Deployment\DbScriptToRun.cs" />
+    <Compile Include="Deployment\DeployUberDeployerAgentUsingConsoleAppDeploymentStep.cs" />
     <Compile Include="Deployment\DirPathParamsResolver.cs" />
     <Compile Include="Deployment\IDirPathParamsResolver.cs" />
     <Compile Include="Deployment\ToggleSchedulerAppEnabledStep.cs" />
     <Compile Include="Domain\DatabaseServer.cs" />
     <Compile Include="Domain\DbProjectConfiguration.cs" />
+    <Compile Include="Deployment\DeployUberDeployerAgentDeploymentTask.cs" />
     <Compile Include="Domain\Repetition.cs" />
     <Compile Include="Domain\SchedulerAppTask.cs" />
+    <Compile Include="Domain\UberDeployerAgentProjectInfo.cs" />
     <Compile Include="Domain\WebAppProjectConfiguration.cs" />
     <Compile Include="Deployment\ExtractVersionDeploymentStep.cs" />
     <Compile Include="Deployment\PrepareVersionedFolderDeploymentStep.cs" />
