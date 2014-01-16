@@ -43,6 +43,11 @@
         <include name="**/*" />
       </fileset>
     </copy>
+    <copy todir="bin\UberDeployer.Agent.NtService\UberDeployer.ConsoleApp">
+      <fileset basedir="bin\UberDeployer.ConsoleApp">
+        <include name="**/*" />
+      </fileset>
+    </copy>
   </target>
   
   <target name="test">
