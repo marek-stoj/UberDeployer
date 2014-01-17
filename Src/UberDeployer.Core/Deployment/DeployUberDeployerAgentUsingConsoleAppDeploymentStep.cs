@@ -11,6 +11,8 @@ namespace UberDeployer.Core.Deployment
 {
   public class DeployUberDeployerAgentUsingConsoleAppDeploymentStep : DeploymentStep
   {
+    private const string _ConsoleAppExeName = "UberDeployer.ConsoleApp.exe";
+
     private readonly DeploymentInfo _deploymentInfo;
     private readonly IDirectoryAdapter _directoryAdapter;
 
@@ -51,11 +53,11 @@ namespace UberDeployer.Core.Deployment
       _directoryAdapter.CopyAll(consoleAppSrcPath, consoleAppDstPath);
 
       string consoleAppExePath =
-        Path.Combine(consoleAppDstPath, "UberDeployer.ConsoleApp.exe");
+        Path.Combine(consoleAppDstPath, _ConsoleAppExeName);
 
       string consoleAppArgs =
         string.Format(
-          "deploy {0} {1} {2} {3} {4}",
+          "deploy \"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\"",
           _deploymentInfo.ProjectName,
           _deploymentInfo.ProjectConfigurationName,
           _deploymentInfo.ProjectConfigurationBuildId,
@@ -72,7 +74,7 @@ namespace UberDeployer.Core.Deployment
 
       Win32Api.CreateProcess(
         consoleAppExePath,
-        consoleAppArgs,
+        " " + consoleAppArgs,
         ref processSecurityAttributes,
         ref threadSecurityAttributes,
         false,
