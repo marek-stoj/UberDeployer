@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -87,6 +88,7 @@
     <Compile Include="Deployment\DirPathParamsResolver.cs" />
     <Compile Include="Deployment\IDirPathParamsResolver.cs" />
     <Compile Include="Deployment\ToggleSchedulerAppEnabledStep.cs" />
+    <Compile Include="Deployment\Win32Api.cs" />
     <Compile Include="Domain\DatabaseServer.cs" />
     <Compile Include="Domain\DbProjectConfiguration.cs" />
     <Compile Include="Deployment\DeployUberDeployerAgentDeploymentTask.cs" />

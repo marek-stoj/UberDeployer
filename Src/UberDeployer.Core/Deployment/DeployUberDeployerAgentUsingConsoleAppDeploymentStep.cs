@@ -1,7 +1,7 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using UberDeployer.Common;
 using UberDeployer.Common.IO;
 using UberDeployer.Common.SyntaxSugar;
@@ -62,16 +62,25 @@ namespace UberDeployer.Core.Deployment
           _deploymentInfo.TargetEnvironmentName,
           _deploymentInfo.IsSimulation ? "simulate" : "");
 
-      ProcessStartInfo processStartInfo =
-        new ProcessStartInfo(
-          consoleAppExePath,
-          consoleAppArgs);
+      var processSecurityAttributes = new Win32Api.SECURITY_ATTRIBUTES();
+      var threadSecurityAttributes = new Win32Api.SECURITY_ATTRIBUTES();
+      var startupInfo = new Win32Api.STARTUPINFO();
+      Win32Api.PROCESS_INFORMATION processInformation;
 
-      processStartInfo.CreateNoWindow = true;
-      processStartInfo.UseShellExecute = false;
-      processStartInfo.WorkingDirectory = consoleAppDstPath;
+      processSecurityAttributes.nLength = Marshal.SizeOf(processSecurityAttributes);
+      threadSecurityAttributes.nLength = Marshal.SizeOf(threadSecurityAttributes);
 
-      Process.Start(processStartInfo);
+      Win32Api.CreateProcess(
+        consoleAppExePath,
+        consoleAppArgs,
+        ref processSecurityAttributes,
+        ref threadSecurityAttributes,
+        false,
+        Win32Api.NORMAL_PRIORITY_CLASS,
+        IntPtr.Zero,
+        consoleAppDstPath,
+        ref startupInfo,
+        out processInformation);
     }
 
     public override string Description
