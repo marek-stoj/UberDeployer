@@ -17,6 +17,7 @@
       <arg value="src/UberDeployer.sln" />
       <arg value="/p:Configuration=Release" />
       <arg value="/p:DebugType=none" />
+      <arg value="/p:AllowUnsafeBlocks=true" />
     </exec>
     <copy todir="bin\UberDeployer.WebApp">
       <fileset basedir="Src\UberDeployer.WebApp">
