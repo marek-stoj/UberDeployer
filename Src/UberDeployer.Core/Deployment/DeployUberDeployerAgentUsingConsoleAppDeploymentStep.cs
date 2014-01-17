@@ -83,6 +83,8 @@ namespace UberDeployer.Core.Deployment
         consoleAppDstPath,
         ref startupInfo,
         out processInformation);
+
+      PostDiagnosticMessage("UberDeployer.Agent has been requested to deploy itself - it could take a few seconds.", DiagnosticMessageType.Warn);
     }
 
     public override string Description
