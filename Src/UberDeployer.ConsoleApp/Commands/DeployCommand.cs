@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Reflection;
 using System.Security.Principal;
+using log4net;
+using UberDeployer.Common;
 using UberDeployer.CommonConfiguration;
 using UberDeployer.ConsoleCommander;
 using UberDeployer.Core.Deployment;
@@ -10,6 +13,8 @@ namespace UberDeployer.ConsoleApp.Commands
 {
   public class DeployCommand : ConsoleCommand
   {
+    private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
     public DeployCommand(CommandDispatcher commandDispatcher)
       : base(commandDispatcher)
     {
@@ -85,7 +90,7 @@ namespace UberDeployer.ConsoleApp.Commands
 
     protected void LogMessage(string message, DiagnosticMessageType messageType)
     {
-      OutputWriter.WriteLine("[{0}] {1}", messageType.ToString(), message);
+      _log.DebugIfEnabled(() => string.Format("{0}: {1}", messageType, message));
     }
 
     public override string CommandName

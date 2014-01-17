@@ -29,6 +29,10 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\..\Lib\DotNetZip\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Lib\log4net\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="msdeploy, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <ExecutableExtension>.exe</ExecutableExtension>
       <HintPath>..\..\Lib\MsWebDeploy\msdeploy.exe</HintPath>
@@ -66,6 +70,10 @@
       <Project>{1F7893B7-4540-4469-BE29-39A3BEEE2584}</Project>
       <Name>UberDeployer.CommonConfiguration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Common\UberDeployer.Common.csproj">
+      <Project>{256FF6D7-F1B8-43E7-97CA-7A63455C0BE6}</Project>
+      <Name>UberDeployer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UberDeployer.ConsoleCommander\UberDeployer.ConsoleCommander.csproj">
       <Project>{9FD59C63-52EF-40D1-8341-1ED7F24605A2}</Project>
       <Name>UberDeployer.ConsoleCommander</Name>
@@ -93,6 +101,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="log4net.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using log4net;
+using log4net.Config;
 using UberDeployer.ConsoleCommander;
 using System.Reflection;
 using UberDeployer.CommonConfiguration;
@@ -10,6 +12,9 @@ namespace UberDeployer.ConsoleApp
   {
     private static int Main(string[] args)
     {
+      GlobalContext.Properties["applicationName"] = "UberDeployer.ConsoleApp";
+      XmlConfigurator.Configure();
+
       TextWriter outputWriter = Console.Out;
 
       try
