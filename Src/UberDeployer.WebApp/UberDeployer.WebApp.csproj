@@ -152,6 +152,7 @@
     <None Include="log4net.config" />
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Deployment\Index.cshtml" />
+    <Content Include="Static\plugins\jquery.debounce.js" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

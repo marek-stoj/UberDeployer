@@ -96,7 +96,7 @@ function initializeDeploymentPage(initData) {
   });
  
 
-  domHelper.getProjectsElement().change(function () {
+  domHelper.getProjectsElement().change($.debounce(500, function () {
     var projectName = getSelectedProjectName();
 
     if (!projectName) {
@@ -107,9 +107,9 @@ function initializeDeploymentPage(initData) {
     loadProjectConfigurations(projectName);
     loadWebMachinesList();
     disableDeployButtonsForCurrentEnvironment();
-  });
+  }));
   
-  domHelper.getProjectConfigsElement().change(function () {
+  domHelper.getProjectConfigsElement().change($.debounce(500, function () {
     var projectName = getSelectedProjectName();
     var projectConfigurationName = getSelectedProjectConfigurationName();
 
@@ -145,7 +145,7 @@ function initializeDeploymentPage(initData) {
 
         projectConfigBuildsElement.trigger('change');
       });
-  });  
+  }));  
 
   loadEnvironments(function () {
     if (g_initialSelection && g_initialSelection.targetEnvironmentName) {
@@ -156,14 +156,14 @@ function initializeDeploymentPage(initData) {
     }
   });
 
-  domHelper.getEnvironmentsElement().change(function () {
+  domHelper.getEnvironmentsElement().change($.debounce(500, function () {
     if (!g_initialSelection || !g_initialSelection.targetEnvironmentName) {
       rememberTargetEnvironmentName();
     }
     
     loadProjectsForCurrentEnvironment();
     disableDeployButtonsForCurrentEnvironment();
-  });
+  }));
   
   startDiagnosticMessagesLoader();
 }
