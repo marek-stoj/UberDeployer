@@ -130,7 +130,7 @@ namespace UberDeployer.Core.TeamCity
     {
       // ReSharper disable CSharpWarnings::CS0612
       var webClient =
-        new WebClient
+        new Http10WebClient
           {
             Credentials = new NetworkCredential(_userName, _password),
             Proxy = GlobalProxySelection.GetEmptyWebProxy(),
