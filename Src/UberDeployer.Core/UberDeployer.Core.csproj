@@ -217,6 +217,9 @@
     <Compile Include="Management\Shortcut\ShellLinkNative.cs" />
     <Compile Include="Management\Shortcut\ShellShortcut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TeamCity\Http10WebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TeamCity\Models\BuildsLocation.cs" />
     <Compile Include="TeamCity\Models\BuildStatus.cs" />
     <Compile Include="TeamCity\Models\ProjectConfigurationBuild.cs" />
