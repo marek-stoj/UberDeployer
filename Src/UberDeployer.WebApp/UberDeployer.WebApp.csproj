@@ -21,9 +21,9 @@
     <OldToolsVersion>4.0</OldToolsVersion>
     <UpgradeBackupLocation />
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <TargetFrameworkProfile />
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
   </PropertyGroup>
@@ -122,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Static\bootstrap\css\font-awesome.css" />
+    <Content Include="Static\bootstrap\css\simple-sidebar.css" />
+    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.svg" />
     <Content Include="Static\jquery.signalr.js" />
     <Content Include="Static\site.js" />
     <Content Include="Static\jquery.js" />
@@ -153,6 +156,10 @@
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Deployment\Index.cshtml" />
     <Content Include="Static\plugins\jquery.debounce.js" />
+    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.eot" />
+    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.woff" />
+    <Content Include="Static\bootstrap\fonts\FontAwesome.otf" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

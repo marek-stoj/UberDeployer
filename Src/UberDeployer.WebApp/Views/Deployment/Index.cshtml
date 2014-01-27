@@ -3,103 +3,91 @@
   ViewBag.Title = "Deployment | ÜberDeployer";
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container">
-  <h1>
-    Deployment
-  </h1>
-
-  <hr />
-
+<div class="jumbotron">
   <p>
-    Life pro tip of the fucking day: <em>@Model.TipOfTheDay</em>
-    <br />
-    <small>Courtesy of <a href="http://fuckinghomepage.com/">Fucking Homepage</a>.</small>
+    <em><small>Life pro tip of the fucking day:</small></em>
   </p>
+  <p>
+    <q>@Model.TipOfTheDay</q>
+  </p>
+  <p><small>Courtesy of <a href="http://fuckinghomepage.com/">Fucking Homepage</a>.</small></p>
+</div>
 
-  <hr />
-
-  <div class="container">
-    <div class="row">
-      <div id="errorMsg" class="alert alert-error" style="display: none;">
+<div class="row">
+  <div id="errorMsg" class="alert alert-error" style="display: none;">
+  </div>
+</div>
+<div id="main-container">
+  <div class="row" id="main-row">
+    <div class="col-md-3">
+      <label for="lst-projects" class="lst-header">Projects:</label>
+      <div class="lst-filter">
+        <input type="checkbox" id="chb-deployable-projects" @(Model.ShowOnlyDeployable ? "checked=\"checked\"" : "") />
+        <label for="chb-deployable-projects">Only deployable</label>
       </div>
+      <br />
+      <select id="lst-projects" size="10"></select>
+    </div>
+    <div class="col-md-4">
+      <label for="lst-project-configs" class="lst-header">Configurations:</label>
+      <br />
+      <select id="lst-project-configs" size="10"></select>
+    </div>
+    <div class="col-md-5">
+      <label for="lst-project-config-builds" class="lst-header">Builds:</label>
+      <br />
+      <select id="lst-project-config-builds" size="10"></select>
     </div>
   </div>
-  <div class="container" id="main-container">
-    <div class="row" id="main-row">
-      <div class="span3">
-        <label for="lst-projects" class="lst-header">Projects:</label>
-        <div class="lst-filter">
-          <input type="checkbox" id="chb-deployable-projects" @(Model.ShowOnlyDeployable ? "checked=\"checked\"" : "") />
-          <label for="chb-deployable-projects">Only deployable</label>
-        </div>
-        <br />
-        <select id="lst-projects" size="10">
-        </select>
-      </div>
-      <div class="span4">
-        <label for="lst-project-configs" class="lst-header">Configurations:</label>
-        <br />
-        <select id="lst-project-configs" size="10">
-        </select>
-      </div>
-      <div class="span5">
-        <label for="lst-project-config-builds" class="lst-header">Builds:</label>
-        <br />
-        <select id="lst-project-config-builds" size="10">
-        </select>
-      </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="lst-environments" class="lst-header">Target environment:</label>
+      <select id="lst-environments" size="5"></select>
     </div>
-    <div class="row">
-      <div class="span6">
-        <label for="lst-environments" class="lst-header">Target environment:</label>
-        <select id="lst-environments" size="5">
-        </select>
-      </div>
-      <div class="span6">
-        <label for="lst-machines" class="lst-header">Target machines:</label>
-        <select id="lst-machines" size="5" multiple="multiple">
-        </select>
-      </div>
+    <div class="col-md-6">
+      <label for="lst-machines" class="lst-header">Target machines:</label>
+      <select id="lst-machines" size="5" multiple="multiple"></select>
     </div>
-    <div class="row">
-      <div class="span12">
-        <button id="btn-deploy" name="btn-deploy" class="btn btn-primary pull-right" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
+  </div>
+  <div class="row">
+    <div id="deploy-buttons">
+      <div class="col-md-12">
+        <button type="button" id="btn-deploy" name="btn-deploy" class="btn btn-primary pull-right" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
           Deploy
         </button>
-        <button id="btn-simulate" name="btn-simulate" class="btn pull-right">
+        <button type="button" id="btn-simulate" name="btn-simulate" class="btn btn-default pull-right">
           Simulate
         </button>
         @if (Model.IsCreatePackageVisible)
         {
-          <button id="btn-create-package" name="btn-create-package" class="btn pull-right" data-toggle="package-dir-modal">
+          <button type="button" id="btn-create-package" name="btn-create-package" class="btn btn-default pull-right" data-toggle="package-dir-modal">
             Create Package
           </button>
         }
-        <button id="btn-version" class="btn pull-left" onclick="javascript: getProjectVersion();">
+        <button type="button" id="btn-version" class="btn btn-default pull-left" onclick="javascript: getProjectVersion();">
           Version?
         </button>
-        <button id="btn-kick-ass" class="btn pull-left" onclick="javascript: kickAss();">
+        <button type="button" id="btn-kick-ass" class="btn btn-default pull-left" onclick="javascript: kickAss();">
           Kick Ass!
         </button>
       </div>
     </div>
-    <div class="row">
-      <div class="span12">
-        <hr />
-        <div id="txt-logs">
-        </div>
-        <button id="btn-clear-logs" class="btn pull-right" onclick="javascript: clearLogs();">
-          Clear
-        </button>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="txt-logs">
       </div>
+      <button id="btn-clear-logs" class="btn pull-right" onclick="javascript: clearLogs();">
+        Clear
+      </button>
     </div>
   </div>
-  <div id="dev-life-container">
-    <p class="dev-life-description">
-      "@Model.TodayDevLifeGifDescription"
-    </p>
-    <img src="@Model.TodayDevLifeGifUrl" />
-  </div>
+</div>
+<div id="dev-life-container">
+  <p class="dev-life-description">
+    "@Model.TodayDevLifeGifDescription"
+  </p>
+  <img src="@Model.TodayDevLifeGifUrl" />
 </div>
 
 <div id="dlg-collect-credentials" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
