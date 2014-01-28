@@ -37,6 +37,7 @@ label.lst-header {
   padding: 10px;
   border: solid #ccc 1px;
   margin-bottom: 10px;
+  background: #ffffff;
 }
 
 .log-msg {
