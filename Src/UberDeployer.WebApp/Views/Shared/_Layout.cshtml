@@ -7,6 +7,8 @@
     <title>@ViewBag.Title</title>
     <link href="@Url.Content("~/Static/bootstrap/css/bootstrap.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/bootstrap/css/font-awesome.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/bootstrap/css/fonts.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/bootstrap/css/flat-buttons.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/bootstrap/css/simple-sidebar.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/site.css?t=382743")" rel="stylesheet" type="text/css" />
 
@@ -48,18 +50,19 @@
         <div id="sidebar-footer">
           <ul class="sidebar-nav sidebar-nav-centered">
             <li>
-              <a href="https://github.com/marek-stoj/UberDeployer" class="github"><i class="fa fa-github fa-2x"></i></a>
+              <a href="https://github.com/marek-stoj/UberDeployer" target="_blank" class="github"><i class="fa fa-github fa-2x"></i></a>
             </li>
             <li>
-              <a href="#" class="kickass"><i class="fa fa-rocket fa-2x"></i></a>
+              <a href="#" class="kickass" onclick="javascript: kickAss();"><i class="fa fa-rocket fa-2x"></i></a>
+            </li>
+            <li>
+              <a href="#" class="info"><i class="fa fa-info-circle fa-2x"></i></a>
             </li>
           </ul>
         </div>
       </div>
       <div id="page-content-wrapper">
-        <div class="page-content inset">
-          @RenderBody()
-        </div>
+        @RenderBody()
       </div>
     </div>
   </body>

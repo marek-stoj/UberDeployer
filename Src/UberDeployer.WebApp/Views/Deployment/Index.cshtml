@@ -3,148 +3,158 @@
   ViewBag.Title = "Deployment | ÜberDeployer";
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="jumbotron">
-  <p>
-    <em><small>Life pro tip of the fucking day:</small></em>
-  </p>
-  <p>
-    <q>@Model.TipOfTheDay</q>
-  </p>
-  <p><small>Courtesy of <a href="http://fuckinghomepage.com/">Fucking Homepage</a>.</small></p>
-</div>
 
-<div class="row">
-  <div id="errorMsg" class="alert alert-error" style="display: none;">
-  </div>
-</div>
-<div id="main-container">
-  <div class="row" id="main-row">
-    <div class="col-md-3">
-      <label for="lst-projects" class="lst-header">Projects:</label>
-      <div class="lst-filter">
-        <input type="checkbox" id="chb-deployable-projects" @(Model.ShowOnlyDeployable ? "checked=\"checked\"" : "") />
-        <label for="chb-deployable-projects">Only deployable</label>
-      </div>
-      <br />
-      <select id="lst-projects" size="10"></select>
-    </div>
-    <div class="col-md-4">
-      <label for="lst-project-configs" class="lst-header">Configurations:</label>
-      <br />
-      <select id="lst-project-configs" size="10"></select>
+<div id="content-title">
+  <div class="row">
+    <div class="col-md-7">
+      <h1>Deployment</h1>
     </div>
     <div class="col-md-5">
-      <label for="lst-project-config-builds" class="lst-header">Builds:</label>
-      <br />
-      <select id="lst-project-config-builds" size="10"></select>
+      <p>
+        <em><small>Life pro tip of the fucking day:</small></em>
+      </p>
+      <p>
+        <q>@Model.TipOfTheDay</q>
+      </p>
+      <p><small>Courtesy of <a href="http://fuckinghomepage.com/">Fucking Homepage</a>.</small></p>
     </div>
   </div>
+
+</div>
+<div class="page-content inset">
   <div class="row">
-    <div class="col-md-6">
-      <label for="lst-environments" class="lst-header">Target environment:</label>
-      <select id="lst-environments" size="5"></select>
-    </div>
-    <div class="col-md-6">
-      <label for="lst-machines" class="lst-header">Target machines:</label>
-      <select id="lst-machines" size="5" multiple="multiple"></select>
+    <div id="errorMsg" class="alert alert-error" style="display: none;">
     </div>
   </div>
-  <div class="row">
-    <div id="deploy-buttons">
-      <div class="col-md-12">
-        <button type="button" id="btn-deploy" name="btn-deploy" class="btn btn-primary pull-right" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
-          Deploy
-        </button>
-        <button type="button" id="btn-simulate" name="btn-simulate" class="btn btn-default pull-right">
-          Simulate
-        </button>
-        @if (Model.IsCreatePackageVisible)
-        {
-          <button type="button" id="btn-create-package" name="btn-create-package" class="btn btn-default pull-right" data-toggle="package-dir-modal">
-            Create Package
+  <div id="main-container">
+    <div class="row" id="main-row">
+      <div class="col-md-3">
+        <label for="lst-projects" class="lst-header">Projects:</label>
+        <div class="lst-filter">
+          <input type="checkbox" id="chb-deployable-projects" @(Model.ShowOnlyDeployable ? "checked=\"checked\"" : "") />
+          <label for="chb-deployable-projects">Only deployable</label>
+        </div>
+        <br />
+        <select id="lst-projects" size="10"></select>
+      </div>
+      <div class="col-md-4">
+        <label for="lst-project-configs" class="lst-header">Configurations:</label>
+        <br />
+        <select id="lst-project-configs" size="10"></select>
+      </div>
+      <div class="col-md-5">
+        <label for="lst-project-config-builds" class="lst-header">Builds:</label>
+        <br />
+        <select id="lst-project-config-builds" size="10"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label for="lst-environments" class="lst-header">Target environment:</label>
+        <select id="lst-environments" size="5"></select>
+      </div>
+      <div class="col-md-6">
+        <label for="lst-machines" class="lst-header">Target machines:</label>
+        <select id="lst-machines" size="5" multiple="multiple"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div id="deploy-buttons">
+        <div class="col-md-6">
+          @if (Model.IsCreatePackageVisible)
+          {
+            <button type="button" id="btn-create-package" name="btn-create-package" class="btn btn-default" data-toggle="package-dir-modal">
+              Create Package
+            </button>
+          }
+          <button type="button" id="btn-version" class="btn btn-default" onclick="javascript: getProjectVersion();">
+            Version?
           </button>
-        }
-        <button type="button" id="btn-version" class="btn btn-default pull-left" onclick="javascript: getProjectVersion();">
-          Version?
-        </button>
-        <button type="button" id="btn-kick-ass" class="btn btn-default pull-left" onclick="javascript: kickAss();">
-          Kick Ass!
+        </div>
+        <div class="col-md-6">
+          <button type="button" id="btn-deploy" name="btn-deploy" class="btn btn-primary" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
+            Deploy
+          </button>
+          <button type="button" id="btn-simulate" name="btn-simulate" class="btn btn-default">
+            Simulate
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div id="txt-logs">
+        </div>
+        <button id="btn-clear-logs" class="btn pull-right" onclick="javascript: clearLogs();">
+          Clear
         </button>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div id="txt-logs">
-      </div>
-      <button id="btn-clear-logs" class="btn pull-right" onclick="javascript: clearLogs();">
-        Clear
-      </button>
+  <div id="dev-life-container">
+    <p class="dev-life-description">
+      "@Model.TodayDevLifeGifDescription"
+    </p>
+    <img src="@Model.TodayDevLifeGifUrl" />
+  </div>
+</div>
+
+
+  <div id="dlg-collect-credentials" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Enter credentials</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        Credentials are needed to perform deployment of project <strong id="dlg-collect-credentials-project-name"></strong>
+        (configuration: <strong id="dlg-collect-credentials-project-configuration-name"></strong>)
+        to environment <strong id="dlg-collect-credentials-target-environment-name"></strong>.
+      </p>
+      <p>
+        <label for="dlg-collect-credentials-username">Username:</label>
+        <input type="text" id="dlg-collect-credentials-username" name="dlg-collect-credentials-username" readonly="readonly" />
+        <br />
+        <label for="dlg-collect-credentials-machine-name">Machine:</label>
+        <input type="text" id="dlg-collect-credentials-machine-name" name="dlg-collect-credentials-machine-name" readonly="readonly" />
+        <br />
+        <label for="dlg-collect-credentials-password">Password:</label>
+        <input type="password" id="dlg-collect-credentials-password" name="dlg-collect-credentials-password" />
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button id="dlg-collect-credentials-ok" class="btn btn-primary">OK</button>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+    <input type="hidden" id="dlg-collect-credentials-deployment-id" name="dlg-collect-credentials-deployment-id" value="" />
+  </div>
+
+  <div id="package-dir-modal" class="modal hide fade">
+    <div class="modal-header">
+      <h3>Enter directory path for manual deployment package.</h3>
+    </div>
+    <div class="modal-body">
+      <label for="txt-package-dir">Directory:</label>
+      <input type="text" id="txt-package-dir" required="required" />
+    </div>
+    <div class="modal-footer">
+      <button id="btn-package-ok" class="btn btn-primary">OK</button>
+      <button id="btn-package-cancel" data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>
     </div>
   </div>
-</div>
-<div id="dev-life-container">
-  <p class="dev-life-description">
-    "@Model.TodayDevLifeGifDescription"
-  </p>
-  <img src="@Model.TodayDevLifeGifUrl" />
-</div>
 
-<div id="dlg-collect-credentials" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Enter credentials</h3>
-  </div>
-  <div class="modal-body">
-    <p>
-      Credentials are needed to perform deployment of project <strong id="dlg-collect-credentials-project-name"></strong>
-      (configuration: <strong id="dlg-collect-credentials-project-configuration-name"></strong>)
-      to environment <strong id="dlg-collect-credentials-target-environment-name"></strong>.
-    </p>
-    <p>
-      <label for="dlg-collect-credentials-username">Username:</label>
-      <input type="text" id="dlg-collect-credentials-username" name="dlg-collect-credentials-username" readonly="readonly" />
-      <br />
-      <label for="dlg-collect-credentials-machine-name">Machine:</label>
-      <input type="text" id="dlg-collect-credentials-machine-name" name="dlg-collect-credentials-machine-name" readonly="readonly" />
-      <br />
-      <label for="dlg-collect-credentials-password">Password:</label>
-      <input type="password" id="dlg-collect-credentials-password" name="dlg-collect-credentials-password" />
-    </p>
-  </div>
-  <div class="modal-footer">
-    <button id="dlg-collect-credentials-ok" class="btn btn-primary">OK</button>
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-  </div>
-  <input type="hidden" id="dlg-collect-credentials-deployment-id" name="dlg-collect-credentials-deployment-id" value="" />
-</div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var initData = {
+        userCanDeploy: @(Model.CanDeploy ? "true" : "false"),
+        initialSelection: {
+          targetEnvironmentName: @Html.Raw(Model.InitialSelection != null ? string.Format("'{0}'", Model.InitialSelection.TargetEnvironmentName) : "null"),
+          projectName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectName) ? string.Format("'{0}'", Model.InitialSelection.ProjectName) : "null"),
+          projectConfigurationName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationName) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationName) : "null"),
+          projectConfigurationBuildId: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationBuildId) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationBuildId) : "null")
+          }
+      };
 
-<div id="package-dir-modal" class="modal hide fade">
-  <div class="modal-header">
-    <h3>Enter directory path for manual deployment package.</h3>
-  </div>
-  <div class="modal-body">
-    <label for="txt-package-dir">Directory:</label>
-    <input type="text" id="txt-package-dir" required="required" />
-  </div>
-  <div class="modal-footer">
-    <button id="btn-package-ok" class="btn btn-primary">OK</button>
-    <button id="btn-package-cancel" data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>
-  </div>
-</div>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    var initData = {
-      userCanDeploy: @(Model.CanDeploy ? "true" : "false"),
-      initialSelection: {
-        targetEnvironmentName: @Html.Raw(Model.InitialSelection != null ? string.Format("'{0}'", Model.InitialSelection.TargetEnvironmentName) : "null"),
-        projectName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectName) ? string.Format("'{0}'", Model.InitialSelection.ProjectName) : "null"),
-        projectConfigurationName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationName) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationName) : "null"),
-        projectConfigurationBuildId: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationBuildId) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationBuildId) : "null")
-      }
-    };
-
-    initializeDeploymentPage(initData);
-  })
-</script>
+      initializeDeploymentPage(initData);
+    })
+  </script>

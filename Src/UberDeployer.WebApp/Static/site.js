@@ -768,6 +768,8 @@ function kickAss() {
   s.type = 'text/javascript';
   document.body.appendChild(s);
   s.src = '//hi.kickassapp.com/kickass.js';
+
+  return false;
 }
 
 function setupSignalR() {

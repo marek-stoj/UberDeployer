@@ -1,6 +1,17 @@
 body {
   background-color: #ecf0f1;
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+  color: rgb(52, 73, 94);
 }
+
+#content-title {
+  display: block;
+  margin: 0;
+  padding: 15px 0 0 20px;
+}
+
+#content-title h1 { margin: 0; }
+
 label.lst-header {
   display: inline;
   font-weight: bold;
@@ -11,23 +22,28 @@ label.lst-header {
   float: right;
 }
 
-.lst-filter label {
-  display: inline;
-}
+.lst-filter label { display: inline; }
 
 #main-container select {
   width: 100%;
   border: solid #ccc 1px;
 }
 
-#main-row {
-  margin-bottom: 10px;
-}
+#main-row { margin-bottom: 10px; }
 
 #deploy-buttons {
   display: block;
   overflow: hidden;
   margin: 10px 0;
+}
+
+#deploy-buttons .btn {
+  -ms-border-radius: 0;
+  border-radius: 0;
+}
+
+select, #txt-logs {
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;  
 }
 
 #txt-logs {
@@ -40,28 +56,17 @@ label.lst-header {
   background: #ffffff;
 }
 
-.log-msg {
-}
+.log-msg { }
 
-.log-msg-trace {
-  color: #999;
-}
+.log-msg-trace { color: #999; }
 
-.log-msg-info {
-  color: #3A87AD;
-}
+.log-msg-info { color: #3A87AD; }
 
-.log-msg-warn {
-  color: #ff4500;
-}
+.log-msg-warn { color: #ff4500; }
 
-.log-msg-error {
-  color: #f00;
-}
+.log-msg-error { color: #f00; }
 
-#tbl-history {
-  width: 100%;
-}
+#tbl-history { width: 100%; }
 
 #tbl-history th,
 #tbl-history td {
@@ -69,45 +74,34 @@ label.lst-header {
   text-align: left;
 }
 
-#tbl-history tr.even td {
-  background-color: #eee;
-}
+#tbl-history tr.even td { background-color: #eee; }
 
 .navbar .nav > li > span {
   display: block;
   padding: 10px 15px 10px;
 }
 
-.footer {
-  padding: 10px;
-}
+.footer { padding: 10px; }
 
-button.pull-right {
-  margin-left: 10px;
-}
+button.pull-right { margin-left: 10px; }
 
-button.pull-left {
-  margin-right: 10px;
-}
+button.pull-left { margin-right: 10px; }
 
 #dlg-collect-credentials-username,
-#dlg-collect-credentials-password {
-  width: 320px;
-}
+#dlg-collect-credentials-password { width: 320px; }
 
-#dev-life-container {
-  text-align: center;
-}
+#dev-life-container { text-align: center; }
 
 .dev-life-description {
   font-weight: bold;
   font-size: 18px;
 }
 
-#txt-package-dir {
-  width: 97%;
-}
+#txt-package-dir { width: 97%; }
 
-#chb-deployable-projects {
-  margin-bottom: 5px;
+#chb-deployable-projects { margin-bottom: 5px; }
+
+
+@media (max-width: 767px) {
+  #content-title { padding: 15px 0 0 15px; }
 }
