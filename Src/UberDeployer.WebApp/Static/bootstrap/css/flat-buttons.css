@@ -1,6 +1,6 @@
 ﻿.flat-butt {
   display: inline-block;
-  margin: 0 5px;
+  margin: 2px 5px;
   border-radius: 6px;
   font-family: "Lato", sans-serif;
   font-size: 16.5px;
@@ -13,6 +13,11 @@
 }
 .flat-butt:hover {
   background: #005580;
+}
+.flat-butt-full-width {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
 }
 .flat-primary-butt {
   background: #1abc9c;
@@ -31,6 +36,12 @@
 }
 .flat-danger-butt:hover {
   background: #ec7063;
+}
+.flat-gray-butt {
+  background: #95a5a6;
+}
+.flat-gray-butt:hover {
+  background: #7f8c8d;
 }
 .flat-border-butt {
   padding: 8px 20px;

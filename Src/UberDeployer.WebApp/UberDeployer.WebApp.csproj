@@ -122,11 +122,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Static\bootstrap\css\bootstrap-helpers.css" />
     <Content Include="Static\bootstrap\css\flat-buttons.css" />
     <Content Include="Static\bootstrap\css\font-awesome.css" />
     <Content Include="Static\bootstrap\css\fonts.css" />
     <Content Include="Static\bootstrap\css\simple-sidebar.css" />
     <Content Include="Static\bootstrap\fonts\fontawesome-webfont.svg" />
+    <Content Include="Static\img\logo.png" />
     <Content Include="Static\jquery.signalr.js" />
     <Content Include="Static\site.js" />
     <Content Include="Static\jquery.js" />

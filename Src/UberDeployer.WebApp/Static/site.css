@@ -15,6 +15,7 @@ body {
 label.lst-header {
   display: inline;
   font-weight: bold;
+  font-size: 1.18em;
 }
 
 .lst-filter {
@@ -31,19 +32,10 @@ label.lst-header {
 
 #main-row { margin-bottom: 10px; }
 
-#deploy-buttons {
-  display: block;
-  overflow: hidden;
-  margin: 10px 0;
-}
-
-#deploy-buttons .btn {
-  -ms-border-radius: 0;
-  border-radius: 0;
-}
-
 select, #txt-logs {
-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;  
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
 }
 
 #txt-logs {
@@ -90,6 +82,8 @@ button.pull-left { margin-right: 10px; }
 #dlg-collect-credentials-username,
 #dlg-collect-credentials-password { width: 320px; }
 
+#pro-fucking-tip { text-align: center;font-size: 1.7em; }
+
 #dev-life-container { text-align: center; }
 
 .dev-life-description {
@@ -104,4 +98,6 @@ button.pull-left { margin-right: 10px; }
 
 @media (max-width: 767px) {
   #content-title { padding: 15px 0 0 15px; }
+
+  #pro-fucking-tip { margin-bottom: 35px; }
 }

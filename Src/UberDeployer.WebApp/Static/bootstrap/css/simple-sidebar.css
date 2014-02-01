@@ -15,13 +15,19 @@
   transition: all 0.4s ease 0s;
 }
 
+#sidebar-logo {
+  background: url('../../img/logo.png') 20px 0 no-repeat transparent;
+  width: 240px;
+  height: 74px;
+  margin: 20px 0;
+}
+
 #page-content-wrapper {
   width: 100%;
 }
 
 .sidebar-nav {
-  position: absolute;
-  top: 0;
+  position: relative;
   width: 240px;
   list-style: none;
   margin: 0;
@@ -48,6 +54,7 @@
   color: #ffffff;
   display: block;
   text-decoration: none;
+  font-size: 18px;
 }
 
 .sidebar-nav li.active a {
@@ -110,41 +117,39 @@
 #sidebar-footer {
   display: block;
   overflow: hidden;
-  position: fixed;
+  position: absolute;
   bottom: 0px;
   width: 100%;
+  padding: 0 0 20px 20px
 }
 
-#sidebar-footer .sidebar-nav {
-  position: relative;
+#sidebar-footer > a {
+  padding-right: 15px;
+  font-size: 12px;
 }
 
-#sidebar-footer .sidebar-nav li a {
-  color: #ffffff;
+#sidebar-footer a.github {
+  color: #27ae60;
 }
 
-#sidebar-footer .sidebar-nav li a.github {
-  background: #27ae60;
+#sidebar-footer a.github:hover {
+  color: #2ecc71;
 }
 
-#sidebar-footer .sidebar-nav li a.github:hover {
-  background: #2ecc71;
+#sidebar-footer a.kickass {
+  color: #f39c12;
 }
 
-#sidebar-footer .sidebar-nav li a.kickass {
-  background: #f39c12;
+#sidebar-footer a.kickass:hover {
+  color: #f1c40f;
 }
 
-#sidebar-footer .sidebar-nav li a.kickass:hover {
-  background: #f1c40f;
+#sidebar-footer a.info {
+  color: #7f8c8d;
 }
 
-#sidebar-footer .sidebar-nav li a.info {
-  background: #7f8c8d;
-}
-
-#sidebar-footer .sidebar-nav li a.info:hover {
-  background: #95a5a6;
+#sidebar-footer a.info:hover {
+  color: #95a5a6;
 }
 
 @media (max-width:767px) {
