@@ -81,7 +81,7 @@ function initializeDeploymentPage(initData) {
     var packageDir = $('#txt-package-dir')[0].value;
     
     if ($.trim(packageDir) === '') {
-      alert('You have to enter package dir path.');
+      toastr.error('You have to enter package dir path.');
       return;
     }
 
@@ -139,7 +139,7 @@ function initializeDeploymentPage(initData) {
         projectConfigBuildsElement.val(valueToSelect);
         
         if (projectConfigBuildsElement.val() === null) {
-          alert('No project configuration build with id \'' + valueToSelect + '\'.');
+          toastr.error('No project configuration build with id \'' + valueToSelect + '\'.');
           return;
         }
 
@@ -179,7 +179,7 @@ function getDeploymentInfo() {
   
   if (!deploymentInfo.projectName || !deploymentInfo.projectConfigurationName
     || !deploymentInfo.projectConfigurationBuildId || !deploymentInfo.targetEnvironmentName) {
-    alert('Select project, configuration, build and environment!');
+    toastr.error('Select project, configuration, build and environment!');
     return null;
   }
 
@@ -190,7 +190,7 @@ function doDeployOrSimulate(isSimulation) {
   var deploymentInfo = getDeploymentInfo();
   
   if (g_ProjectList[deploymentInfo.projectName].type == APP_TYPES.WebApp && (!deploymentInfo.targetMachines || deploymentInfo.targetMachines.length == 0)) {
-    alert('Select web machine for selected environment!');
+    toastr.error('Select web machine for selected environment!');
     return;
   }
 
@@ -359,7 +359,7 @@ function loadProjectsForCurrentEnvironment() {
       projectsElement.val(projectToSelect);
       
       if (projectsElement.val() === null) {
-        alert('No project named \'' + projectToSelect + '\'.');
+        toastr.error('No project named \'' + projectToSelect + '\'.');
         return;
       }
 
@@ -452,7 +452,7 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
           projectConfigsElement.val(valueToSelect);
           
           if (projectConfigsElement.val() === null) {
-            alert('No project configuration named \'' + valueToSelect + '\'.');
+            toastr.error('No project configuration named \'' + valueToSelect + '\'.');
             return;
           }
 
@@ -607,7 +607,7 @@ function selectEnvironment(environmentName) {
   environmentsElement.val(environmentName);
 
   if (domHelper.getEnvironmentsElement().val() === null) {
-    alert('No environment named \'' + environmentName + '\'.');
+    toastr.error('No environment named \'' + environmentName + '\'.');
     return;
   }
 
@@ -731,7 +731,7 @@ function getProjectVersion() {
   var targetEnvironmentName = getSelectedTargetEnvironmentName();
 
   if (!projectName || !targetEnvironmentName) {
-    alert('Select project and environment!');
+    toastr.error('Select project and environment!');
     return;
   }
 

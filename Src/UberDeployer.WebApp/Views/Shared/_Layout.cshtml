@@ -9,26 +9,10 @@
     <link href="@Url.Content("~/Static/bootstrap/css/bootstrap-helpers.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/bootstrap/css/font-awesome.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/bootstrap/css/fonts.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/plugins/toastr/toastr.min.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/bootstrap/css/flat-buttons.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/bootstrap/css/simple-sidebar.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/site.css?t=382743")" rel="stylesheet" type="text/css" />
-
-    <script type="text/javascript" src="@Url.Content("~/Static/jquery.js")"> </script>
-    <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery.debounce.js")"> </script>
-
-    <script type="text/javascript" src="@Url.Content("~/Static/bootstrap/js/bootstrap.js")"> </script>
-
-    <script type="text/javascript" src="@Url.Content("~/Static/site.js?t=857337")"> </script>
-    <script type="text/javascript" src="@Url.Content("~/Static/jquery.signalr.js")"> </script>
-    <script src="signalr/hubs" type="text/javascript"> </script>
-
-    @* ReSharper disable PossibleNullReferenceException *@
-
-    <script type="text/javascript">
-      setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
-    </script>
-
-    @* ReSharper restore PossibleNullReferenceException *@
   </head>
 <body>
   <div id="wrapper">
@@ -58,5 +42,24 @@
       @RenderBody()
     </div>
   </div>
+  <script type="text/javascript" src="@Url.Content("~/Static/jquery.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery.debounce.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/toastr/toastr.min.js")"> </script>
+
+  <script type="text/javascript" src="@Url.Content("~/Static/bootstrap/js/bootstrap.js")"> </script>
+
+  <script type="text/javascript" src="@Url.Content("~/Static/site.js?t=857337")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/jquery.signalr.js")"> </script>
+  <script src="signalr/hubs" type="text/javascript"> </script>
+  <script type="text/javascript">
+    setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
+    $(function () {
+      $('#sidebar-footer a.info').click(function (event) {
+        event.preventDefault();
+        toastr.info('Username: @Model.Username.Replace(@"\", @"\\")<br/>Version @(BuildManager.GetGlobalAsaxType().BaseType.Assembly.GetName().Version)');
+      });
+    });
+  </script>
+  @RenderSection("OptionalScripts", required: false)
 </body>
 </html>

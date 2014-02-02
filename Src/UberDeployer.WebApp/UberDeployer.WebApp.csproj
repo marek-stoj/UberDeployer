@@ -130,6 +130,10 @@
     <Content Include="Static\bootstrap\fonts\fontawesome-webfont.svg" />
     <Content Include="Static\img\logo.png" />
     <Content Include="Static\jquery.signalr.js" />
+    <Content Include="Static\plugins\toastr\toastr.css" />
+    <Content Include="Static\plugins\toastr\toastr.js" />
+    <Content Include="Static\plugins\toastr\toastr.min.css" />
+    <Content Include="Static\plugins\toastr\toastr.min.js" />
     <Content Include="Static\site.js" />
     <Content Include="Static\jquery.js" />
     <Content Include="Static\site.css" />
@@ -164,6 +168,8 @@
     <Content Include="Static\bootstrap\fonts\fontawesome-webfont.ttf" />
     <Content Include="Static\bootstrap\fonts\fontawesome-webfont.woff" />
     <Content Include="Static\bootstrap\fonts\FontAwesome.otf" />
+    <Content Include="Static\plugins\toastr\toastr.less" />
+    <Content Include="Static\plugins\toastr\toastr.min.js.map" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
