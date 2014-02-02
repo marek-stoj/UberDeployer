@@ -25,12 +25,6 @@
         <li class="@(Model.CurrentAppPage == AppPage.History ? "active" : "")">
           <a href="@Url.Action("Index", "History")">History</a>
         </li>
-        <li>
-          <span>Username: @Model.Username</span>
-        </li>
-        <li>
-          <span>Version @(BuildManager.GetGlobalAsaxType().BaseType.Assembly.GetName().Version)</span>
-        </li>
       </ul>
       <div id="sidebar-footer">
         <a href="https://github.com/marek-stoj/UberDeployer" target="_blank" class="github"><i class="fa fa-github fa-3x"></i></a>
@@ -39,6 +33,7 @@
       </div>
     </div>
     <div id="page-content-wrapper">
+      <a href="#" id="menu-toggle"><i class="fa fa-bars fa-3x"></i></a>
       @RenderBody()
     </div>
   </div>
@@ -54,6 +49,12 @@
   <script type="text/javascript">
     setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
     $(function () {
+      $('#menu-toggle').click(function(event) {
+        event.preventDefault();
+
+        $('#wrapper').toggleClass('active');
+      });
+      
       $('#sidebar-footer a.info').click(function (event) {
         event.preventDefault();
         toastr.info('Username: @Model.Username.Replace(@"\", @"\\")<br/>Version @(BuildManager.GetGlobalAsaxType().BaseType.Assembly.GetName().Version)');

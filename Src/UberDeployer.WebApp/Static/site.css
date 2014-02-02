@@ -4,6 +4,10 @@ body {
   color: rgb(52, 73, 94);
 }
 
+h1, h2, h3, h4, h5 {
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+}
+
 #content-title {
   display: block;
   margin: 0;
@@ -95,9 +99,12 @@ button.pull-left { margin-right: 10px; }
 
 #chb-deployable-projects { margin-bottom: 5px; }
 
+#errorMsg { font-size: 1.6em !important; }
 
 @media (max-width: 767px) {
   #content-title { padding: 15px 0 0 15px; }
 
   #pro-fucking-tip { margin-bottom: 35px; }
+
+  #dev-life-container img { width: 100%; }
 }

@@ -170,11 +170,23 @@
 #wrapper.active #sidebar-wrapper {
   left: 250px;
   width: 250px;
+  -webkit-transition: all 0.4s ease 0s;
+  -moz-transition: all 0.4s ease 0s;
+  -ms-transition: all 0.4s ease 0s;
+  -o-transition: all 0.4s ease 0s;
   transition: all 0.4s ease 0s;
 }
 
-#menu-toggle {
-  display: inline-block;
+  #menu-toggle {
+  display: block;
+  margin: 0;
+  padding: 15px 0 0 15px;
+  color: #232C35;
+}
+
+#menu-toggle:hover  {
+  color: #50667f;
+
 }
 
 .inset {
