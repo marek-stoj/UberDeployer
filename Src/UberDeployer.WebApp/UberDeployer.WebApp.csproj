@@ -122,25 +122,118 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Static\bootstrap\css\bootstrap-helpers.css" />
-    <Content Include="Static\bootstrap\css\flat-buttons.css" />
-    <Content Include="Static\bootstrap\css\font-awesome.css" />
-    <Content Include="Static\bootstrap\css\fonts.css" />
-    <Content Include="Static\bootstrap\css\simple-sidebar.css" />
-    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.svg" />
+    <None Include="Static\css\bootstrap-helpers.less" />
+    <Content Include="Static\css\bootstrap-helpers.css">
+      <DependentUpon>bootstrap-helpers.less</DependentUpon>
+    </Content>
+    <Content Include="Static\css\bootstrap-helpers.min.css">
+      <DependentUpon>bootstrap-helpers.css</DependentUpon>
+    </Content>
+    <Content Include="Static\plugins\bootstrap\css\bootstrap.min.css">
+      <DependentUpon>bootstrap.css</DependentUpon>
+    </Content>
+    <None Include="Static\css\flat-buttons.less" />
+    <Content Include="Static\css\flat-buttons.css">
+      <DependentUpon>flat-buttons.less</DependentUpon>
+    </Content>
+    <Content Include="Static\css\flat-buttons.min.css">
+      <DependentUpon>flat-buttons.css</DependentUpon>
+    </Content>
+    <None Include="Static\plugins\fontawesome\css\font-awesome.less" />
+    <Content Include="Static\plugins\fontawesome\css\font-awesome.css">
+      <DependentUpon>font-awesome.less</DependentUpon>
+    </Content>
+    <Content Include="Static\plugins\fontawesome\css\font-awesome.min.css">
+      <DependentUpon>font-awesome.css</DependentUpon>
+    </Content>
+    <None Include="Static\css\fonts.less" />
+    <Content Include="Static\css\fonts.css">
+      <DependentUpon>fonts.less</DependentUpon>
+    </Content>
+    <Content Include="Static\css\fonts.min.css">
+      <DependentUpon>fonts.css</DependentUpon>
+    </Content>
+    <Content Include="Static\plugins\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Static\plugins\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Static\plugins\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Static\plugins\bootstrap\css\forms.less" />
+    <Content Include="Static\plugins\bootstrap\css\glyphicons.less" />
+    <Content Include="Static\plugins\bootstrap\css\grid.less" />
+    <Content Include="Static\plugins\bootstrap\css\input-groups.less" />
+    <Content Include="Static\plugins\bootstrap\css\jumbotron.less" />
+    <Content Include="Static\plugins\bootstrap\css\labels.less" />
+    <Content Include="Static\plugins\bootstrap\css\list-group.less" />
+    <Content Include="Static\plugins\bootstrap\css\media.less" />
+    <Content Include="Static\plugins\bootstrap\css\mixins.less" />
+    <Content Include="Static\plugins\bootstrap\css\modals.less" />
+    <Content Include="Static\plugins\bootstrap\css\navbar.less" />
+    <Content Include="Static\plugins\bootstrap\css\navs.less" />
+    <Content Include="Static\plugins\bootstrap\css\normalize.less" />
+    <Content Include="Static\plugins\bootstrap\css\pager.less" />
+    <Content Include="Static\plugins\bootstrap\css\pagination.less" />
+    <Content Include="Static\plugins\bootstrap\css\panels.less" />
+    <Content Include="Static\plugins\bootstrap\css\popovers.less" />
+    <Content Include="Static\plugins\bootstrap\css\print.less" />
+    <Content Include="Static\plugins\bootstrap\css\progress-bars.less" />
+    <Content Include="Static\plugins\bootstrap\css\responsive-utilities.less" />
+    <Content Include="Static\plugins\bootstrap\css\scaffolding.less" />
+    <Content Include="Static\plugins\bootstrap\css\tables.less" />
+    <Content Include="Static\plugins\bootstrap\css\theme.less" />
+    <Content Include="Static\plugins\bootstrap\css\thumbnails.less" />
+    <Content Include="Static\plugins\bootstrap\css\tooltip.less" />
+    <Content Include="Static\plugins\bootstrap\css\type.less" />
+    <Content Include="Static\plugins\bootstrap\css\utilities.less" />
+    <Content Include="Static\plugins\bootstrap\css\variables.less" />
+    <Content Include="Static\plugins\bootstrap\css\wells.less" />
+    <Content Include="Static\plugins\bootstrap\css\bootstrap.less" />
+    <Content Include="Static\plugins\bootstrap\css\breadcrumbs.less" />
+    <Content Include="Static\plugins\bootstrap\css\button-groups.less" />
+    <Content Include="Static\plugins\bootstrap\css\buttons.less" />
+    <Content Include="Static\plugins\bootstrap\css\carousel.less" />
+    <Content Include="Static\plugins\bootstrap\css\close.less" />
+    <Content Include="Static\plugins\bootstrap\css\code.less" />
+    <Content Include="Static\plugins\bootstrap\css\component-animations.less" />
+    <Content Include="Static\plugins\bootstrap\css\dropdowns.less" />
+    <Content Include="Static\plugins\bootstrap\css\alerts.less" />
+    <Content Include="Static\plugins\bootstrap\css\badges.less" />
+    <None Include="Static\css\sidebar.less" />
+    <Content Include="Static\plugins\fontawesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Static\plugins\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Static\fonts\lato\lato-black-webfont.svg" />
+    <Content Include="Static\fonts\lato\lato-bold-webfont.svg" />
+    <Content Include="Static\fonts\lato\lato-bolditalic-webfont.svg" />
+    <Content Include="Static\fonts\lato\lato-italic-webfont.svg" />
+    <Content Include="Static\fonts\lato\lato-light-webfont.svg" />
+    <Content Include="Static\fonts\lato\lato-regular-webfont.svg" />
     <Content Include="Static\img\logo.png" />
-    <Content Include="Static\jquery.signalr.js" />
-    <Content Include="Static\plugins\toastr\toastr.css" />
+    <Content Include="Static\plugins\jquery\jquery.signalr.js" />
+    <Content Include="Static\plugins\toastr\toastr.css">
+      <DependentUpon>toastr.less</DependentUpon>
+    </Content>
     <Content Include="Static\plugins\toastr\toastr.js" />
-    <Content Include="Static\plugins\toastr\toastr.min.css" />
+    <Content Include="Static\plugins\toastr\toastr.min.css">
+      <DependentUpon>toastr.css</DependentUpon>
+    </Content>
     <Content Include="Static\plugins\toastr\toastr.min.js" />
+    <Content Include="Static\css\sidebar.css">
+      <DependentUpon>sidebar.less</DependentUpon>
+    </Content>
+    <Content Include="Static\css\sidebar.min.css">
+      <DependentUpon>sidebar.css</DependentUpon>
+    </Content>
+    <Content Include="Static\css\site.css">
+      <DependentUpon>site.less</DependentUpon>
+    </Content>
     <Content Include="Static\site.js" />
-    <Content Include="Static\jquery.js" />
-    <Content Include="Static\site.css" />
-    <Content Include="Static\bootstrap\css\bootstrap.css" />
-    <Content Include="Static\bootstrap\img\glyphicons-halflings-white.png" />
-    <Content Include="Static\bootstrap\img\glyphicons-halflings.png" />
-    <Content Include="Static\bootstrap\js\bootstrap.js" />
+    <Content Include="Static\plugins\jquery\jquery.js" />
+    <None Include="Static\css\site.less" />
+    <Content Include="Static\plugins\bootstrap\css\bootstrap.css">
+      <DependentUpon>bootstrap.less</DependentUpon>
+    </Content>
+    <Content Include="Static\plugins\bootstrap\js\bootstrap.js" />
+    <Content Include="Static\css\site.min.css">
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -163,13 +256,31 @@
     <None Include="log4net.config" />
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Deployment\Index.cshtml" />
-    <Content Include="Static\plugins\jquery.debounce.js" />
-    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.eot" />
-    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Static\bootstrap\fonts\fontawesome-webfont.woff" />
-    <Content Include="Static\bootstrap\fonts\FontAwesome.otf" />
+    <Content Include="Static\plugins\jquery\jquery.debounce.js" />
+    <Content Include="Static\plugins\fontawesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Static\plugins\fontawesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Static\plugins\fontawesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Static\plugins\fontawesome\fonts\FontAwesome.otf" />
     <Content Include="Static\plugins\toastr\toastr.less" />
     <Content Include="Static\plugins\toastr\toastr.min.js.map" />
+    <Content Include="Static\fonts\lato\lato-black-webfont.eot" />
+    <Content Include="Static\fonts\lato\lato-black-webfont.ttf" />
+    <Content Include="Static\fonts\lato\lato-black-webfont.woff" />
+    <Content Include="Static\fonts\lato\lato-bold-webfont.eot" />
+    <Content Include="Static\fonts\lato\lato-bold-webfont.ttf" />
+    <Content Include="Static\fonts\lato\lato-bold-webfont.woff" />
+    <Content Include="Static\fonts\lato\lato-bolditalic-webfont.eot" />
+    <Content Include="Static\fonts\lato\lato-bolditalic-webfont.ttf" />
+    <Content Include="Static\fonts\lato\lato-bolditalic-webfont.woff" />
+    <Content Include="Static\fonts\lato\lato-italic-webfont.eot" />
+    <Content Include="Static\fonts\lato\lato-italic-webfont.ttf" />
+    <Content Include="Static\fonts\lato\lato-italic-webfont.woff" />
+    <Content Include="Static\fonts\lato\lato-light-webfont.eot" />
+    <Content Include="Static\fonts\lato\lato-light-webfont.ttf" />
+    <Content Include="Static\fonts\lato\lato-light-webfont.woff" />
+    <Content Include="Static\fonts\lato\lato-regular-webfont.eot" />
+    <Content Include="Static\fonts\lato\lato-regular-webfont.ttf" />
+    <Content Include="Static\fonts\lato\lato-regular-webfont.woff" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

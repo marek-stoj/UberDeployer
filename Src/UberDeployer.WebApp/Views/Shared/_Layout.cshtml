@@ -5,14 +5,10 @@
 <html>
   <head>
     <title>@ViewBag.Title</title>
-    <link href="@Url.Content("~/Static/bootstrap/css/bootstrap.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Static/bootstrap/css/bootstrap-helpers.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Static/bootstrap/css/font-awesome.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Static/bootstrap/css/fonts.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/plugins/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/plugins/fontawesome/css/font-awesome.min.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Static/plugins/toastr/toastr.min.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Static/bootstrap/css/flat-buttons.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Static/bootstrap/css/simple-sidebar.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Static/site.css?t=382743")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/css/site.min.css?t=382743")" rel="stylesheet" type="text/css" />
   </head>
 <body>
   <div id="wrapper">
@@ -37,14 +33,14 @@
       @RenderBody()
     </div>
   </div>
-  <script type="text/javascript" src="@Url.Content("~/Static/jquery.js")"> </script>
-  <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery.debounce.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery/jquery.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery/jquery.debounce.js")"> </script>
   <script type="text/javascript" src="@Url.Content("~/Static/plugins/toastr/toastr.min.js")"> </script>
 
-  <script type="text/javascript" src="@Url.Content("~/Static/bootstrap/js/bootstrap.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/bootstrap/js/bootstrap.js")"> </script>
 
   <script type="text/javascript" src="@Url.Content("~/Static/site.js?t=857337")"> </script>
-  <script type="text/javascript" src="@Url.Content("~/Static/jquery.signalr.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery/jquery.signalr.js")"> </script>
   <script src="signalr/hubs" type="text/javascript"> </script>
   <script type="text/javascript">
     setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
