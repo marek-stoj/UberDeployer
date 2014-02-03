@@ -256,7 +256,6 @@
     <None Include="log4net.config" />
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Deployment\Index.cshtml" />
-    <Content Include="Static\plugins\jquery\jquery.debounce.js" />
     <Content Include="Static\plugins\fontawesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Static\plugins\fontawesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="Static\plugins\fontawesome\fonts\fontawesome-webfont.woff" />
