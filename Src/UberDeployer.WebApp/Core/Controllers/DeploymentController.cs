@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using UberDeployer.Common;
 using UberDeployer.WebApp.Core.Models.Deployment;
 using UberDeployer.WebApp.Core.Services;
@@ -37,14 +36,14 @@ namespace UberDeployer.WebApp.Core.Controllers
         }
       }
 
-      Tuple<string, string> todayDevLifeGif = DevLife.GetTodayGif();
+      DailyGif dailyGif = DailyGifs.GetTodayGif();
 
       var viewModel =
         new IndexViewModel
         {
           TipOfTheDay = LifeProFuckingTips.GetTodayTip(),
-          TodayDevLifeGifUrl = todayDevLifeGif.Item1,
-          TodayDevLifeGifDescription = todayDevLifeGif.Item2,
+          TodayDevLifeGifUrl = dailyGif.Url,
+          TodayDevLifeGifDescription = dailyGif.Description,
           CanDeploy = SecurityUtils.CanDeploy,
           ShowOnlyDeployable = _onlyDeployableCheckedByDefault,
           IsCreatePackageVisible = _isCreatePackageVisible,
