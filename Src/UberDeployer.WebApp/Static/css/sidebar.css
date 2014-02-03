@@ -27,6 +27,7 @@
 }
 #page-content-wrapper {
   width: 100%;
+  overflow: hidden;
 }
 .sidebar-nav {
   position: relative;
