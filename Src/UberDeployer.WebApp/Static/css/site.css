@@ -10,6 +10,9 @@
 .row-with-bottom-margin {
   margin-bottom: 15px;
 }
+.modal-open {
+  overflow: auto;
+}
 @media (max-width: 767px) {
   .col-no-padding-left {
     padding-left: 15px;
@@ -224,6 +227,7 @@
 }
 #page-content-wrapper {
   width: 100%;
+  overflow: hidden;
 }
 .sidebar-nav {
   position: relative;
@@ -359,6 +363,10 @@
     padding: 15px;
   }
 }
+* {
+  margin: 0;
+  padding: 0;
+}
 body {
   background-color: #ecf0f1;
   font-family: "Lato", Helvetica, Arial, sans-serif;
@@ -381,8 +389,9 @@ h5 {
 }
 label.lst-header {
   display: inline;
-  font-weight: bold];
+  font-weight: bold;
   font-size: 1.18em;
+  float: left;
 }
 .lst-filter {
   display: inline-block;
