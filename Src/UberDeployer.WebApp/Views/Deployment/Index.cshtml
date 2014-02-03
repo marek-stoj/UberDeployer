@@ -3,104 +3,111 @@
   ViewBag.Title = "Deployment | ÜberDeployer";
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container">
-  <h1>
-    Deployment
-  </h1>
 
-  <hr />
-
-  <p>
-    Life pro tip of the fucking day: <em>@Model.TipOfTheDay</em>
-    <br />
-    <small>Courtesy of <a href="http://fuckinghomepage.com/">Fucking Homepage</a>.</small>
-  </p>
-
-  <hr />
-
-  <div class="container">
-    <div class="row">
-      <div id="errorMsg" class="alert alert-error" style="display: none;">
-      </div>
+<div id="content-title">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Deployment</h1>
     </div>
   </div>
-  <div class="container" id="main-container">
+</div>
+<div class="page-content inset">
+  <div class="row">
+    <div id="errorMsg" class="alert alert-error" style="display: none;">
+    </div>
+  </div>
+  <div id="main-container">
     <div class="row" id="main-row">
-      <div class="span3">
+      <div class="col-md-3">
         <label for="lst-projects" class="lst-header">Projects:</label>
         <div class="lst-filter">
           <input type="checkbox" id="chb-deployable-projects" @(Model.ShowOnlyDeployable ? "checked=\"checked\"" : "") />
           <label for="chb-deployable-projects">Only deployable</label>
         </div>
         <br />
-        <select id="lst-projects" size="10">
-        </select>
+        <select id="lst-projects" size="10"></select>
       </div>
-      <div class="span4">
+      <div class="col-md-4">
         <label for="lst-project-configs" class="lst-header">Configurations:</label>
         <br />
-        <select id="lst-project-configs" size="10">
-        </select>
+        <select id="lst-project-configs" size="10"></select>
       </div>
-      <div class="span5">
+      <div class="col-md-5">
         <label for="lst-project-config-builds" class="lst-header">Builds:</label>
         <br />
-        <select id="lst-project-config-builds" size="10">
-        </select>
+        <select id="lst-project-config-builds" size="10"></select>
       </div>
     </div>
     <div class="row">
-      <div class="span6">
+      <div class="col-md-6">
         <label for="lst-environments" class="lst-header">Target environment:</label>
-        <select id="lst-environments" size="5">
-        </select>
+        <select id="lst-environments" size="5"></select>
       </div>
-      <div class="span6">
+      <div class="col-md-6">
         <label for="lst-machines" class="lst-header">Target machines:</label>
-        <select id="lst-machines" size="5" multiple="multiple">
-        </select>
+        <select id="lst-machines" size="5" multiple="multiple"></select>
       </div>
     </div>
-    <div class="row">
-      <div class="span12">
-        <button id="btn-deploy" name="btn-deploy" class="btn btn-primary pull-right" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
-          Deploy
-        </button>
-        <button id="btn-simulate" name="btn-simulate" class="btn pull-right">
-          Simulate
-        </button>
+    <div class="row row-with-top-margin row-with-bottom-margin">
+      <div class="col-md-6">
         @if (Model.IsCreatePackageVisible)
         {
-          <button id="btn-create-package" name="btn-create-package" class="btn pull-right" data-toggle="package-dir-modal">
-            Create Package
+          <button type="button" id="btn-create-package" name="btn-create-package" class="flat-butt" data-toggle="package-dir-modal">
+            <i class="fa fa-gift"></i> Create Package
           </button>
         }
-        <button id="btn-version" class="btn pull-left" onclick="javascript: getProjectVersion();">
-          Version?
+        <button type="button" id="btn-version" class="flat-butt" onclick="javascript: getProjectVersion();">
+          <i class="fa fa-crosshairs"></i> Version?
         </button>
-        <button id="btn-kick-ass" class="btn pull-left" onclick="javascript: kickAss();">
-          Kick Ass!
-        </button>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-8">
+            <button type="button" id="btn-deploy" name="btn-deploy" class="flat-butt flat-primary-butt flat-butt-full-width" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
+              <i class="fa fa-cloud-upload"></i> Deploy!
+            </button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" id="btn-simulate" name="btn-simulate" class="flat-butt flat-info-butt flat-butt-full-width">
+              <i class="fa fa-cloud"></i> Simulate
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
-      <div class="span12">
-        <hr />
+      <div class="col-md-12">
         <div id="txt-logs">
         </div>
-        <button id="btn-clear-logs" class="btn pull-right" onclick="javascript: clearLogs();">
-          Clear
+        <button id="btn-clear-logs" class="flat-butt flat-gray-butt pull-right" onclick="javascript: clearLogs();">
+          <i class="fa fa-trash-o"></i> Clear
         </button>
       </div>
     </div>
-  </div>
-  <div id="dev-life-container">
-    <p class="dev-life-description">
-      "@Model.TodayDevLifeGifDescription"
-    </p>
-    <img src="@Model.TodayDevLifeGifUrl" />
+    <div class="row row-with-top-margin">
+      <div class="col-md-6">
+        <div id="pro-fucking-tip">
+          <p>
+            <small>Life pro tip of the fucking day:</small>
+          </p>
+          <p>
+            <q><em>@Model.TipOfTheDay</em></q>
+          </p>
+          <p><small>Courtesy of <a href="http://fuckinghomepage.com/">Fucking Homepage</a>.</small></p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div id="dev-life-container">
+          <p class="dev-life-description">
+            "@Model.TodayDevLifeGifDescription"
+          </p>
+          <img src="@Model.TodayDevLifeGifUrl" />
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
 
 <div id="dlg-collect-credentials" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
@@ -145,6 +152,7 @@
   </div>
 </div>
 
+@section OptionalScripts {
 <script type="text/javascript">
   $(document).ready(function() {
     var initData = {
@@ -154,9 +162,10 @@
         projectName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectName) ? string.Format("'{0}'", Model.InitialSelection.ProjectName) : "null"),
         projectConfigurationName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationName) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationName) : "null"),
         projectConfigurationBuildId: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectConfigurationBuildId) ? string.Format("'{0}'", Model.InitialSelection.ProjectConfigurationBuildId) : "null")
-      }
+        }
     };
 
     initializeDeploymentPage(initData);
   })
-</script>
+</script>  
+}

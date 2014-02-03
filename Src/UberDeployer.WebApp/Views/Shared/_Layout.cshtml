@@ -3,67 +3,58 @@
 @model BaseViewModel
 <!DOCTYPE html>
 <html>
-<head>
-  <title>@ViewBag.Title</title>
-  <link href="@Url.Content("~/Static/bootstrap/css/bootstrap.css")" rel="stylesheet" type="text/css" />
-  <link href="@Url.Content("~/Static/site.css?t=382743")" rel="stylesheet" type="text/css" />
-
-  <script type="text/javascript" src="@Url.Content("~/Static/jquery.js")"></script>
-
-  <script type="text/javascript" src="@Url.Content("~/Static/bootstrap/js/bootstrap.js")"></script>
-
-  <script type="text/javascript" src="@Url.Content("~/Static/site.js?t=857337")"></script>
-  <script type="text/javascript" src="@Url.Content("~/Static/jquery.signalr.js")"></script>
-  <script src="signalr/hubs" type="text/javascript"></script>
-
-  @* ReSharper disable PossibleNullReferenceException *@
-
-  <script type="text/javascript">
-    setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
-  </script>
-
-  @* ReSharper restore PossibleNullReferenceException *@
-</head>
+  <head>
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Static/plugins/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/plugins/fontawesome/css/font-awesome.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/plugins/toastr/toastr.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Static/css/site.min.css?t=382743")" rel="stylesheet" type="text/css" />
+  </head>
 <body>
-  <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        <a class="brand" href="@Url.Action("Index", "Home")">ÜberDeployer</a>
-        <div class="nav-collapse collapse">
-          <ul class="nav">
-            <li class="@(Model.CurrentAppPage == AppPage.Deployment ? "active" : "")">
-              <a href="@Url.Action("Index", "Deployment")">Deployment</a>
-            </li>
-            <li class="@(Model.CurrentAppPage == AppPage.History ? "active" : "")">
-              <a href="@Url.Action("Index", "History")">History</a>
-            </li>
-          </ul>
-          <ul class="nav pull-right">
-            <li>
-              <a href="https://github.com/marek-stoj/UberDeployer">Fork Me on GitHub!</a>
-            </li>
-          </ul>
-          <ul class="nav pull-right">
-            <li>
-              <span>Username: @Model.Username</span>
-            </li>
-          </ul>
-        </div>
+  <div id="wrapper">
+    <div id="sidebar-wrapper">
+      <div id="sidebar-logo"></div>
+      <ul class="sidebar-nav sidebar-nav-indented">
+        <li class="@(Model.CurrentAppPage == AppPage.Deployment ? "active" : "")">
+          <a href="@Url.Action("Index", "Deployment")">Deployment</a>
+        </li>
+        <li class="@(Model.CurrentAppPage == AppPage.History ? "active" : "")">
+          <a href="@Url.Action("Index", "History")">History</a>
+        </li>
+      </ul>
+      <div id="sidebar-footer">
+        <a href="https://github.com/marek-stoj/UberDeployer" target="_blank" class="github"><i class="fa fa-github fa-3x"></i></a>
+        <a href="#" class="kickass" onclick="javascript: kickAss();"><i class="fa fa-rocket fa-3x"></i></a>
+        <a href="#" class="info"><i class="fa fa-info-circle fa-3x"></i></a>
       </div>
     </div>
-  </div>
-  @RenderBody()
-  <div class="footer navbar navbar-fixed-bottom">
-    <div class="container" style="text-align: left;">
-      @* ReSharper disable PossibleNullReferenceException *@
-      Version @(BuildManager.GetGlobalAsaxType().BaseType.Assembly.GetName().Version)
-      @* ReSharper restore PossibleNullReferenceException *@
+    <div id="page-content-wrapper">
+      <a href="#" id="menu-toggle"><i class="fa fa-bars fa-3x"></i></a>
+      @RenderBody()
     </div>
   </div>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery/jquery.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/toastr/toastr.min.js")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/bootstrap/js/bootstrap.js")"> </script>
+
+  <script type="text/javascript" src="@Url.Content("~/Static/site.js?t=857337")"> </script>
+  <script type="text/javascript" src="@Url.Content("~/Static/plugins/jquery/jquery.signalr.js")"> </script>
+  <script src="signalr/hubs" type="text/javascript"> </script>
+  <script type="text/javascript">
+    setAppPrefix('@(Request.ApplicationPath.EndsWith("/") ? Request.ApplicationPath : Request.ApplicationPath + "/")');
+    $(function () {
+      $('#menu-toggle').click(function(event) {
+        event.preventDefault();
+
+        $('#wrapper').toggleClass('active');
+      });
+      
+      $('#sidebar-footer a.info').click(function (event) {
+        event.preventDefault();
+        toastr.info('Username: @Model.Username.Replace(@"\", @"\\")<br/>Version @(BuildManager.GetGlobalAsaxType().BaseType.Assembly.GetName().Version)');
+      });
+    });
+  </script>
+  @RenderSection("OptionalScripts", required: false)
 </body>
 </html>

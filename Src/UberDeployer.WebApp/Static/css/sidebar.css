@@ -1,0 +1,164 @@
+﻿#wrapper {
+  padding-left: 240px;
+  -moz-transition: all 0.4s ease 0s;
+  -o-transition: all 0.4s ease 0s;
+  -webkit-transition: all 0.4s ease 0s;
+  transition: all 0.4s ease 0s;
+}
+#sidebar-wrapper {
+  margin-left: -240px;
+  left: 240px;
+  width: 240px;
+  background: #232C35;
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+  z-index: 1000;
+  -moz-transition: all 0.4s ease 0s;
+  -o-transition: all 0.4s ease 0s;
+  -webkit-transition: all 0.4s ease 0s;
+  transition: all 0.4s ease 0s;
+}
+#sidebar-logo {
+  background: url('../img/logo.png') 20px 0 no-repeat transparent;
+  width: 240px;
+  height: 74px;
+  margin: 20px 0;
+}
+#page-content-wrapper {
+  width: 100%;
+}
+.sidebar-nav {
+  position: relative;
+  width: 240px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar-nav li {
+  line-height: 40px;
+}
+.sidebar-nav-indented li {
+  text-indent: 20px;
+}
+.sidebar-nav-centered li {
+  text-align: center;
+}
+.sidebar-nav li i {
+  vertical-align: middle;
+}
+.sidebar-nav li a {
+  color: #ffffff;
+  display: block;
+  text-decoration: none;
+  font-size: 18px;
+}
+.sidebar-nav li.active a {
+  background: #8e44ad;
+  color: #ffffff;
+}
+.sidebar-nav li.active a:hover {
+  background: #9b59b6;
+  color: #ffffff;
+}
+.sidebar-nav li a:hover {
+  color: #fff;
+  background: #999999;
+  background: rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+}
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+  text-decoration: none;
+}
+.sidebar-nav > .sidebar-brand {
+  height: 65px;
+  line-height: 60px;
+  font-size: 18px;
+}
+.sidebar-nav > .sidebar-brand a {
+  color: #999999;
+}
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}
+.content-header {
+  height: 65px;
+  line-height: 65px;
+}
+.content-header h1 {
+  margin: 0;
+  margin-left: 20px;
+  line-height: 65px;
+  display: inline-block;
+}
+#menu-toggle {
+  display: none;
+}
+.inset {
+  padding: 20px;
+}
+#sidebar-footer {
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 0 0 20px 20px;
+}
+#sidebar-footer > a {
+  padding-right: 15px;
+  font-size: 12px;
+}
+#sidebar-footer a.github {
+  color: #27ae60;
+}
+#sidebar-footer a.github:hover {
+  color: #2ecc71;
+}
+#sidebar-footer a.kickass {
+  color: #f39c12;
+}
+#sidebar-footer a.kickass:hover {
+  color: #f1c40f;
+}
+#sidebar-footer a.info {
+  color: #7f8c8d;
+}
+#sidebar-footer a.info:hover {
+  color: #95a5a6;
+}
+@media (max-width: 767px) {
+  #wrapper {
+    padding-left: 0;
+  }
+  #sidebar-wrapper {
+    left: 0;
+  }
+  #wrapper.active {
+    position: relative;
+    left: 240px;
+  }
+  #wrapper.active #sidebar-wrapper {
+    left: 240px;
+    width: 240px;
+    -webkit-transition: all 0.4s ease 0s;
+    -moz-transition: all 0.4s ease 0s;
+    -ms-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+  }
+  #menu-toggle {
+    display: block;
+    margin: 0;
+    padding: 15px 0 0 15px;
+    color: #232C35;
+  }
+  #menu-toggle:hover {
+    color: #50667f;
+  }
+  .inset {
+    padding: 15px;
+  }
+}
