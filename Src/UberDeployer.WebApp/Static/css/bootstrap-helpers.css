@@ -10,6 +10,9 @@
 .row-with-bottom-margin {
   margin-bottom: 15px;
 }
+.modal-open {
+  overflow: auto;
+}
 @media (max-width: 767px) {
   .col-no-padding-left {
     padding-left: 15px;
