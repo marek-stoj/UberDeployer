@@ -15,7 +15,7 @@
     <AssemblyName>UberDeployer.WebApp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
@@ -103,8 +103,7 @@
     <Compile Include="Core\Models\BaseViewModel.cs" />
     <Compile Include="Core\Models\Deployment\IndexViewModel.cs" />
     <Compile Include="Core\Models\History\IndexViewModel.cs" />
-    <Compile Include="Core\Services\DailyGif.cs" />
-    <Compile Include="Core\Services\DailyGifs.cs" />
+    <Compile Include="Core\Services\DevLife.cs" />
     <Compile Include="Core\Services\DeploymentState.cs" />
     <Compile Include="Core\Services\DeploymentStateProvider.cs" />
     <Compile Include="Core\Services\IDeploymentStateProvider.cs" />
@@ -307,7 +306,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63515</DevelopmentServerPort>
           <DevelopmentServerVPath>/UberDeployer</DevelopmentServerVPath>
-          <IISUrl>http://localhost:63515/</IISUrl>
+          <IISUrl>http://localhost/UberDeployer.WebApp</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
