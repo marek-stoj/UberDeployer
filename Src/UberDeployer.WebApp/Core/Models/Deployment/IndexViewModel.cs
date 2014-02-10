@@ -9,9 +9,9 @@
 
     public string TipOfTheDay { get; set; }
 
-    public string TodayDevLifeGifUrl { get; set; }
+    public string FunnyGifUrl { get; set; }
     
-    public string TodayDevLifeGifDescription { get; set; }
+    public string FunnyGifDescription { get; set; }
 
     public bool CanDeploy { get; set; }
 

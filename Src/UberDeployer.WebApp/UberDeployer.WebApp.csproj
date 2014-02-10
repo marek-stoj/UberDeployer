@@ -103,7 +103,8 @@
     <Compile Include="Core\Models\BaseViewModel.cs" />
     <Compile Include="Core\Models\Deployment\IndexViewModel.cs" />
     <Compile Include="Core\Models\History\IndexViewModel.cs" />
-    <Compile Include="Core\Services\DevLife.cs" />
+    <Compile Include="Core\Services\FunnyGif.cs" />
+    <Compile Include="Core\Services\FunnyGifs.cs" />
     <Compile Include="Core\Services\DeploymentState.cs" />
     <Compile Include="Core\Services\DeploymentStateProvider.cs" />
     <Compile Include="Core\Services\IDeploymentStateProvider.cs" />
