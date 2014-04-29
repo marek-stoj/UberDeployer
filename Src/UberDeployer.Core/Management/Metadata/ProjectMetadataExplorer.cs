@@ -140,11 +140,8 @@ namespace UberDeployer.Core.Management.Metadata
     {
       var projectVersions = new List<MachineSpecificProjectVersion>();
 
-      DbProjectConfiguration dbProjectConfiguration =
-        environmentInfo.GetDbProjectConfiguration(dbProjectInfo.Name);
-
       DatabaseServer databaseServer =
-        environmentInfo.GetDatabaseServer(dbProjectConfiguration.DatabaseServerId);
+        environmentInfo.GetDatabaseServer(dbProjectInfo);
 
       IEnumerable<string> dbVersions =
         _dbVersionProvider.GetVersions(

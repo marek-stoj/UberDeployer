@@ -7,17 +7,12 @@ namespace UberDeployer.Core.Domain
 {
   public class DbProjectInfo : ProjectInfo
   {
-    #region Constructor(s)
-
-    public DbProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string dbName)
+    public DbProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string dbName, string databaseServerId)
       : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
       DbName = dbName;
+      DatabaseServerId = databaseServerId;
     }
-
-    #endregion
-
-    #region Overrides of ProjectInfo
 
     public override ProjectType Type
     {
@@ -57,12 +52,8 @@ namespace UberDeployer.Core.Domain
       throw new NotSupportedException();
     }
 
-    #endregion
-
-    #region Properties
-
     public string DbName { get; private set; }
 
-    #endregion
+    public string DatabaseServerId { get; set; }
   }
 }

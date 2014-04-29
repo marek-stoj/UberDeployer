@@ -51,11 +51,8 @@ namespace UberDeployer.Core.Deployment
       EnvironmentInfo environmentInfo = GetEnvironmentInfo();
       DbProjectInfo projectInfo = GetProjectInfo<DbProjectInfo>();
 
-      DbProjectConfiguration dbProjectConfiguration =
-        environmentInfo.GetDbProjectConfiguration(projectInfo.Name);
-
       DatabaseServer databaseServer =
-        environmentInfo.GetDatabaseServer(dbProjectConfiguration.DatabaseServerId);
+        environmentInfo.GetDatabaseServer(projectInfo);
 
       string databaseServerMachineName = databaseServer.MachineName;
 

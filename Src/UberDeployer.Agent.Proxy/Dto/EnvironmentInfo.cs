@@ -40,6 +40,6 @@ namespace UberDeployer.Agent.Proxy.Dto
 
     public List<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings { get; set; }
 
-    public List<DbProjectConfiguration> DbProjectConfigurations { get; set; }
+    public List<DbProjectConfigurationOverride> DbProjectConfigurationOverrides { get; set; }
   }
 }

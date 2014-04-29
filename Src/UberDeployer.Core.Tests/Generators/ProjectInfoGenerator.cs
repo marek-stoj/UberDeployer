@@ -53,7 +53,8 @@ namespace UberDeployer.Core.Tests.Generators
           new[] { "env_name" },
           "artifacts_repository_dir_name",
           !areEnvironmentSpecific,
-          "database_name");
+          "database_name",
+          "database_server");
     }
 
     public static TerminalAppProjectInfo GetTerminalAppProjectInfo()

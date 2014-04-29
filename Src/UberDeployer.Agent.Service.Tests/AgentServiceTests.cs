@@ -119,7 +119,7 @@ namespace UberDeployer.Agent.Service.Tests
         new[] { new DatabaseServer("db_server_id", "db_server"), },
         new[] { new WebAppProjectConfiguration("webappprj", "website", "apppool", "dir", "webapp"), },
         new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") },
-        new[] { new DbProjectConfiguration("dbprj", "db_server"), },
+        new[] { new DbProjectConfigurationOverride("dbprj", "db_server"), },
         "terminalAppsShortcutFolder",
         "artifactsDeploymentDirPath");
     }

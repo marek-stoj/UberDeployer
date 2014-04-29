@@ -2,12 +2,11 @@
 
 namespace UberDeployer.Core.Domain
 {
-  public class DbProjectConfiguration
+  public class DbProjectConfigurationOverride
   {
-    public DbProjectConfiguration(string projectName, string databaseServerId)
+    public DbProjectConfigurationOverride(string projectName, string databaseServerId = null)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
-      Guard.NotNullNorEmpty(databaseServerId, "databaseServerId");
 
       ProjectName = projectName;
       DatabaseServerId = databaseServerId;

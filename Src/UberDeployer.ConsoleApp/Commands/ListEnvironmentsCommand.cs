@@ -1,4 +1,6 @@
-﻿using UberDeployer.CommonConfiguration;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UberDeployer.CommonConfiguration;
 using UberDeployer.ConsoleCommander;
 using UberDeployer.Core.Domain;
 
@@ -16,7 +18,11 @@ namespace UberDeployer.ConsoleApp.Commands
       IEnvironmentInfoRepository environmentInfoRepository =
         ObjectFactory.Instance.CreateEnvironmentInfoRepository();
 
-      foreach (EnvironmentInfo environmentInfo in environmentInfoRepository.GetAll())
+      List<EnvironmentInfo> environmentInfos =
+        environmentInfoRepository.GetAll()
+          .ToList();
+
+      foreach (EnvironmentInfo environmentInfo in environmentInfos)
       {
         OutputWriter.WriteLine("{0}", environmentInfo.Name);
       }

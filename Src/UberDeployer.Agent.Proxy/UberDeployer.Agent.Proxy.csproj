@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
     <Compile Include="Dto\DatabaseServer.cs" />
-    <Compile Include="Dto\DbProjectConfiguration.cs" />
+    <Compile Include="Dto\DbProjectConfigurationOverride.cs" />
     <Compile Include="Dto\Metadata\MachineSpecificProjectVersion.cs" />
     <Compile Include="Dto\Metadata\ProjectMetadata.cs" />
     <Compile Include="Dto\Repetition.cs" />

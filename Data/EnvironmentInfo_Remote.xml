@@ -40,6 +40,10 @@
       <Id>Default</Id>
       <MachineName>REMOTE</MachineName>
     </DatabaseServerXml>
+    <DatabaseServerXml>
+      <Id>Alternative</Id>
+      <MachineName>REMOTE2</MachineName>
+    </DatabaseServerXml>
   </DatabaseServers>
   <WebAppProjectConfigurations>
     <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
@@ -55,9 +59,9 @@
       <ClusterGroupName>UD_SAMPLE</ClusterGroupName>
     </ProjectToFailoverClusterGroupMappingXml>
   </ProjectToFailoverClusterGroupMappings>
-  <DbProjectConfigurations>
-    <DbProjectConfigurationXml projectName="UberDeployer.SampleDb">
-      <DatabaseServerId>Default</DatabaseServerId>
-    </DbProjectConfigurationXml>
-  </DbProjectConfigurations>
+  <DbProjectConfigurationOverrides>
+    <DbProjectConfigurationOverrideXml projectName="UberDeployer.SampleDb">
+      <DatabaseServerId>Alternative</DatabaseServerId>
+    </DbProjectConfigurationOverrideXml>
+  </DbProjectConfigurationOverrides>
 </EnvironmentInfoXml>

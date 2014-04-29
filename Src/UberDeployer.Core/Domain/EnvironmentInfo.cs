@@ -18,9 +18,7 @@ namespace UberDeployer.Core.Domain
     private readonly Dictionary<string, DatabaseServer> _databaseServersByIdDict;
     private readonly Dictionary<string, WebAppProjectConfiguration> _webAppProjectConfigurationsDict;
     private readonly Dictionary<string, ProjectToFailoverClusterGroupMapping> _projectToFailoverClusterGroupMappingsDict;
-    private readonly Dictionary<string, DbProjectConfiguration> _dbProjectConfigurationsDict;
-
-    #region Constructor(s)
+    private readonly Dictionary<string, DbProjectConfigurationOverride> _dbProjectConfigurationOverridesDict;
 
     public EnvironmentInfo(
       string name,
@@ -41,7 +39,7 @@ namespace UberDeployer.Core.Domain
       IEnumerable<DatabaseServer> databaseServers,
       IEnumerable<WebAppProjectConfiguration> webAppProjectConfigurations,
       IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings,
-      IEnumerable<DbProjectConfiguration> dbProjectConfigurations,
+      IEnumerable<DbProjectConfigurationOverride> dbProjectConfigurations,
       string terminalAppShortcutFolder,
       string manualDeploymentPackageDirPath
       )
@@ -136,15 +134,11 @@ namespace UberDeployer.Core.Domain
 
       _webAppProjectConfigurationsDict = webAppProjectConfigurations.ToDictionary(e => e.ProjectName);
       _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(e => e.ProjectName);
-      _dbProjectConfigurationsDict = dbProjectConfigurations.ToDictionary(e => e.ProjectName);
+      _dbProjectConfigurationOverridesDict = dbProjectConfigurations.ToDictionary(e => e.ProjectName);
 
       TerminalAppsShortcutFolder = terminalAppShortcutFolder;
       ManualDeploymentPackageDirPath = manualDeploymentPackageDirPath;
     }
-
-    #endregion
-
-    #region Public methods
 
     public static string GetNetworkPath(string machineName, string absoluteLocalPath)
     {
@@ -244,18 +238,18 @@ namespace UberDeployer.Core.Domain
       return null;
     }
 
-    public DbProjectConfiguration GetDbProjectConfiguration(string projectName)
+    public DbProjectConfigurationOverride FindDbProjectConfigurationOverride(string projectName)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
 
-      DbProjectConfiguration configuration;
+      DbProjectConfigurationOverride configurationOverride;
 
-      if (_dbProjectConfigurationsDict.TryGetValue(projectName, out configuration))
+      if (_dbProjectConfigurationOverridesDict.TryGetValue(projectName, out configurationOverride))
       {
-        return configuration;
+        return configurationOverride;
       }
 
-      throw new ArgumentException(string.Format("Db project named '{0}' has no configuration for environment '{1}'.", projectName, Name));
+      return null;
     }
 
     public IisAppPoolInfo GetAppPoolInfo(string appPoolId)
@@ -272,7 +266,24 @@ namespace UberDeployer.Core.Domain
       throw new ArgumentException(string.Format("App pool with id '{0}' is not defined for environment '{1}'.", appPoolId, Name));
     }
 
-    public DatabaseServer GetDatabaseServer(string databaseServerId)
+    public DatabaseServer GetDatabaseServer(DbProjectInfo dbProjectInfo)
+    {
+      Guard.NotNull(dbProjectInfo, "dbProjectInfo");
+
+      DbProjectConfigurationOverride dbProjectConfigurationOverride =
+        FindDbProjectConfigurationOverride(dbProjectInfo.Name);
+
+      string databaseServerId = dbProjectInfo.DatabaseServerId;
+
+      if (dbProjectConfigurationOverride != null && !string.IsNullOrEmpty(dbProjectConfigurationOverride.DatabaseServerId))
+      {
+        databaseServerId = dbProjectConfigurationOverride.DatabaseServerId;
+      }
+
+      return GetDatabaseServerById(databaseServerId);
+    }
+
+    private DatabaseServer GetDatabaseServerById(string databaseServerId)
     {
       Guard.NotNullNorEmpty(databaseServerId, "databaseServerId");
 
@@ -285,10 +296,6 @@ namespace UberDeployer.Core.Domain
 
       throw new ArgumentException(string.Format("Database server with id '{0}' is not defined for environment '{1}'.", databaseServerId, Name));
     }
-
-    #endregion
-
-    #region Properties
 
     public string Name { get; private set; }
 
@@ -354,11 +361,9 @@ namespace UberDeployer.Core.Domain
       get { return _projectToFailoverClusterGroupMappingsDict.Values; }
     }
 
-    public IEnumerable<DbProjectConfiguration> DbProjectConfigurations
+    public IEnumerable<DbProjectConfigurationOverride> DbProjectConfigurationOverrides
     {
-      get { return _dbProjectConfigurationsDict.Values; }
+      get { return _dbProjectConfigurationOverridesDict.Values; }
     }
-
-    #endregion
   }
 }

@@ -29,10 +29,10 @@ namespace UberDeployer.Core.Tests
         new WebAppProjectConfiguration("webappprj", "apppool", "website", "dir", "webapp"),
       };
 
-    public static readonly List<DbProjectConfiguration> DbProjectConfigurations =
-      new List<DbProjectConfiguration>
+    public static readonly List<DbProjectConfigurationOverride> DbProjectConfigurations =
+      new List<DbProjectConfigurationOverride>
       {
-        new DbProjectConfiguration("dbprj", "db_server_id"),
+        new DbProjectConfigurationOverride("dbprj", "db_server_id"),
       };
 
     public static readonly List<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings =

@@ -112,6 +112,8 @@ namespace UberDeployer.Core.DataAccess.Xml
     public class DbProjectInfoXml : ProjectInfoXml
     {
       public string DbName { get; set; }
+
+      public string DatabaseServerId { get; set; }
     }
 
     public class UberDeployerAgentProjectInfoXml : NtServiceProjectInfoXml
@@ -287,7 +289,8 @@ namespace UberDeployer.Core.DataAccess.Xml
             allowedEnvironmentNames,
             dbProjectInfoXml.ArtifactsRepositoryDirName,
             dbProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
-            dbProjectInfoXml.DbName);
+            dbProjectInfoXml.DbName,
+            dbProjectInfoXml.DatabaseServerId);
       }
 
       throw new NotSupportedException(string.Format("Project type '{0}' is not supported.", projectInfoXml.GetType()));

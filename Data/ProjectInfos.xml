@@ -64,6 +64,7 @@
       <ArtifactsRepositoryDirName>DbScripts</ArtifactsRepositoryDirName>
       <ArtifactsAreNotEnvironmentSpecific>true</ArtifactsAreNotEnvironmentSpecific>
       <DbName>UberDeployerSample</DbName>
+      <DatabaseServerId>Default</DatabaseServerId>
     </ProjectInfoXml>
   </ProjectInfos>
 

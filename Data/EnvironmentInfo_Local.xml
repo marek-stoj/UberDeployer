@@ -49,9 +49,6 @@
       <WebAppName>UberDeployer.SampleWebApp</WebAppName>
     </WebAppProjectConfigurationXml>
   </WebAppProjectConfigurations>
-  <DbProjectConfigurations>
-    <DbProjectConfigurationXml projectName="UberDeployer.SampleDb">
-      <DatabaseServerId>Default</DatabaseServerId>
-    </DbProjectConfigurationXml>
-  </DbProjectConfigurations>
+  <DbProjectConfigurationOverrides>
+  </DbProjectConfigurationOverrides>
 </EnvironmentInfoXml>

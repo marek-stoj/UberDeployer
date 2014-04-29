@@ -37,9 +37,10 @@ namespace UberDeployer.Agent.Service
       
       Mapper.CreateMap<Core.Domain.Repetition, Proxy.Dto.Repetition>();
 
-      Mapper.CreateMap<Core.Domain.WebAppProjectConfiguration, Proxy.Dto.WebAppProjectConfiguration>();
       Mapper.CreateMap<Core.Domain.ProjectToFailoverClusterGroupMapping, Proxy.Dto.ProjectToFailoverClusterGroupMapping>();
-      Mapper.CreateMap<Core.Domain.DbProjectConfiguration, Proxy.Dto.DbProjectConfiguration>();
+
+      Mapper.CreateMap<Core.Domain.WebAppProjectConfiguration, Proxy.Dto.WebAppProjectConfiguration>();
+      Mapper.CreateMap<Core.Domain.DbProjectConfigurationOverride, Proxy.Dto.DbProjectConfigurationOverride>();
 
       Mapper.CreateMap<Core.TeamCity.Models.ProjectConfiguration, Proxy.Dto.TeamCity.ProjectConfiguration>();
 

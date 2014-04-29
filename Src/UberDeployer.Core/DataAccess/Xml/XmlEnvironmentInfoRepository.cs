@@ -49,7 +49,7 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; }
 
-      public List<DbProjectConfigurationXml> DbProjectConfigurations { get; set; }
+      public List<DbProjectConfigurationOverrideXml> DbProjectConfigurationOverrides { get; set; }
 
       public string TerminalAppsShortcutFolder { get; set; }
 
@@ -100,7 +100,7 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string ClusterGroupName { get; set; }
     }
 
-    public class DbProjectConfigurationXml
+    public class DbProjectConfigurationOverrideXml
     {
       [XmlAttribute("projectName")]
       public string ProjectName { get; set; }
@@ -237,9 +237,9 @@ namespace UberDeployer.Core.DataAccess.Xml
               new ProjectToFailoverClusterGroupMapping(
                 e.ProjectName,
                 e.ClusterGroupName)),
-          environmentInfoXml.DbProjectConfigurations.Select(
+          environmentInfoXml.DbProjectConfigurationOverrides.Select(
             e =>
-              new DbProjectConfiguration(
+              new DbProjectConfigurationOverride(
                 e.ProjectName,
                 e.DatabaseServerId)),
           environmentInfoXml.TerminalAppsShortcutFolder,
