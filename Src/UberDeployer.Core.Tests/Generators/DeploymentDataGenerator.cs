@@ -30,9 +30,9 @@ namespace UberDeployer.Core.Tests.Generators
           users,
           TestData.AppPoolInfos,
           TestData.DatabaseServers,
-          TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
-          TestData.DbProjectConfigurations,
+          TestData.WebAppProjectConfigurationOverrides,
+          TestData.DbProjectConfigurationOverrides,
           "X:\\terminal_apps_shortcut_folder",
           "X:\\artifacts_deployment_dir_path");
     }

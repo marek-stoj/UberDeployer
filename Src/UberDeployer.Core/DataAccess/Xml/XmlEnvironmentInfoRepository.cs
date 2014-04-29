@@ -9,8 +9,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 {
   public class XmlEnvironmentInfoRepository : IEnvironmentInfoRepository
   {
-    #region Nested types
-
     public class EnvironmentInfoXml
     {
       public string Name { get; set; }
@@ -45,7 +43,7 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public List<DatabaseServerXml> DatabaseServers { get; set; }
 
-      public List<WebAppProjectConfigurationXml> WebAppProjectConfigurations { get; set; }
+      public List<WebAppProjectConfigurationOverrideXml> WebAppProjectConfigurationOverrides { get; set; }
 
       public List<ProjectToFailoverClusterGroupMappingXml> ProjectToFailoverClusterGroupMappings { get; set; }
 
@@ -79,7 +77,7 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string MachineName { get; set; }
     }
 
-    public class WebAppProjectConfigurationXml
+    public class WebAppProjectConfigurationOverrideXml
     {
       [XmlAttribute("projectName")]
       public string ProjectName { get; set; }
@@ -108,13 +106,9 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string DatabaseServerId { get; set; }
     }
 
-    #endregion
-
     private readonly string _xmlFilesDirPath;
 
     private Dictionary<string, EnvironmentInfo> _environmentInfosByName;
-
-    #region Constructor(s)
 
     public XmlEnvironmentInfoRepository(string xmlFilesDirPath)
     {
@@ -125,10 +119,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       _xmlFilesDirPath = xmlFilesDirPath;
     }
-
-    #endregion
-
-    #region IEnvironmentInfoRepository Members
 
     public IEnumerable<EnvironmentInfo> GetAll()
     {
@@ -157,10 +147,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       return environmentInfo;
     }
-
-    #endregion
-
-    #region Private helper methods
 
     private void LoadXmlFilesIfNeeded()
     {
@@ -224,19 +210,19 @@ namespace UberDeployer.Core.DataAccess.Xml
               new DatabaseServer(
                 e.Id,
                 e.MachineName)),
-          environmentInfoXml.WebAppProjectConfigurations.Select(
-            e =>
-              new WebAppProjectConfiguration(
-                e.ProjectName,
-                e.AppPoolId,
-                e.WebSiteName,
-                e.WebAppDirName,
-                e.WebAppName)),
           environmentInfoXml.ProjectToFailoverClusterGroupMappings.Select(
             e =>
               new ProjectToFailoverClusterGroupMapping(
                 e.ProjectName,
                 e.ClusterGroupName)),
+          environmentInfoXml.WebAppProjectConfigurationOverrides.Select(
+            e =>
+              new WebAppProjectConfigurationOverride(
+                e.ProjectName,
+                e.AppPoolId,
+                e.WebSiteName,
+                e.WebAppDirName,
+                e.WebAppName)),
           environmentInfoXml.DbProjectConfigurationOverrides.Select(
             e =>
               new DbProjectConfigurationOverride(
@@ -246,7 +232,5 @@ namespace UberDeployer.Core.DataAccess.Xml
           environmentInfoXml.ManualDeploymentPackageDirPath
           );
     }
-
-    #endregion
   }
 }

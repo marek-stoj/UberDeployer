@@ -34,6 +34,12 @@
       <Version>V4_0</Version>
       <Mode>Integrated</Mode>
     </AppPoolInfoXml>
+    <AppPoolInfoXml>
+      <Id>Alternative</Id>
+      <Name>Alternative</Name>
+      <Version>V4_0</Version>
+      <Mode>Integrated</Mode>
+    </AppPoolInfoXml>
   </AppPoolInfos>
   <DatabaseServers>
     <DatabaseServerXml>
@@ -45,20 +51,20 @@
       <MachineName>REMOTE2</MachineName>
     </DatabaseServerXml>
   </DatabaseServers>
-  <WebAppProjectConfigurations>
-    <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
-      <AppPoolId>ASP.NET v4.0</AppPoolId>
-      <WebSiteName>Default Web Site</WebSiteName>
-      <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
-      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
-    </WebAppProjectConfigurationXml>
-  </WebAppProjectConfigurations>
   <ProjectToFailoverClusterGroupMappings>
     <ProjectToFailoverClusterGroupMappingXml>
       <ProjectName>UberDeployer.SampleNtService</ProjectName>
       <ClusterGroupName>UD_SAMPLE</ClusterGroupName>
     </ProjectToFailoverClusterGroupMappingXml>
   </ProjectToFailoverClusterGroupMappings>
+  <WebAppProjectConfigurationOverrides>
+    <WebAppProjectConfigurationOverrideXml projectName="UberDeployer.SampleWebApp">
+      <AppPoolId>Alternative</AppPoolId>
+      <WebSiteName>Default Web Site 2</WebSiteName>
+      <WebAppDirName>UberDeployer.SampleWebApp2</WebAppDirName>
+      <WebAppName>UberDeployer.SampleWebApp2</WebAppName>
+    </WebAppProjectConfigurationOverrideXml>
+  </WebAppProjectConfigurationOverrides>
   <DbProjectConfigurationOverrides>
     <DbProjectConfigurationOverrideXml projectName="UberDeployer.SampleDb">
       <DatabaseServerId>Alternative</DatabaseServerId>

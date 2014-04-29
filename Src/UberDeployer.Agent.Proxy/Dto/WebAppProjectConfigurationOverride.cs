@@ -1,6 +1,6 @@
 ﻿namespace UberDeployer.Agent.Proxy.Dto
 {
-  public class WebAppProjectConfiguration
+  public class WebAppProjectConfigurationOverride
   {
     public string ProjectName { get; set; }
 

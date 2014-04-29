@@ -117,8 +117,8 @@ namespace UberDeployer.Agent.Service.Tests
         new[] { new EnvironmentUser("id", "user") },
         new[] { new IisAppPoolInfo("apppool", IisAppPoolVersion.V4_0, IisAppPoolMode.Integrated), },
         new[] { new DatabaseServer("db_server_id", "db_server"), },
-        new[] { new WebAppProjectConfiguration("webappprj", "website", "apppool", "dir", "webapp"), },
         new[] { new ProjectToFailoverClusterGroupMapping("projectName", "groupName") },
+        new[] { new WebAppProjectConfigurationOverride("webappprj", "website", "apppool", "dir", "webapp"), },
         new[] { new DbProjectConfigurationOverride("dbprj", "db_server"), },
         "terminalAppsShortcutFolder",
         "artifactsDeploymentDirPath");

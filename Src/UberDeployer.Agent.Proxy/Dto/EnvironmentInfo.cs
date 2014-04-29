@@ -36,9 +36,9 @@ namespace UberDeployer.Agent.Proxy.Dto
     
     public List<DatabaseServer> DatabaseServers { get; set; }
 
-    public List<WebAppProjectConfiguration> WebAppProjectConfigurations { get; set; }
-
     public List<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings { get; set; }
+
+    public List<WebAppProjectConfigurationOverride> WebAppProjectConfigurationOverrides { get; set; }
 
     public List<DbProjectConfigurationOverride> DbProjectConfigurationOverrides { get; set; }
   }

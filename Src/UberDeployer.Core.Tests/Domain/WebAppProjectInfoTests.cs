@@ -19,6 +19,11 @@ namespace UberDeployer.Core.Tests.Domain
     private const string _ArtifactsRepositoryName = "repoName";
     private const string _ArtifactsRepositoryDirName = "repoDirName";
     private const bool _ArtifactsAreNotEnvironmentSpecific = false;
+    private const string _AppPoolId = "app_pool_id";
+    private const string _WebSiteName = "web_site_name";
+    private const string _WebAppDirName = "web_app_dir_name";
+    private const string _WebAppName = "web_app_name";
+
     private static readonly string[] _AllowedEnvironmentNames = { "env_name" };
 
     private Mock<IObjectFactory> _objectFactoryFake;
@@ -48,7 +53,11 @@ namespace UberDeployer.Core.Tests.Domain
           _ArtifactsRepositoryName,
           _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvironmentSpecific);
+          _ArtifactsAreNotEnvironmentSpecific,
+          _AppPoolId,
+          _WebSiteName,
+          _WebAppDirName,
+          _WebAppName);
 
       objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(prjInfoRepository.Object);
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
@@ -85,9 +94,9 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.EnvironmentUsers,
           TestData.AppPoolInfos,
           TestData.DatabaseServers,
-          TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
-          TestData.DbProjectConfigurations,
+          TestData.WebAppProjectConfigurationOverrides,
+          TestData.DbProjectConfigurationOverrides,
           "terminalAppsShortcutFolder",
           "artifactsDeploymentDirPath");
 
@@ -97,7 +106,11 @@ namespace UberDeployer.Core.Tests.Domain
           _ArtifactsRepositoryName,
           _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
-          false);
+          false,
+          _AppPoolId,
+          _WebSiteName,
+          _WebAppDirName,
+          _WebAppName);
 
       Assert.IsNotNullOrEmpty(projectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo).FirstOrDefault());
     }
@@ -126,9 +139,9 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.EnvironmentUsers,
           TestData.AppPoolInfos,
           TestData.DatabaseServers,
-          TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
-          TestData.DbProjectConfigurations,
+          TestData.WebAppProjectConfigurationOverrides,
+          TestData.DbProjectConfigurationOverrides,
           "terminalAppsShortcutFolder",
           "artifactsDeploymentDirPath");
 
@@ -138,7 +151,11 @@ namespace UberDeployer.Core.Tests.Domain
           _ArtifactsRepositoryName,
           _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvironmentSpecific);
+          _ArtifactsAreNotEnvironmentSpecific,
+          _AppPoolId,
+          _WebSiteName,
+          _WebAppDirName,
+          _WebAppName);
 
       List<string> targetUrls =
         projectInfo.GetTargetUrls(envInfo)
@@ -157,7 +174,11 @@ namespace UberDeployer.Core.Tests.Domain
         _ArtifactsRepositoryName,
         _AllowedEnvironmentNames,
         _ArtifactsRepositoryDirName,
-        _ArtifactsAreNotEnvironmentSpecific);
+        _ArtifactsAreNotEnvironmentSpecific,
+        _AppPoolId,
+        _WebSiteName,
+        _WebAppDirName,
+        _WebAppName);
     }
 
     [Test]
@@ -169,7 +190,11 @@ namespace UberDeployer.Core.Tests.Domain
           _ArtifactsRepositoryName,
           _AllowedEnvironmentNames,
           _ArtifactsRepositoryDirName,
-          _ArtifactsAreNotEnvironmentSpecific);
+          _ArtifactsAreNotEnvironmentSpecific,
+          _AppPoolId,
+          _WebSiteName,
+          _WebAppDirName,
+          _WebAppName);
 
       Assert.AreEqual(ProjectType.WebService, info.Type);
     }

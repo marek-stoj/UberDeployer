@@ -105,9 +105,9 @@ namespace UberDeployer.Core.Tests.Domain
           TestData.EnvironmentUsers,
           TestData.AppPoolInfos,
           TestData.DatabaseServers,
-          TestData.WebAppProjectConfigurations,
           TestData.ProjectToFailoverClusterGroupMappings,
-          TestData.DbProjectConfigurations,
+          TestData.WebAppProjectConfigurationOverrides,
+          TestData.DbProjectConfigurationOverrides,
           "terminalAppsShortcutFolder",
           "artifactsDeploymentDirPath");
 

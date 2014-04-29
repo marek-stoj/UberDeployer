@@ -54,7 +54,7 @@
     <Compile Include="Dto\Repetition.cs" />
     <Compile Include="Dto\SchedulerAppTask.cs" />
     <Compile Include="Dto\UberDeployerAgentProjectInfo.cs" />
-    <Compile Include="Dto\WebAppProjectConfiguration.cs" />
+    <Compile Include="Dto\WebAppProjectConfigurationOverride.cs" />
     <Compile Include="Dto\Input\DbInputParams.cs" />
     <Compile Include="Dto\Input\InputParams.cs" />
     <Compile Include="Dto\Input\NtServiceInputParams.cs" />

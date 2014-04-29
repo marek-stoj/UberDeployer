@@ -188,7 +188,7 @@ namespace UberDeployer.Core.Deployment
       bool taskExists = taskDetails != null;
 
       EnvironmentUser environmentUser =
-        environmentInfo.GetEnvironmentUserById(schedulerAppTask.UserId);
+        environmentInfo.GetEnvironmentUser(schedulerAppTask.UserId);
 
       string environmentUserPassword = null;
 

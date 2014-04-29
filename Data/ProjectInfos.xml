@@ -19,6 +19,10 @@
       <Name>UberDeployer.SampleWebApp</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleWebApp</ArtifactsRepositoryDirName>
+      <AppPoolId>Default</AppPoolId>
+      <WebSiteName>Default Web Site</WebSiteName>
+      <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
+      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
     </ProjectInfoXml>
 
     <!-- Scheduler apps -->

@@ -30,7 +30,11 @@ namespace UberDeployer.Core.Tests.Generators
           "artifacts_repository_name",
           new[] { "env_name" },
           "artifacts_repository_dir_name",
-          true);
+          true,
+          "app_pool_id",
+          "web_site_name",
+          "web_app_dir_name",
+          "web_app_name");
     }
 
     public static WebServiceProjectInfo GetWebServiceProjectInfo()
@@ -41,7 +45,11 @@ namespace UberDeployer.Core.Tests.Generators
           "artifacts_repository_name",
           new[] { "env_name" },
           "artifacts_repository_dir_name",
-          true);
+          true,
+          "app_pool_id",
+          "web_site_name",
+          "web_app_dir_name",
+          "web_app_name");
     }
 
     public static DbProjectInfo GetDbProjectInfo(bool areEnvironmentSpecific = false)

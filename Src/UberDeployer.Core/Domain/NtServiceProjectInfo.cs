@@ -10,8 +10,6 @@ namespace UberDeployer.Core.Domain
 {
   public class NtServiceProjectInfo : ProjectInfo
   {
-    #region Constructor(s)
-
     public NtServiceProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string ntServiceName, string ntServiceDirName, string ntServiceDisplayName, string ntServiceExeName, string ntServiceUserId)
       : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
@@ -26,10 +24,6 @@ namespace UberDeployer.Core.Domain
       NtServiceExeName = ntServiceExeName;
       NtServiceUserId = ntServiceUserId;
     }
-
-    #endregion
-
-    #region Overrides of ProjectInfo
 
     public override ProjectType Type
     {
@@ -95,10 +89,6 @@ namespace UberDeployer.Core.Domain
       return NtServiceExeName;
     }
 
-    #endregion
-
-    #region Properties
-
     public string NtServiceName { get; private set; }
 
     public string NtServiceDirName { get; private set; }
@@ -111,7 +101,5 @@ namespace UberDeployer.Core.Domain
     /// A reference to a user that will be used to run the scheduled task. Users are defined in target environments.
     /// </summary>
     public string NtServiceUserId { get; private set; }
-
-    #endregion
   }
 }

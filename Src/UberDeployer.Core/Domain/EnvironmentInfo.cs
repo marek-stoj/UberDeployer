@@ -16,8 +16,8 @@ namespace UberDeployer.Core.Domain
     private readonly Dictionary<string, EnvironmentUser> _environmentUsersByIdDict;
     private readonly Dictionary<string, IisAppPoolInfo> _appPoolInfosByNameDict;
     private readonly Dictionary<string, DatabaseServer> _databaseServersByIdDict;
-    private readonly Dictionary<string, WebAppProjectConfiguration> _webAppProjectConfigurationsDict;
     private readonly Dictionary<string, ProjectToFailoverClusterGroupMapping> _projectToFailoverClusterGroupMappingsDict;
+    private readonly Dictionary<string, WebAppProjectConfigurationOverride> _webAppProjectConfigurationOverridesDict;
     private readonly Dictionary<string, DbProjectConfigurationOverride> _dbProjectConfigurationOverridesDict;
 
     public EnvironmentInfo(
@@ -37,8 +37,8 @@ namespace UberDeployer.Core.Domain
       IEnumerable<EnvironmentUser> environmentUsers,
       IEnumerable<IisAppPoolInfo> appPoolInfos,
       IEnumerable<DatabaseServer> databaseServers,
-      IEnumerable<WebAppProjectConfiguration> webAppProjectConfigurations,
       IEnumerable<ProjectToFailoverClusterGroupMapping> projectToFailoverClusterGroupMappings,
+      IEnumerable<WebAppProjectConfigurationOverride> webAppProjectConfigurationOverrides,
       IEnumerable<DbProjectConfigurationOverride> dbProjectConfigurations,
       string terminalAppShortcutFolder,
       string manualDeploymentPackageDirPath
@@ -85,9 +85,9 @@ namespace UberDeployer.Core.Domain
         throw new ArgumentException("If enableFailoverClusteringForNtServices is set, failoverClusterMachineName must not be empty.", "enableFailoverClusteringForNtServices");
       }
 
-      if (webAppProjectConfigurations == null)
+      if (webAppProjectConfigurationOverrides == null)
       {
-        throw new ArgumentNullException("webAppProjectConfigurations");
+        throw new ArgumentNullException("webAppProjectConfigurationOverrides");
       }
 
       if (projectToFailoverClusterGroupMappings == null)
@@ -132,8 +132,9 @@ namespace UberDeployer.Core.Domain
       _appPoolInfosByNameDict = appPoolInfos.ToDictionary(e => e.Name);
       _databaseServersByIdDict = databaseServers.ToDictionary(e => e.Id);
 
-      _webAppProjectConfigurationsDict = webAppProjectConfigurations.ToDictionary(e => e.ProjectName);
       _projectToFailoverClusterGroupMappingsDict = projectToFailoverClusterGroupMappings.ToDictionary(e => e.ProjectName);
+
+      _webAppProjectConfigurationOverridesDict = webAppProjectConfigurationOverrides.ToDictionary(e => e.ProjectName);
       _dbProjectConfigurationOverridesDict = dbProjectConfigurations.ToDictionary(e => e.ProjectName);
 
       TerminalAppsShortcutFolder = terminalAppShortcutFolder;
@@ -196,7 +197,7 @@ namespace UberDeployer.Core.Domain
       return GetNetworkPath(TerminalServerMachineName, absoluteLocalPath);
     }
 
-    public EnvironmentUser GetEnvironmentUserById(string userId)
+    public EnvironmentUser GetEnvironmentUser(string userId)
     {
       Guard.NotNullNorEmpty(userId, "userId");
 
@@ -208,20 +209,6 @@ namespace UberDeployer.Core.Domain
       }
 
       throw new InvalidOperationException(string.Format("There's no environment user with id '{0}' defined in environment named '{1}'.", userId, Name));
-    }
-
-    public WebAppProjectConfiguration GetWebAppProjectConfiguration(string projectName)
-    {
-      Guard.NotNullNorEmpty(projectName, "projectName");
-
-      WebAppProjectConfiguration configuration;
-
-      if (_webAppProjectConfigurationsDict.TryGetValue(projectName, out configuration))
-      {
-        return configuration;
-      }
-
-      throw new ArgumentException(string.Format("Web app project named '{0}' has no configuration for environment '{1}'.", projectName, Name));
     }
 
     public string GetFailoverClusterGroupNameForProject(string projectName)
@@ -236,6 +223,52 @@ namespace UberDeployer.Core.Domain
       }
 
       return null;
+    }
+
+    public WebAppProjectConfiguration GetWebAppProjectConfiguration(WebAppProjectInfo webAppProjectInfo)
+    {
+      Guard.NotNull(webAppProjectInfo, "webAppProjectInfo");
+
+      string projectName = webAppProjectInfo.Name;
+      string appPoolId = webAppProjectInfo.AppPoolId;
+      string webSiteName = webAppProjectInfo.WebSiteName;
+      string webAppDirName = webAppProjectInfo.WebAppDirName;
+      string webAppName = webAppProjectInfo.WebAppName;
+
+      WebAppProjectConfigurationOverride webAppProjectConfigurationOverride =
+        FindWebAppProjectConfigurationOverride(projectName);
+
+      // TODO IMM HI: xxx what about empty strings?
+      if (webAppProjectConfigurationOverride != null)
+      {
+        if (webAppProjectConfigurationOverride.AppPoolId != null)
+        {
+          appPoolId = webAppProjectConfigurationOverride.AppPoolId;
+        }
+
+        if (webAppProjectConfigurationOverride.WebSiteName != null)
+        {
+          webSiteName = webAppProjectConfigurationOverride.WebSiteName;
+        }
+
+        if (webAppProjectConfigurationOverride.WebAppDirName != null)
+        {
+          webAppDirName = webAppProjectConfigurationOverride.WebAppDirName;
+        }
+
+        if (webAppProjectConfigurationOverride.WebAppName != null)
+        {
+          webAppName = webAppProjectConfigurationOverride.WebAppName;
+        }
+      }
+
+      return
+        new WebAppProjectConfiguration(
+          projectName,
+          appPoolId,
+          webSiteName,
+          webAppDirName,
+          webAppName);
     }
 
     public DbProjectConfiguration GetDbProjectConfiguration(DbProjectInfo dbProjectInfo)
@@ -290,18 +323,28 @@ namespace UberDeployer.Core.Domain
       throw new ArgumentException(string.Format("Database server with id '{0}' is not defined for environment '{1}'.", databaseServerId, Name));
     }
 
+    private WebAppProjectConfigurationOverride FindWebAppProjectConfigurationOverride(string projectName)
+    {
+      Guard.NotNullNorEmpty(projectName, "projectName");
+
+      WebAppProjectConfigurationOverride configuration;
+
+      return
+        _webAppProjectConfigurationOverridesDict.TryGetValue(projectName, out configuration)
+          ? configuration
+          : null;
+    }
+
     private DbProjectConfigurationOverride FindDbProjectConfigurationOverride(string projectName)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
 
       DbProjectConfigurationOverride configurationOverride;
 
-      if (_dbProjectConfigurationOverridesDict.TryGetValue(projectName, out configurationOverride))
-      {
-        return configurationOverride;
-      }
-
-      return null;
+      return
+        _dbProjectConfigurationOverridesDict.TryGetValue(projectName, out configurationOverride)
+          ? configurationOverride
+          : null;
     }
 
     public string Name { get; private set; }
@@ -358,14 +401,14 @@ namespace UberDeployer.Core.Domain
       get { return _databaseServersByIdDict.Values; }
     }
 
-    public IEnumerable<WebAppProjectConfiguration> WebAppProjectConfigurations
-    {
-      get { return _webAppProjectConfigurationsDict.Values; }
-    }
-
     public IEnumerable<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings
     {
       get { return _projectToFailoverClusterGroupMappingsDict.Values; }
+    }
+
+    public IEnumerable<WebAppProjectConfigurationOverride> WebAppProjectConfigurationOverrides
+    {
+      get { return _webAppProjectConfigurationOverridesDict.Values; }
     }
 
     public IEnumerable<DbProjectConfigurationOverride> DbProjectConfigurationOverrides

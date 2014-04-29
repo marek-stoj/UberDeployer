@@ -99,6 +99,7 @@
     <Compile Include="Domain\Repetition.cs" />
     <Compile Include="Domain\SchedulerAppTask.cs" />
     <Compile Include="Domain\UberDeployerAgentProjectInfo.cs" />
+    <Compile Include="Domain\WebAppProjectConfigurationOverride.cs" />
     <Compile Include="Domain\WebAppProjectConfiguration.cs" />
     <Compile Include="Deployment\ExtractVersionDeploymentStep.cs" />
     <Compile Include="Deployment\PrepareVersionedFolderDeploymentStep.cs" />

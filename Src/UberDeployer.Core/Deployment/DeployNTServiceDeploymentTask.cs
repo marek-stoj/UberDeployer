@@ -148,7 +148,7 @@ namespace UberDeployer.Core.Deployment
         () =>
         {
           EnvironmentUser environmentUser =
-            environmentInfo.GetEnvironmentUserById(_projectInfo.NtServiceUserId);
+            environmentInfo.GetEnvironmentUser(_projectInfo.NtServiceUserId);
 
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(
@@ -227,7 +227,7 @@ namespace UberDeployer.Core.Deployment
           // ReSharper restore AccessToModifiedClosure
 
           EnvironmentUser environmentUser =
-            environmentInfo.GetEnvironmentUserById(_projectInfo.NtServiceUserId);
+            environmentInfo.GetEnvironmentUser(_projectInfo.NtServiceUserId);
 
           string environmentUserPassword =
             PasswordCollectorHelper.CollectPasssword(

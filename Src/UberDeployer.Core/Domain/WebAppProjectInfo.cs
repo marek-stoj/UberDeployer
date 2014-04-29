@@ -10,9 +10,17 @@ namespace UberDeployer.Core.Domain
 {
   public class WebAppProjectInfo : ProjectInfo
   {
-    public WebAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific)
+    public WebAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string appPoolId, string webSiteName, string webAppDirName, string webAppName = null)
       : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
+      Guard.NotNullNorEmpty(appPoolId, "appPoolId");
+      Guard.NotNullNorEmpty(webSiteName, "webSiteName");
+      Guard.NotNullNorEmpty(webAppDirName, "webAppDirName");
+
+      AppPoolId = appPoolId;
+      WebSiteName = webSiteName;
+      WebAppDirName = webAppDirName;
+      WebAppName = webAppName;
     }
 
     public override ProjectType Type
@@ -46,7 +54,7 @@ namespace UberDeployer.Core.Domain
       Guard.NotNull(environmentInfo, "environmentInfo");
 
       WebAppProjectConfiguration configuration =
-        environmentInfo.GetWebAppProjectConfiguration(Name);
+        environmentInfo.GetWebAppProjectConfiguration(this);
 
       return
         environmentInfo
@@ -67,7 +75,7 @@ namespace UberDeployer.Core.Domain
       }
 
       WebAppProjectConfiguration webAppProjectConfiguration =
-        environmentInfo.GetWebAppProjectConfiguration(Name);
+        environmentInfo.GetWebAppProjectConfiguration(this);
 
       // TODO IMM HI: what about https vs http?
       return
@@ -86,5 +94,13 @@ namespace UberDeployer.Core.Domain
       // TODO IMM HI: add mainassemblyfilename to config?
       return string.Format("bin\\{0}.dll", Name);
     }
+
+    public string AppPoolId { get; private set; }
+
+    public string WebSiteName { get; private set; }
+
+    public string WebAppDirName { get; private set; }
+
+    public string WebAppName { get; private set; }
   }
 }

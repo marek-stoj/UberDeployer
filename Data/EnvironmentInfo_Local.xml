@@ -41,14 +41,8 @@
       <MachineName>localhost</MachineName>
     </DatabaseServerXml>
   </DatabaseServers>
-  <WebAppProjectConfigurations>
-    <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
-      <AppPoolId>ASP.NET v4.0</AppPoolId>
-      <WebSiteName>Default Web Site</WebSiteName>
-      <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
-      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
-    </WebAppProjectConfigurationXml>
-  </WebAppProjectConfigurations>
+  <WebAppProjectConfigurationOverrides>
+  </WebAppProjectConfigurationOverrides>
   <DbProjectConfigurationOverrides>
   </DbProjectConfigurationOverrides>
 </EnvironmentInfoXml>

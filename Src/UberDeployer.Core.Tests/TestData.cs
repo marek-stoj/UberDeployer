@@ -23,22 +23,22 @@ namespace UberDeployer.Core.Tests
         new DatabaseServer("db_server_id", "db_server"),
       };
 
-    public static readonly List<WebAppProjectConfiguration> WebAppProjectConfigurations =
-      new List<WebAppProjectConfiguration>
-      {
-        new WebAppProjectConfiguration("webappprj", "apppool", "website", "dir", "webapp"),
-      };
-
-    public static readonly List<DbProjectConfigurationOverride> DbProjectConfigurations =
-      new List<DbProjectConfigurationOverride>
-      {
-        new DbProjectConfigurationOverride("dbprj", "db_server_id"),
-      };
-
     public static readonly List<ProjectToFailoverClusterGroupMapping> ProjectToFailoverClusterGroupMappings =
       new List<ProjectToFailoverClusterGroupMapping>
         {
           new ProjectToFailoverClusterGroupMapping("ntsvcprj", "cg1"),
         };
+
+    public static readonly List<WebAppProjectConfigurationOverride> WebAppProjectConfigurationOverrides =
+      new List<WebAppProjectConfigurationOverride>
+      {
+        new WebAppProjectConfigurationOverride("webappprj", "apppool", "website", "dir", "webapp"),
+      };
+
+    public static readonly List<DbProjectConfigurationOverride> DbProjectConfigurationOverrides =
+      new List<DbProjectConfigurationOverride>
+      {
+        new DbProjectConfigurationOverride("dbprj", "db_server_id"),
+      };
   }
 }
