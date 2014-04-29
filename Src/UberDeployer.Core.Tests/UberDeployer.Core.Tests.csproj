@@ -138,6 +138,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Data\EnvironmentInfo_Local.xml">
+      <Link>Data\EnvironmentInfo_Local.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\EnvironmentInfo_Remote.xml">
+      <Link>Data\EnvironmentInfo_Remote.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\NonVersionedScript\01.NonVersionedScript.sql">
       <SubType>Form</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -160,10 +168,6 @@
     </None>
     <Content Include="..\..\Data\ApplicationConfiguration.xml">
       <Link>Data\ApplicationConfiguration.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Data\EnvironmentInfos.xml">
-      <Link>Data\EnvironmentInfos.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Data\ProjectInfos.xml">

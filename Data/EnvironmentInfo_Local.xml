@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<EnvironmentInfoXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Local</Name>
+  <ConfigurationTemplateName>Dev</ConfigurationTemplateName>
+  <AppServerMachineName>localhost</AppServerMachineName>
+  <FailoverClusterMachineName></FailoverClusterMachineName>
+  <WebServerMachineNames>
+    <string>localhost</string>
+  </WebServerMachineNames>
+  <TerminalServerMachineName>localhost</TerminalServerMachineName>
+  <SchedulerServerTasksMachineNames>
+    <string>localhost</string>
+  </SchedulerServerTasksMachineNames>
+  <SchedulerServerBinariesMachineNames>
+    <string>localhost</string>
+  </SchedulerServerBinariesMachineNames>
+  <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
+  <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
+  <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
+  <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
+  <TerminalAppsShortcutFolder>C:\AppShortcuts</TerminalAppsShortcutFolder>
+  <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
+  <ManualDeploymentPackageDirPath></ManualDeploymentPackageDirPath>
+  <EnvironmentUsers>
+    <EnvironmentUserXml>
+      <Id>Sample.User</Id>
+      <UserName>UberDeployer</UserName>
+    </EnvironmentUserXml>
+  </EnvironmentUsers>
+  <AppPoolInfos>
+    <AppPoolInfoXml>
+      <Id>ASP.NET v4.0</Id>
+      <Name>ASP.NET v4.0</Name>
+      <Version>V4_0</Version>
+      <Mode>Integrated</Mode>
+    </AppPoolInfoXml>
+  </AppPoolInfos>
+  <DatabaseServers>
+    <DatabaseServerXml>
+      <Id>Default</Id>
+      <MachineName>localhost</MachineName>
+    </DatabaseServerXml>
+  </DatabaseServers>
+  <WebAppProjectConfigurations>
+    <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
+      <AppPoolId>ASP.NET v4.0</AppPoolId>
+      <WebSiteName>Default Web Site</WebSiteName>
+      <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
+      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
+    </WebAppProjectConfigurationXml>
+  </WebAppProjectConfigurations>
+  <DbProjectConfigurations>
+    <DbProjectConfigurationXml projectName="UberDeployer.SampleDb">
+      <DatabaseServerId>Default</DatabaseServerId>
+    </DbProjectConfigurationXml>
+  </DbProjectConfigurations>
+</EnvironmentInfoXml>

@@ -68,8 +68,13 @@
     <Content Include="..\..\Data\ApplicationConfiguration.xml">
       <Link>Data\ApplicationConfiguration.xml</Link>
     </Content>
-    <Content Include="..\..\Data\EnvironmentInfos.xml">
-      <Link>Data\EnvironmentInfos.xml</Link>
+    <Content Include="..\..\Data\EnvironmentInfo_Local.xml">
+      <Link>Data\EnvironmentInfo_Local.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\EnvironmentInfo_Remote.xml">
+      <Link>Data\EnvironmentInfo_Remote.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Data\ProjectInfos.xml">
       <Link>Data\ProjectInfos.xml</Link>

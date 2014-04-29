@@ -29,8 +29,8 @@ namespace UberDeployer.CommonConfiguration
   {
     private static readonly string _BaseDirPath = AppDomain.CurrentDomain.BaseDirectory;
     private static readonly string _ApplicationConfigPath = Path.Combine(_BaseDirPath, @"Data\ApplicationConfiguration.xml");
-    private static readonly string _ProjectInfoPath = Path.Combine(_BaseDirPath, @"Data\ProjectInfos.xml");
-    private static readonly string _EnvironmentInfoPath = Path.Combine(_BaseDirPath, @"Data\EnvironmentInfos.xml");
+    private static readonly string _ProjectInfosFilePath = Path.Combine(_BaseDirPath, @"Data\ProjectInfos.xml");
+    private static readonly string _EnvironmentInfosDirPath = Path.Combine(_BaseDirPath, @"Data");
 
     private static readonly TimeSpan _NtServiceManagerOperationsTimeout = TimeSpan.FromMinutes(2);
 
@@ -46,11 +46,13 @@ namespace UberDeployer.CommonConfiguration
         Component.For<IApplicationConfiguration>()
           .UsingFactoryMethod(() => new XmlApplicationConfiguration(_ApplicationConfigPath))
           .LifeStyle.Singleton,
+
         Component.For<IProjectInfoRepository>()
-          .UsingFactoryMethod(() => new XmlProjectInfoRepository(_ProjectInfoPath))
+          .UsingFactoryMethod(() => new XmlProjectInfoRepository(_ProjectInfosFilePath))
           .LifeStyle.Singleton,
+
         Component.For<IEnvironmentInfoRepository>()
-          .UsingFactoryMethod(() => new XmlEnvironmentInfoRepository(_EnvironmentInfoPath))
+          .UsingFactoryMethod(() => new XmlEnvironmentInfoRepository(_EnvironmentInfosDirPath))
           .LifeStyle.Singleton);
 
       container.Register(

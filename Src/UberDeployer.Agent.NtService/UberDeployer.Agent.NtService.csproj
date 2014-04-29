@@ -139,8 +139,12 @@
       <Link>Data\ApplicationConfiguration.xml</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\data\EnvironmentInfos.xml">
-      <Link>Data\EnvironmentInfos.xml</Link>
+    <Content Include="..\..\Data\EnvironmentInfo_Local.xml">
+      <Link>Data\EnvironmentInfo_Local.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\EnvironmentInfo_Remote.xml">
+      <Link>Data\EnvironmentInfo_Remote.xml</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\data\ProjectInfos.xml">

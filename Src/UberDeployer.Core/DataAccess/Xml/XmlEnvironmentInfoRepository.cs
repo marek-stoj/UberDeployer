@@ -11,11 +11,6 @@ namespace UberDeployer.Core.DataAccess.Xml
   {
     #region Nested types
 
-    public class EnvironmentInfosXml
-    {
-      public List<EnvironmentInfoXml> EnvironmentInfos { get; set; }
-    }
-
     public class EnvironmentInfoXml
     {
       public string Name { get; set; }
@@ -30,9 +25,9 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       public string TerminalServerMachineName { get; set; }
 
-      public List<string> SchedulerServerTasksMachineNames { get; set; }       
-      
-      public List<string> SchedulerServerBinariesMachineNames { get; set; }       
+      public List<string> SchedulerServerTasksMachineNames { get; set; }
+
+      public List<string> SchedulerServerBinariesMachineNames { get; set; }
 
       public string NtServicesBaseDirPath { get; set; }
 
@@ -115,21 +110,20 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     #endregion
 
-    private readonly string _xmlFilePath;
+    private readonly string _xmlFilesDirPath;
 
-    private EnvironmentInfosXml _environmentInfosXml;
     private Dictionary<string, EnvironmentInfo> _environmentInfosByName;
 
     #region Constructor(s)
 
-    public XmlEnvironmentInfoRepository(string xmlFilePath)
+    public XmlEnvironmentInfoRepository(string xmlFilesDirPath)
     {
-      if (string.IsNullOrEmpty(xmlFilePath))
+      if (string.IsNullOrEmpty(xmlFilesDirPath))
       {
-        throw new ArgumentException("Argument can't be null nor empty.", "xmlFilePath");
+        throw new ArgumentException("Argument can't be null nor empty.", "xmlFilesDirPath");
       }
 
-      _xmlFilePath = xmlFilePath;
+      _xmlFilesDirPath = xmlFilesDirPath;
     }
 
     #endregion
@@ -138,10 +132,11 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     public IEnumerable<EnvironmentInfo> GetAll()
     {
-      LoadXmlIfNeeded();
+      LoadXmlFilesIfNeeded();
 
-      return _environmentInfosByName.Values
-        .OrderByDescending(ei => ei.Name); // TODO IMM HI: OrderBy instead of OrderByDescending
+      return
+        _environmentInfosByName.Values
+          .OrderByDescending(ei => ei.Name); // TODO IMM HI: OrderBy instead of OrderByDescending
     }
 
     public EnvironmentInfo FindByName(string environmentName)
@@ -151,7 +146,7 @@ namespace UberDeployer.Core.DataAccess.Xml
         throw new ArgumentException("Argument can't be null nor empty.", "environmentName");
       }
 
-      LoadXmlIfNeeded();
+      LoadXmlFilesIfNeeded();
 
       EnvironmentInfo environmentInfo;
 
@@ -167,76 +162,89 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     #region Private helper methods
 
-    private void LoadXmlIfNeeded()
+    private void LoadXmlFilesIfNeeded()
     {
-      if (_environmentInfosXml != null)
+      if (_environmentInfosByName != null)
       {
         return;
       }
 
-      var xmlSerializer = new XmlSerializer(typeof(EnvironmentInfosXml));
+      _environmentInfosByName = new Dictionary<string, EnvironmentInfo>();
 
-      using (var fs = File.OpenRead(_xmlFilePath))
+      var xmlSerializer = new XmlSerializer(typeof(EnvironmentInfoXml));
+
+      foreach (string xmlFilePath in Directory.GetFiles(_xmlFilesDirPath, "EnvironmentInfo_*.xml", SearchOption.TopDirectoryOnly))
       {
-        _environmentInfosXml = (EnvironmentInfosXml)xmlSerializer.Deserialize(fs);
-      }
+        EnvironmentInfoXml environmentInfoXml;
 
-      _environmentInfosByName =
-        _environmentInfosXml.EnvironmentInfos
-          .Select(
-            eiXml =>
-            new EnvironmentInfo(
-              eiXml.Name,
-              eiXml.ConfigurationTemplateName,
-              eiXml.AppServerMachineName,
-              eiXml.FailoverClusterMachineName,
-              eiXml.WebServerMachineNames,
-              eiXml.TerminalServerMachineName,
-              eiXml.SchedulerServerTasksMachineNames,
-              eiXml.SchedulerServerBinariesMachineNames,
-              eiXml.NtServicesBaseDirPath,
-              eiXml.WebAppsBaseDirPath,
-              eiXml.SchedulerAppsBaseDirPath,
-              eiXml.TerminalAppsBaseDirPath,
-              eiXml.EnableFailoverClusteringForNtServices,
-              eiXml.EnvironmentUsers.Select(
-                e =>
-                new EnvironmentUser(
-                  e.Id,
-                  e.UserName)),
-              eiXml.AppPoolInfos.Select(
-                e =>
-                new IisAppPoolInfo(
-                  e.Name,
-                  e.Version,
-                  e.Mode)),
-              eiXml.DatabaseServers.Select(
-                e =>
-                new DatabaseServer(
-                  e.Id,
-                  e.MachineName)),
-              eiXml.WebAppProjectConfigurations.Select(
-                e =>
-                new WebAppProjectConfiguration(
-                  e.ProjectName,
-                  e.AppPoolId,
-                  e.WebSiteName,
-                  e.WebAppDirName,
-                  e.WebAppName)),
-              eiXml.ProjectToFailoverClusterGroupMappings.Select(
-                e =>
-                new ProjectToFailoverClusterGroupMapping(
-                  e.ProjectName,
-                  e.ClusterGroupName)),
-              eiXml.DbProjectConfigurations.Select(
-                e =>
-                new DbProjectConfiguration(
-                  e.ProjectName,
-                  e.DatabaseServerId)),
-              eiXml.TerminalAppsShortcutFolder,
-              eiXml.ManualDeploymentPackageDirPath
-              ))
-          .ToDictionary(ei => ei.Name);
+        using (var fs = File.OpenRead(xmlFilePath))
+        {
+          environmentInfoXml = (EnvironmentInfoXml)xmlSerializer.Deserialize(fs);
+        }
+
+        EnvironmentInfo environmentInfo =
+          ConvertToEnvironmentInfo(environmentInfoXml);
+
+        _environmentInfosByName.Add(
+          environmentInfo.Name,
+          environmentInfo);
+      }
+    }
+
+    private static EnvironmentInfo ConvertToEnvironmentInfo(EnvironmentInfoXml environmentInfoXml)
+    {
+      return
+        new EnvironmentInfo(
+          environmentInfoXml.Name,
+          environmentInfoXml.ConfigurationTemplateName,
+          environmentInfoXml.AppServerMachineName,
+          environmentInfoXml.FailoverClusterMachineName,
+          environmentInfoXml.WebServerMachineNames,
+          environmentInfoXml.TerminalServerMachineName,
+          environmentInfoXml.SchedulerServerTasksMachineNames,
+          environmentInfoXml.SchedulerServerBinariesMachineNames,
+          environmentInfoXml.NtServicesBaseDirPath,
+          environmentInfoXml.WebAppsBaseDirPath,
+          environmentInfoXml.SchedulerAppsBaseDirPath,
+          environmentInfoXml.TerminalAppsBaseDirPath,
+          environmentInfoXml.EnableFailoverClusteringForNtServices,
+          environmentInfoXml.EnvironmentUsers.Select(
+            e =>
+              new EnvironmentUser(
+                e.Id,
+                e.UserName)),
+          environmentInfoXml.AppPoolInfos.Select(
+            e =>
+              new IisAppPoolInfo(
+                e.Name,
+                e.Version,
+                e.Mode)),
+          environmentInfoXml.DatabaseServers.Select(
+            e =>
+              new DatabaseServer(
+                e.Id,
+                e.MachineName)),
+          environmentInfoXml.WebAppProjectConfigurations.Select(
+            e =>
+              new WebAppProjectConfiguration(
+                e.ProjectName,
+                e.AppPoolId,
+                e.WebSiteName,
+                e.WebAppDirName,
+                e.WebAppName)),
+          environmentInfoXml.ProjectToFailoverClusterGroupMappings.Select(
+            e =>
+              new ProjectToFailoverClusterGroupMapping(
+                e.ProjectName,
+                e.ClusterGroupName)),
+          environmentInfoXml.DbProjectConfigurations.Select(
+            e =>
+              new DbProjectConfiguration(
+                e.ProjectName,
+                e.DatabaseServerId)),
+          environmentInfoXml.TerminalAppsShortcutFolder,
+          environmentInfoXml.ManualDeploymentPackageDirPath
+          );
     }
 
     #endregion

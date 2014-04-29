@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<EnvironmentInfoXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Remote</Name>
+  <ConfigurationTemplateName>Prod</ConfigurationTemplateName>
+  <AppServerMachineName>REMOTE</AppServerMachineName>
+  <FailoverClusterMachineName>REMOTE_CLUSTER</FailoverClusterMachineName>
+  <WebServerMachineNames>
+    <string>REMOTE</string>
+  </WebServerMachineNames>
+  <TerminalServerMachineName>REMOTE</TerminalServerMachineName>
+  <SchedulerServerTasksMachineNames>
+    <string>REMOTE</string>
+  </SchedulerServerTasksMachineNames>
+  <SchedulerServerBinariesMachineNames>
+    <string>REMOTE</string>
+  </SchedulerServerBinariesMachineNames>
+  <NtServicesBaseDirPath>C:\Program Files\NtServices</NtServicesBaseDirPath>
+  <WebAppsBaseDirPath>C:\inetpub\wwwroot</WebAppsBaseDirPath>
+  <SchedulerAppsBaseDirPath>C:\Program Files\SchedulerApps</SchedulerAppsBaseDirPath>
+  <TerminalAppsBaseDirPath>C:\Program Files\TerminalApps</TerminalAppsBaseDirPath>
+  <TerminalAppsShortcutFolder>C:\Users\Public\Desktop</TerminalAppsShortcutFolder>
+  <EnableFailoverClusteringForNtServices>false</EnableFailoverClusteringForNtServices>
+  <ManualDeploymentPackageDirPath></ManualDeploymentPackageDirPath>
+  <EnvironmentUsers>
+    <EnvironmentUserXml>
+      <Id>Sample.User</Id>
+      <UserName>UberDeployer</UserName>
+    </EnvironmentUserXml>
+  </EnvironmentUsers>
+  <AppPoolInfos>
+    <AppPoolInfoXml>
+      <Id>ASP.NET v4.0</Id>
+      <Name>ASP.NET v4.0</Name>
+      <Version>V4_0</Version>
+      <Mode>Integrated</Mode>
+    </AppPoolInfoXml>
+  </AppPoolInfos>
+  <DatabaseServers>
+    <DatabaseServerXml>
+      <Id>Default</Id>
+      <MachineName>REMOTE</MachineName>
+    </DatabaseServerXml>
+  </DatabaseServers>
+  <WebAppProjectConfigurations>
+    <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
+      <AppPoolId>ASP.NET v4.0</AppPoolId>
+      <WebSiteName>Default Web Site</WebSiteName>
+      <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
+      <WebAppName>UberDeployer.SampleWebApp</WebAppName>
+    </WebAppProjectConfigurationXml>
+  </WebAppProjectConfigurations>
+  <ProjectToFailoverClusterGroupMappings>
+    <ProjectToFailoverClusterGroupMappingXml>
+      <ProjectName>UberDeployer.SampleNtService</ProjectName>
+      <ClusterGroupName>UD_SAMPLE</ClusterGroupName>
+    </ProjectToFailoverClusterGroupMappingXml>
+  </ProjectToFailoverClusterGroupMappings>
+  <DbProjectConfigurations>
+    <DbProjectConfigurationXml projectName="UberDeployer.SampleDb">
+      <DatabaseServerId>Default</DatabaseServerId>
+    </DbProjectConfigurationXml>
+  </DbProjectConfigurations>
+</EnvironmentInfoXml>
