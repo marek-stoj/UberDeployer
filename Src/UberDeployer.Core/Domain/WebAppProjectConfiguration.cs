@@ -4,8 +4,6 @@ namespace UberDeployer.Core.Domain
 {
   public class WebAppProjectConfiguration
   {
-    #region Constructor(s)
-
     public WebAppProjectConfiguration(string projectName, string appPoolId, string webSiteName, string webAppDirName, string webAppName = null)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
@@ -20,10 +18,6 @@ namespace UberDeployer.Core.Domain
       WebAppName = webAppName;
     }
 
-    #endregion
-
-    #region Properties
-
     public string ProjectName { get; private set; }
 
     public string AppPoolId { get; private set; }
@@ -33,7 +27,5 @@ namespace UberDeployer.Core.Domain
     public string WebAppDirName { get; private set; }
     
     public string WebAppName { get; private set; }
-   
-    #endregion
   }
 }

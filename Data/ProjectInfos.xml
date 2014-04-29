@@ -19,7 +19,6 @@
       <Name>UberDeployer.SampleWebApp</Name>
       <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
       <ArtifactsRepositoryDirName>SampleWebApp</ArtifactsRepositoryDirName>
-      <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
     </ProjectInfoXml>
 
     <!-- Scheduler apps -->

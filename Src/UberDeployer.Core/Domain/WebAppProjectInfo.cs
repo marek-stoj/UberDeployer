@@ -10,16 +10,10 @@ namespace UberDeployer.Core.Domain
 {
   public class WebAppProjectInfo : ProjectInfo
   {
-    #region Ctor(s)
-
     public WebAppProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific)
       : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
     }
-
-    #endregion
-
-    #region Overrides of ProjectInfo
 
     public override ProjectType Type
     {
@@ -92,7 +86,5 @@ namespace UberDeployer.Core.Domain
       // TODO IMM HI: add mainassemblyfilename to config?
       return string.Format("bin\\{0}.dll", Name);
     }
-
-    #endregion
   }
 }
