@@ -238,18 +238,28 @@ namespace UberDeployer.Core.Domain
       return null;
     }
 
-    public DbProjectConfigurationOverride FindDbProjectConfigurationOverride(string projectName)
+    public DbProjectConfiguration GetDbProjectConfiguration(DbProjectInfo dbProjectInfo)
     {
-      Guard.NotNullNorEmpty(projectName, "projectName");
+      Guard.NotNull(dbProjectInfo, "dbProjectInfo");
 
-      DbProjectConfigurationOverride configurationOverride;
+      string projectName = dbProjectInfo.Name;
+      string databaseServerId = dbProjectInfo.DatabaseServerId;
 
-      if (_dbProjectConfigurationOverridesDict.TryGetValue(projectName, out configurationOverride))
+      DbProjectConfigurationOverride dbProjectConfigurationOverride =
+        FindDbProjectConfigurationOverride(projectName);
+
+      if (dbProjectConfigurationOverride != null)
       {
-        return configurationOverride;
+        if (!string.IsNullOrEmpty(databaseServerId))
+        {
+          databaseServerId = dbProjectConfigurationOverride.DatabaseServerId;
+        }
       }
 
-      return null;
+      return
+        new DbProjectConfiguration(
+          projectName,
+          databaseServerId);
     }
 
     public IisAppPoolInfo GetAppPoolInfo(string appPoolId)
@@ -266,24 +276,7 @@ namespace UberDeployer.Core.Domain
       throw new ArgumentException(string.Format("App pool with id '{0}' is not defined for environment '{1}'.", appPoolId, Name));
     }
 
-    public DatabaseServer GetDatabaseServer(DbProjectInfo dbProjectInfo)
-    {
-      Guard.NotNull(dbProjectInfo, "dbProjectInfo");
-
-      DbProjectConfigurationOverride dbProjectConfigurationOverride =
-        FindDbProjectConfigurationOverride(dbProjectInfo.Name);
-
-      string databaseServerId = dbProjectInfo.DatabaseServerId;
-
-      if (dbProjectConfigurationOverride != null && !string.IsNullOrEmpty(dbProjectConfigurationOverride.DatabaseServerId))
-      {
-        databaseServerId = dbProjectConfigurationOverride.DatabaseServerId;
-      }
-
-      return GetDatabaseServerById(databaseServerId);
-    }
-
-    private DatabaseServer GetDatabaseServerById(string databaseServerId)
+    public DatabaseServer GetDatabaseServer(string databaseServerId)
     {
       Guard.NotNullNorEmpty(databaseServerId, "databaseServerId");
 
@@ -295,6 +288,20 @@ namespace UberDeployer.Core.Domain
       }
 
       throw new ArgumentException(string.Format("Database server with id '{0}' is not defined for environment '{1}'.", databaseServerId, Name));
+    }
+
+    private DbProjectConfigurationOverride FindDbProjectConfigurationOverride(string projectName)
+    {
+      Guard.NotNullNorEmpty(projectName, "projectName");
+
+      DbProjectConfigurationOverride configurationOverride;
+
+      if (_dbProjectConfigurationOverridesDict.TryGetValue(projectName, out configurationOverride))
+      {
+        return configurationOverride;
+      }
+
+      return null;
     }
 
     public string Name { get; private set; }

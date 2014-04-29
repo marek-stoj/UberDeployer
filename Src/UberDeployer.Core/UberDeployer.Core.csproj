@@ -93,6 +93,7 @@
     <Compile Include="Deployment\ToggleSchedulerAppEnabledStep.cs" />
     <Compile Include="Deployment\Win32Api.cs" />
     <Compile Include="Domain\DatabaseServer.cs" />
+    <Compile Include="Domain\DbProjectConfiguration.cs" />
     <Compile Include="Domain\DbProjectConfigurationOverride.cs" />
     <Compile Include="Deployment\DeployUberDeployerAgentDeploymentTask.cs" />
     <Compile Include="Domain\Repetition.cs" />
