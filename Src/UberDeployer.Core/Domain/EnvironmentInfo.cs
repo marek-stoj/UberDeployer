@@ -238,7 +238,6 @@ namespace UberDeployer.Core.Domain
       WebAppProjectConfigurationOverride webAppProjectConfigurationOverride =
         FindWebAppProjectConfigurationOverride(projectName);
 
-      // TODO IMM HI: xxx what about empty strings?
       if (webAppProjectConfigurationOverride != null)
       {
         if (webAppProjectConfigurationOverride.AppPoolId != null)
