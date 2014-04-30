@@ -2,7 +2,7 @@
 
 ## Konfiguracja serwisu WCF UberDeployer.Agent.NtService
 
-Dane konfiguracyjne części usługowej ÜberDeployera trzymane są w plikach XML: `ApplicationConfiguration.xml`, `EnvironmentInfos.xml` oraz `ProjectInfos.xml`.
+Dane konfiguracyjne części usługowej ÜberDeployera trzymane są w plikach XML: `ApplicationConfiguration.xml`, `EnvironmentInfo_XYZ.xml` oraz `ProjectInfos.xml`.
 Po zmianie konfiguracji konieczne jest wdrożenie usługi agenta ÜberDeployera. Niestety na tę chwilę nie da się wdrażać agenta ÜberDeployera ÜberDeployerem,
 więc trzeba to robić ręcznie. W zasadzie wystarczy tylko podmieniać zmodyfikowane pliki konfiguracyjne (z podkatalogu Data), natomiast trzeba pamiętać
 o zrestartowaniu usługi NT o nazwie `UberDeployer.Agent.NtService`.
@@ -70,12 +70,23 @@ Przykładowa konfiguracja:
   <Name>UberDeployer.SampleWebApp</Name>
   <ArtifactsRepositoryName>UberDeployerSamples</ArtifactsRepositoryName>
   <ArtifactsRepositoryDirName>SampleWebApp</ArtifactsRepositoryDirName>
+  <AppPoolId>ASP.NET v4.0</AppPoolId>
+  <WebSiteName>Default Web Site</WebSiteName>
   <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
+  <WebAppName>UberDeployer.SampleWebApp</WebAppName>
 </ProjectInfoXml>
 ```
 
-Aplikacje webowe nie mają dodatkowych parametrów konfiguracji w pliku `ProjectInfos.xml`, ponieważ większość tych
-parametrów zależy od docelowego środowiska &mdash; patrz sekcja "Konfiguracja środowisk", element `WebAppProjectConfigurations`.
+Omówienie elementów specyficznych dla aplikacji webowych:
+
+- `AppPoolId` &mdash; wewnętrzny identyfikator puli aplikacji IIS, z której ma korzystać dana aplikacja. Patrz również element `AppPoolInfos`.
+- `WebSiteName` &mdash; nazwa witryny IIS, pod którą ma być podpięta dana aplikacja.
+- `WebAppDirName` &mdash; nazwa katalogu na docelowym serwerze, w którym umieszczona będzie aplikacja.
+Uwaga: w tej chwili nieużywane &mdash; docelowy katalog dla aplikacji webowych zależy od konfiguracji witryny w IIS, pod którą dana aplikacja
+jest podpięta.
+-`WebAppName` &mdash; nazwa, pod którą aplikacja będzie widniała w IIS.
+
+Każdy z tych elementów można nadpisać dla konkretnego środowiska &mdash; patrz element `WebAppProjectConfigurationOverride` w sekcji "Konfiguracja środowisk".
 
 ### Konfiguracja aplikacji harmonogramu zadań
 
@@ -178,6 +189,7 @@ Przykładowa konfiguracja:
   <ArtifactsRepositoryDirName>DbScripts</ArtifactsRepositoryDirName>
   <ArtifactsAreNotEnvironmentSpecific>true</ArtifactsAreNotEnvironmentSpecific>
   <DbName>UberDeployerSample</DbName>
+  <DatabaseServerId>Default</DatabaseServerId>
 </ProjectInfoXml>
 ```
 
@@ -186,6 +198,9 @@ Omówienie elementów specyficznych dla projektów bazodanowych:
 - `ArtifactsAreNotEnvironmentSpecific` &mdash; informacja dla ÜberDeployera, że artefakty tego projektu nie są zależne od środowiska,
 na które projekt ma być wdrożony.
 - `DbName` &mdash; nazwa bazy danych na docelowym serwerze.
+- `DatabaseServerId` &mdash; identyfikator wewnętrzny serwera bazodanowego. Patrz również element `DatabaseServers`.
+
+Każdy z tych elementów można nadpisać dla konkretnego środowiska &mdash; patrz element `DbProjectConfigurationOverride` w sekcji "Konfiguracja środowisk".
 
 ## Konfiguracja środowisk
 
@@ -306,28 +321,6 @@ które wymagają podania użytkownika, w kontekście którego dana aplikacja ma 
   * `Id` &mdash; wewnętrzny identyfikator serwera bazodanowego.
   * `MachineName` &mdash; nazwa serwera bazodanowego.
 
-- `WebAppProjectConfigurations` &mdash; lista elementów konfiguracyjnych poszczególnych aplikacji webowych specyficznych dla danego środowiska. Przykład:
-
-    ```xml
-    <WebAppProjectConfigurations>
-      <WebAppProjectConfigurationXml projectName="UberDeployer.SampleWebApp">
-        <AppPoolId>ASP.NET v4.0</AppPoolId>
-        <WebSiteName>Default Web Site</WebSiteName>
-        <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
-        <WebAppName>UberDeployer.SampleWebApp</WebAppName>
-      </WebAppProjectConfigurationXml>
-    </WebAppProjectConfigurations>
-    ```
-        
-  Opis elementów:
-  
-  * `AppPoolId` &mdash; wewnętrzny identyfikator puli aplikacji IIS, z której ma korzystać dana aplikacja. Patrz również element `AppPoolInfos`.
-  * `WebSiteName` &mdash; nazwa witryny IIS, pod którą ma być podpięta dana aplikacja.
-  * `WebAppDirName` &mdash; nazwa katalogu na docelowym serwerze, w którym umieszczona będzie aplikacja.
-  Uwaga: w tej chwili nieużywane &mdash; docelowy katalog dla aplikacji webowych zależy od konfiguracji witryny w IIS, pod którą dana aplikacja
-  jest podpięta.
-  * `WebAppName` &mdash; nazwa, pod którą aplikacja będzie widniała w IIS.
-
 - `ProjectToFailoverClusterGroupMappings` &mdash; definiuje mapowanie projektów typu usługa NT na nazwy grup klastrowych. Używane, gdy na danym
 środowisku włączone jest klastrowanie (patrz element `EnableFailoverClusteringForNtServices`). Przykład:
 
@@ -343,12 +336,34 @@ które wymagają podania użytkownika, w kontekście którego dana aplikacja ma 
   * `ProjectName` &mdash; nazwa projektu (wewnętrzna, czyli ta używana w obrębie ÜberDeployera).
   * `ClusterGroupName` &mdash; nazwa grupy klastrowej.
 
-- `DbProjectConfigurations` &mdash; konfiguracja
+- `WebAppProjectConfigurationOverrides` &mdash; lista opcjonalnych elementów konfiguracyjnych poszczególnych aplikacji webowych specyficznych dla danego środowiska. Przykład:
 
     ```xml
-    <DbProjectConfigurationXml projectName="UberDeployer.SampleDb">
+    <WebAppProjectConfigurationOverrides>
+      <WebAppProjectConfigurationOverrideXml projectName="UberDeployer.SampleWebApp">
+        <AppPoolId>ASP.NET v4.0</AppPoolId>
+        <WebSiteName>Default Web Site</WebSiteName>
+        <WebAppDirName>UberDeployer.SampleWebApp</WebAppDirName>
+        <WebAppName>UberDeployer.SampleWebApp</WebAppName>
+      </WebAppProjectConfigurationOverrideXml>
+    </WebAppProjectConfigurationOverrides>
+    ```
+        
+  Opis elementów:
+  
+  * `AppPoolId` &mdash; wewnętrzny identyfikator puli aplikacji IIS, z której ma korzystać dana aplikacja. Patrz również element `AppPoolInfos`.
+  * `WebSiteName` &mdash; nazwa witryny IIS, pod którą ma być podpięta dana aplikacja.
+  * `WebAppDirName` &mdash; nazwa katalogu na docelowym serwerze, w którym umieszczona będzie aplikacja.
+  Uwaga: w tej chwili nieużywane &mdash; docelowy katalog dla aplikacji webowych zależy od konfiguracji witryny w IIS, pod którą dana aplikacja
+  jest podpięta.
+  * `WebAppName` &mdash; nazwa, pod którą aplikacja będzie widniała w IIS.
+
+- `DbProjectConfigurationOverrides` &mdash; lista opcjonalnych elementów konfiguracyjnych poszczególnych projektów bazodanowych specyficznych dla danego środowiska. Przykład:
+
+    ```xml
+    <DbProjectConfigurationOverrideXml projectName="UberDeployer.SampleDb">
       <DatabaseServerId>Default</DatabaseServerId>
-    </DbProjectConfigurationXml>
+    </DbProjectConfigurationOverrideXml>
     ```
 
   Opis atrybutów i elementów:
