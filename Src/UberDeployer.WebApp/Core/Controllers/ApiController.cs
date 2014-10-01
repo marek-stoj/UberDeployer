@@ -20,7 +20,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 {
   public class ApiController : UberDeployerWebAppController
   {
-    private const int _MaxProjectConfigurationBuildsCount = 25;
+    private const string _AppSettingsKey_MaxProjectConfigurationBuildsCount = "MaxProjectConfigurationBuildsCount";
     private const string _AppSettingsKey_VisibleEnvironments = "VisibleEnvironments";
     private const string _AppSettingsKey_DeployableEnvironments = "DeployableEnvironments";
     private const string _AppSettingsKey_AllowedProjectConfigurations = "AllowedProjectConfigurations";
@@ -28,6 +28,7 @@ namespace UberDeployer.WebApp.Core.Controllers
     private static readonly ISet<string> _visibleEnvironments;
     private static readonly ISet<string> _deployableEnvironments;
     private static readonly ISet<string> _allowedProjectConfigurations;
+    private static readonly int _maxProjectConfigurationBuildsCount;
 
     private readonly ISessionService _sessionService;
     private readonly IAgentService _agentService;
@@ -42,6 +43,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       _visibleEnvironments = ParseAppSettingSet(visibleEnvironmentsStr);
       _deployableEnvironments = ParseAppSettingSet(deployableEnvironmentsStr);
       _allowedProjectConfigurations = ParseAppSettingSet(allowedProjectConfigurationsStr);
+      _maxProjectConfigurationBuildsCount = AppSettingsUtils.ReadAppSettingInt(_AppSettingsKey_MaxProjectConfigurationBuildsCount);
     }
 
     public ApiController(ISessionService sessionService, IAgentService agentService, IDeploymentStateProvider deploymentStateProvider)
@@ -142,7 +144,7 @@ namespace UberDeployer.WebApp.Core.Controllers
       }
 
       List<ProjectConfigurationBuildViewModel> projectConfigurationBuildViewModels =
-        _agentService.GetProjectConfigurationBuilds(projectName, projectConfigurationName, _MaxProjectConfigurationBuildsCount, ProjectConfigurationBuildFilter.Empty)
+        _agentService.GetProjectConfigurationBuilds(projectName, projectConfigurationName, _maxProjectConfigurationBuildsCount, ProjectConfigurationBuildFilter.Empty)
           .Select(
             pcb =>
               new ProjectConfigurationBuildViewModel
