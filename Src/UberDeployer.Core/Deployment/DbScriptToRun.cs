@@ -31,7 +31,7 @@ namespace UberDeployer.Core.Deployment
         new[] {
           string.Format("insert\\s+(into)?\\s+\\[?version(history)?\\]?(.+?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
           string.Format("insert\\s+into\\s+#temp(.+?)VALUES(.*?){0}\\.{1}{2}{3}", dbVersion.Major, dbVersion.Minor, RevisionRegex(dbVersion), BuildRegex(dbVersion)),
-          "alter\\s+procedure\\s+(\\[?init\\]?\\.)?\\[?initversion\\]?",
+          "(alter|create)\\s+procedure\\s+(\\[?init\\]?\\.)?\\[?initversion\\]?",
         }
       .Select(pattern => new Regex(pattern, RegexOptions.IgnoreCase));
 
