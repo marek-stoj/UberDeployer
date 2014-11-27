@@ -81,7 +81,7 @@ namespace UberDeployer.Core.DbDiff
 
             if (Build == otherVersion.Build)
             {
-              if (String.CompareOrdinal(Tail, otherVersion.Tail) < 0)
+              if (String.Compare(Tail, otherVersion.Tail, StringComparison.OrdinalIgnoreCase) < 0)
               {
                 return true;
               }
@@ -111,7 +111,7 @@ namespace UberDeployer.Core.DbDiff
     {
       Guard.NotNull(other, "other");
 
-      if (Equals(this, other))
+      if (Equals(other))
       {
         return 0;
       }
@@ -136,7 +136,7 @@ namespace UberDeployer.Core.DbDiff
     {
       if (ReferenceEquals(null, other)) return false;
       if (ReferenceEquals(this, other)) return true;
-      return other.Major == Major && other.Minor == Minor && other.Revision == Revision && other.Build == Build && Equals(other.Tail, Tail);
+      return other.Major == Major && other.Minor == Minor && other.Revision == Revision && other.Build == Build && string.Equals(other.Tail, Tail, StringComparison.OrdinalIgnoreCase);
     }
 
     public override bool Equals(object obj)

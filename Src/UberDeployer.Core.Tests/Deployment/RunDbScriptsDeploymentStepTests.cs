@@ -95,5 +95,20 @@ namespace UberDeployer.Core.Tests.Deployment
       // act, assert
       Assert.Throws<DeploymentTaskException>(() => _deploymentStep.PrepareAndExecute());
     }
+
+    [Test]
+    public void DoExecute_does_not_fail_on_nonversioned_script_when_is_marked_as_non_transactional()
+    {
+      // arrange  
+      IEnumerable<DbScriptToRun> nonTransactionalScript = new List<DbScriptToRun>() { new DbScriptToRun(DbVersion.FromString("1.0"), "TestData/NonVersionedScript/02.NonVersionedScript.notrans.sql") };
+
+      _deploymentStep = new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, nonTransactionalScript);
+
+      // act
+      _deploymentStep.PrepareAndExecute();
+
+      // assert
+      _dbScriptRunnerFake.Verify(x => x.Execute(It.IsAny<string>()));
+    }
   }
 }

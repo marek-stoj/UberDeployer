@@ -82,8 +82,7 @@ namespace UberDeployer.Core.Tests.Deployment
       // act
       _deploymentStep.PrepareAndExecute();
 
-      // assert
-      Assert.AreEqual(1, _deploymentStep.ScriptsToRun.Count());
+      // assert      
       Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == notExecutedScript));
     }
 
@@ -121,6 +120,25 @@ namespace UberDeployer.Core.Tests.Deployment
 
       // assert
       Assert.IsFalse(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == notSupportedScript));
+    }
+
+    [Test]
+    public void DoExecute_gathers_scripts_marked_as_non_transactional()
+    {
+      // arrange  
+      string[] executedScriptsVersion = new[] { "1.2", "1.3" };
+
+      const string nonTransactionalScriptToExecute = "1.3.notrans.sql";
+
+      _dbVersionProviderFake
+        .Setup(x => x.GetVersions(It.IsAny<string>(), It.IsAny<string>())).
+        Returns(executedScriptsVersion);
+
+      // act
+      _deploymentStep.PrepareAndExecute();
+
+      // assert      
+      Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == nonTransactionalScriptToExecute));
     }
 
     private OrderedDictionary GetDefaultConstructorParams()

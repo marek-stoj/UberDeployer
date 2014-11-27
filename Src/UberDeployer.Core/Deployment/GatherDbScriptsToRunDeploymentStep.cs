@@ -10,6 +10,8 @@ namespace UberDeployer.Core.Deployment
 {
   public class GatherDbScriptsToRunDeploymentStep : DeploymentStep
   {
+    private const string _AllowedTail = ".notrans";
+
     private readonly string _dbName;
     private readonly Lazy<string> _scriptsDirectoryPathProvider;
     private readonly string _sqlServerName;
@@ -64,7 +66,8 @@ namespace UberDeployer.Core.Deployment
 
     private static bool IsScriptSupported(DbVersion scriptVersion)
     {
-      return string.IsNullOrEmpty(scriptVersion.Tail);
+      return string.IsNullOrEmpty(scriptVersion.Tail) 
+        || string.Equals(scriptVersion.Tail, _AllowedTail, StringComparison.OrdinalIgnoreCase);
     }
 
     private IEnumerable<DbScriptToRun> GetScriptsToRun()

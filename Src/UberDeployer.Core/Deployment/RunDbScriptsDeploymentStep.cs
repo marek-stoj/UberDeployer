@@ -7,12 +7,10 @@ using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Deployment
 {
-  using System.Text.RegularExpressions;
-
-  using UberDeployer.Core.DbDiff;
-
   public class RunDbScriptsDeploymentStep : DeploymentStep
   {
+    private const string _NoTransactionTail = "notrans";
+
     private readonly string _databaseServerMachineName;
 
     private readonly IEnumerable<DbScriptToRun> _scriptPathsToRunEnumerable;
@@ -65,8 +63,8 @@ namespace UberDeployer.Core.Deployment
             using (var sr = new StreamReader(scriptPathToRun.ScriptPath))
             {
               string script = sr.ReadToEnd();
-              
-              if (!DbScriptToRun.IsVersionInsertPresent(scriptPathToRun.DbVersion, script))
+
+              if (ShouldBeTransactional(executedScriptName) && !DbScriptToRun.IsVersionInsertPresent(scriptPathToRun.DbVersion, script))
               {
                 throw new DeploymentTaskException(string.Format("Script {0} that should be run does not have necessary version insert.", scriptPathToRun.DbVersion));
               }
@@ -84,6 +82,18 @@ namespace UberDeployer.Core.Deployment
 
         throw new DeploymentTaskException(message, exc);
       }
+    }
+
+    private static bool ShouldBeTransactional(string scriptFileName)
+    {
+      string fileName = Path.GetFileNameWithoutExtension(scriptFileName);
+
+      if (string.IsNullOrEmpty(fileName))
+      {
+        throw new DeploymentTaskException(string.Format("Invalid script file name: '{0}'", scriptFileName));
+      }
+
+      return !fileName.EndsWith(_NoTransactionTail, StringComparison.OrdinalIgnoreCase);
     }
 
     public override string Description
