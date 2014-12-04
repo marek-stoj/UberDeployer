@@ -17,6 +17,7 @@ namespace UberDeployer.Core.DataAccess.Xml
     [XmlInclude(typeof(TerminalAppProjectInfoXml))]
     [XmlInclude(typeof(DbProjectInfoXml))]
     [XmlInclude(typeof(UberDeployerAgentProjectInfoXml))]
+    [XmlInclude(typeof(ExtensionProjectInfoXml))]
     public class ProjectInfosXml
     {
       public List<ProjectInfoXml> ProjectInfos { get; set; }
@@ -54,6 +55,8 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string NtServiceExeName { get; set; }
 
       public string NtServiceUserId { get; set; }
+
+      public string ExtensionsDirName { get; set; }
     }
 
     public class WebAppProjectInfoXml : ProjectInfoXml
@@ -125,6 +128,11 @@ namespace UberDeployer.Core.DataAccess.Xml
 
     public class UberDeployerAgentProjectInfoXml : NtServiceProjectInfoXml
     {
+    }
+
+    public class ExtensionProjectInfoXml : ProjectInfoXml
+    {
+      public string ExtendedProjectName { get; set; }
     }
 
     #endregion
@@ -222,7 +230,9 @@ namespace UberDeployer.Core.DataAccess.Xml
             ntServiceProjectInfoXml.NtServiceDirName,
             ntServiceProjectInfoXml.NtServiceDisplayName,
             ntServiceProjectInfoXml.NtServiceExeName,
-            ntServiceProjectInfoXml.NtServiceUserId);
+            ntServiceProjectInfoXml.NtServiceUserId,
+            ntServiceProjectInfoXml.ExtensionsDirName);
+
       }
 
       var webAppProjectInfoXml = projectInfoXml as WebAppProjectInfoXml;
@@ -302,6 +312,20 @@ namespace UberDeployer.Core.DataAccess.Xml
             dbProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
             dbProjectInfoXml.DbName,
             dbProjectInfoXml.DatabaseServerId);
+      }
+
+      var extensionProjectXml = projectInfoXml as ExtensionProjectInfoXml;
+
+      if (extensionProjectXml != null)
+      {
+        return
+          new ExtensionProjectInfo(
+            extensionProjectXml.Name,
+            extensionProjectXml.ArtifactsRepositoryName,
+            allowedEnvironmentNames,
+            extensionProjectXml.ArtifactsRepositoryDirName,
+            true,
+            extensionProjectXml.ExtendedProjectName);
       }
 
       throw new NotSupportedException(string.Format("Project type '{0}' is not supported.", projectInfoXml.GetType()));

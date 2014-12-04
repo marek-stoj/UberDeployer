@@ -78,9 +78,15 @@ namespace UberDeployer.Core.Deployment
       }
 
       AddSubTask(
-        new CopyFilesDeploymentStep(
+        new CleanDirectoryDeploymentStep(
           _directoryAdapter,
           _fileAdapter,
+          new Lazy<string>(() => PreparePackageDirPath(PackageDirPath)), 
+          excludedDirs: new string[] {}));
+      
+      AddSubTask(
+        new CopyFilesDeploymentStep(
+          _directoryAdapter,
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           new Lazy<string>(() => PreparePackageDirPath(PackageDirPath))));
     }

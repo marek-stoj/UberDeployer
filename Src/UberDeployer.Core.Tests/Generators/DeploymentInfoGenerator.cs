@@ -26,6 +26,11 @@ namespace UberDeployer.Core.Tests.Generators
       return GetDeploymentInfo(new DbInputParams());
     }
 
+    public static DeploymentInfo GetExtensionProjectDeploymentInfo()
+    {
+      return GetDeploymentInfo(new ExtensionInputParams());
+    }
+
     public static DeploymentInfo GetTerminalAppDeploymentInfo()
     {
       return GetDeploymentInfo(new TerminalAppInputParams());

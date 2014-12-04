@@ -54,7 +54,7 @@ namespace UberDeployer.Common.IO
 
         string dstFilePath = Path.Combine(dstPath, fileName);
 
-        File.Copy(filePath, dstFilePath);
+        File.Copy(filePath, dstFilePath, true);
       }
 
       foreach (string dirPath in Directory.GetDirectories(srcPath, "*", SearchOption.TopDirectoryOnly))
@@ -68,7 +68,10 @@ namespace UberDeployer.Common.IO
 
         string dstSubDirPath = Path.Combine(dstPath, dirName);
 
-        Directory.CreateDirectory(dstSubDirPath);
+        if (!Directory.Exists(dstSubDirPath))
+        {
+          Directory.CreateDirectory(dstSubDirPath);
+        }
 
         CopyAll(dirPath, dstSubDirPath);
       }

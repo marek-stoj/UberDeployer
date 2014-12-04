@@ -129,6 +129,25 @@ namespace UberDeployer.Core.Deployment
       return (T)projectInfo;
     }
 
+    protected T GetProjectInfo<T>(string projectName)
+      where T : ProjectInfo
+    {
+      ProjectInfo projectInfo =
+        _projectInfoRepository.FindByName(projectName);
+
+      if (projectInfo == null)
+      {
+        throw new DeploymentTaskException(string.Format("Project named '{0}' doesn't exist.", DeploymentInfo.ProjectName));
+      }
+
+      if (!(projectInfo is T))
+      {
+        throw new DeploymentTaskException(string.Format("Project named '{0}' is not of the expected type: '{1}'.", DeploymentInfo.ProjectName, typeof(T).FullName));
+      }
+
+      return (T)projectInfo;
+    }
+
     protected void AddSubTask(DeploymentTaskBase subTask)
     {
       if (subTask == null)

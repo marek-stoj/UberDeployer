@@ -27,7 +27,8 @@ namespace UberDeployer.Core.Tests.Deployment
         "serviceDir",
         "serviceDisplayed",
         "exeName",
-        "Sample.User");
+        "Sample.User",
+        "");
 
     private Mock<INtServiceManager> _ntServiceManager;
     private Mock<IArtifactsRepository> _artifactsRepository;

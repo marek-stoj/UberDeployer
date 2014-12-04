@@ -8,7 +8,7 @@ namespace UberDeployer.Core.Domain
     #region Constructor(s)
 
     public UberDeployerAgentProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string ntServiceName, string ntServiceDirName, string ntServiceDisplayName, string ntServiceExeName, string ntServiceUserId)
-      : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific, ntServiceName, ntServiceDirName, ntServiceDisplayName, ntServiceExeName, ntServiceUserId)
+      : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific, ntServiceName, ntServiceDirName, ntServiceDisplayName, ntServiceExeName, ntServiceUserId, string.Empty)
     {
     }
 

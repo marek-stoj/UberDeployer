@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="DataAccess\TeamCityArtifactsRepositoryTests.cs" />
     <Compile Include="Deployment\DbScriptToRunTests.cs" />
+    <Compile Include="Deployment\DeployExtensionProjectDeploymentTaskTests.cs" />
     <Compile Include="Deployment\DeployNtServiceDeploymentTaskTests.cs" />
     <Compile Include="Deployment\BackupFilesDeploymentStepTests.cs" />
     <Compile Include="Deployment\CtorTester.cs" />

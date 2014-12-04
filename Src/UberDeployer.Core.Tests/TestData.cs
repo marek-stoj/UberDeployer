@@ -27,6 +27,7 @@ namespace UberDeployer.Core.Tests
       new List<ProjectToFailoverClusterGroupMapping>
         {
           new ProjectToFailoverClusterGroupMapping("ntsvcprj", "cg1"),
+          new ProjectToFailoverClusterGroupMapping("project_name", "cg1"),
         };
 
     public static readonly List<WebAppProjectConfigurationOverride> WebAppProjectConfigurationOverrides =

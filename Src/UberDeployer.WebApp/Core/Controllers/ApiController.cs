@@ -518,6 +518,11 @@ namespace UberDeployer.WebApp.Core.Controllers
           return new NtServiceInputParams();
         }
 
+        case ProjectType.Extension:
+        {
+          return new ExtensionInputParams();
+        }
+
         default:
         {
           throw new NotSupportedException(string.Format("Unknown project type: '{0}'.", projectType));

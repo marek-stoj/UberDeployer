@@ -49,8 +49,16 @@ namespace UberDeployer.Core.Deployment.Pipeline
 
         finishedSuccessfully = true;
 
-        PostDiagnosticMessage(string.Format("Finished{0} '{1}' (\"{2}\").", (deploymentInfo.IsSimulation ? " (simulation)" : ""), deploymentTask.GetType().Name, deploymentTask.Description), DiagnosticMessageType.Info);
-        PostDiagnosticMessage("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", DiagnosticMessageType.Info);
+        PostDiagnosticMessage(
+          string.Format("Finished{0} '{1}' (\"{2}\").", (deploymentInfo.IsSimulation ? " (simulation)" : ""),
+            deploymentTask.GetType().Name, deploymentTask.Description), DiagnosticMessageType.Info);
+        PostDiagnosticMessage(
+          "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+          DiagnosticMessageType.Info);
+      }
+      catch (Exception ex)
+      {
+        PostDiagnosticMessage(string.Format("Exception: {0}", ex.Message), DiagnosticMessageType.Error);
       }
       finally
       {

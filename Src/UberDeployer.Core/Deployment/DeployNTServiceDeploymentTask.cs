@@ -329,9 +329,15 @@ namespace UberDeployer.Core.Deployment
 */
 
       AddSubTask(
-        new CopyFilesDeploymentStep(
+        new CleanDirectoryDeploymentStep(
           _directoryAdapter,
           _fileAdapter,
+          new Lazy<string>(() => getAppServerNetworkPathFunc(targetDirPath)),
+          excludedDirs: new string[] { _projectInfo.ExtensionsDirName }));
+
+      AddSubTask(
+        new CopyFilesDeploymentStep(
+          _directoryAdapter,
           artifactsBinariesDirPathProvider,
           new Lazy<string>(() => getAppServerNetworkPathFunc(targetDirPath))));
 

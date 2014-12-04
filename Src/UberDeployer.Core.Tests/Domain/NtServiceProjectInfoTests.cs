@@ -60,7 +60,8 @@ namespace UberDeployer.Core.Tests.Domain
           _NtServiceDirName,
           _NtServiceDisplayName,
           _NtServiceExeName,
-          _NtServiceUserId);
+          _NtServiceUserId,
+          "");
 
       objectFactory.Setup(o => o.CreateProjectInfoRepository()).Returns(prjInfoRepository.Object);
       objectFactory.Setup(o => o.CreateEnvironmentInfoRepository()).Returns(envInfoRepository.Object);
@@ -117,7 +118,8 @@ namespace UberDeployer.Core.Tests.Domain
           _NtServiceDirName,
           _NtServiceDisplayName,
           _NtServiceExeName,
-          _NtServiceUserId);
+          _NtServiceUserId,
+          "");
 
       var targetFolders = projectInfo.GetTargetFolders(_objectFactoryFake.Object, envInfo).ToList();
 

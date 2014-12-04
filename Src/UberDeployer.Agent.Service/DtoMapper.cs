@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Agent.Service
 {
@@ -15,7 +16,8 @@ namespace UberDeployer.Agent.Service
         .Include<Core.Domain.TerminalAppProjectInfo, Proxy.Dto.TerminalAppProjectInfo>()
         .Include<Core.Domain.SchedulerAppProjectInfo, Proxy.Dto.SchedulerAppProjectInfo>()
         .Include<Core.Domain.DbProjectInfo, Proxy.Dto.DbProjectInfo>()
-        .Include<Core.Domain.UberDeployerAgentProjectInfo, Proxy.Dto.UberDeployerAgentProjectInfo>();
+        .Include<Core.Domain.UberDeployerAgentProjectInfo, Proxy.Dto.UberDeployerAgentProjectInfo>()
+        .Include<Core.Domain.ExtensionProjectInfo, Proxy.Dto.ExtensionProjectInfo>();
 
       Mapper.CreateMap<Core.Domain.NtServiceProjectInfo, Proxy.Dto.NtServiceProjectInfo>();
       Mapper.CreateMap<Core.Domain.WebAppProjectInfo, Proxy.Dto.WebAppProjectInfo>();
@@ -24,6 +26,7 @@ namespace UberDeployer.Agent.Service
       Mapper.CreateMap<Core.Domain.SchedulerAppProjectInfo, Proxy.Dto.SchedulerAppProjectInfo>();
       Mapper.CreateMap<Core.Domain.DbProjectInfo, Proxy.Dto.DbProjectInfo>();
       Mapper.CreateMap<Core.Domain.UberDeployerAgentProjectInfo, Proxy.Dto.UberDeployerAgentProjectInfo>();
+      Mapper.CreateMap<Core.Domain.ExtensionProjectInfo, Proxy.Dto.ExtensionProjectInfo>();
 
       Mapper.CreateMap<Core.Domain.IisAppPoolInfo, Proxy.Dto.IisAppPoolInfo>();
 
@@ -120,6 +123,13 @@ namespace UberDeployer.Agent.Service
       if (webServiceInputParams != null)
       {
         return new Core.Domain.Input.WebServiceInputParams();
+      }
+
+      var extensionInputParams = inputParams as Proxy.Dto.Input.ExtensionInputParams;
+
+      if (extensionInputParams != null)
+      {
+        return new ExtensionInputParams();  
       }
 
       throw new NotSupportedException(string.Format("Unknown input params type: '{0}'.", inputParams.GetType().FullName));

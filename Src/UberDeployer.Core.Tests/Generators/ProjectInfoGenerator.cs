@@ -19,7 +19,8 @@ namespace UberDeployer.Core.Tests.Generators
           "nt_service_dir_name",
           "nt_service_display_name",
           "nt_service_exe_name",
-          "nt_service_user_id");
+          "nt_service_user_id",
+          "");
     }
 
     public static WebAppProjectInfo GetWebAppProjectInfo()

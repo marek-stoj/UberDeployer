@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="Deployment\AsynchronousWebPasswordCollector.cs" />
+    <Compile Include="Deployment\CleanDirectoryDeploymentStep.cs" />
     <Compile Include="Deployment\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\Converter.cs" />
     <Compile Include="Deployment\CreateManualDeploymentPackageDeploymentTask.cs" />
@@ -96,7 +97,10 @@
     <Compile Include="Domain\DbProjectConfiguration.cs" />
     <Compile Include="Domain\DbProjectConfigurationOverride.cs" />
     <Compile Include="Deployment\DeployUberDeployerAgentDeploymentTask.cs" />
+    <Compile Include="Deployment\DeployExtensionProjectDeploymentTask.cs" />
+    <Compile Include="Domain\Input\ExtensionInputParams.cs" />
     <Compile Include="Domain\Repetition.cs" />
+    <Compile Include="Domain\ExtensionProjectInfo.cs" />
     <Compile Include="Domain\SchedulerAppTask.cs" />
     <Compile Include="Domain\UberDeployerAgentProjectInfo.cs" />
     <Compile Include="Domain\WebAppProjectConfigurationOverride.cs" />

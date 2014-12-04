@@ -30,7 +30,6 @@ namespace UberDeployer.Core.Tests.Deployment
         var copyFilesDeploymentStep =
           new CopyFilesDeploymentStep(
             _directoryAdapter, 
-            _fileAdapter, 
             new Lazy<string>(() => srcDirPath), 
             new Lazy<string>(() => dstDirPath));
 
@@ -64,7 +63,6 @@ namespace UberDeployer.Core.Tests.Deployment
         var copyFilesDeploymentStep =
           new CopyFilesDeploymentStep(
             _directoryAdapter, 
-            _fileAdapter,
             new Lazy<string>(() => srcDirPath),
             new Lazy<string>(() => dstDirPath));
 
@@ -96,7 +94,6 @@ namespace UberDeployer.Core.Tests.Deployment
         var copyFilesDeploymentStep =
           new CopyFilesDeploymentStep(
             _directoryAdapter, 
-            _fileAdapter, 
             new Lazy<string>(() => srcDirPath),
             new Lazy<string>(() => dstDirPath));
 

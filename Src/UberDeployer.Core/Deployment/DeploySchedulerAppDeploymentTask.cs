@@ -109,9 +109,15 @@ namespace UberDeployer.Core.Deployment
         string targetDirNetworkPath = environmentInfo.GetSchedulerServerNetworkPath(schedulerServerBinariesMachineName, targetDirPath);
 
         AddSubTask(
-          new CopyFilesDeploymentStep(
+          new CleanDirectoryDeploymentStep(
             _directoryAdapter,
             _fileAdapter,
+            new Lazy<string>(() => targetDirNetworkPath),
+            excludedDirs: new string[] { }));
+
+        AddSubTask(
+          new CopyFilesDeploymentStep(
+            _directoryAdapter,
             binariesDirPathProvider,
             new Lazy<string>(() => targetDirNetworkPath)));
       }
