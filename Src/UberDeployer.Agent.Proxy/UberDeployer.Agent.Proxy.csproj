@@ -49,7 +49,6 @@
     <Compile Include="AgentServiceClient.cs" />
     <Compile Include="Dto\DatabaseServer.cs" />
     <Compile Include="Dto\DbProjectConfigurationOverride.cs" />
-    <Compile Include="Dto\ExtensionProjectInfo.cs" />
     <Compile Include="Dto\Input\ExtensionInputParams.cs" />
     <Compile Include="Dto\Metadata\MachineSpecificProjectVersion.cs" />
     <Compile Include="Dto\Metadata\ProjectMetadata.cs" />
