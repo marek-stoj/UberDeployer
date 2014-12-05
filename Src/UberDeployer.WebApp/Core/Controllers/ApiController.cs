@@ -516,12 +516,7 @@ namespace UberDeployer.WebApp.Core.Controllers
         case ProjectType.UberDeployerAgent:
         {
           return new NtServiceInputParams();
-        }
-
-        case ProjectType.Extension:
-        {
-          return new ExtensionInputParams();
-        }
+        }        
 
         default:
         {

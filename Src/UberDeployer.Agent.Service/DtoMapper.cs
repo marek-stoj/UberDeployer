@@ -17,7 +17,8 @@ namespace UberDeployer.Agent.Service
         .Include<Core.Domain.SchedulerAppProjectInfo, Proxy.Dto.SchedulerAppProjectInfo>()
         .Include<Core.Domain.DbProjectInfo, Proxy.Dto.DbProjectInfo>()
         .Include<Core.Domain.UberDeployerAgentProjectInfo, Proxy.Dto.UberDeployerAgentProjectInfo>()
-        .Include<Core.Domain.ExtensionProjectInfo, Proxy.Dto.ProjectInfo>();
+        .Include<Core.Domain.ExtensionProjectInfo, Proxy.Dto.ProjectInfo>()
+        .ForMember(x => x.Type, opt => opt.MapFrom(y => MapProjectType(y.Type)));
 
       Mapper.CreateMap<Core.Domain.NtServiceProjectInfo, Proxy.Dto.NtServiceProjectInfo>();
       Mapper.CreateMap<Core.Domain.WebAppProjectInfo, Proxy.Dto.WebAppProjectInfo>();
@@ -75,6 +76,16 @@ namespace UberDeployer.Agent.Service
           deploymentInfo.ProjectConfigurationBuildId,
           deploymentInfo.TargetEnvironmentName,
           inputParams);
+    }
+
+    private static Proxy.Dto.ProjectType MapProjectType(Core.Domain.ProjectType domainProjectType)
+    {
+      if (domainProjectType == Core.Domain.ProjectType.Extension)
+      {
+        return Proxy.Dto.ProjectType.NtService;
+      }
+
+      return Mapper.Map<Core.Domain.ProjectType, Proxy.Dto.ProjectType>(domainProjectType);
     }
 
     private static Core.Domain.Input.InputParams ConvertInputParams(Proxy.Dto.Input.InputParams inputParams)
