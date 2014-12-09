@@ -21,7 +21,6 @@ namespace UberDeployer.Core.Deployment
       Guard.NotNull(dstDirPath, "dstDirPath");
       Guard.NotNull(fileAdapter, "fileAdapter");
       Guard.NotNull(directoryAdapter, "directoryAdapter");
-      Guard.NotNull(excludedDirs, "excludedDirsPattern");
 
       _dstDirPath = dstDirPath;
       _directoryAdapter = directoryAdapter;

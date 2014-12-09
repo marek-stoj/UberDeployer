@@ -156,7 +156,7 @@ namespace UberDeployer.Core.Deployment
               DeploymentInfo.DeploymentId,
               environmentInfo,
               environmentInfo.AppServerMachineName,
-              environmentUser, 
+              environmentUser,
               OnDiagnosticMessagePosted);
 
           return
@@ -316,24 +316,28 @@ namespace UberDeployer.Core.Deployment
       // create a step for copying the binaries to the target machine
       string targetDirPath = Path.Combine(ntServicesBaseDirPath, _projectInfo.NtServiceDirName);
 
-/* // TODO IMM HI: xxx we don't need this for now - should we parameterize this somehow?
-      // create a backup step if needed
-      string targetDirNetworkPath = getAppServerNetworkPathFunc(targetDirPath);
+      /* // TODO IMM HI: xxx we don't need this for now - should we parameterize this somehow?
+            // create a backup step if needed
+            string targetDirNetworkPath = getAppServerNetworkPathFunc(targetDirPath);
 
-      if (Directory.Exists(targetDirNetworkPath))
-      {
-        AddSubTask(
-          new BackupFilesDeploymentStep(
-            targetDirNetworkPath));
-      }
-*/
+            if (Directory.Exists(targetDirNetworkPath))
+            {
+              AddSubTask(
+                new BackupFilesDeploymentStep(
+                  targetDirNetworkPath));
+            }
+      */
+
+      string[] excludedDirs = string.IsNullOrEmpty(_projectInfo.ExtensionsDirName)
+        ? new string[0]
+        : new string[] {_projectInfo.ExtensionsDirName};
 
       AddSubTask(
         new CleanDirectoryDeploymentStep(
           _directoryAdapter,
           _fileAdapter,
           new Lazy<string>(() => getAppServerNetworkPathFunc(targetDirPath)),
-          excludedDirs: new string[] { _projectInfo.ExtensionsDirName }));
+          excludedDirs: excludedDirs));
 
       AddSubTask(
         new CopyFilesDeploymentStep(
