@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using log4net;
 
 namespace UberDeployer.Common.IO
 {
   public class DirectoryAdapter : IDirectoryAdapter
   {
+    private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    
     public bool Exists(string path)
     {
       return Directory.Exists(path);
@@ -23,6 +27,8 @@ namespace UberDeployer.Common.IO
 
     public void Delete(string path, bool recursive)
     {
+      _log.DebugFormat("Deleting path {0}, recursive {1}", path, recursive);
+
       Directory.Delete(path, recursive);
     }
 
