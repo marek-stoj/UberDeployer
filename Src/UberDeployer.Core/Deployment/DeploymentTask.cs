@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using UberDeployer.Common;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Domain;
 
@@ -201,7 +202,11 @@ namespace UberDeployer.Core.Deployment
     {
       if (!string.IsNullOrEmpty(_tempDirPath) && Directory.Exists(_tempDirPath))
       {
-        Directory.Delete(_tempDirPath, true);
+        RetryUtils.RetryOnException(
+          new[] {typeof (IOException)},
+          retriesCount: 4,
+          retryDelay: 500,
+          action: () => Directory.Delete(_tempDirPath, true));
       }
     }
 
