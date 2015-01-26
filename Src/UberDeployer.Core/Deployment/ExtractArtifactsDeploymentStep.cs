@@ -18,8 +18,6 @@ namespace UberDeployer.Core.Deployment
 
     private string _archiveSubPath;
 
-    #region Constructor(s)
-
     public ExtractArtifactsDeploymentStep(ProjectInfo projectInfo, EnvironmentInfo environmentInfo, DeploymentInfo deploymentInfo, string artifactsFilePath, string targetArtifactsDirPath, IFileAdapter fileAdapter, IZipFileAdapter zipFileAdapter)
     {
       Guard.NotNull(projectInfo, "projectInfo");
@@ -38,10 +36,6 @@ namespace UberDeployer.Core.Deployment
       _fileAdapter = fileAdapter;
       _zipFileAdapter = zipFileAdapter;
     }
-
-    #endregion
-
-    #region Overrides of DeploymentStep
 
     protected override void DoPrepare()
     {
@@ -102,10 +96,6 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion
-
-    #region Properties
-    
     public string BinariesDirPath
     {
       get
@@ -119,8 +109,6 @@ namespace UberDeployer.Core.Deployment
           Path.Combine(_targetArtifactsDirPath, _archiveSubPath.Replace("/", Path.DirectorySeparatorChar.ToString()))
             .TrimEnd(Path.DirectorySeparatorChar);
       }
-    }    
-
-    #endregion
+    }
   }
 }

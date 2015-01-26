@@ -125,6 +125,7 @@
     <Compile Include="Domain\ProjectToFailoverClusterGroupMapping.cs" />
     <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="InternalException.cs" />
+    <Compile Include="Management\Db\MsSqlSqlCmdScriptRunner.cs" />
     <Compile Include="Management\FailoverCluster\IFailoverClusterManager.cs" />
     <Compile Include="Management\Db\DbScriptRunnerException.cs" />
     <Compile Include="Management\Db\DbVersionTableInfo.cs" />

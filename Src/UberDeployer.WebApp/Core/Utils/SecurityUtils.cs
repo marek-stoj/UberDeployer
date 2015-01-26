@@ -28,7 +28,10 @@ namespace UberDeployer.WebApp.Core.Utils
 
     public static bool CanDeploy
     {
-      get { return string.IsNullOrEmpty(_canDeployRole) || Thread.CurrentPrincipal.IsInRole(_canDeployRole); }
+      get
+      {
+        return string.IsNullOrEmpty(_canDeployRole) || Thread.CurrentPrincipal.IsInRole(_canDeployRole);
+      }
     }
   }
 }

@@ -12,8 +12,6 @@ namespace UberDeployer.Core.Management.Db
 
     private readonly string _databaseServer;
 
-    #region Constructor(s)
-
     public MsSqlDbScriptRunner(string databaseServer)
     {
       if (string.IsNullOrEmpty(databaseServer))
@@ -24,15 +22,11 @@ namespace UberDeployer.Core.Management.Db
       _databaseServer = databaseServer;
     }
 
-    #endregion
-
-    #region IDbScriptRunner Members
-
-    public void Execute(string script)
+    public void Execute(string scriptToExecute)
     {
-      if (string.IsNullOrEmpty(script))
+      if (string.IsNullOrEmpty(scriptToExecute))
       {
-        throw new ArgumentException("Argument can't be null nor empty.", "script");
+        throw new ArgumentException("Argument can't be null nor empty.", "scriptToExecute");
       }
 
       try
@@ -44,24 +38,18 @@ namespace UberDeployer.Core.Management.Db
 
           server.ConnectionContext.ServerMessage += (o, eventArgs) => errors.AppendLine(eventArgs.ToString());
           server.ConnectionContext.InfoMessage += (o, eventArgs) => errors.AppendLine(eventArgs.ToString());
-          server.ConnectionContext.ExecuteNonQuery(script);
+          server.ConnectionContext.ExecuteNonQuery(scriptToExecute);
         }
       }
       catch (Exception exc)
       {
-        throw new DbScriptRunnerException(script, exc);
+        throw new DbScriptRunnerException(scriptToExecute, exc);
       }
     }
-
-    #endregion
-
-    #region Private methnods
 
     private string GetConnectionString()
     {
       return string.Format(_ConnectionStringPattern, _databaseServer);
     }
-
-    #endregion
   }
 }

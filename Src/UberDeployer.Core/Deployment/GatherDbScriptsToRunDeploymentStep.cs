@@ -20,8 +20,6 @@ namespace UberDeployer.Core.Deployment
 
     private IEnumerable<DbScriptToRun> _scriptsToRun = new List<DbScriptToRun>();
 
-    #region Constructor(s)
-
     public GatherDbScriptsToRunDeploymentStep(string dbName, Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
     {
       Guard.NotNullNorEmpty(dbName, "dbName");
@@ -38,10 +36,6 @@ namespace UberDeployer.Core.Deployment
 
       _scriptsToRun = Enumerable.Empty<DbScriptToRun>();
     }
-
-    #endregion
-
-    #region Overrides of DeploymentStep
 
     protected override void DoExecute()
     {
@@ -60,13 +54,9 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion
-
-    #region Private methods
-
     private static bool IsScriptSupported(DbVersion scriptVersion)
     {
-      return string.IsNullOrEmpty(scriptVersion.Tail) 
+      return string.IsNullOrEmpty(scriptVersion.Tail)
         || string.Equals(scriptVersion.Tail, _AllowedTail, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -95,7 +85,7 @@ namespace UberDeployer.Core.Deployment
         Directory.GetFiles(
           _scriptsDirectoryPathProvider.Value,
           "*.sql",
-          SearchOption.TopDirectoryOnly);
+          SearchOption.AllDirectories);
 
       Dictionary<DbVersion, string> scriptsToRunDict =
         (from filePath in scriptFilePaths
@@ -155,15 +145,9 @@ namespace UberDeployer.Core.Deployment
       }
     }
 
-    #endregion
-
-    #region Properties
-
     public IEnumerable<DbScriptToRun> ScriptsToRun
     {
       get { return _scriptsToRun; }
     }
-
-    #endregion
   }
 }
