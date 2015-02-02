@@ -10,7 +10,7 @@ namespace UberDeployer.Core.Deployment
 {
   public class GatherDbScriptsToRunDeploymentStep : DeploymentStep
   {
-    private const string _AllowedTail = ".notrans";
+    private const string _NoTransactionTail = ".notrans";
 
     private readonly string _dbName;
     private readonly Lazy<string> _scriptsDirectoryPathProvider;
@@ -56,8 +56,13 @@ namespace UberDeployer.Core.Deployment
 
     private static bool IsScriptSupported(DbVersion scriptVersion)
     {
-      return string.IsNullOrEmpty(scriptVersion.Tail)
-        || string.Equals(scriptVersion.Tail, _AllowedTail, StringComparison.OrdinalIgnoreCase);
+      return string.IsNullOrEmpty(scriptVersion.Tail) 
+        || IsNoTransactionScript(scriptVersion);
+    }
+
+    private static bool IsNoTransactionScript(DbVersion dbVersion)
+    {
+      return string.Equals(dbVersion.Tail, _NoTransactionTail, StringComparison.OrdinalIgnoreCase);
     }
 
     private IEnumerable<DbScriptToRun> GetScriptsToRun()
@@ -107,7 +112,7 @@ namespace UberDeployer.Core.Deployment
 
       foreach (DbVersion dbVersion in scriptsToRunOlderThanCurrentVersion)
       {
-        if (!IsScriptSupported(dbVersion))
+        if (!IsScriptSupported(dbVersion) || IsNoTransactionScript(dbVersion))
         {
           continue;
         }
@@ -123,7 +128,7 @@ namespace UberDeployer.Core.Deployment
           .ToList();
 
       return scriptsToRun;
-    }
+    }    
 
     /// <summary>
     /// Removes script versions with tail - hotfixes etc.
