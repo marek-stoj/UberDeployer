@@ -135,6 +135,13 @@ namespace UberDeployer.Core.Deployment
       return (T)projectInfo;
     }
 
+    protected List<T> GetProjects<T>()
+    {
+      return _projectInfoRepository.GetAll()
+        .OfType<T>()
+        .ToList();
+    }
+
     protected void AddSubTask(DeploymentTaskBase subTask)
     {
       if (subTask == null)
