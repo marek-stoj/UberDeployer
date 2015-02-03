@@ -192,6 +192,13 @@ namespace UberDeployer.Core.Deployment
         throw new InvalidOperationException(string.Format("There is no node in cluster '{0}' that we can move cluster group '{1}' to.", failoverClusterMachineName, clusterGroupName));
       }
 
+      AddSubTask(
+          new MoveClusterGroupToAnotherNodeDeploymentStep(
+            _failoverClusterManager,
+            failoverClusterMachineName,
+            clusterGroupName,
+            targetNodeName));
+
       // update nt service on the machine that was the previous owner node
       string previousMachineName = currentNodeName;
 
