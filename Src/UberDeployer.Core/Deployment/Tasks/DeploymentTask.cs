@@ -18,8 +18,6 @@ namespace UberDeployer.Core.Deployment.Tasks
     private DeploymentInfo _deploymentInfo;
     private string _tempDirPath;
 
-    #region Constructor(s)
-
     protected DeploymentTask(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository)
     {
       Guard.NotNull(projectInfoRepository, "projectInfoRepository");
@@ -31,20 +29,12 @@ namespace UberDeployer.Core.Deployment.Tasks
       _subTasks = new List<DeploymentTaskBase>();
     }
 
-    #endregion
-
-    #region Public methods
-
     public void Initialize(DeploymentInfo deploymentInfo)
     {
       Guard.NotNull(deploymentInfo, "deploymentInfo");
 
       _deploymentInfo = deploymentInfo;
     }
-
-    #endregion
-
-    #region Overrides of DeploymentTaskBase
 
     protected override void DoPrepare()
     {
@@ -92,10 +82,6 @@ namespace UberDeployer.Core.Deployment.Tasks
     {
       get { return string.Join(Environment.NewLine, _subTasks.Select(st => st.Description).ToArray()); }
     }
-
-    #endregion
-
-    #region Protected members
 
     protected EnvironmentInfo GetEnvironmentInfo()
     {
@@ -149,6 +135,13 @@ namespace UberDeployer.Core.Deployment.Tasks
       return (T)projectInfo;
     }
 
+    protected List<T> GetProjects<T>()
+    {
+      return _projectInfoRepository.GetAll()
+        .OfType<T>()
+        .ToList();
+    }
+
     protected void AddSubTask(DeploymentTaskBase subTask)
     {
       if (subTask == null)
@@ -194,31 +187,21 @@ namespace UberDeployer.Core.Deployment.Tasks
       }
     }
 
-    #endregion
-
-    #region Private methods
-
     private void DeleteTemporaryDirectoryIfNeeded()
     {
       if (!string.IsNullOrEmpty(_tempDirPath) && Directory.Exists(_tempDirPath))
       {
         RetryUtils.RetryOnException(
-          new[] {typeof (IOException)},
+          new[] { typeof(IOException) },
           retriesCount: 4,
           retryDelay: 500,
           action: () => Directory.Delete(_tempDirPath, true));
       }
     }
 
-    #endregion
-
-    #region Properties
-
     public IEnumerable<DeploymentTaskBase> SubTasks
     {
       get { return _subTasks.AsReadOnly(); }
     }
-
-    #endregion
   }
 }

@@ -18,8 +18,6 @@ namespace UberDeployer.Core.Deployment.Tasks
     private readonly IFileAdapter _fileAdapter;
     private readonly IZipFileAdapter _zipFileAdapter;
 
-    #region Constructor(s)
-
     public DeployDbProjectDeploymentTask(
       IProjectInfoRepository projectInfoRepository,
       IEnvironmentInfoRepository environmentInfoRepository,
@@ -42,10 +40,6 @@ namespace UberDeployer.Core.Deployment.Tasks
       _fileAdapter = fileAdapter;
       _zipFileAdapter = zipFileAdapter;
     }
-
-    #endregion
-
-    #region Overrides of DeploymentTask
 
     protected override void DoPrepare()
     {
@@ -80,7 +74,7 @@ namespace UberDeployer.Core.Deployment.Tasks
           GetTempDirPath(),
           _fileAdapter,
           _zipFileAdapter);
-      
+
       AddSubTask(extractArtifactsDeploymentStep);
 
       // create a step for gathering scripts to run
@@ -97,7 +91,7 @@ namespace UberDeployer.Core.Deployment.Tasks
       // create a step for running scripts
       var runDbScriptsDeploymentStep =
         new RunDbScriptsDeploymentStep(
-          GetScriptRunner(databaseServerMachineName),
+          GetScriptRunner(projectInfo.IsTransactional, databaseServerMachineName, projectInfo.DbName),
           databaseServerMachineName,
           new DeferredEnumerable<DbScriptToRun>(() => gatherDbScriptsToRunDeploymentStep.ScriptsToRun));
 
@@ -122,7 +116,7 @@ namespace UberDeployer.Core.Deployment.Tasks
 
           string diagnosticMessage =
             string.Format(
-              "Will run {0} script(s): {1}.",
+              "Will run [{0}] script(s): [{1}].",
               scriptsToRun.Count,
               scriptsToRun.Count > 0 ? string.Join(", ", scriptsToRun) : "(none)");
 
@@ -149,14 +143,10 @@ namespace UberDeployer.Core.Deployment.Tasks
       }
     }
 
-    #endregion
-
-    #region Private helper methods
-
-    private IDbScriptRunner GetScriptRunner(string databaseServerMachineName)
+    private IDbScriptRunner GetScriptRunner(bool isTransactional, string databaseServerMachineName, string dbName)
     {
       IDbScriptRunner scriptRunner =
-        _dbScriptRunnerFactory.CreateDbScriptRunner(databaseServerMachineName);
+        _dbScriptRunnerFactory.CreateDbScriptRunner(isTransactional, databaseServerMachineName, dbName);
 
       if (scriptRunner == null)
       {
@@ -165,7 +155,5 @@ namespace UberDeployer.Core.Deployment.Tasks
 
       return scriptRunner;
     }
-
-    #endregion Private helper methods
   }
 }

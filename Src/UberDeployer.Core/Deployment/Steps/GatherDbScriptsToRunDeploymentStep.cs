@@ -10,7 +10,7 @@ namespace UberDeployer.Core.Deployment.Steps
 {
   public class GatherDbScriptsToRunDeploymentStep : DeploymentStep
   {
-    private const string _AllowedTail = ".notrans";
+    private const string _NoTransactionTail = ".notrans";
 
     private readonly string _dbName;
     private readonly Lazy<string> _scriptsDirectoryPathProvider;
@@ -19,8 +19,6 @@ namespace UberDeployer.Core.Deployment.Steps
     private readonly IDbVersionProvider _dbVersionProvider;
 
     private IEnumerable<DbScriptToRun> _scriptsToRun = new List<DbScriptToRun>();
-
-    #region Constructor(s)
 
     public GatherDbScriptsToRunDeploymentStep(string dbName, Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
     {
@@ -39,10 +37,6 @@ namespace UberDeployer.Core.Deployment.Steps
       _scriptsToRun = Enumerable.Empty<DbScriptToRun>();
     }
 
-    #endregion
-
-    #region Overrides of DeploymentStep
-
     protected override void DoExecute()
     {
       _scriptsToRun = GetScriptsToRun();
@@ -60,14 +54,15 @@ namespace UberDeployer.Core.Deployment.Steps
       }
     }
 
-    #endregion
-
-    #region Private methods
-
     private static bool IsScriptSupported(DbVersion scriptVersion)
     {
       return string.IsNullOrEmpty(scriptVersion.Tail) 
-        || string.Equals(scriptVersion.Tail, _AllowedTail, StringComparison.OrdinalIgnoreCase);
+        || IsNoTransactionScript(scriptVersion);
+    }
+
+    private static bool IsNoTransactionScript(DbVersion dbVersion)
+    {
+      return string.Equals(dbVersion.Tail, _NoTransactionTail, StringComparison.OrdinalIgnoreCase);
     }
 
     private IEnumerable<DbScriptToRun> GetScriptsToRun()
@@ -95,7 +90,7 @@ namespace UberDeployer.Core.Deployment.Steps
         Directory.GetFiles(
           _scriptsDirectoryPathProvider.Value,
           "*.sql",
-          SearchOption.TopDirectoryOnly);
+          SearchOption.AllDirectories);
 
       Dictionary<DbVersion, string> scriptsToRunDict =
         (from filePath in scriptFilePaths
@@ -117,7 +112,7 @@ namespace UberDeployer.Core.Deployment.Steps
 
       foreach (DbVersion dbVersion in scriptsToRunOlderThanCurrentVersion)
       {
-        if (!IsScriptSupported(dbVersion))
+        if (!IsScriptSupported(dbVersion) || IsNoTransactionScript(dbVersion))
         {
           continue;
         }
@@ -133,7 +128,7 @@ namespace UberDeployer.Core.Deployment.Steps
           .ToList();
 
       return scriptsToRun;
-    }
+    }    
 
     /// <summary>
     /// Removes script versions with tail - hotfixes etc.
@@ -155,15 +150,9 @@ namespace UberDeployer.Core.Deployment.Steps
       }
     }
 
-    #endregion
-
-    #region Properties
-
     public IEnumerable<DbScriptToRun> ScriptsToRun
     {
       get { return _scriptsToRun; }
     }
-
-    #endregion
   }
 }

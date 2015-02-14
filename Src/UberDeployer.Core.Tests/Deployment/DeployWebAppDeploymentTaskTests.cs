@@ -90,6 +90,42 @@ namespace UberDeployer.Core.Tests.Deployment
     }
 
     [Test]
+    public void Prepare_should_throw_exception_when_web_appplication_name_is_empty_and_web_site_has_more_than_one_application()
+    {
+      // arrange  
+      const string webSiteName = "webSiteName";
+
+      _projectInfo = GetWebProjectInfoWithEmptyAppName(webSiteName);
+      
+      _projectInfoRepositoryFake.Setup(x => x.FindByName(It.IsAny<string>()))
+        .Returns(_projectInfo);
+
+      _projectInfoRepositoryFake.Setup(x => x.GetAll())
+        .Returns(new List<WebAppProjectInfo>
+        {
+          GetWebProjectInfoWithEmptyAppName(webSiteName),
+          GetWebProjectInfoWithEmptyAppName(webSiteName)
+        });
+
+      // act assert
+      Assert.Throws<DeploymentTaskException>(() => _deployWebAppDeploymentTask.Prepare());
+    }
+
+    private static WebAppProjectInfo GetWebProjectInfoWithEmptyAppName(string webSiteName)
+    {
+      return new WebAppProjectInfo(
+        "webproj",
+        "artifacts_repository_name",
+        new[] { "env_name" },
+        "artifacts_repository_dir_name",
+        true,
+        "app_pool_id",
+        webSiteName,
+        "web_app_dir_name",
+        null);
+    }
+
+    [Test]
     public void Prepare_should_create_subTask_AppPoolDeploymentStep_when_app_pool_does_not_exist()
     {
       // Arrange

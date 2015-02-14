@@ -199,7 +199,7 @@ namespace UberDeployer.Core.Deployment.Tasks
             failoverClusterMachineName,
             clusterGroupName,
             targetNodeName));
-
+	  
       // update nt service on the machine that was the previous owner node
       string previousMachineName = currentNodeName;
 

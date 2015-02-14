@@ -48,7 +48,7 @@ namespace UberDeployer.Core.Tests.Deployment
         .Returns(DeploymentDataGenerator.GetEnvironmentInfo);
 
       _dbScriptRunnerFactoryFake
-        .Setup(x => x.CreateDbScriptRunner(It.IsAny<string>()))
+        .Setup(x => x.CreateDbScriptRunner(It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>()))
         .Returns(new Mock<IDbScriptRunner>(MockBehavior.Loose).Object);
 
       _deploymentTask =
@@ -121,7 +121,7 @@ namespace UberDeployer.Core.Tests.Deployment
     {
       // act
       _dbScriptRunnerFactoryFake
-        .Setup(x => x.CreateDbScriptRunner(It.IsAny<string>()))
+        .Setup(x => x.CreateDbScriptRunner(It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>()))
         .Returns((IDbScriptRunner)null);
 
       // assert
@@ -170,8 +170,6 @@ namespace UberDeployer.Core.Tests.Deployment
       }
     }
 
-    #region Private helper methods
-
     private static int GetIndexOfTaskWithType(IEnumerable<DeploymentTaskBase> deploymentTasks, Type taskType)
     {
       int i = 0;
@@ -203,7 +201,5 @@ namespace UberDeployer.Core.Tests.Deployment
           { "zipFileAdapter", _zipFileAdapterFake.Object },
         };
     }
-
-    #endregion
   }
 }

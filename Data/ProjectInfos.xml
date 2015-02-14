@@ -69,6 +69,14 @@
       <DbName>UberDeployerSample</DbName>
       <DatabaseServerId>Default</DatabaseServerId>
     </ProjectInfoXml>
+    <ProjectInfoXml xsi:type="DbProjectInfoXml" allowedEnvironments="Local,Remote">
+      <Name>Constance.Database</Name>
+      <ArtifactsRepositoryName>Constance.Database</ArtifactsRepositoryName>
+      <ArtifactsRepositoryDirName>Schema Upgrades</ArtifactsRepositoryDirName>
+      <ArtifactsAreNotEnvironmentSpecific>true</ArtifactsAreNotEnvironmentSpecific>
+      <DbName>ConstanceUD</DbName>
+      <DatabaseServerId>Default</DatabaseServerId>
+      <IsTransacional>true</IsTransacional>
+    </ProjectInfoXml>
   </ProjectInfos>
-
 </ProjectInfosXml>

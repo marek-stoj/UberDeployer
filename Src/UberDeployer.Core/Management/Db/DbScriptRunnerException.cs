@@ -4,12 +4,14 @@ namespace UberDeployer.Core.Management.Db
 {
   public class DbScriptRunnerException : Exception
   {
-    public DbScriptRunnerException(string failedScript, Exception innerException)
-      : base("Script execution failed", innerException)
+    public DbScriptRunnerException(string failedScript)
+      : this(failedScript, null)
     {
-      FailedScript = failedScript;
     }
 
-    public string FailedScript { get; private set; }
+    public DbScriptRunnerException(string failedScript, Exception innerException)
+      : base(failedScript, innerException)
+    {
+    }
   }
 }

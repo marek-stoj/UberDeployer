@@ -114,6 +114,8 @@ namespace UberDeployer.Core.Deployment.Tasks
       WebAppProjectConfiguration configuration =
         environmentInfo.GetWebAppProjectConfiguration(projectInfo);
 
+      CheckConfiguration(configuration);
+
       string webSiteName = configuration.WebSiteName;
       string webAppName = configuration.WebAppName;
       IisAppPoolInfo appPoolInfo = environmentInfo.GetAppPoolInfo(configuration.AppPoolId);
@@ -193,6 +195,19 @@ namespace UberDeployer.Core.Deployment.Tasks
             webAppName);
 
         AddSubTask(setAppPoolDeploymentStep);
+      }
+    }
+
+    private void CheckConfiguration(WebAppProjectConfiguration configuration)
+    {
+      if (string.IsNullOrEmpty(configuration.WebAppName))
+      {
+        List<WebAppProjectInfo> webAppProjects = GetProjects<WebAppProjectInfo>();
+        
+        if (webAppProjects.Count(x => x.WebSiteName == configuration.WebSiteName) > 1)
+        {
+          throw new DeploymentTaskException(string.Format("Configuration error, WebAppName is empty and there is more than one application on specified WebSiteName: '{0}'.", configuration.WebSiteName));
+        }
       }
     }
 

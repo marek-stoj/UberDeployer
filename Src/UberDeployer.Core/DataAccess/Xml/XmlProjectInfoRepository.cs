@@ -9,8 +9,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 {
   public class XmlProjectInfoRepository : IProjectInfoRepository
   {
-    #region Nested types
-
     [XmlInclude(typeof(NtServiceProjectInfoXml))]
     [XmlInclude(typeof(WebAppProjectInfoXml))]
     [XmlInclude(typeof(SchedulerAppProjectInfoXml))]
@@ -26,6 +24,7 @@ namespace UberDeployer.Core.DataAccess.Xml
     public abstract class ProjectInfoXml
     {
       private string _allowedEnvironments;
+
       public string Name { get; set; }
 
       public string Type { get; set; }
@@ -62,11 +61,11 @@ namespace UberDeployer.Core.DataAccess.Xml
     public class WebAppProjectInfoXml : ProjectInfoXml
     {
       public string AppPoolId { get; set; }
-      
+
       public string WebSiteName { get; set; }
-      
+
       public string WebAppDirName { get; set; }
-      
+
       public string WebAppName { get; set; }
     }
 
@@ -115,7 +114,7 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string TerminalAppName { get; set; }
 
       public string TerminalAppDirName { get; set; }
-      
+
       public string TerminalAppExeName { get; set; }
     }
 
@@ -124,6 +123,8 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string DbName { get; set; }
 
       public string DatabaseServerId { get; set; }
+
+      public bool UsesSqlCmdUpgradeScripts { get; set; }
     }
 
     public class UberDeployerAgentProjectInfoXml : NtServiceProjectInfoXml
@@ -135,14 +136,10 @@ namespace UberDeployer.Core.DataAccess.Xml
       public string ExtendedProjectName { get; set; }
     }
 
-    #endregion
-
     private readonly string _xmlFilePath;
 
     private ProjectInfosXml _projectInfosXml;
     private Dictionary<string, ProjectInfo> _projectInfosByName;
-
-    #region Constructor(s)
 
     public XmlProjectInfoRepository(string xmlFilePath)
     {
@@ -153,10 +150,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       _xmlFilePath = xmlFilePath;
     }
-
-    #endregion
-
-    #region IProjectInfoRepository Members
 
     public IEnumerable<ProjectInfo> GetAll()
     {
@@ -185,10 +178,6 @@ namespace UberDeployer.Core.DataAccess.Xml
 
       return projectInfo;
     }
-
-    #endregion
-
-    #region Private helper methods
 
     private static ProjectInfo CreateProjectInfo(ProjectInfoXml projectInfoXml)
     {
@@ -232,7 +221,6 @@ namespace UberDeployer.Core.DataAccess.Xml
             ntServiceProjectInfoXml.NtServiceExeName,
             ntServiceProjectInfoXml.NtServiceUserId,
             ntServiceProjectInfoXml.ExtensionsDirName);
-
       }
 
       var webAppProjectInfoXml = projectInfoXml as WebAppProjectInfoXml;
@@ -311,7 +299,8 @@ namespace UberDeployer.Core.DataAccess.Xml
             dbProjectInfoXml.ArtifactsRepositoryDirName,
             dbProjectInfoXml.ArtifactsAreNotEnvironmentSpecific,
             dbProjectInfoXml.DbName,
-            dbProjectInfoXml.DatabaseServerId);
+            dbProjectInfoXml.DatabaseServerId,
+            dbProjectInfoXml.UsesSqlCmdUpgradeScripts);
       }
 
       var extensionProjectXml = projectInfoXml as ExtensionProjectInfoXml;
@@ -350,7 +339,5 @@ namespace UberDeployer.Core.DataAccess.Xml
           .Select(CreateProjectInfo)
           .ToDictionary(pi => pi.Name);
     }
-
-    #endregion
   }
 }
