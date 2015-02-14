@@ -1,4 +1,5 @@
 ﻿using System;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment.Pipeline.Modules
@@ -6,8 +7,6 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
   public class AuditingModule : IDeploymentPipelineModule
   {
     private readonly IDeploymentRequestRepository _deploymentRequestRepository;
-
-    #region Constructor(s)
 
     public AuditingModule(IDeploymentRequestRepository deploymentRequestRepository)
     {
@@ -18,10 +17,6 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
       _deploymentRequestRepository = deploymentRequestRepository;
     }
-
-    #endregion
-
-    #region IDeploymentPipelineModule Members
 
     public void OnDeploymentTaskStarting(DeploymentInfo deploymentInfo, DeploymentTask deploymentTask, DeploymentContext deploymentContext)
     {
@@ -50,7 +45,5 @@ namespace UberDeployer.Core.Deployment.Pipeline.Modules
 
       _deploymentRequestRepository.AddDeploymentRequest(deploymentRequest);
     }
-
-    #endregion
   }
 }

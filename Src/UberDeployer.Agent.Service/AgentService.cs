@@ -18,6 +18,7 @@ using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.TeamCity;
 using log4net;
+using UberDeployer.Core.Deployment.Tasks;
 using DeploymentInfo = UberDeployer.Agent.Proxy.Dto.DeploymentInfo;
 using DeploymentRequest = UberDeployer.Core.Deployment.Pipeline.Modules.DeploymentRequest;
 using DiagnosticMessage = UberDeployer.Core.Deployment.DiagnosticMessage;

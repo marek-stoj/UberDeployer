@@ -1,4 +1,5 @@
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Tests.Deployment.Pipeline

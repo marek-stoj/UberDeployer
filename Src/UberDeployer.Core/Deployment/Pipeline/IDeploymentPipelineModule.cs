@@ -1,4 +1,5 @@
-﻿using UberDeployer.Core.Domain;
+﻿using UberDeployer.Core.Deployment.Tasks;
+using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment.Pipeline
 {

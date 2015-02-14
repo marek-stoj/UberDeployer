@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Tasks;
 
 namespace UberDeployer.Core.Domain
 {

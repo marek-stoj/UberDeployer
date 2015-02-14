@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Deployment.Tasks;
 
 namespace UberDeployer.Core.Deployment
 {

@@ -2,6 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Steps;
 
 namespace UberDeployer.Core.Tests.Deployment
 {

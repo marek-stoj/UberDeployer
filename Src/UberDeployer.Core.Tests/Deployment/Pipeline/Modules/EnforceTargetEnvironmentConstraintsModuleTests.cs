@@ -5,6 +5,7 @@ using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Domain.Input;
 using UberDeployer.Core.Tests.Generators;

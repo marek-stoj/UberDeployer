@@ -5,6 +5,8 @@ using Moq;
 using NUnit.Framework;
 using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Steps;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Domain.Input;
 using UberDeployer.Core.Management.Iis;

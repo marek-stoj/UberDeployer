@@ -3,6 +3,8 @@ using NUnit.Framework;
 using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
 using System.IO;
+using UberDeployer.Core.Deployment.Steps;
+using UberDeployer.Core.Deployment.Tasks;
 
 namespace UberDeployer.Core.Tests.Deployment
 {

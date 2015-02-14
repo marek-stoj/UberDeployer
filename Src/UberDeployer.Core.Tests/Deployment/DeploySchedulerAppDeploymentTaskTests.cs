@@ -7,6 +7,8 @@ using NUnit.Framework;
 using UberDeployer.Common;
 using UberDeployer.Common.IO;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Steps;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.ScheduledTasks;
 using UberDeployer.Core.Tests.Generators;

@@ -8,6 +8,7 @@ using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using System.Linq;
+using UberDeployer.Core.Deployment.Steps;
 using UberDeployer.Core.Tests.Generators;
 using UberDeployer.Core.Tests.TestUtils;
 

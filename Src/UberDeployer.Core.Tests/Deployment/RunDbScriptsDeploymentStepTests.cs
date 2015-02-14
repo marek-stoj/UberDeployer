@@ -5,6 +5,8 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Steps;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Tests.Deployment

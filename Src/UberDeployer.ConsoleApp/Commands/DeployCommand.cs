@@ -7,6 +7,7 @@ using UberDeployer.CommonConfiguration;
 using UberDeployer.ConsoleCommander;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.ConsoleApp.Commands

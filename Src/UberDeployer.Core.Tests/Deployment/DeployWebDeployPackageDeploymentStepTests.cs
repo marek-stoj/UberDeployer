@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Management.MsDeploy;
 
 namespace UberDeployer.Core.Tests.Deployment
