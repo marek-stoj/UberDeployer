@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.DbDiff;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 
 namespace UberDeployer.Core.Deployment.Steps
@@ -16,23 +17,28 @@ namespace UberDeployer.Core.Deployment.Steps
     private readonly Lazy<string> _scriptsDirectoryPathProvider;
     private readonly string _sqlServerName;
     private readonly string _environmentName;
+    private readonly DeploymentInfo _deploymentInfo;
+    private readonly IScriptsToRunWebSelector _scriptsToRunWebSelector;
     private readonly IDbVersionProvider _dbVersionProvider;
 
     private IEnumerable<DbScriptToRun> _scriptsToRun = new List<DbScriptToRun>();
+    private IScriptsToRunWebSelector _scriptToRunWebSelector;
 
-    public GatherDbScriptsToRunDeploymentStep(string dbName, Lazy<string> scriptsDirectoryPathProvider, string sqlServerName, string environmentName, IDbVersionProvider dbVersionProvider)
+    public GatherDbScriptsToRunDeploymentStep(string dbName, Lazy<string> scriptsDirectoryPathProvider, string databaseServerMachineName, string environmentName, DeploymentInfo deploymentInfo, IDbVersionProvider scriptToRunWebSelector, IScriptsToRunWebSelector scriptsToRunWebSelector)
     {
       Guard.NotNullNorEmpty(dbName, "dbName");
       Guard.NotNull(scriptsDirectoryPathProvider, "scriptsDirectoryPathProvider");
-      Guard.NotNullNorEmpty(sqlServerName, "sqlServerName");
+      Guard.NotNullNorEmpty(databaseServerMachineName, "databaseServerMachineName");
       Guard.NotNullNorEmpty(environmentName, "environmentName");
-      Guard.NotNull(dbVersionProvider, "dbVersionProvider");
+      Guard.NotNull(deploymentInfo, "deploymentInfo");
+      Guard.NotNull(scriptToRunWebSelector, "scriptToRunWebSelector");
 
       _dbName = dbName;
       _scriptsDirectoryPathProvider = scriptsDirectoryPathProvider;
-      _sqlServerName = sqlServerName;
+      _sqlServerName = databaseServerMachineName;
       _environmentName = environmentName;
-      _dbVersionProvider = dbVersionProvider;
+      _deploymentInfo = deploymentInfo;
+      _scriptsToRunWebSelector = scriptsToRunWebSelector;
 
       _scriptsToRun = Enumerable.Empty<DbScriptToRun>();
     }
@@ -56,7 +62,7 @@ namespace UberDeployer.Core.Deployment.Steps
 
     private static bool IsScriptSupported(DbVersion scriptVersion)
     {
-      return string.IsNullOrEmpty(scriptVersion.Tail) 
+      return string.IsNullOrEmpty(scriptVersion.Tail)
         || IsNoTransactionScript(scriptVersion);
     }
 
@@ -127,8 +133,10 @@ namespace UberDeployer.Core.Deployment.Steps
           .Select(x => new DbScriptToRun(x.Key, x.Value))
           .ToList();
 
-      return scriptsToRun;
-    }    
+      string[] selectedScripts = _scriptToRunWebSelector.GetSelectedScripts(scriptsToRun.Select(s => Path.GetFileNameWithoutExtension(s.ScriptPath)).ToArray(), _deploymentInfo.DeploymentId);
+
+      return scriptsToRun.Where(w => selectedScripts.Any(a => a == Path.GetFileNameWithoutExtension(w.ScriptPath)));
+    }
 
     /// <summary>
     /// Removes script versions with tail - hotfixes etc.

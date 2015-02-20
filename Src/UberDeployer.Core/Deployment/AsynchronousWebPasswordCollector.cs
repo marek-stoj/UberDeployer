@@ -27,7 +27,7 @@ namespace UberDeployer.Core.Deployment
     {
       Guard.NotEmpty(deploymentId, "deploymentId");
       Guard.NotNullNorEmpty(password, "password");
-      
+
       lock (_collectedPasswordByDeploymentId)
       {
         _collectedPasswordByDeploymentId[deploymentId] = password;

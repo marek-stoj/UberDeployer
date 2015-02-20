@@ -80,7 +80,7 @@ namespace UberDeployer.Core.Tests.Deployment
 
       _failoverClusterManager
         .Setup(x => x.GetPossibleNodeNames(It.IsAny<string>(), It.IsAny<string>()))
-        .Returns(new[] {"node1", "node2"});
+        .Returns(new[] { "node1", "node2" });
 
       _failoverClusterManager
         .Setup(x => x.GetCurrentNodeName(It.IsAny<string>(), It.IsAny<string>()))
@@ -89,6 +89,5 @@ namespace UberDeployer.Core.Tests.Deployment
       // act
       _deploymentTask.Prepare();
     }
-
   }
 }

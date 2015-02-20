@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Steps;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
-using System.Linq;
-using UberDeployer.Core.Deployment.Steps;
 using UberDeployer.Core.Tests.Generators;
 using UberDeployer.Core.Tests.TestUtils;
 
@@ -23,15 +23,19 @@ namespace UberDeployer.Core.Tests.Deployment
     private const string _Environment = "env";
 
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
+    private Mock<IScriptsToRunWebSelector> _scriptsToRunWebSelector;
 
     [SetUp]
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
+      _scriptsToRunWebSelector = new Mock<IScriptsToRunWebSelector>(MockBehavior.Loose);
 
       DbProjectInfo dbProjectInfo = ProjectInfoGenerator.GetDbProjectInfo();
 
-      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(dbProjectInfo.DbName, new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
+      DeploymentInfo di = DeploymentInfoGenerator.GetDbDeploymentInfo();
+
+      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(dbProjectInfo.DbName, new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, di, _dbVersionProviderFake.Object, _scriptsToRunWebSelector.Object);
     }
 
     [Test]
@@ -83,7 +87,7 @@ namespace UberDeployer.Core.Tests.Deployment
       // act
       _deploymentStep.PrepareAndExecute();
 
-      // assert      
+      // assert
       Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == notExecutedScript));
     }
 
@@ -126,7 +130,7 @@ namespace UberDeployer.Core.Tests.Deployment
     [Test]
     public void DoExecute_gathers_scripts_marked_as_non_transactional()
     {
-      // arrange  
+      // arrange
       string[] executedScriptsVersion = new[] { "1.2", "1.3" };
 
       const string nonTransactionalScriptToExecute = "1.3.notrans.sql";
@@ -138,7 +142,7 @@ namespace UberDeployer.Core.Tests.Deployment
       // act
       _deploymentStep.PrepareAndExecute();
 
-      // assert      
+      // assert
       Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == nonTransactionalScriptToExecute));
     }
 

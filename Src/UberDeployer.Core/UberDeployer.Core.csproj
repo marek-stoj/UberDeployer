@@ -86,6 +86,8 @@
     <Compile Include="Deployment\Steps\CleanDirectoryDeploymentStep.cs" />
     <Compile Include="Deployment\Steps\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\Converter.cs" />
+    <Compile Include="Deployment\Steps\IScriptsToRunWebSelector.cs" />
+    <Compile Include="Deployment\Steps\ScriptsToRunWebSelector.cs" />
     <Compile Include="Deployment\Tasks\CreateManualDeploymentPackageDeploymentTask.cs" />
     <Compile Include="Deployment\DbScriptToRun.cs" />
     <Compile Include="Deployment\Steps\DeployUberDeployerAgentUsingConsoleAppDeploymentStep.cs" />

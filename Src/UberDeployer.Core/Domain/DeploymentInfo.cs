@@ -41,7 +41,7 @@ namespace UberDeployer.Core.Domain
 
     public string ProjectConfigurationBuildId { get; private set; }
 
-    public string TargetEnvironmentName { get; private set; }    
+    public string TargetEnvironmentName { get; private set; }
 
     public InputParams InputParams { get; private set; }
   }

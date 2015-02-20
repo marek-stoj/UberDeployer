@@ -41,7 +41,8 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateDbScriptRunnerFactory(),
           objectFactory.CreateDbVersionProvider(),
           objectFactory.CreateFileAdapter(),
-          objectFactory.CreateZipFileAdapter());
+          objectFactory.CreateZipFileAdapter(),
+          objectFactory.CreateScriptsToRunWebSelector());
     }
 
     public override IEnumerable<string> GetTargetFolders(IObjectFactory objectFactory, EnvironmentInfo environmentInfo)

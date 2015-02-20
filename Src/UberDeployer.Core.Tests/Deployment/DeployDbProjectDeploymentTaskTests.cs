@@ -59,7 +59,8 @@ namespace UberDeployer.Core.Tests.Deployment
           _dbScriptRunnerFactoryFake.Object,
           _dbVersionProviderFake.Object,
           _fileAdapterFake.Object,
-          _zipFileAdapterFake.Object);
+          _zipFileAdapterFake.Object,
+          null);
 
       _deploymentTask.Initialize(DeploymentInfoGenerator.GetDbDeploymentInfo());
     }

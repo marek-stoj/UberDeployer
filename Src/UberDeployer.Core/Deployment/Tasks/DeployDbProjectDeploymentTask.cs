@@ -17,15 +17,9 @@ namespace UberDeployer.Core.Deployment.Tasks
     private readonly IDbVersionProvider _dbVersionProvider;
     private readonly IFileAdapter _fileAdapter;
     private readonly IZipFileAdapter _zipFileAdapter;
+    private readonly IScriptsToRunWebSelector _createScriptsToRunWebSelector;
 
-    public DeployDbProjectDeploymentTask(
-      IProjectInfoRepository projectInfoRepository,
-      IEnvironmentInfoRepository environmentInfoRepository,
-      IArtifactsRepository artifactsRepository,
-      IDbScriptRunnerFactory dbScriptRunnerFactory,
-      IDbVersionProvider dbVersionProvider,
-      IFileAdapter fileAdapter,
-      IZipFileAdapter zipFileAdapter)
+    public DeployDbProjectDeploymentTask(IProjectInfoRepository projectInfoRepository, IEnvironmentInfoRepository environmentInfoRepository, IArtifactsRepository artifactsRepository, IDbScriptRunnerFactory dbScriptRunnerFactory, IDbVersionProvider dbVersionProvider, IFileAdapter fileAdapter, IZipFileAdapter zipFileAdapter, IScriptsToRunWebSelector createScriptsToRunWebSelector)
       : base(projectInfoRepository, environmentInfoRepository)
     {
       Guard.NotNull(artifactsRepository, "artifactsRepository");
@@ -33,12 +27,14 @@ namespace UberDeployer.Core.Deployment.Tasks
       Guard.NotNull(dbScriptRunnerFactory, "dbScriptRunnerFactory");
       Guard.NotNull(fileAdapter, "fileAdapter");
       Guard.NotNull(zipFileAdapter, "zipFileAdapter");
+      Guard.NotNull(createScriptsToRunWebSelector, "createScriptsToRunWebSelector");
 
       _artifactsRepository = artifactsRepository;
       _dbScriptRunnerFactory = dbScriptRunnerFactory;
       _dbVersionProvider = dbVersionProvider;
       _fileAdapter = fileAdapter;
       _zipFileAdapter = zipFileAdapter;
+      _createScriptsToRunWebSelector = createScriptsToRunWebSelector;
     }
 
     protected override void DoPrepare()
@@ -84,7 +80,10 @@ namespace UberDeployer.Core.Deployment.Tasks
           new Lazy<string>(() => extractArtifactsDeploymentStep.BinariesDirPath),
           databaseServerMachineName,
           environmentInfo.Name,
-          _dbVersionProvider);
+          DeploymentInfo,
+          _dbVersionProvider,
+          _createScriptsToRunWebSelector
+          );
 
       AddSubTask(gatherDbScriptsToRunDeploymentStep);
 
