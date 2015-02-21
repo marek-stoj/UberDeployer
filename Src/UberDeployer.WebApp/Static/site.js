@@ -56,8 +56,10 @@ function initializeDeploymentPage(initData) {
   g_userCanDeploy = initData.userCanDeploy;
   g_initialSelection = initData.initialSelection;
 
-  setupSignalR();
-  setupCollectCredentialsDialog();
+  var collectCredentialsDialog = new CollectCredentialsDialog();
+  var collectScriptsToRunDialog = new CollectScriptsToRunDialog();
+
+  setupSignalR(collectCredentialsDialog, collectScriptsToRunDialog);
 
   $.ajaxSetup({
     'error': function (xhr) {
@@ -772,86 +774,138 @@ function kickAss() {
   return false;
 }
 
-function setupSignalR() {
+
+
+function setupSignalR(collectCredentialsDialog, collectScriptsToRunDialog) {
   var deploymentHub = $.connection.deploymentHub;
 
   deploymentHub.client.connected = function () { };
   deploymentHub.client.disconnected = function () { };
 
-  deploymentHub.client.promptForCredentials =
-    function(message) {
-      showCollectCredentialsDialog(
-        message.deploymentId,
-        message.projectName,
-        message.projectConfigurationName,
-        message.targetEnvironmentName,
-        message.machineName,
-        message.username);
-    };
-  
-  deploymentHub.client.cancelPromptForCredentials =
-    function() {
-      closeCollectCredentialsDialog();
-    };
+  deploymentHub.client.promptForCredentials = collectCredentialsDialog.showDialog(message);
+  deploymentHub.client.cancelPromptForCredentials = collectCredentialsDialog.closeDialog();
+
+  deploymentHub.client.promptForScriptsToRun = collectScriptsToRunDialog.showDialog(message);
+  deploymentHub.client.cancelPromptForScriptsToRun = collectScriptsToRunDialog.closeDialog();
   
   $.connection.hub.start();
 }
 
-function showCollectCredentialsDialog(deploymentId, projectName, projectConfigurationName, targetEnvironmentName, machineName, username) {
-  $('#dlg-collect-credentials-deployment-id').val(deploymentId);
-  $('#dlg-collect-credentials-project-name').html(projectName);
-  $('#dlg-collect-credentials-project-configuration-name').html(projectConfigurationName);
-  $('#dlg-collect-credentials-target-environment-name').html(targetEnvironmentName);
-  $('#dlg-collect-credentials-machine-name').val(machineName);
-  $('#dlg-collect-credentials-username').val(username);
-  $('#dlg-collect-credentials-password').val('');
+var CollectCredentialsDialog = (function() {
 
-  $('#dlg-collect-credentials').modal('show');
-}
+  function CollectCredentialsDialog() {
+    var self = this;
+    $('#dlg-collect-credentials-ok')
+      .click(function () {
+        var deploymentId = $('#dlg-collect-credentials-deployment-id').val();
+        var password = $('#dlg-collect-credentials-password').val();
 
-function closeCollectCredentialsDialog() {
-  $('#dlg-collect-credentials-deployment-id').val('');
-  $('#dlg-collect-credentials-project-name').html('');
-  $('#dlg-collect-credentials-project-configuration-name').html('');
-  $('#dlg-collect-credentials-target-environment-name').html('');
-  $('#dlg-collect-credentials-machine-name').val('');
-  $('#dlg-collect-credentials-username').val('');
-  $('#dlg-collect-credentials-password').val('');
+        if (password === '') {
+          alert('You have to enter the password.');
+          return;
+        }
 
-  $('#dlg-collect-credentials').modal('hide');
-}
+        $.ajax({
+          url: g_AppPrefix + 'InternalApi/OnCredentialsCollected',
+          type: "POST",
+          data: {
+            deploymentId: deploymentId,
+            password: password,
+          },
+          traditional: true
+        });
 
-function setupCollectCredentialsDialog() {
-  $('#dlg-collect-credentials-ok')
-    .click(function () {
-      var deploymentId = $('#dlg-collect-credentials-deployment-id').val();
-      var password = $('#dlg-collect-credentials-password').val();
-
-      if (password === '') {
-        alert('You have to enter the password.');
-        return;
-      }
-
-      $.ajax({
-        url: g_AppPrefix + 'InternalApi/OnCredentialsCollected',
-        type: "POST",
-        data: {
-          deploymentId: deploymentId,
-          password: password,
-        },
-        traditional: true
+        self.closeDialog();
       });
 
-      closeCollectCredentialsDialog();
+    $('#dlg-collect-credentials')
+      .on(
+        'shown',
+        function () {
+          $('#dlg-collect-credentials-password').focus();
+        });
+  };
+
+  CollectCredentialsDialog.prototype.showDialog = function(message) {
+    $('#dlg-collect-credentials-deployment-id').val(message.deploymentId);
+    $('#dlg-collect-credentials-project-name').html(message.projectName);
+    $('#dlg-collect-credentials-project-configuration-name').html(message.projectConfigurationName);
+    $('#dlg-collect-credentials-target-environment-name').html(message.targetEnvironmentName);
+    $('#dlg-collect-credentials-machine-name').val(message.machineName);
+    $('#dlg-collect-credentials-username').val(message.username);
+    $('#dlg-collect-credentials-password').val('');
+
+    $('#dlg-collect-credentials').modal('show');
+  };
+
+  CollectCredentialsDialog.prototype.closeDialog = function() {
+    $('#dlg-collect-credentials-deployment-id').val('');
+    $('#dlg-collect-credentials-project-name').html('');
+    $('#dlg-collect-credentials-project-configuration-name').html('');
+    $('#dlg-collect-credentials-target-environment-name').html('');
+    $('#dlg-collect-credentials-machine-name').val('');
+    $('#dlg-collect-credentials-username').val('');
+    $('#dlg-collect-credentials-password').val('');
+
+    $('#dlg-collect-credentials').modal('hide');
+  };
+
+  return CollectCredentialsDialog;
+})();
+
+var CollectScriptsToRunDialog = (function () {
+
+  function CollectScriptsToRunDialog() {
+    var self = this;
+
+    $('#dlg-collect-scripts-ok')
+      .click(function () {
+        var deploymentId = $('#dlg-collect-scripts-deployment-id').val();
+        var scriptsToRun = $('#dlg-collect-scripts-select').val();
+
+        if (scriptsToRun === '') {
+          alert('Scripts were not selected!');
+          return;
+        }
+
+        $.ajax({
+          url: g_AppPrefix + 'InternalApi/OnScriptsToRunCollected',
+          type: "POST",
+          data: {
+            deploymentId: deploymentId,
+            scriptsToRun: scriptsToRun,
+          },
+          traditional: true
+        });
+
+        self.closeDialog();
+      });
+  };
+
+  CollectScriptsToRunDialog.prototype.showDialog = function (message) {
+    $('#dlg-collect-scripts-deployment-id').val(message.deploymentId);
+    $('#dlg-collect-scripts-project-name').html(message.projectName);
+    $('#dlg-collect-scripts-project-configuration-name').html(message.projectConfigurationName);
+
+    $.each(message.scriptsToRun, function(item) {
+      $('#dlg-collect-scripts-select').append('<option value=' + item + '>' + item + '</option>');
     });
 
-  $('#dlg-collect-credentials')
-    .on(
-      'shown',
-      function() {
-        $('#dlg-collect-credentials-password').focus();
-      });
-}
+    $('#dlg-collect-scripts').modal('show');
+  };
+
+  CollectScriptsToRunDialog.prototype.closeDialog = function () {
+    $('#dlg-collect-scripts-deployment-id').val('');
+    $('#dlg-collect-scripts-project-name').html('');
+    $('#dlg-collect-scripts-project-configuration-name').html('');
+    $('#dlg-collect-scripts-select').find('option').remove();
+
+    $('#dlg-collect-scripts').modal('hide');
+  };
+
+  return CollectScriptsToRunDialog;
+})();
+
 
 $(document).ready(function() {
   // do nothing

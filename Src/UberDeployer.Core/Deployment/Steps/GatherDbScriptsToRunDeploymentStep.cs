@@ -133,7 +133,14 @@ namespace UberDeployer.Core.Deployment.Steps
           .Select(x => new DbScriptToRun(x.Key, x.Value))
           .ToList();
 
-      string[] selectedScripts = _scriptToRunWebSelector.GetSelectedScripts(scriptsToRun.Select(s => Path.GetFileNameWithoutExtension(s.ScriptPath)).ToArray(), _deploymentInfo.DeploymentId);
+      string[] selectedScripts = _scriptToRunWebSelector.GetSelectedScriptsToRun(_deploymentInfo.DeploymentId, scriptsToRun.Select(s => Path.GetFileNameWithoutExtension(s.ScriptPath)).ToArray());
+
+      return FilterScripts(scriptsToRun, selectedScripts);
+    }
+
+    private static IEnumerable<DbScriptToRun> FilterScripts(List<DbScriptToRun> scriptsToRun, string[] selectedScripts)
+    {
+      // TODO LK: we have to choose the way we want to filter our scripts (we could get all scripts below selected script for example)
 
       return scriptsToRun.Where(w => selectedScripts.Any(a => a == Path.GetFileNameWithoutExtension(w.ScriptPath)));
     }

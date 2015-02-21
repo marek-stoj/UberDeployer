@@ -5,6 +5,6 @@ namespace UberDeployer.Core.Deployment.Steps
 {
   public interface IScriptsToRunWebSelector
   {
-    string[] GetSelectedScripts(string[] sourceScriptsList, Guid deploymentId);
+    string[] GetSelectedScriptsToRun(Guid deploymentId, string[] sourceScriptsList);
   }
 }
