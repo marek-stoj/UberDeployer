@@ -147,16 +147,27 @@ namespace UberDeployer.Core.Deployment.Steps
           .Select(x => new DbScriptToRun(x.Key, x.Value))
           .ToList();
 
-      string[] selectedScripts = _scriptsToRunWebSelector.GetSelectedScriptsToRun(_deploymentInfo.DeploymentId, scriptsToRun.Select(s => Path.GetFileNameWithoutExtension(s.ScriptPath)).ToArray());
+      var scriptFileNames = scriptsToRun.Select(s => s.GetScriptFileName()).ToArray();
+      DbScriptsToRunSelection scriptsToRunSelection = _scriptsToRunWebSelector.GetSelectedScriptsToRun(_deploymentInfo.DeploymentId, scriptFileNames);
 
-      return FilterScripts(scriptsToRun, selectedScripts);
+      return FilterScripts(scriptsToRun, scriptsToRunSelection);
     }
 
-    private static IEnumerable<DbScriptToRun> FilterScripts(List<DbScriptToRun> scriptsToRun, string[] selectedScripts)
+    private static IEnumerable<DbScriptToRun> FilterScripts(List<DbScriptToRun> scriptsToRun, DbScriptsToRunSelection scriptsToRunSelection)
     {
-      // TODO LK: we have to choose the way we want to filter our scripts (we could get all scripts below selected script for example)
+      switch (scriptsToRunSelection.DatabaseScriptToRunSelectionType)
+      {
+        case DatabaseScriptToRunSelectionType.LastVersion:
+          var lastScriptToRun = scriptsToRunSelection.SelectedScripts.Last();
+          int lastScriptPosition = scriptsToRun.FindLastIndex(x => x.GetScriptFileName() == lastScriptToRun);
+          return scriptsToRun.Take(lastScriptPosition + 1);
 
-      return scriptsToRun.Where(w => selectedScripts.Any(a => a == Path.GetFileNameWithoutExtension(w.ScriptPath)));
+        case DatabaseScriptToRunSelectionType.Multiselect:
+          return scriptsToRun.Where(scriptToRun => scriptsToRunSelection.SelectedScripts.Any(selectedScript => selectedScript == scriptToRun.GetScriptFileName()));
+
+        default:
+          throw new ArgumentOutOfRangeException();
+      }
     }
 
     /// <summary>

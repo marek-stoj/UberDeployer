@@ -872,9 +872,9 @@ var CollectScriptsToRunDialog = (function () {
     $('#dlg-collect-scripts-ok')
       .click(function () {
         var deploymentId = $('#dlg-collect-scripts-deployment-id').val();
-        var scriptsToRun = $('#dlg-collect-scripts-select').val();
+        var selectedScripts = $('#dlg-collect-scripts-select').val();
 
-        if (scriptsToRun === '') {
+        if (selectedScripts === '') {
           alert('Scripts were not selected!');
           return;
         }
@@ -884,7 +884,8 @@ var CollectScriptsToRunDialog = (function () {
           type: "POST",
           data: {
             deploymentId: deploymentId,
-            scriptsToRun: scriptsToRun,
+            selectedScripts: selectedScripts,
+            isMultiselect: false
           },
           traditional: true
         });

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentServiceClient.cs" />
+    <Compile Include="Dto\DbScriptsToRunSelection.cs" />
     <Compile Include="Dto\DatabaseServer.cs" />
     <Compile Include="Dto\DbProjectConfigurationOverride.cs" />
     <Compile Include="Dto\Input\ExtensionInputParams.cs" />

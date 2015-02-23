@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.Threading;
+
 using log4net;
+
 using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto.TeamCity;
 using UberDeployer.Agent.Proxy.Faults;
@@ -20,6 +22,7 @@ using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.TeamCity;
+
 using DeploymentInfo = UberDeployer.Agent.Proxy.Dto.DeploymentInfo;
 using DeploymentRequest = UberDeployer.Core.Deployment.Pipeline.Modules.DeploymentRequest;
 using DiagnosticMessage = UberDeployer.Core.Deployment.DiagnosticMessage;
@@ -494,9 +497,11 @@ namespace UberDeployer.Agent.Service
       AsynchronousWebPasswordCollector.SetCollectedCredentials(deploymentId, password);
     }
 
-    public void SetSelectedDbScriptsToRun(Guid deploymentId, string[] selectedScripts)
+    public void SetSelectedDbScriptsToRun(Guid deploymentId, Proxy.Dto.DbScriptsToRunSelection scriptsToRunSelection)
     {
-      ScriptsToRunWebSelector.SetSelectedScriptsToRun(deploymentId, selectedScripts);
+      ScriptsToRunWebSelector.SetSelectedScriptsToRun(
+        deploymentId,
+        DtoMapper.Map<Proxy.Dto.DbScriptsToRunSelection, DbScriptsToRunSelection>(scriptsToRunSelection));
     }
 
     public string GetDefaultPackageDirPath(string environmentName, string projectName)

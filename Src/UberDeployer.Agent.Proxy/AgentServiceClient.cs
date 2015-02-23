@@ -78,9 +78,9 @@ namespace UberDeployer.Agent.Proxy
       Exec(@as => @as.SetCollectedCredentialsForAsynchronousWebCredentialsCollector(deploymentId, password));
     }
 
-    public void SetSelectedDbScriptsToRun(Guid deploymentId, string[] selectedScripts)
+    public void SetSelectedDbScriptsToRun(Guid deploymentId, DbScriptsToRunSelection scriptsToRunSelection)
     {
-      Exec(@as => @as.SetSelectedDbScriptsToRun(deploymentId, selectedScripts));
+      Exec(@as => @as.SetSelectedDbScriptsToRun(deploymentId, scriptsToRunSelection));
     }
 
     public string GetDefaultPackageDirPath(string environmentName, string projectName)

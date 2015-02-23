@@ -53,6 +53,8 @@ namespace UberDeployer.Agent.Service
       Mapper.CreateMap<Core.Deployment.DiagnosticMessage, Proxy.Dto.DiagnosticMessage>();
       Mapper.CreateMap<Core.Deployment.DiagnosticMessageType, Proxy.Dto.DiagnosticMessageType>();
 
+      Mapper.CreateMap<Proxy.Dto.DbScriptsToRunSelection, Core.Deployment.DbScriptsToRunSelection>();
+
       Mapper.AssertConfigurationIsValid();
     }
 

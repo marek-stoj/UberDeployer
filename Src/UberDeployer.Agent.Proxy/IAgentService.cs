@@ -68,7 +68,7 @@ namespace UberDeployer.Agent.Proxy
     void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password);
 
     [OperationContract]
-    void SetSelectedDbScriptsToRun(Guid deploymentId, string[] selectedScripts);
+    void SetSelectedDbScriptsToRun(Guid deploymentId, DbScriptsToRunSelection scriptsToRunSelection);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using UberDeployer.Agent.Proxy;
+using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.WebApp.Core.Connectivity;
 using UberDeployer.WebApp.Core.Models.Api;
@@ -128,14 +129,18 @@ namespace UberDeployer.WebApp.Core.Controllers
     }
 
     [HttpPost]
-    public ActionResult OnScriptsToRunCollected(CollectScriptsToRunRequest request)
+    public ActionResult OnScriptsToRunCollected(CollectScriptsToRunResponse response)
     {
-      if (request == null || !request.DeploymentId.HasValue || request.ScriptsToRun == null || request.ScriptsToRun.Length == 0)
+      if (response == null || !response.DeploymentId.HasValue || response.SelectedScripts == null || response.SelectedScripts.Length == 0)
       {
         return BadRequest();
       }
 
-      _agentService.SetSelectedDbScriptsToRun(request.DeploymentId.Value, request.ScriptsToRun);
+      _agentService.SetSelectedDbScriptsToRun(response.DeploymentId.Value, new DbScriptsToRunSelection
+      {
+        SelectedScripts = response.SelectedScripts,
+        DatabaseScriptToRunSelectionType = response.IsMultiselect ? DatabaseScriptToRunSelectionType.Multiselect : DatabaseScriptToRunSelectionType.LastVersion
+      });
 
       return Content("OK");
     }

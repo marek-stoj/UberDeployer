@@ -9,7 +9,7 @@ namespace UberDeployer.Core.Deployment.Steps
 {
   public class ScriptsToRunWebSelector : IScriptsToRunWebSelector
   {
-    private static readonly Dictionary<Guid, string[]> _collectedScriptsByDeploymentId = new Dictionary<Guid, string[]>();
+    private static readonly Dictionary<Guid, DbScriptsToRunSelection> _collectedScriptsByDeploymentId = new Dictionary<Guid, DbScriptsToRunSelection>();
     private readonly string _internalApiEndpointUrl;
     private readonly int _maxWaitTimeInSeconds;
 
@@ -23,15 +23,15 @@ namespace UberDeployer.Core.Deployment.Steps
       _maxWaitTimeInSeconds = maxWaitTimeInSeconds;
     }
 
-    public static void SetSelectedScriptsToRun(Guid deploymentId, string[] scriptsToRun)
+    public static void SetSelectedScriptsToRun(Guid deploymentId, DbScriptsToRunSelection dbScriptsToRunSelection)
     {
       lock (_collectedScriptsByDeploymentId)
       {
-        _collectedScriptsByDeploymentId[deploymentId] = scriptsToRun;
+        _collectedScriptsByDeploymentId[deploymentId] = dbScriptsToRunSelection;
       }
     }
 
-    public string[] GetSelectedScriptsToRun(Guid deploymentId, string[] sourceScriptsList)
+    public DbScriptsToRunSelection GetSelectedScriptsToRun(Guid deploymentId, string[] sourceScriptsList)
     {
       using (var webClient = CreateWebClient())
       {
@@ -54,7 +54,7 @@ namespace UberDeployer.Core.Deployment.Steps
       }
 
       var pollStartTime = DateTime.UtcNow;
-      string[] scriptsToRun;
+      DbScriptsToRunSelection scriptsToRunSelection;
 
       while (true)
       {
@@ -62,7 +62,7 @@ namespace UberDeployer.Core.Deployment.Steps
 
         lock (_collectedScriptsByDeploymentId)
         {
-          if (_collectedScriptsByDeploymentId.TryGetValue(deploymentId, out scriptsToRun))
+          if (_collectedScriptsByDeploymentId.TryGetValue(deploymentId, out scriptsToRunSelection))
           {
             break;
           }
@@ -78,7 +78,7 @@ namespace UberDeployer.Core.Deployment.Steps
         }
       }
 
-      if (scriptsToRun == null || scriptsToRun.Length == 0)
+      if (scriptsToRunSelection == null || scriptsToRunSelection.SelectedScripts == null || scriptsToRunSelection.SelectedScripts.Length == 0)
       {
         using (var webClient = CreateWebClient())
         {
@@ -90,7 +90,7 @@ namespace UberDeployer.Core.Deployment.Steps
 
       PostDiagnosticMessage("Scripts to run were provided - we'll continue.", DiagnosticMessageType.Trace);
 
-      return scriptsToRun;
+      return scriptsToRunSelection;
     }
 
     private static WebClient CreateWebClient()
