@@ -782,11 +782,21 @@ function setupSignalR(collectCredentialsDialog, collectScriptsToRunDialog) {
   deploymentHub.client.connected = function () { };
   deploymentHub.client.disconnected = function () { };
 
-  deploymentHub.client.promptForCredentials = collectCredentialsDialog.showDialog(message);
-  deploymentHub.client.cancelPromptForCredentials = collectCredentialsDialog.closeDialog();
+  deploymentHub.client.promptForCredentials = function(message) {
+    collectCredentialsDialog.showDialog(message);
+  };
 
-  deploymentHub.client.promptForScriptsToRun = collectScriptsToRunDialog.showDialog(message);
-  deploymentHub.client.cancelPromptForScriptsToRun = collectScriptsToRunDialog.closeDialog();
+  deploymentHub.client.cancelPromptForCredentials = function() {
+    collectCredentialsDialog.closeDialog();
+  };
+
+  deploymentHub.client.promptForScriptsToRun = function(message) {
+    collectScriptsToRunDialog.showDialog(message);
+  };
+
+  deploymentHub.client.cancelPromptForScriptsToRun = function() {
+    collectScriptsToRunDialog.closeDialog();
+  };
   
   $.connection.hub.start();
 }
@@ -858,6 +868,7 @@ var CollectScriptsToRunDialog = (function () {
   function CollectScriptsToRunDialog() {
     var self = this;
 
+    // TODO LK: add click handler for cancel button. We should send cancel command to service asap and not wait for timeout.
     $('#dlg-collect-scripts-ok')
       .click(function () {
         var deploymentId = $('#dlg-collect-scripts-deployment-id').val();
@@ -887,8 +898,8 @@ var CollectScriptsToRunDialog = (function () {
     $('#dlg-collect-scripts-project-name').html(message.projectName);
     $('#dlg-collect-scripts-project-configuration-name').html(message.projectConfigurationName);
 
-    $.each(message.scriptsToRun, function(item) {
-      $('#dlg-collect-scripts-select').append('<option value=' + item + '>' + item + '</option>');
+    $.each(message.scriptsToRun, function(index, scriptToRun) {
+      $('#dlg-collect-scripts-select').append('<option value=' + scriptToRun + '>' + scriptToRun + '</option>');
     });
 
     $('#dlg-collect-scripts').modal('show');

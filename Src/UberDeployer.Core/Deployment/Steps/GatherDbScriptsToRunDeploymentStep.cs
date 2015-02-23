@@ -14,30 +14,44 @@ namespace UberDeployer.Core.Deployment.Steps
     private const string _NoTransactionTail = ".notrans";
 
     private readonly string _dbName;
+
     private readonly Lazy<string> _scriptsDirectoryPathProvider;
+
     private readonly string _sqlServerName;
+
     private readonly string _environmentName;
+
     private readonly DeploymentInfo _deploymentInfo;
-    private readonly IScriptsToRunWebSelector _scriptsToRunWebSelector;
+
     private readonly IDbVersionProvider _dbVersionProvider;
 
-    private IEnumerable<DbScriptToRun> _scriptsToRun = new List<DbScriptToRun>();
-    private IScriptsToRunWebSelector _scriptToRunWebSelector;
+    private readonly IScriptsToRunWebSelector _scriptsToRunWebSelector;
 
-    public GatherDbScriptsToRunDeploymentStep(string dbName, Lazy<string> scriptsDirectoryPathProvider, string databaseServerMachineName, string environmentName, DeploymentInfo deploymentInfo, IDbVersionProvider scriptToRunWebSelector, IScriptsToRunWebSelector scriptsToRunWebSelector)
+    private IEnumerable<DbScriptToRun> _scriptsToRun = new List<DbScriptToRun>();
+
+    public GatherDbScriptsToRunDeploymentStep(
+      string dbName,
+      Lazy<string> scriptsDirectoryPathProvider,
+      string databaseServerMachineName,
+      string environmentName,
+      DeploymentInfo deploymentInfo,
+      IDbVersionProvider dbVersionProvider,
+      IScriptsToRunWebSelector scriptsToRunWebSelector)
     {
       Guard.NotNullNorEmpty(dbName, "dbName");
       Guard.NotNull(scriptsDirectoryPathProvider, "scriptsDirectoryPathProvider");
       Guard.NotNullNorEmpty(databaseServerMachineName, "databaseServerMachineName");
       Guard.NotNullNorEmpty(environmentName, "environmentName");
       Guard.NotNull(deploymentInfo, "deploymentInfo");
-      Guard.NotNull(scriptToRunWebSelector, "scriptToRunWebSelector");
+      Guard.NotNull(dbVersionProvider, "dbVersionProvider");
+      Guard.NotNull(scriptsToRunWebSelector, "scriptsToRunWebSelector");
 
       _dbName = dbName;
       _scriptsDirectoryPathProvider = scriptsDirectoryPathProvider;
       _sqlServerName = databaseServerMachineName;
       _environmentName = environmentName;
       _deploymentInfo = deploymentInfo;
+      _dbVersionProvider = dbVersionProvider;
       _scriptsToRunWebSelector = scriptsToRunWebSelector;
 
       _scriptsToRun = Enumerable.Empty<DbScriptToRun>();
@@ -133,7 +147,7 @@ namespace UberDeployer.Core.Deployment.Steps
           .Select(x => new DbScriptToRun(x.Key, x.Value))
           .ToList();
 
-      string[] selectedScripts = _scriptToRunWebSelector.GetSelectedScriptsToRun(_deploymentInfo.DeploymentId, scriptsToRun.Select(s => Path.GetFileNameWithoutExtension(s.ScriptPath)).ToArray());
+      string[] selectedScripts = _scriptsToRunWebSelector.GetSelectedScriptsToRun(_deploymentInfo.DeploymentId, scriptsToRun.Select(s => Path.GetFileNameWithoutExtension(s.ScriptPath)).ToArray());
 
       return FilterScripts(scriptsToRun, selectedScripts);
     }
