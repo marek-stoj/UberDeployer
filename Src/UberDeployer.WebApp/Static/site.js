@@ -57,7 +57,7 @@ function initializeDeploymentPage(initData) {
   g_initialSelection = initData.initialSelection;
 
   var collectCredentialsDialog = new CollectCredentialsDialog();
-  var collectScriptsToRunDialog = new CollectScriptsToRunDialog();
+  var collectScriptsToRunDialog = new CollectScriptsToRunDialog(false);
 
   setupSignalR(collectCredentialsDialog, collectScriptsToRunDialog);
 
@@ -865,8 +865,10 @@ var CollectCredentialsDialog = (function() {
 
 var CollectScriptsToRunDialog = (function () {
 
-  function CollectScriptsToRunDialog() {
+  function CollectScriptsToRunDialog(isMultiple) {
     var self = this;
+
+    self.isMultiple = isMultiple;
 
     // TODO LK: add click handler for cancel button. We should send cancel command to service asap and not wait for timeout.
     $('#dlg-collect-scripts-ok')
@@ -885,7 +887,7 @@ var CollectScriptsToRunDialog = (function () {
           data: {
             deploymentId: deploymentId,
             selectedScripts: selectedScripts,
-            isMultiselect: false
+            isMultiselect: isMultiple
           },
           traditional: true
         });
@@ -903,6 +905,12 @@ var CollectScriptsToRunDialog = (function () {
       $('#dlg-collect-scripts-select').append('<option value=' + scriptToRun + '>' + scriptToRun + '</option>');
     });
 
+    if (this.isMultiple) {
+      $('#dlg-collect-scripts-select').attr('multiple', 'multiple');
+    } else {
+      $('#dlg-collect-scripts-select option:last-child').attr('selected', 'selected');
+    }
+    
     $('#dlg-collect-scripts').modal('show');
   };
 
