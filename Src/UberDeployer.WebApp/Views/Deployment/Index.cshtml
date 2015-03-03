@@ -53,23 +53,23 @@
         @if (Model.IsCreatePackageVisible)
         {
           <button type="button" id="btn-create-package" name="btn-create-package" class="flat-butt" data-toggle="package-dir-modal" data-target="#package-dir-modal">
-            <i class="fa fa-gift"></i> Create Package
+            <i class="fa fa-gift"></i>Create Package
           </button>
         }
         <button type="button" id="btn-version" class="flat-butt" onclick="javascript: getProjectVersion();">
-          <i class="fa fa-crosshairs"></i> Version?
+          <i class="fa fa-crosshairs"></i>Version?
         </button>
       </div>
       <div class="col-md-6">
         <div class="row">
           <div class="col-md-8">
-            <button type="button" id="btn-deploy" name="btn-deploy" class="flat-butt flat-primary-butt flat-butt-full-width" @(!Model.CanDeploy ? "disabled=\"disabled\"" : "")>
-              <i class="fa fa-cloud-upload"></i> Deploy!
+            <button type="button" id="btn-deploy" name="btn-deploy" class="flat-butt flat-primary-butt flat-butt-full-width">
+              <i class="fa fa-cloud-upload"></i>Deploy!
             </button>
           </div>
           <div class="col-md-4">
             <button type="button" id="btn-simulate" name="btn-simulate" class="flat-butt flat-info-butt flat-butt-full-width">
-              <i class="fa fa-cloud"></i> Simulate
+              <i class="fa fa-cloud"></i>Simulate
             </button>
           </div>
         </div>
@@ -80,7 +80,7 @@
         <div id="txt-logs">
         </div>
         <button id="btn-clear-logs" class="flat-butt flat-gray-butt pull-right" onclick="javascript: clearLogs();">
-          <i class="fa fa-trash-o"></i> Clear
+          <i class="fa fa-trash-o"></i>Clear
         </button>
       </div>
     </div>
@@ -170,7 +170,7 @@
           <div class="form-group">
             <label for="dlg-collect-scripts-select" class="col-sm-2 control-label">Scripts:</label>
             <div class="col-sm-10">
-              <select id="dlg-collect-scripts-select" name="dlg-collect-scripts-select" class="form-control" ></select>
+              <select id="dlg-collect-scripts-select" name="dlg-collect-scripts-select" class="form-control"></select>
             </div>
           </div>
         </div>
@@ -213,7 +213,7 @@
   <script type="text/javascript">
     $(document).ready(function() {
       var initData = {
-        userCanDeploy: @(Model.CanDeploy ? "true" : "false"),
+        userCanDeploy: "true",
         initialSelection: {
           targetEnvironmentName: @Html.Raw(Model.InitialSelection != null ? string.Format("'{0}'", Model.InitialSelection.TargetEnvironmentName) : "null"),
           projectName: @Html.Raw(Model.InitialSelection != null && !string.IsNullOrEmpty(Model.InitialSelection.ProjectName) ? string.Format("'{0}'", Model.InitialSelection.ProjectName) : "null"),

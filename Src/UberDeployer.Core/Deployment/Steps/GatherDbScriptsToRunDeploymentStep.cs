@@ -11,7 +11,7 @@ namespace UberDeployer.Core.Deployment.Steps
 {
   public class GatherDbScriptsToRunDeploymentStep : DeploymentStep
   {
-    private const string _NoTransactionTail = ".notrans";
+    private static readonly string[] _supportedTails = { ".notrans", ".migration" };
 
     private readonly string _dbName;
 
@@ -77,23 +77,17 @@ namespace UberDeployer.Core.Deployment.Steps
     private static bool IsScriptSupported(DbVersion scriptVersion)
     {
       return string.IsNullOrEmpty(scriptVersion.Tail)
-        || IsNoTransactionScript(scriptVersion);
-    }
-
-    private static bool IsNoTransactionScript(DbVersion dbVersion)
-    {
-      return string.Equals(dbVersion.Tail, _NoTransactionTail, StringComparison.OrdinalIgnoreCase);
+        || _supportedTails.Contains(scriptVersion.Tail);
     }
 
     private IEnumerable<DbScriptToRun> GetScriptsToRun()
     {
       // get db versions
-      IEnumerable<string> versions =
-        _dbVersionProvider.GetVersions(_dbName, _sqlServerName);
+      var versions = _dbVersionProvider.GetVersions(_dbName, _sqlServerName);
 
       var dbVersionsModel = new DbVersionsModel();
 
-      dbVersionsModel.AddDatabase(_environmentName, _dbName, versions);
+      dbVersionsModel.AddDatabase(_environmentName, _dbName, versions.SelectMany(s => s.GetRunnedVersions()));
 
       // sort db versions
       List<DbVersion> dbVersionsList =
@@ -132,7 +126,7 @@ namespace UberDeployer.Core.Deployment.Steps
 
       foreach (DbVersion dbVersion in scriptsToRunOlderThanCurrentVersion)
       {
-        if (!IsScriptSupported(dbVersion) || IsNoTransactionScript(dbVersion))
+        if (!IsScriptSupported(dbVersion))
         {
           continue;
         }

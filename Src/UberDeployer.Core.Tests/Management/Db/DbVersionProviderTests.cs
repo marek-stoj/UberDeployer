@@ -23,12 +23,12 @@ namespace UberDeployer.Core.Tests.Management.Db
           new DbVersionTableInfo
             {
               TableName = _TableName,
-              ColumnName = _ColumnName
+              VersionColumnName = _ColumnName
             },
           new DbVersionTableInfo
             {
               TableName = "VERSIONHISTORY",
-              ColumnName = "DBLabel"
+              VersionColumnName = "DBLabel"
             }
         };
 
@@ -76,7 +76,7 @@ namespace UberDeployer.Core.Tests.Management.Db
               new DbVersionTableInfo
                 {
                   TableName = _TableName,
-                  ColumnName = _ColumnName
+                  VersionColumnName = _ColumnName
                 }
             });
 
@@ -114,7 +114,7 @@ namespace UberDeployer.Core.Tests.Management.Db
               new DbVersionTableInfo
                 {
                   TableName = "OtherTableName",
-                  ColumnName = "OtherColumnName"
+                  VersionColumnName = "OtherColumnName"
                 }
             });
 

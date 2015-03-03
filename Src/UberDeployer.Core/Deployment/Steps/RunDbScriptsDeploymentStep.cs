@@ -10,15 +10,13 @@ namespace UberDeployer.Core.Deployment.Steps
 {
   public class RunDbScriptsDeploymentStep : DeploymentStep
   {
-    private const string _NoTransactionTail = "notrans";
+    private static readonly string[] _versionInsertNotRequiredScriptTails = { "notrans", "migration" };
 
     private readonly string _databaseServerMachineName;
 
     private readonly IEnumerable<DbScriptToRun> _scriptPathsToRunEnumerable;
 
     private readonly IDbScriptRunner _dbScriptRunner;
-
-    #region Constructor(s)
 
     public RunDbScriptsDeploymentStep(
       IDbScriptRunner dbScriptRunner, string databaseServerMachineName, IEnumerable<DbScriptToRun> scriptPathsToRunEnumerable)
@@ -35,10 +33,6 @@ namespace UberDeployer.Core.Deployment.Steps
       _scriptPathsToRunEnumerable = scriptPathsToRunEnumerable;
       _dbScriptRunner = dbScriptRunner;
     }
-
-    #endregion
-
-    #region Overrides of DeploymentStep
 
     protected override void DoExecute()
     {
@@ -65,7 +59,7 @@ namespace UberDeployer.Core.Deployment.Steps
             {
               string script = sr.ReadToEnd();
 
-              if (ShouldBeTransactional(executedScriptName) && !DbScriptToRun.IsVersionInsertPresent(scriptPathToRun.DbVersion, script))
+              if (ShouldBeVersionInsertPresent(executedScriptName) && !DbScriptToRun.IsVersionInsertPresent(scriptPathToRun.DbVersion, script))
               {
                 throw new DeploymentTaskException(string.Format("Script {0} that should be run does not have necessary version insert.", scriptPathToRun.DbVersion));
               }
@@ -81,11 +75,20 @@ namespace UberDeployer.Core.Deployment.Steps
       {
         string message = string.Format("Script execution failed, script name: '{0}'.", executedScriptName);
 
+        Exception eLocal = exc.InnerException;
+
+        while (eLocal != null)
+        {
+          PostDiagnosticMessage("Inner exception: " + eLocal.Message, DiagnosticMessageType.Error);
+
+          eLocal = eLocal.InnerException;
+        }
+
         throw new DeploymentTaskException(message, exc);
       }
     }
 
-    private static bool ShouldBeTransactional(string scriptFileName)
+    private bool ShouldBeVersionInsertPresent(string scriptFileName)
     {
       string fileName = Path.GetFileNameWithoutExtension(scriptFileName);
 
@@ -94,7 +97,15 @@ namespace UberDeployer.Core.Deployment.Steps
         throw new DeploymentTaskException(string.Format("Invalid script file name: '{0}'", scriptFileName));
       }
 
-      return !fileName.EndsWith(_NoTransactionTail, StringComparison.OrdinalIgnoreCase);
+      foreach (string versionInsertNotRequiredScriptTail in _versionInsertNotRequiredScriptTails)
+      {
+        if (fileName.EndsWith(versionInsertNotRequiredScriptTail, StringComparison.OrdinalIgnoreCase))
+        {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     public override string Description
@@ -104,7 +115,5 @@ namespace UberDeployer.Core.Deployment.Steps
         return string.Format("Run db scripts on server '{0}'.", _databaseServerMachineName);
       }
     }
-
-    #endregion
   }
 }
