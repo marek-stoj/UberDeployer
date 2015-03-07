@@ -4,8 +4,6 @@ namespace UberDeployer.Core.TeamCity.Models
 {
   public class ProjectConfigurationDetails
   {
-    #region Properties
-
     public string Id { get; set; }
 
     public string Name { get; set; }
@@ -23,7 +21,5 @@ namespace UberDeployer.Core.TeamCity.Models
 
     [JsonProperty("builds")]
     public BuildsLocation BuildsLocation { get; set; }
-
-    #endregion
   }
 }

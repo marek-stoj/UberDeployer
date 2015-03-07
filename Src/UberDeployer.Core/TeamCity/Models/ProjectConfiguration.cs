@@ -2,7 +2,17 @@
 {
   public class ProjectConfiguration
   {
-    #region Overrides of object
+    public string Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string Href { get; set; }
+
+    public string WebUrl { get; set; }
+
+    public string ProjectId { get; set; }
+
+    public string ProjectName { get; set; }
 
     public override string ToString()
     {
@@ -16,23 +26,5 @@
           ProjectId,
           ProjectName);
     }
-
-    #endregion
-
-    #region Properties
-
-    public string Id { get; set; }
-
-    public string Name { get; set; }
-
-    public string Href { get; set; }
-
-    public string WebUrl { get; set; }
-
-    public string ProjectId { get; set; }
-
-    public string ProjectName { get; set; }
-
-    #endregion
   }
 }
