@@ -42,7 +42,7 @@ namespace UberDeployer.Core.TeamCity
 
     public IEnumerable<Project> GetAllProjects()
     {
-      var projectsList = ExecuteWebRequest<ProjectsList>("projects");
+      var projectsList = ExecuteWebRequest<ProjectsList>(CreateRestApiPath("projects"));
 
       if (projectsList.Projects == null)
       {
@@ -54,7 +54,7 @@ namespace UberDeployer.Core.TeamCity
 
     public Project GetProjectByName(string projectName)
     {
-      var project = ExecuteWebRequest<Project>("projects/" + projectName);
+      var project = ExecuteWebRequest<Project>(CreateRestApiPath("projects/" + projectName));
 
       return project;
     }
@@ -103,9 +103,9 @@ namespace UberDeployer.Core.TeamCity
       DownloadDataViaRestApi(apiUrl, destinationFilePath);
     }
 
-    private T ExecuteWebRequest<T>(string resourceName) where T: class
+    private T ExecuteWebRequest<T>(string restApiPath) where T: class
     {
-      string response = DownloadStringViaRestApi(_RestApiBasePath + resourceName);
+      string response = DownloadStringViaRestApi(restApiPath);
 
       return ParseResponse<T>(response);
     }
@@ -159,6 +159,11 @@ namespace UberDeployer.Core.TeamCity
       webClient.Headers.Add("Accept", "application/json");
 
       return webClient;
+    }
+
+    private static string CreateRestApiPath(string resourceName)
+    {
+      return _RestApiBasePath + resourceName;
     }
 
     private string CreateRestApiUrl(string restApiPath)
