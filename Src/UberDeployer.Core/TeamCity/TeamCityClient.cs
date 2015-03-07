@@ -74,6 +74,8 @@ namespace UberDeployer.Core.TeamCity
 
       var projectConfigurationDetails = ExecuteWebRequest<ProjectConfigurationDetails>(projectConfiguration.Href);
 
+      // TODO LK: add to ProjectConfigurationDetails branches information (builds dont always have branchName specified)
+
       return projectConfigurationDetails;
     }
 

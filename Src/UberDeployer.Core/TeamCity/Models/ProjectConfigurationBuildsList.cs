@@ -5,7 +5,10 @@ namespace UberDeployer.Core.TeamCity.Models
 {
   public class ProjectConfigurationBuildsList
   {
-    #region Overrides of object
+    [JsonProperty("build")]
+    public List<ProjectConfigurationBuild> Builds { get; set; }
+
+    public int Count { get; set; }
 
     public override string ToString()
     {
@@ -14,16 +17,5 @@ namespace UberDeployer.Core.TeamCity.Models
           "BuildsCount: {0}",
           Builds != null ? Builds.Count : 0);
     }
-
-    #endregion
-
-    #region Properties
-
-    [JsonProperty("build")]
-    public List<ProjectConfigurationBuild> Builds { get; set; }
-
-    public int Count { get; set; }
-
-    #endregion
   }
 }
