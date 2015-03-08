@@ -86,6 +86,11 @@ namespace UberDeployer.Core.TeamCity
 
       var projectDetails = ExecuteWebRequest<ProjectDetails>(project.Href);
 
+      foreach (var projectConfiguration in projectDetails.ConfigurationsList.Configurations)
+      {
+        projectConfiguration.Branches = ExecuteWebRequest<ProjectBranchList>(projectConfiguration.Href);
+      }
+
       return projectDetails;
     }
 
