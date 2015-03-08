@@ -2,6 +2,11 @@
 {
   public class ProjectConfiguration
   {
+    public ProjectConfiguration()
+    {
+      Branches = new ProjectBranchList();
+    }
+
     public string Id { get; set; }
 
     public string Name { get; set; }
@@ -13,6 +18,8 @@
     public string ProjectId { get; set; }
 
     public string ProjectName { get; set; }
+
+    public ProjectBranchList Branches { get; set; }
 
     public override string ToString()
     {
