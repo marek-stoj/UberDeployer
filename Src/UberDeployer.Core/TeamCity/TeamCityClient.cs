@@ -69,7 +69,7 @@ namespace UberDeployer.Core.TeamCity
       {
         throw new InternalException("'Projects property should never be null here.");
       }
-      
+
       return projectsList.Projects;
     }
 
@@ -95,7 +95,7 @@ namespace UberDeployer.Core.TeamCity
 
       var projectConfigurationDetails = ExecuteWebRequest<ProjectConfigurationDetails>(projectConfiguration.Href);
 
-      // TODO LK: add to ProjectConfigurationDetails branches information (builds dont always have branchName specified)
+      projectConfigurationDetails.Branches = ExecuteWebRequest<ProjectBranchList>(projectConfiguration.Href + "/branches");
 
       return projectConfigurationDetails;
     }
@@ -122,11 +122,11 @@ namespace UberDeployer.Core.TeamCity
       Guard.NotNullNorEmpty(destinationFilePath, "destinationFilePath");
 
       string apiUrl = _RestApiPathTemplate_DownloadArtifacts.Replace("${buildId}", projectConfigurationBuild.Id);
-      
+
       DownloadDataViaRestApi(apiUrl, destinationFilePath);
     }
 
-    private T ExecuteWebRequest<T>(string restApiPath) where T: class
+    private T ExecuteWebRequest<T>(string restApiPath) where T : class
     {
       string response = DownloadStringViaRestApi(restApiPath);
 

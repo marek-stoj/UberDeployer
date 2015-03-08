@@ -232,6 +232,8 @@
     </Compile>
     <Compile Include="TeamCity\Models\BuildsLocation.cs" />
     <Compile Include="TeamCity\Models\BuildStatus.cs" />
+    <Compile Include="TeamCity\Models\ProjectBranch.cs" />
+    <Compile Include="TeamCity\Models\ProjectBranchList.cs" />
     <Compile Include="TeamCity\Models\ProjectConfigurationBuild.cs" />
     <Compile Include="TeamCity\Models\ProjectConfigurationDetails.cs" />
     <Compile Include="TeamCity\Models\ProjectConfigurationsList.cs" />
