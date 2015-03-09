@@ -18,12 +18,15 @@ using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.TeamCity;
 using log4net;
+
+using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.TeamCity.ApiModels;
 
 using DeploymentInfo = UberDeployer.Agent.Proxy.Dto.DeploymentInfo;
 using DeploymentRequest = UberDeployer.Core.Deployment.Pipeline.Modules.DeploymentRequest;
 using DiagnosticMessage = UberDeployer.Core.Deployment.DiagnosticMessage;
+using DiagnosticMessageType = UberDeployer.Core.Deployment.DiagnosticMessageType;
 using EnvironmentInfo = UberDeployer.Core.Domain.EnvironmentInfo;
 using MachineSpecificProjectVersion = UberDeployer.Agent.Proxy.Dto.Metadata.MachineSpecificProjectVersion;
 using ProjectInfo = UberDeployer.Core.Domain.ProjectInfo;
@@ -243,56 +246,31 @@ namespace UberDeployer.Agent.Service
       return environmentInfo.WebServerMachineNames.ToList();
     }
 
-    public List<ProjectConfiguration> GetProjectConfigurations(string projectName, Proxy.Dto.ProjectConfigurationFilter projectConfigurationFilter)
+    public List<ProjectConfiguration> GetProjectConfigurations(string projectName)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
-      Guard.NotNull(projectConfigurationFilter);
 
       List<TeamCityBuildType> projectConfigurations = _teamCityClient.GetBuildTypesWithBranches(projectName).ToList();
-
-      if (!string.IsNullOrEmpty(projectConfigurationFilter.Name))
-      {
-        projectConfigurations = projectConfigurations.Where(x => x.Name.Contains(projectConfigurationFilter.Name)).ToList();
-      }
 
       return projectConfigurations.Select(DtoMapper.Map<TeamCityBuildType, ProjectConfiguration>).ToList();
     }
 
-    public List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, int maxCount, Proxy.Dto.ProjectConfigurationBuildFilter projectConfigurationBuildFilter)
+    public List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, string branchName, int maxCount)
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
       Guard.NotNullNorEmpty(projectConfigurationName, "projectConfigurationName");
-      Guard.NotNull(projectConfigurationBuildFilter);
 
       ProjectInfo projectInfo =
         _projectInfoRepository.FindByName(projectName);
 
-      var projectConfigurationBuilds = new List<TeamCityBuild>();
-        
-      if (string.IsNullOrEmpty(projectConfigurationBuildFilter.Number))
+      TeamCityBuildType teamCityBuildType = _teamCityClient.GetBuildTypes(projectInfo.ArtifactsRepositoryName).FirstOrDefault(x => x.Name == projectConfigurationName);
+
+      if (teamCityBuildType == null)
       {
-        TeamCityBuildType teamCityBuildType = _teamCityClient.GetBuildTypes(projectInfo.ArtifactsRepositoryName).FirstOrDefault(x => x.Name == projectConfigurationName);
-
-        if (teamCityBuildType == null)
-        {
-          return new List<ProjectConfigurationBuild>();
-        }
-
-        IEnumerable<TeamCityBuild> builds = _teamCityClient.GetBuilds(teamCityBuildType.Id, TeamCityBuildParams.Default);
-
-        projectConfigurationBuilds.AddRange(builds);
+        return new List<ProjectConfigurationBuild>();
       }
-      else
-      {
-        TeamCityBuild teamCityBuild = _teamCityClient.GetBuild(projectConfigurationBuildFilter.Number);
 
-        if (teamCityBuild == null)
-        {
-          return new List<ProjectConfigurationBuild>();
-        }
-
-        projectConfigurationBuilds.Add(teamCityBuild);
-      }
+      IEnumerable<TeamCityBuild> projectConfigurationBuilds = _teamCityClient.GetBuilds(teamCityBuildType.Id, branchName, 0, maxCount, true);
 
       return projectConfigurationBuilds.Select(DtoMapper.Map<TeamCityBuild, ProjectConfigurationBuild>).ToList();
     }

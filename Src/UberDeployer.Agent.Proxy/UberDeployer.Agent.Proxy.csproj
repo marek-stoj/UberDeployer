@@ -68,8 +68,6 @@
     <Compile Include="Dto\DiagnosticMessage.cs" />
     <Compile Include="Dto\DiagnosticMessageType.cs" />
     <Compile Include="Dto\DeploymentRequest.cs" />
-    <Compile Include="Dto\ProjectConfigurationBuildFilter.cs" />
-    <Compile Include="Dto\ProjectConfigurationFilter.cs" />
     <Compile Include="Dto\DbProjectInfo.cs" />
     <Compile Include="Dto\EnvironmentUser.cs" />
     <Compile Include="Dto\IisAppPoolInfo.cs" />

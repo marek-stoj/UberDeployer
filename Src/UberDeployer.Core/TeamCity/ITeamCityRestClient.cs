@@ -14,7 +14,7 @@ namespace UberDeployer.Core.TeamCity
 
     IEnumerable<TeamCityBuildType> GetBuildTypesWithBranches(string projectName);
 
-    IEnumerable<TeamCityBuild> GetBuilds(string buildTypeId, TeamCityBuildParams teamCityBuildParams);
+    IEnumerable<TeamCityBuild> GetBuilds(string buildTypeId, string branchName, int start, int count, bool onlySuccessful);
 
     TeamCityBuild GetBuild(string buildId);
 

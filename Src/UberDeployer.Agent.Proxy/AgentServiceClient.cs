@@ -35,14 +35,14 @@ namespace UberDeployer.Agent.Proxy
       return Exec(@as => @as.GetEnvironmentInfos());
     }
 
-    public List<ProjectConfiguration> GetProjectConfigurations(string projectName, ProjectConfigurationFilter projectConfigurationFilter)
+    public List<ProjectConfiguration> GetProjectConfigurations(string projectName)
     {
-      return Exec(@as => @as.GetProjectConfigurations(projectName, projectConfigurationFilter));
+      return Exec(@as => @as.GetProjectConfigurations(projectName));
     }
 
-    public List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, int maxCount, ProjectConfigurationBuildFilter projectConfigurationBuildFilter)
+    public List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, string branchName, int maxCount)
     {
-      return Exec(@as => @as.GetProjectConfigurationBuilds(projectName, projectConfigurationName, maxCount, projectConfigurationBuildFilter));
+      return Exec(@as => @as.GetProjectConfigurationBuilds(projectName, projectConfigurationName, branchName, maxCount));
     }
 
     public List<string> GetWebAppProjectTargetUrls(string projectName, string environmentName)

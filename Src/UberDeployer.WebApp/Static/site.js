@@ -428,7 +428,12 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
 
         $.each(data.projectConfigurations, function(i, val) {
           var $lstProjectConfigs = $('#lst-project-configs');
+
           var projectConfiguration = val.Name;
+          if (val.BranchName) {
+            projectConfiguration = val.BranchName + " [" + val.Name + "]";
+          }
+
           var projectConfigurationUpper = projectConfiguration.toUpperCase();
 
           if (valueToSelect === null && (projectConfigurationUpper === 'TRUNK' || projectConfigurationUpper === 'PRODUCTION' || projectConfigurationUpper === 'DEFAULT' || projectConfigurationUpper === 'MASTER')) {

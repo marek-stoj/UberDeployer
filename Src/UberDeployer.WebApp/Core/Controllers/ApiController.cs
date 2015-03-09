@@ -119,7 +119,7 @@ namespace UberDeployer.WebApp.Core.Controllers
         return BadRequest();
       }
 
-      List<ProjectConfiguration> projectConfigurations = _agentService.GetProjectConfigurations(projectName, ProjectConfigurationFilter.Empty)
+      List<ProjectConfiguration> projectConfigurations = _agentService.GetProjectConfigurations(projectName)
         .Where(pc => _allowedProjectConfigurations.Count == 0 || _allowedProjectConfigurations.Any(apc => Regex.IsMatch(pc.Name, apc, RegexOptions.IgnoreCase))).ToList();
 
       var projectConfigurationViewModels = new List<ProjectConfigurationViewModel>();
@@ -166,8 +166,14 @@ namespace UberDeployer.WebApp.Core.Controllers
         return BadRequest();
       }
 
+      var projectConfigurationModel = new ProjectConfigurationModel(projectConfigurationName);
+
       List<ProjectConfigurationBuildViewModel> projectConfigurationBuildViewModels =
-        _agentService.GetProjectConfigurationBuilds(projectName, projectConfigurationName, _maxProjectConfigurationBuildsCount, ProjectConfigurationBuildFilter.Empty)
+        _agentService.GetProjectConfigurationBuilds(
+          projectName,
+          projectConfigurationModel.ConfigurationName,
+          projectConfigurationModel.BranchName,
+          _maxProjectConfigurationBuildsCount)
           .Select(
             pcb =>
               new ProjectConfigurationBuildViewModel
@@ -428,12 +434,14 @@ namespace UberDeployer.WebApp.Core.Controllers
       {
         Guid deploymentId = Guid.NewGuid();
 
+        var projectConfigurationModel = new ProjectConfigurationModel(projectConfigurationName);
+        
         var deploymentState =
           new DeploymentState(
             deploymentId,
             UserIdentity,
             projectName,
-            projectConfigurationName,
+            projectConfigurationModel.ConfigurationName,
             projectConfigurationBuildId,
             targetEnvironmentName);
 
@@ -449,7 +457,7 @@ namespace UberDeployer.WebApp.Core.Controllers
             deploymentId,
             isSimulation,
             projectName,
-            projectConfigurationName,
+            projectConfigurationModel.ConfigurationName,
             projectConfigurationBuildId,
             targetEnvironmentName,
             projectType.Value,

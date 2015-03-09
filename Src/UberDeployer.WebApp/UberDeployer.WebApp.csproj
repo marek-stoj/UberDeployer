@@ -89,6 +89,7 @@
     <Compile Include="Core\Controllers\ApiController.cs" />
     <Compile Include="Core\Controllers\InternalApiController.cs" />
     <Compile Include="Core\Models\Api\MachineSpecificProjectVersionViewModel.cs" />
+    <Compile Include="Core\Models\Api\ProjectConfigurationModel.cs" />
     <Compile Include="Core\Models\Api\ProjectMetadataViewModel.cs" />
     <Compile Include="Core\InternalException.cs" />
     <Compile Include="Core\Models\Api\ProjectTypeViewModel.cs" />

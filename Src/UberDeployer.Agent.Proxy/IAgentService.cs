@@ -35,12 +35,12 @@ namespace UberDeployer.Agent.Proxy
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
-    List<ProjectConfiguration> GetProjectConfigurations(string projectName, ProjectConfigurationFilter projectConfigurationFilter);
+    List<ProjectConfiguration> GetProjectConfigurations(string projectName);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
     [FaultContract(typeof(ProjectConfigurationNotFoundFault))]
-    List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, int maxCount, ProjectConfigurationBuildFilter projectConfigurationBuildFilter);
+    List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, string branchName, int maxCount);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]

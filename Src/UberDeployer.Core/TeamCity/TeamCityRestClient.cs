@@ -97,14 +97,13 @@ namespace UberDeployer.Core.TeamCity
       return buildTypes;
     }
 
-    public IEnumerable<TeamCityBuild> GetBuilds(string buildTypeId, TeamCityBuildParams teamCityBuildParams)
+    public IEnumerable<TeamCityBuild> GetBuilds(string buildTypeId, string branchName, int start, int count, bool onlySuccessful)
     {
       Guard.NotNullNorEmpty(buildTypeId, "buildTypeId");
-      Guard.NotNull(teamCityBuildParams);
 
-      string branchLocator = string.IsNullOrWhiteSpace(teamCityBuildParams.BranchName) ? string.Empty : string.Format("locator=branch:(name:{0})&", teamCityBuildParams.BranchName);
+      string branchLocator = string.IsNullOrWhiteSpace(branchName) ? string.Empty : string.Format("locator=branch:(name:{0})&", branchName);
 
-      string statusLocator = teamCityBuildParams.OnlySuccessful ? "&status=SUCCESS" : string.Empty;
+      string statusLocator = onlySuccessful ? "&status=SUCCESS" : string.Empty;
 
       var response =
         ExecuteRequest(
@@ -112,8 +111,8 @@ namespace UberDeployer.Core.TeamCity
             "buildTypes/id:{0}/builds?{1}start={2}&count={3}{4}",
             buildTypeId,
             branchLocator,
-            teamCityBuildParams.Skip.ToString(),
-            teamCityBuildParams.Take.ToString(),
+            start.ToString(),
+            count.ToString(),
             statusLocator));
 
       var builds = ParseResponse<List<TeamCityBuild>>(response["build"]);

@@ -228,7 +228,6 @@
     <Compile Include="Management\Shortcut\ShellShortcut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamCity\ApiModels\TeamCityBuild.cs" />
-    <Compile Include="TeamCity\ApiModels\TeamCityBuildParams.cs" />
     <Compile Include="TeamCity\ApiModels\TeamCityBuildType.cs" />
     <Compile Include="TeamCity\ApiModels\TeamCityBuildTypeBranch.cs" />
     <Compile Include="TeamCity\ApiModels\TeamCityProject.cs" />
