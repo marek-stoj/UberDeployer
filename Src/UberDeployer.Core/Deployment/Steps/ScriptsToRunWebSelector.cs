@@ -7,9 +7,16 @@ using UberDeployer.Common.SyntaxSugar;
 
 namespace UberDeployer.Core.Deployment.Steps
 {
+  internal class DbScriptsToRunSelectionResult
+  {
+    public bool Canceled { get; set; }
+
+    public DbScriptsToRunSelection DbScriptsToRunSelection { get; set; }
+  }
+
   public class ScriptsToRunWebSelector : IScriptsToRunWebSelector
   {
-    private static readonly Dictionary<Guid, DbScriptsToRunSelection> _collectedScriptsByDeploymentId = new Dictionary<Guid, DbScriptsToRunSelection>();
+    private static readonly Dictionary<Guid, DbScriptsToRunSelectionResult> _collectedScriptsByDeploymentId = new Dictionary<Guid, DbScriptsToRunSelectionResult>();
     private readonly string _internalApiEndpointUrl;
     private readonly int _maxWaitTimeInSeconds;
 
@@ -27,7 +34,10 @@ namespace UberDeployer.Core.Deployment.Steps
     {
       lock (_collectedScriptsByDeploymentId)
       {
-        _collectedScriptsByDeploymentId[deploymentId] = dbScriptsToRunSelection;
+        _collectedScriptsByDeploymentId[deploymentId] = new DbScriptsToRunSelectionResult
+        {
+          DbScriptsToRunSelection = dbScriptsToRunSelection
+        };
       }
     }
 
@@ -54,7 +64,7 @@ namespace UberDeployer.Core.Deployment.Steps
       }
 
       var pollStartTime = DateTime.UtcNow;
-      DbScriptsToRunSelection scriptsToRunSelection;
+      DbScriptsToRunSelectionResult scriptsToRunSelection;
 
       while (true)
       {
@@ -78,7 +88,14 @@ namespace UberDeployer.Core.Deployment.Steps
         }
       }
 
-      if (scriptsToRunSelection == null || scriptsToRunSelection.SelectedScripts == null || scriptsToRunSelection.SelectedScripts.Length == 0)
+      if (scriptsToRunSelection != null && scriptsToRunSelection.Canceled)
+      {
+        PostDiagnosticMessage("Canceled selection of scripts to run - we'll not continue.", DiagnosticMessageType.Trace);
+
+        return new DbScriptsToRunSelection();
+      }
+
+      if (scriptsToRunSelection == null || scriptsToRunSelection.DbScriptsToRunSelection.SelectedScripts == null || scriptsToRunSelection.DbScriptsToRunSelection.SelectedScripts.Length == 0)
       {
         using (var webClient = CreateWebClient())
         {
@@ -90,7 +107,7 @@ namespace UberDeployer.Core.Deployment.Steps
 
       PostDiagnosticMessage("Scripts to run were provided - we'll continue.", DiagnosticMessageType.Trace);
 
-      return scriptsToRunSelection;
+      return scriptsToRunSelection.DbScriptsToRunSelection;
     }
 
     private static WebClient CreateWebClient()
@@ -118,6 +135,17 @@ namespace UberDeployer.Core.Deployment.Steps
       if (eventHandler != null)
       {
         eventHandler(sender, diagnosticMessageEventArgs);
+      }
+    }
+
+    public static void CancelDbScriptsSelection(Guid deploymentId)
+    {
+      lock (_collectedScriptsByDeploymentId)
+      {
+        _collectedScriptsByDeploymentId[deploymentId] = new DbScriptsToRunSelectionResult
+        {
+          Canceled = true
+        };
       }
     }
   }

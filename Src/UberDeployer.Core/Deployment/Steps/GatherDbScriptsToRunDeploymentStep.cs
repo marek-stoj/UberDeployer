@@ -149,6 +149,11 @@ namespace UberDeployer.Core.Deployment.Steps
       var scriptFileNames = scriptsToRun.Select(s => s.GetScriptFileName()).ToArray();
       DbScriptsToRunSelection scriptsToRunSelection = _scriptsToRunWebSelector.GetSelectedScriptsToRun(_deploymentInfo.DeploymentId, scriptFileNames);
 
+      if (scriptsToRunSelection.SelectedScripts == null || scriptsToRunSelection.SelectedScripts.Length == 0)
+      {
+        return Enumerable.Empty<DbScriptToRun>();
+      }
+
       return FilterScripts(scriptsToRun, scriptsToRunSelection);
     }
 

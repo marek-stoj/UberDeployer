@@ -101,7 +101,7 @@ namespace UberDeployer.WebApp.Core.Controllers
 
       return Content("OK");
     }
-    
+
     [HttpPost]
     public ActionResult CollectScriptsToRun(CollectScriptsToRunRequest request)
     {
@@ -141,6 +141,19 @@ namespace UberDeployer.WebApp.Core.Controllers
         SelectedScripts = response.SelectedScripts,
         DatabaseScriptToRunSelectionType = response.IsMultiselect ? DatabaseScriptToRunSelectionType.Multiselect : DatabaseScriptToRunSelectionType.LastVersion
       });
+
+      return Content("OK");
+    }
+
+    [HttpPost]
+    public ActionResult OnScriptsToRunCanceled(Guid? deploymentId)
+    {
+      if (!deploymentId.HasValue)
+      {
+        return BadRequest();
+      }
+
+      _agentService.CancelDbScriptsSelection(deploymentId.Value);
 
       return Content("OK");
     }

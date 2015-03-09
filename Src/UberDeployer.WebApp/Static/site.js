@@ -30,13 +30,13 @@ var APP_TYPES = {
 };
 
 function Project(name, type, allowedEnvironmentNames) {
-  var self = this;  
+  var self = this;
 
   self.name = '';
   self.type = '';
   self.allowedEnvironmentNames = [];
 
-  self.update = function(projectName, projectType, allowedEnvironmentNamesForProject) {
+  self.update = function (projectName, projectType, allowedEnvironmentNamesForProject) {
     self.name = projectName;
     self.type = projectType;
     self.allowedEnvironmentNames = allowedEnvironmentNamesForProject;
@@ -66,7 +66,7 @@ function initializeDeploymentPage(initData) {
       domHelper.showError(xhr);
     }
   });
-  
+
   $('#btn-deploy').click(function () {
     deploy();
   });
@@ -74,29 +74,28 @@ function initializeDeploymentPage(initData) {
   $('#btn-simulate').click(function () {
     simulate();
   });
-  
+
   $('#btn-create-package').click(function () {
     promptPackageDirPath();
   });
 
-  $('#btn-package-ok').click(function() {
+  $('#btn-package-ok').click(function () {
     var packageDir = $('#txt-package-dir')[0].value;
-    
+
     if ($.trim(packageDir) === '') {
       toastr.error('You have to enter package dir path.');
       return;
     }
 
     $('#package-dir-modal').modal('hide');
-    
-    createPackage(packageDir);    
+
+    createPackage(packageDir);
   });
 
-  $('#chb-deployable-projects').change(function() {
+  $('#chb-deployable-projects').change(function () {
     loadProjectsForCurrentEnvironment();
     disableDeployButtonsForCurrentEnvironment();
   });
- 
 
   domHelper.getProjectsElement().change(function () {
     var projectName = getSelectedProjectName();
@@ -110,7 +109,7 @@ function initializeDeploymentPage(initData) {
     loadWebMachinesList();
     disableDeployButtonsForCurrentEnvironment();
   });
-  
+
   domHelper.getProjectConfigsElement().change(function () {
     var projectName = getSelectedProjectName();
     var projectConfigurationName = getSelectedProjectConfigurationName();
@@ -137,9 +136,9 @@ function initializeDeploymentPage(initData) {
         g_initialSelection = null;
 
         var projectConfigBuildsElement = $('#lst-project-config-builds');
-        
+
         projectConfigBuildsElement.val(valueToSelect);
-        
+
         if (projectConfigBuildsElement.val() === null) {
           toastr.error('No project configuration build with id \'' + valueToSelect + '\'.');
           return;
@@ -147,7 +146,7 @@ function initializeDeploymentPage(initData) {
 
         projectConfigBuildsElement.trigger('change');
       });
-  });  
+  });
 
   loadEnvironments(function () {
     if (g_initialSelection && g_initialSelection.targetEnvironmentName) {
@@ -162,11 +161,11 @@ function initializeDeploymentPage(initData) {
     if (!g_initialSelection || !g_initialSelection.targetEnvironmentName) {
       rememberTargetEnvironmentName();
     }
-    
+
     loadProjectsForCurrentEnvironment();
     disableDeployButtonsForCurrentEnvironment();
   });
-  
+
   startDiagnosticMessagesLoader();
 }
 
@@ -178,7 +177,7 @@ function getDeploymentInfo() {
     targetEnvironmentName: getSelectedTargetEnvironmentName(),
     targetMachines: getSelectedTargetMachines()
   };
-  
+
   if (!deploymentInfo.projectName || !deploymentInfo.projectConfigurationName
     || !deploymentInfo.projectConfigurationBuildId || !deploymentInfo.targetEnvironmentName) {
     toastr.error('Select project, configuration, build and environment!');
@@ -190,7 +189,7 @@ function getDeploymentInfo() {
 
 function doDeployOrSimulate(isSimulation) {
   var deploymentInfo = getDeploymentInfo();
-  
+
   if (g_ProjectList[deploymentInfo.projectName].type == APP_TYPES.WebApp && (!deploymentInfo.targetMachines || deploymentInfo.targetMachines.length == 0)) {
     toastr.error('Select web machine for selected environment!');
     return;
@@ -247,7 +246,7 @@ function createPackage(packageDirPath) {
 
 function promptPackageDirPath() {
   var deploymentInfo = getDeploymentInfo();
-  
+
   $.get(
    g_AppPrefix + "Api/GetDefaultPackageDirPath",
    {
@@ -255,7 +254,7 @@ function promptPackageDirPath() {
      projectName: deploymentInfo.projectName
    })
    .done(
-     function (data) {       
+     function (data) {
        $('#txt-package-dir')[0].value = data;
        $('#package-dir-modal').modal('show');
      })
@@ -270,7 +269,7 @@ function loadEnvironments(onFinishedCallback) {
 
   $.getJSON(
     g_AppPrefix + 'Api/GetEnvironments',
-    function(data) {
+    function (data) {
       clearEnvironments();
       g_EnvironmentList = [];
 
@@ -311,7 +310,7 @@ function loadWebMachinesList() {
     { envName: $lstEnvironments.val() },
     function (machines) {
       var newSelectedProject = domHelper.getProjectsElement().val();
-      
+
       if (!newSelectedProject) {
         return;
       }
@@ -325,7 +324,7 @@ function loadWebMachinesList() {
 
       $lstMachines.removeAttr('disabled');
 
-      $.each(machines, function(i, val) {
+      $.each(machines, function (i, val) {
         $lstMachines.append(
           $('<option></option>')
             .attr('value', val)
@@ -337,8 +336,8 @@ function loadWebMachinesList() {
 
 function loadProjectsForCurrentEnvironment() {
   var selectedTargetEnvironmentName =
-    getSelectedTargetEnvironmentName();   
-  
+    getSelectedTargetEnvironmentName();
+
   if (!selectedTargetEnvironmentName) {
     return;
   }
@@ -355,11 +354,11 @@ function loadProjectsForCurrentEnvironment() {
       else {
         projectToSelect = $('#lst-projects option').eq(0).val();
       }
-      
+
       var projectsElement = domHelper.getProjectsElement();
-      
+
       projectsElement.val(projectToSelect);
-      
+
       if (projectsElement.val() === null) {
         toastr.error('No project named \'' + projectToSelect + '\'.');
         return;
@@ -376,11 +375,11 @@ function doLoadProjects(environmentName, onlyDeployable, onFinishedCallback) {
 
   $.getJSON(g_AppPrefix + 'Api/GetProjects', { environmentName: environmentName, onlyDeployable: onlyDeployable })
     .done(
-      function(data) {
+      function (data) {
         g_ProjectList = [];
         clearProjects();
 
-        $.each(data.projects, function(i, val) {
+        $.each(data.projects, function (i, val) {
           g_ProjectList[val.Name] = new Project(val.Name, val.Type, val.AllowedEnvironmentNames);
 
           domHelper.getProjectsElement()
@@ -399,23 +398,23 @@ function doLoadProjects(environmentName, onlyDeployable, onFinishedCallback) {
 function disableDeployButtonsForCurrentEnvironment() {
   var selectedEnvironmentName = getSelectedTargetEnvironmentName();
   var projectName = getSelectedProjectName();
-  
+
   if (!selectedEnvironmentName || !projectName) {
     return;
   }
 
   var environment = g_EnvironmentList[selectedEnvironmentName];
   var project = g_ProjectList[projectName];
-  
+
   if (!environment || !project) {
     return;
   }
 
-  if (g_userCanDeploy && environment.isDeployable && $.inArray(selectedEnvironmentName, project.allowedEnvironmentNames) > -1) {
-    $('#btn-deploy').removeAttr('disabled');
-  } else {
-    $('#btn-deploy').attr('disabled', 'disabled');
-  }
+  //if (g_userCanDeploy && environment.isDeployable && $.inArray(selectedEnvironmentName, project.allowedEnvironmentNames) > -1) {
+  //  $('#btn-deploy').removeAttr('disabled');
+  //} else {
+  //  $('#btn-deploy').attr('disabled', 'disabled');
+  //}
 }
 
 function loadProjectConfigurations(projectName, onFinishedCallback) {
@@ -428,7 +427,7 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
 
         var valueToSelect = null;
 
-        $.each(data.projectConfigurations, function(i, val) {
+        $.each(data.projectConfigurations, function (i, val) {
           var $lstProjectConfigs = $('#lst-project-configs');
           var projectConfiguration = val.Name;
           var projectConfigurationUpper = projectConfiguration.toUpperCase();
@@ -443,16 +442,16 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
                 .attr('value', projectConfiguration)
                 .text(projectConfiguration));
         });
-        
+
         if (g_initialSelection && g_initialSelection.projectConfigurationName) {
           valueToSelect = g_initialSelection.projectConfigurationName;
         }
 
         if (valueToSelect !== null) {
           var projectConfigsElement = domHelper.getProjectConfigsElement();
-          
+
           projectConfigsElement.val(valueToSelect);
-          
+
           if (projectConfigsElement.val() === null) {
             toastr.error('No project configuration named \'' + valueToSelect + '\'.');
             return;
@@ -475,7 +474,7 @@ function loadProjectConfigurationBuilds(projectName, projectConfigurationName, o
     function (data) {
       clearProjectConfigurationBuilds();
 
-      $.each(data.projectConfigurationBuilds, function(i, val) {
+      $.each(data.projectConfigurationBuilds, function (i, val) {
         var $lstProjectConfigBuilds = $('#lst-project-config-builds');
 
         $lstProjectConfigBuilds
@@ -495,7 +494,7 @@ function startDiagnosticMessagesLoader() {
   loadNewDiagnosticMessages();
 
   setTimeout(
-    function() {
+    function () {
       startDiagnosticMessagesLoader();
     },
     g_DiagnosticMessagesLoaderInterval);
@@ -504,19 +503,19 @@ function startDiagnosticMessagesLoader() {
 function loadNewDiagnosticMessages() {
   $.getJSON(
     g_AppPrefix + 'Api/GetDiagnosticMessages?lastSeenMaxMessageId=' + g_lastSeenMessageId,
-    function(data) {
-      $.each(data.messages, function(i, val) {
+    function (data) {
+      $.each(data.messages, function (i, val) {
         if (val.MessageId > g_lastSeenMessageId) {
           logMessage(val.Message, val.Type);
           g_lastSeenMessageId = val.MessageId;
         }
       });
     });
-  }
+}
 
-function domHelper() {}
+function domHelper() { }
 
-domHelper.getProjectsElement = function() {
+domHelper.getProjectsElement = function () {
   return $('#lst-projects');
 };
 
@@ -524,19 +523,19 @@ domHelper.getProjectConfigsElement = function () {
   return $('#lst-project-configs');
 };
 
-domHelper.getEnvironmentsElement = function() {
+domHelper.getEnvironmentsElement = function () {
   return $('#lst-environments');
 };
 
-domHelper.getMachinesElement = function() {
+domHelper.getMachinesElement = function () {
   return $('#lst-machines');
 };
 
-domHelper.getSelectedMachines = function() {
+domHelper.getSelectedMachines = function () {
   return $.map($('#lst-machines option:selected'), function (item) { return $(item).val(); });
 };
 
-domHelper.showError = function(xhr) {
+domHelper.showError = function (xhr) {
   if (xhr.readyState === 0 || xhr.status === 0) {
     return;
   }
@@ -570,7 +569,7 @@ function isOnlyDeployable() {
   return $('#chb-deployable-projects').is(':checked');
 }
 
-function clearEnvironments() {  
+function clearEnvironments() {
   $('#lst-environments').empty();
 }
 
@@ -592,7 +591,7 @@ function clearTargetMachines() {
 
 function rememberTargetEnvironmentName() {
   var targetEnvironmentName = getSelectedTargetEnvironmentName();
-  
+
   if (!targetEnvironmentName) {
     return;
   }
@@ -605,7 +604,7 @@ function rememberTargetEnvironmentName() {
 
 function selectEnvironment(environmentName) {
   var environmentsElement = domHelper.getEnvironmentsElement();
-  
+
   environmentsElement.val(environmentName);
 
   if (domHelper.getEnvironmentsElement().val() === null) {
@@ -618,7 +617,7 @@ function selectEnvironment(environmentName) {
 
 function restoreRememberedTargetEnvironmentName() {
   var selectFirstValueFunc =
-    function() {
+    function () {
       var firstVal = domHelper.getEnvironmentsElement().find('option').eq(0).val();
 
       if (firstVal !== undefined) {
@@ -635,7 +634,7 @@ function restoreRememberedTargetEnvironmentName() {
   }
 
   domHelper.getEnvironmentsElement().val(cookie);
-  
+
   if (domHelper.getEnvironmentsElement().val() === null) {
     selectFirstValueFunc();
     return;
@@ -672,7 +671,7 @@ function getCookie(c_name) {
 
 function alternateTableRows(tableId) {
   $('#' + tableId + ' tr:even')
-    .each(function() {
+    .each(function () {
       $(this).addClass('even');
     });
 }
@@ -747,7 +746,7 @@ function getProjectVersion() {
       environmentName: targetEnvironmentName
     },
     traditional: true,
-    success: function(data) {
+    success: function (data) {
       if (!handleApiErrorIfPresent(data)) {
         return;
       }
@@ -766,7 +765,7 @@ function getProjectVersion() {
 
 function kickAss() {
   var s = document.createElement('script');
-  
+
   s.type = 'text/javascript';
   document.body.appendChild(s);
   s.src = '//hi.kickassapp.com/kickass.js';
@@ -774,35 +773,32 @@ function kickAss() {
   return false;
 }
 
-
-
 function setupSignalR(collectCredentialsDialog, collectScriptsToRunDialog) {
   var deploymentHub = $.connection.deploymentHub;
 
   deploymentHub.client.connected = function () { };
   deploymentHub.client.disconnected = function () { };
 
-  deploymentHub.client.promptForCredentials = function(message) {
+  deploymentHub.client.promptForCredentials = function (message) {
     collectCredentialsDialog.showDialog(message);
   };
 
-  deploymentHub.client.cancelPromptForCredentials = function() {
+  deploymentHub.client.cancelPromptForCredentials = function () {
     collectCredentialsDialog.closeDialog();
   };
 
-  deploymentHub.client.promptForScriptsToRun = function(message) {
+  deploymentHub.client.promptForScriptsToRun = function (message) {
     collectScriptsToRunDialog.showDialog(message);
   };
 
-  deploymentHub.client.cancelPromptForScriptsToRun = function() {
-    collectScriptsToRunDialog.closeDialog();
+  deploymentHub.client.cancelPromptForScriptsToRun = function () {
+    collectScriptsToRunDialog.cancel();
   };
-  
+
   $.connection.hub.start();
 }
 
-var CollectCredentialsDialog = (function() {
-
+var CollectCredentialsDialog = (function () {
   function CollectCredentialsDialog() {
     var self = this;
     $('#dlg-collect-credentials-ok')
@@ -836,7 +832,7 @@ var CollectCredentialsDialog = (function() {
         });
   };
 
-  CollectCredentialsDialog.prototype.showDialog = function(message) {
+  CollectCredentialsDialog.prototype.showDialog = function (message) {
     $('#dlg-collect-credentials-deployment-id').val(message.deploymentId);
     $('#dlg-collect-credentials-project-name').html(message.projectName);
     $('#dlg-collect-credentials-project-configuration-name').html(message.projectConfigurationName);
@@ -848,7 +844,7 @@ var CollectCredentialsDialog = (function() {
     $('#dlg-collect-credentials').modal('show');
   };
 
-  CollectCredentialsDialog.prototype.closeDialog = function() {
+  CollectCredentialsDialog.prototype.closeDialog = function () {
     $('#dlg-collect-credentials-deployment-id').val('');
     $('#dlg-collect-credentials-project-name').html('');
     $('#dlg-collect-credentials-project-configuration-name').html('');
@@ -864,7 +860,6 @@ var CollectCredentialsDialog = (function() {
 })();
 
 var CollectScriptsToRunDialog = (function () {
-
   function CollectScriptsToRunDialog(isMultiple) {
     var self = this;
 
@@ -894,14 +889,31 @@ var CollectScriptsToRunDialog = (function () {
 
         self.closeDialog();
       });
+
+    $('#dlg-collect-scripts-cancel')
+      .click(function() {
+        var deploymentId = $('#dlg-collect-scripts-deployment-id').val();
+
+        $.ajax({
+          url: g_AppPrefix + 'InternalApi/OnScriptsToRunCanceled',
+          type: "POST",
+          data: {
+            deploymentId: deploymentId
+          },
+          traditional: true
+        });
+
+      self.closeDialog();
+    });
   };
 
   CollectScriptsToRunDialog.prototype.showDialog = function (message) {
     $('#dlg-collect-scripts-deployment-id').val(message.deploymentId);
     $('#dlg-collect-scripts-project-name').html(message.projectName);
     $('#dlg-collect-scripts-project-configuration-name').html(message.projectConfigurationName);
+    $('#dlg-collect-scripts-select').html("");
 
-    $.each(message.scriptsToRun, function(index, scriptToRun) {
+    $.each(message.scriptsToRun, function (index, scriptToRun) {
       $('#dlg-collect-scripts-select').append('<option value=' + scriptToRun + '>' + scriptToRun + '</option>');
     });
 
@@ -910,7 +922,7 @@ var CollectScriptsToRunDialog = (function () {
     } else {
       $('#dlg-collect-scripts-select option:last-child').attr('selected', 'selected');
     }
-    
+
     $('#dlg-collect-scripts').modal('show');
   };
 
@@ -923,10 +935,10 @@ var CollectScriptsToRunDialog = (function () {
     $('#dlg-collect-scripts').modal('hide');
   };
 
+
   return CollectScriptsToRunDialog;
 })();
 
-
-$(document).ready(function() {
+$(document).ready(function () {
   // do nothing
 });

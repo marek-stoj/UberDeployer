@@ -71,6 +71,9 @@ namespace UberDeployer.Agent.Proxy
     void SetSelectedDbScriptsToRun(Guid deploymentId, DbScriptsToRunSelection scriptsToRunSelection);
 
     [OperationContract]
+    void CancelDbScriptsSelection(Guid deploymentId);
+
+    [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
     [FaultContract(typeof(EnvironmentNotFoundFault))]
     string GetDefaultPackageDirPath(string environmentName, string projectName);

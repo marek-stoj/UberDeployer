@@ -83,6 +83,11 @@ namespace UberDeployer.Agent.Proxy
       Exec(@as => @as.SetSelectedDbScriptsToRun(deploymentId, scriptsToRunSelection));
     }
 
+    public void CancelDbScriptsSelection(Guid deploymentId)
+    {
+      Exec(@as => @as.CancelDbScriptsSelection(deploymentId));
+    }
+
     public string GetDefaultPackageDirPath(string environmentName, string projectName)
     {
       return Exec(@as => @as.GetDefaultPackageDirPath(environmentName, projectName));

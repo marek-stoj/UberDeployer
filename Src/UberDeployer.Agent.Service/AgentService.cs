@@ -504,6 +504,11 @@ namespace UberDeployer.Agent.Service
         DtoMapper.Map<Proxy.Dto.DbScriptsToRunSelection, DbScriptsToRunSelection>(scriptsToRunSelection));
     }
 
+    public void CancelDbScriptsSelection(Guid deploymentId)
+    {
+      ScriptsToRunWebSelector.CancelDbScriptsSelection(deploymentId);
+    }
+
     public string GetDefaultPackageDirPath(string environmentName, string projectName)
     {
       EnvironmentInfo environmentInfo = _environmentInfoRepository.FindByName(environmentName);
