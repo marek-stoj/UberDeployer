@@ -16,6 +16,8 @@ namespace UberDeployer.Core.TeamCity
 
     IEnumerable<TeamCityBuild> GetBuilds(string buildTypeId, TeamCityBuildParams teamCityBuildParams);
 
+    TeamCityBuild GetBuild(string buildId);
+
     TeamCityBuild GetLastSuccessfulBuild(string buildTypeId);
 
     void DownloadArtifacts(string buildId, string destinationFilePath);

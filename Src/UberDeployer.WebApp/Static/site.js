@@ -480,7 +480,7 @@ function loadProjectConfigurationBuilds(projectName, projectConfigurationName, o
           .append(
             $('<option></option>')
               .attr('value', val.Id)
-              .text(val.StartDate + ' | ' + val.StartTime + ' | ' + val.Number + ' | ' + val.Status));
+              .text(val.StartDate + ' | ' + val.StartTime + ' | ' + val.Number));
       });
 
       if (onFinishedCallback) {

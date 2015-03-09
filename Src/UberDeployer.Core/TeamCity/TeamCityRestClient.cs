@@ -100,15 +100,38 @@ namespace UberDeployer.Core.TeamCity
     public IEnumerable<TeamCityBuild> GetBuilds(string buildTypeId, TeamCityBuildParams teamCityBuildParams)
     {
       Guard.NotNullNorEmpty(buildTypeId, "buildTypeId");
+      Guard.NotNull(teamCityBuildParams);
 
       string branchLocator = string.IsNullOrWhiteSpace(teamCityBuildParams.BranchName) ? string.Empty : string.Format("locator=branch:(name:{0})&", teamCityBuildParams.BranchName);
+
+      string statusLocator = teamCityBuildParams.OnlySuccessful ? "&status=SUCCESS" : string.Empty;
+
       var response =
         ExecuteRequest(
-          string.Format("buildTypes/id:{0}/builds?{1}start={2}&count={3}", buildTypeId, branchLocator, teamCityBuildParams.Skip.ToString(), teamCityBuildParams.Take.ToString()));
+          string.Format(
+            "buildTypes/id:{0}/builds?{1}start={2}&count={3}{4}",
+            buildTypeId,
+            branchLocator,
+            teamCityBuildParams.Skip.ToString(),
+            teamCityBuildParams.Take.ToString(),
+            statusLocator));
 
       var builds = ParseResponse<List<TeamCityBuild>>(response["build"]);
 
       return builds;
+    }
+
+    public TeamCityBuild GetBuild(string buildId)
+    {
+      Guard.NotNullNorEmpty(buildId, "buildId");
+
+      var response = ExecuteRequest(string.Format("builds/id:{0}", buildId));
+
+      var build = ParseResponse<TeamCityBuild>(response);
+
+      build.BuildTypeId = response["buildType"]["id"].ToString();
+
+      return build;
     }
 
     public TeamCityBuild GetLastSuccessfulBuild(string buildTypeId)

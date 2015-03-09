@@ -9,6 +9,7 @@ using UberDeployer.Agent.Proxy;
 using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Agent.Proxy.Dto.Input;
 using UberDeployer.Agent.Proxy.Dto.Metadata;
+using UberDeployer.Agent.Proxy.Dto.TeamCity;
 using UberDeployer.Agent.Proxy.Faults;
 using UberDeployer.Common;
 using UberDeployer.Common.SyntaxSugar;
@@ -118,11 +119,33 @@ namespace UberDeployer.WebApp.Core.Controllers
         return BadRequest();
       }
 
-      List<ProjectConfigurationViewModel> projectConfigurationViewModels =
-        _agentService.GetProjectConfigurations(projectName, ProjectConfigurationFilter.Empty)
-          .Where(pc => _allowedProjectConfigurations.Count == 0 || _allowedProjectConfigurations.Any(apc => Regex.IsMatch(pc.Name, apc, RegexOptions.IgnoreCase)))
-          .Select(pc => new ProjectConfigurationViewModel { Name = pc.Name })
-          .ToList();
+      List<ProjectConfiguration> projectConfigurations = _agentService.GetProjectConfigurations(projectName, ProjectConfigurationFilter.Empty)
+        .Where(pc => _allowedProjectConfigurations.Count == 0 || _allowedProjectConfigurations.Any(apc => Regex.IsMatch(pc.Name, apc, RegexOptions.IgnoreCase))).ToList();
+
+      var projectConfigurationViewModels = new List<ProjectConfigurationViewModel>();
+
+      foreach (var projectConfiguration in projectConfigurations)
+      {
+        if (projectConfiguration.HasBranches())
+        {
+          ProjectConfiguration configuration = projectConfiguration;
+          projectConfiguration.GetBranches().ForEach(
+            branchName => projectConfigurationViewModels.Add(
+              new ProjectConfigurationViewModel
+              {
+                BranchName = branchName,
+                Name = configuration.Name
+              }));
+        }
+        else
+        {
+          projectConfigurationViewModels.Add(
+            new ProjectConfigurationViewModel
+            {
+              Name = projectConfiguration.Name
+            });
+        }
+      }
 
       return
         Json(
@@ -151,7 +174,6 @@ namespace UberDeployer.WebApp.Core.Controllers
               {
                 Id = pcb.Id,
                 Number = pcb.Number,
-                Status = pcb.Status.ToString(),
                 StartDateStr = pcb.StartDate
               })
           .ToList();

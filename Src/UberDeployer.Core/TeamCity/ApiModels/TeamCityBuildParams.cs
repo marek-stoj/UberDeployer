@@ -7,5 +7,20 @@ namespace UberDeployer.Core.TeamCity.ApiModels
     public int Take { get; set; }
 
     public string BranchName { get; set; }
+
+    public bool OnlySuccessful { get; set; }
+
+    public static TeamCityBuildParams Default
+    {
+      get
+      {
+        return new TeamCityBuildParams
+        {
+          Skip = 0,
+          Take = 20,
+          OnlySuccessful = true
+        };
+      }
+    }
   }
 }

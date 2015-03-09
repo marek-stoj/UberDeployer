@@ -57,5 +57,7 @@ namespace UberDeployer.Core
     IFileAdapter CreateFileAdapter();
     
     IZipFileAdapter CreateZipFileAdapter();
+
+    ITeamCityRestClient CreateTeamCityRestClient();
   }
 }

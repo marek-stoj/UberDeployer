@@ -67,17 +67,34 @@ namespace UberDeployer.CommonConfiguration
               {
                 var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                return new TeamCityClient(
+                var client = new TeamCityClient(
                   appConfig.TeamCityHostName,
                   appConfig.TeamCityPort,
+                  appConfig.TeamCityUserName,
+                  appConfig.TeamCityPassword);
+
+                container.Release(appConfig);
+
+                return client;
+              })
+          .LifeStyle.Transient);
+      
+      container.Register(
+        Component.For<ITeamCityRestClient>()
+          .UsingFactoryMethod(
+            () =>
+              {
+                var appConfig = container.Resolve<IApplicationConfiguration>();
+
+                return new TeamCityRestClient(
+                  new Uri(string.Format("http://{0}:{1}", appConfig.TeamCityHostName, appConfig.TeamCityPort)),
                   appConfig.TeamCityUserName,
                   appConfig.TeamCityPassword);
               })
           .LifeStyle.Transient);
 
       container.Register(
-        Component.For<IArtifactsRepository>()
-          .UsingFactoryMethod(() => new TeamCityArtifactsRepository(container.Resolve<ITeamCityClient>()))
+        Component.For<IArtifactsRepository>().ImplementedBy<TeamCityArtifactsRepository>()
           .LifeStyle.Transient);
 
       container.Register(
