@@ -28,7 +28,7 @@
     <LoadSqlClrTypes>True</LoadSqlClrTypes>
     <RootNamespace>UberDeployer.Database</RootNamespace>
     <DefaultSchema>dbo</DefaultSchema>
-    <PreviousProjectVersion>4.0</PreviousProjectVersion>
+    <PreviousProjectVersion>4.1</PreviousProjectVersion>
     <ValidateCasingOnIdentifiers>False</ValidateCasingOnIdentifiers>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{14f485f0-7957-48b2-b825-be742fb1d815}</ProjectGuid>
