@@ -83,5 +83,16 @@ namespace UberDeployer.Core.Tests.TeamCity
 
       // assert
     }
+
+    [Test]
+    public void GetLastSuccessfulBuild_gets_last_successful_pinned_build()
+    {
+      // TODO LK: write test
+      // assign
+      
+      // act
+
+      // assert
+    }
   }
 }
