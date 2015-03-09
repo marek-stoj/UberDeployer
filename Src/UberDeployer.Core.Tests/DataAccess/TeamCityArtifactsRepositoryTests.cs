@@ -10,7 +10,7 @@ namespace UberDeployer.Core.Tests.DataAccess
   [TestFixture]
   public class TeamCityArtifactsRepositoryTests
   {
-    private Mock<ITeamCityClient> _teamCityClient;
+    private Mock<ITeamCityRestClient> _teamCityClient;
 
     // SUT
     private TeamCityArtifactsRepository _teamCityArtifactsRepository;
@@ -18,7 +18,7 @@ namespace UberDeployer.Core.Tests.DataAccess
     [SetUp]
     public void SetUp()
     {
-      _teamCityClient = new Mock<ITeamCityClient>(MockBehavior.Loose);
+      _teamCityClient = new Mock<ITeamCityRestClient>(MockBehavior.Loose);
       _teamCityArtifactsRepository = new TeamCityArtifactsRepository(_teamCityClient.Object);
     }
 
