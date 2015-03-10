@@ -250,7 +250,9 @@ namespace UberDeployer.Agent.Service
     {
       Guard.NotNullNorEmpty(projectName, "projectName");
 
-      List<TeamCityBuildType> projectConfigurations = _teamCityClient.GetBuildTypesWithBranches(projectName).ToList();
+      ProjectInfo projectInfo = _projectInfoRepository.FindByName(projectName);
+
+      List<TeamCityBuildType> projectConfigurations = _teamCityClient.GetBuildTypesWithBranches(projectInfo.ArtifactsRepositoryName).ToList();
 
       return projectConfigurations.Select(DtoMapper.Map<TeamCityBuildType, ProjectConfiguration>).ToList();
     }
@@ -260,8 +262,7 @@ namespace UberDeployer.Agent.Service
       Guard.NotNullNorEmpty(projectName, "projectName");
       Guard.NotNullNorEmpty(projectConfigurationName, "projectConfigurationName");
 
-      ProjectInfo projectInfo =
-        _projectInfoRepository.FindByName(projectName);
+      ProjectInfo projectInfo = _projectInfoRepository.FindByName(projectName);
 
       TeamCityBuildType teamCityBuildType = _teamCityClient.GetBuildTypes(projectInfo.ArtifactsRepositoryName).FirstOrDefault(x => x.Name == projectConfigurationName);
 

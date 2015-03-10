@@ -139,7 +139,7 @@ function initializeDeploymentPage(initData) {
         projectConfigBuildsElement.val(valueToSelect);
         
         if (projectConfigBuildsElement.val() === null) {
-          toastr.error('No project configuration build with id \'' + valueToSelect + '\'.');
+          toastr.error('Project configuration has no successful builds.');
           return;
         }
 
