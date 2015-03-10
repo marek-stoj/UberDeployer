@@ -139,7 +139,7 @@ function initializeDeploymentPage(initData) {
         projectConfigBuildsElement.val(valueToSelect);
         
         if (projectConfigBuildsElement.val() === null) {
-          toastr.error('No project configuration build with id \'' + valueToSelect + '\'.');
+          toastr.error('Project configuration has no successful builds.');
           return;
         }
 
@@ -428,7 +428,12 @@ function loadProjectConfigurations(projectName, onFinishedCallback) {
 
         $.each(data.projectConfigurations, function(i, val) {
           var $lstProjectConfigs = $('#lst-project-configs');
+
           var projectConfiguration = val.Name;
+          if (val.BranchName) {
+            projectConfiguration = val.BranchName + " [" + val.Name + "]";
+          }
+
           var projectConfigurationUpper = projectConfiguration.toUpperCase();
 
           if (valueToSelect === null && (projectConfigurationUpper === 'TRUNK' || projectConfigurationUpper === 'PRODUCTION' || projectConfigurationUpper === 'DEFAULT' || projectConfigurationUpper === 'MASTER')) {
@@ -480,7 +485,7 @@ function loadProjectConfigurationBuilds(projectName, projectConfigurationName, o
           .append(
             $('<option></option>')
               .attr('value', val.Id)
-              .text(val.StartDate + ' | ' + val.StartTime + ' | ' + val.Number + ' | ' + val.Status));
+              .text(val.StartDate + ' | ' + val.StartTime + ' | ' + val.Number));
       });
 
       if (onFinishedCallback) {

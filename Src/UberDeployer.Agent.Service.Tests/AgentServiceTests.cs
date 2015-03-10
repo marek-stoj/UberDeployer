@@ -22,7 +22,7 @@ namespace UberDeployer.Agent.Service.Tests
     private Mock<IDiagnosticMessagesLogger> _diagnositcMessagesLoggerFake;
     private Mock<IProjectInfoRepository> _projectInfoRepositoryFake;
     private Mock<IEnvironmentInfoRepository> _environmentInfoRepositoryFake;
-    private Mock<ITeamCityClient> _teamCityClientFake;
+    private Mock<ITeamCityRestClient> _teamCityClientFake;
     private Mock<IDeploymentRequestRepository> _deploymentRequestRepositoryFake;
     private Mock<IProjectMetadataExplorer> _projectMetadataExplorerFake;
     private Mock<IDirPathParamsResolver> _dirPathParamsResolver;
@@ -34,7 +34,7 @@ namespace UberDeployer.Agent.Service.Tests
       _diagnositcMessagesLoggerFake = new Mock<IDiagnosticMessagesLogger>();
       _projectInfoRepositoryFake = new Mock<IProjectInfoRepository>();
       _environmentInfoRepositoryFake = new Mock<IEnvironmentInfoRepository>();
-      _teamCityClientFake = new Mock<ITeamCityClient>();
+      _teamCityClientFake = new Mock<ITeamCityRestClient>();
       _deploymentRequestRepositoryFake = new Mock<IDeploymentRequestRepository>();
       _projectMetadataExplorerFake = new Mock<IProjectMetadataExplorer>();
       _dirPathParamsResolver = new Mock<IDirPathParamsResolver>();

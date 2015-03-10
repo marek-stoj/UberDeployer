@@ -148,6 +148,11 @@ namespace UberDeployer.CommonConfiguration
       return new ZipFileAdapter();
     }
 
+    public ITeamCityRestClient CreateTeamCityRestClient()
+    {
+      return _container.Resolve<ITeamCityRestClient>();
+    }
+
     #endregion
 
     #region Properties

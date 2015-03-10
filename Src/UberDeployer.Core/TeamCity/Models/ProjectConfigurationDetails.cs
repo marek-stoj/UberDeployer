@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+
+using Newtonsoft.Json;
 
 namespace UberDeployer.Core.TeamCity.Models
 {
@@ -21,5 +23,7 @@ namespace UberDeployer.Core.TeamCity.Models
 
     [JsonProperty("builds")]
     public BuildsLocation BuildsLocation { get; set; }
+
+    public ProjectBranchList Branches { get; set; }
   }
 }

@@ -45,13 +45,14 @@ namespace UberDeployer.Agent.Service
       Mapper.CreateMap<Core.Domain.WebAppProjectConfigurationOverride, Proxy.Dto.WebAppProjectConfigurationOverride>();
       Mapper.CreateMap<Core.Domain.DbProjectConfigurationOverride, Proxy.Dto.DbProjectConfigurationOverride>();
 
-      Mapper.CreateMap<Core.TeamCity.Models.ProjectConfiguration, Proxy.Dto.TeamCity.ProjectConfiguration>();
-      Mapper.CreateMap<Core.TeamCity.Models.ProjectConfigurationBuild, Proxy.Dto.TeamCity.ProjectConfigurationBuild>();
-
       Mapper.CreateMap<Core.Deployment.Pipeline.Modules.DeploymentRequest, Proxy.Dto.DeploymentRequest>();
 
       Mapper.CreateMap<Core.Deployment.DiagnosticMessage, Proxy.Dto.DiagnosticMessage>();
       Mapper.CreateMap<Core.Deployment.DiagnosticMessageType, Proxy.Dto.DiagnosticMessageType>();
+
+      Mapper.CreateMap<Core.TeamCity.ApiModels.TeamCityBuildTypeBranch, Proxy.Dto.TeamCity.ProjectConfigurationBranch>();
+      Mapper.CreateMap<Core.TeamCity.ApiModels.TeamCityBuildType, Proxy.Dto.TeamCity.ProjectConfiguration>();
+      Mapper.CreateMap<Core.TeamCity.ApiModels.TeamCityBuild, Proxy.Dto.TeamCity.ProjectConfigurationBuild>();
 
       Mapper.AssertConfigurationIsValid();
     }

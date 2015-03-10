@@ -11,7 +11,9 @@ namespace UberDeployer.Core.TeamCity
 {
   public class TeamCityClient : ITeamCityClient
   {
-    private const string _RestApiBasePath = "/httpAuth/app/rest/";
+    private readonly string _teamCityBasePath;
+
+    private readonly bool _isAuthenticationRequired;
 
     private const string _RestApiPathTemplate_DownloadArtifacts = "/httpAuth/downloadArtifacts.html?buildId=${buildId}";
 
@@ -38,6 +40,25 @@ namespace UberDeployer.Core.TeamCity
       _port = port;
       _userName = userName;
       _password = password;
+
+      _teamCityBasePath = "/httpAuth/app/rest/";
+      _isAuthenticationRequired = true;
+    }
+
+    public TeamCityClient(string hostName, int port)
+    {
+      Guard.NotNullNorEmpty(hostName, "hostName");
+
+      if (port <= 0)
+      {
+        throw new ArgumentException("Argument must be greater than 0.", "port");
+      }
+
+      _hostName = hostName;
+      _port = port;
+
+      _teamCityBasePath = "guestAuth/app/rest";
+      _isAuthenticationRequired = false;
     }
 
     public IEnumerable<Project> GetAllProjects()
@@ -48,7 +69,7 @@ namespace UberDeployer.Core.TeamCity
       {
         throw new InternalException("'Projects property should never be null here.");
       }
-      
+
       return projectsList.Projects;
     }
 
@@ -65,6 +86,11 @@ namespace UberDeployer.Core.TeamCity
 
       var projectDetails = ExecuteWebRequest<ProjectDetails>(project.Href);
 
+      foreach (var projectConfiguration in projectDetails.ConfigurationsList.Configurations)
+      {
+        projectConfiguration.Branches = ExecuteWebRequest<ProjectBranchList>(projectConfiguration.Href);
+      }
+
       return projectDetails;
     }
 
@@ -73,6 +99,8 @@ namespace UberDeployer.Core.TeamCity
       Guard.NotNull(projectConfiguration, "projectConfiguration");
 
       var projectConfigurationDetails = ExecuteWebRequest<ProjectConfigurationDetails>(projectConfiguration.Href);
+
+      projectConfigurationDetails.Branches = ExecuteWebRequest<ProjectBranchList>(projectConfiguration.Href + "/branches");
 
       return projectConfigurationDetails;
     }
@@ -99,11 +127,11 @@ namespace UberDeployer.Core.TeamCity
       Guard.NotNullNorEmpty(destinationFilePath, "destinationFilePath");
 
       string apiUrl = _RestApiPathTemplate_DownloadArtifacts.Replace("${buildId}", projectConfigurationBuild.Id);
-      
+
       DownloadDataViaRestApi(apiUrl, destinationFilePath);
     }
 
-    private T ExecuteWebRequest<T>(string restApiPath) where T: class
+    private T ExecuteWebRequest<T>(string restApiPath) where T : class
     {
       string response = DownloadStringViaRestApi(restApiPath);
 
@@ -113,8 +141,6 @@ namespace UberDeployer.Core.TeamCity
     private static T ParseResponse<T>(string response)
       where T : class
     {
-      if (string.IsNullOrEmpty(response)) throw new ArgumentException("Argument can't be null nor empty.", "response");
-
       T responseObject = JsonConvert.DeserializeObject<T>(response);
 
       if (responseObject == null)
@@ -147,23 +173,25 @@ namespace UberDeployer.Core.TeamCity
 
     private WebClient CreateWebClient()
     {
-      // ReSharper disable CSharpWarnings::CS0612
       var webClient =
         new Http10WebClient
         {
-          Credentials = new NetworkCredential(_userName, _password),
           Proxy = GlobalProxySelection.GetEmptyWebProxy(),
         };
-      // ReSharper restore CSharpWarnings::CS0612
+
+      if (_isAuthenticationRequired)
+      {
+        webClient.Credentials = new NetworkCredential(_userName, _password);
+      }
 
       webClient.Headers.Add("Accept", "application/json");
 
       return webClient;
     }
 
-    private static string CreateRestApiPath(string resourceName)
+    private string CreateRestApiPath(string resourceName)
     {
-      return _RestApiBasePath + resourceName;
+      return _teamCityBasePath + resourceName;
     }
 
     private string CreateRestApiUrl(string restApiPath)
