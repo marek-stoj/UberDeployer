@@ -135,10 +135,6 @@
       <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
       <Name>UberDeployer.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UberDeployer.NAnt\UberDeployer.NAnt.csproj">
-      <Project>{F8B00BFD-BA4F-41A6-BA31-9187759C0C75}</Project>
-      <Name>UberDeployer.NAnt</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\Data\EnvironmentInfo_Local.xml">
