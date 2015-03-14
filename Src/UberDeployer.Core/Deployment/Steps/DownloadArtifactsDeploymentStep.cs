@@ -6,14 +6,13 @@ namespace UberDeployer.Core.Deployment.Steps
 {
   public class DownloadArtifactsDeploymentStep : DeploymentStep
   {
+    // TODO LK: take care of those overused dependencies
     private readonly ProjectInfo _projectInfo;
     private readonly DeploymentInfo _deploymentInfo;
     private readonly string _targetDirPath;
     private readonly IArtifactsRepository _artifactsRepository;
     
     private readonly string _artifactsFilePath;
-
-    #region Constructor(s)
 
     public DownloadArtifactsDeploymentStep(ProjectInfo projectInfo, DeploymentInfo deploymentInfo, string targetDirPath, IArtifactsRepository artifactsRepository)
     {
@@ -30,17 +29,14 @@ namespace UberDeployer.Core.Deployment.Steps
       _artifactsFilePath = Path.Combine(_targetDirPath, "artifacts.zip");
     }
 
-    #endregion
-
-    #region Overrides of DeploymentStep
+    public string ArtifactsFilePath
+    {
+      get { return _artifactsFilePath; }
+    }
 
     protected override void DoExecute()
     {
-      _artifactsRepository.GetArtifacts(
-        _projectInfo.ArtifactsRepositoryName,
-        _deploymentInfo.ProjectConfigurationName,
-        _deploymentInfo.ProjectConfigurationBuildId,
-        _artifactsFilePath);
+      _artifactsRepository.GetArtifacts(_deploymentInfo.ProjectConfigurationBuildId, _artifactsFilePath);
     }
 
     public override string Description
@@ -56,16 +52,5 @@ namespace UberDeployer.Core.Deployment.Steps
             _targetDirPath);
       }
     }
-
-    #endregion
-
-    #region Properties
-
-    public string ArtifactsFilePath
-    {
-      get { return _artifactsFilePath; }
-    }
-
-    #endregion
   }
 }

@@ -2,24 +2,10 @@
 {
   public class ProjectConfiguration
   {
-    #region Overrides of object
-
-    public override string ToString()
+    public ProjectConfiguration()
     {
-      return
-        string.Format(
-          "Id: {0}, Name: {1}, Href: {2}, WebUrl: {3}, ProjectId: {4}, ProjectName: {5}",
-          Id,
-          Name,
-          Href,
-          WebUrl,
-          ProjectId,
-          ProjectName);
+      Branches = new ProjectBranchList();
     }
-
-    #endregion
-
-    #region Properties
 
     public string Id { get; set; }
 
@@ -33,6 +19,19 @@
 
     public string ProjectName { get; set; }
 
-    #endregion
+    public ProjectBranchList Branches { get; set; }
+
+    public override string ToString()
+    {
+      return
+        string.Format(
+          "Id: {0}, Name: {1}, Href: {2}, WebUrl: {3}, ProjectId: {4}, ProjectName: {5}",
+          Id,
+          Name,
+          Href,
+          WebUrl,
+          ProjectId,
+          ProjectName);
+    }
   }
 }

@@ -160,6 +160,11 @@ namespace UberDeployer.CommonConfiguration
       return new ZipFileAdapter();
     }
 
+    public ITeamCityRestClient CreateTeamCityRestClient()
+    {
+      return _container.Resolve<ITeamCityRestClient>();
+    }
+
     public static IObjectFactory Instance
     {
       get { return (_instance ?? (_instance = new ObjectFactory())); }

@@ -91,6 +91,7 @@
     <Compile Include="Core\Models\Api\CollectScriptsToRunRequest.cs" />
     <Compile Include="Core\Models\Api\CollectScriptsToRunResponse.cs" />
     <Compile Include="Core\Models\Api\MachineSpecificProjectVersionViewModel.cs" />
+    <Compile Include="Core\Models\Api\ProjectConfigurationModel.cs" />
     <Compile Include="Core\Models\Api\ProjectMetadataViewModel.cs" />
     <Compile Include="Core\InternalException.cs" />
     <Compile Include="Core\Models\Api\ProjectTypeViewModel.cs" />
@@ -307,7 +308,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63515</DevelopmentServerPort>
           <DevelopmentServerVPath>/UberDeployer</DevelopmentServerVPath>

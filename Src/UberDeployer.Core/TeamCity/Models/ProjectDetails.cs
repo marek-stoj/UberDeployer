@@ -4,25 +4,6 @@ namespace UberDeployer.Core.TeamCity.Models
 {
   public class ProjectDetails
   {
-    #region Overrides of object
-
-    public override string ToString()
-    {
-      return
-        string.Format(
-          "ProjectId: {0}, ProjectName: {1}, ProjectHref: {2}, ProjectWebUrl: {3}, IsProjectArchived: {4}, ConfigurationsCount: {5}",
-          ProjectId,
-          ProjectName,
-          ProjectHref,
-          ProjectWebUrl,
-          IsProjectArchived,
-          ConfigurationsList != null && ConfigurationsList.Configurations != null ? ConfigurationsList.Configurations.Count : 0);
-    }
-
-    #endregion
-
-    #region Properties
-
     [JsonProperty("id")]
     public string ProjectId { get; set; }
 
@@ -44,6 +25,17 @@ namespace UberDeployer.Core.TeamCity.Models
     [JsonProperty("buildTypes")]
     public ProjectConfigurationsList ConfigurationsList { get; set; }
 
-    #endregion
+    public override string ToString()
+    {
+      return
+        string.Format(
+          "ProjectId: {0}, ProjectName: {1}, ProjectHref: {2}, ProjectWebUrl: {3}, IsProjectArchived: {4}, ConfigurationsCount: {5}",
+          ProjectId,
+          ProjectName,
+          ProjectHref,
+          ProjectWebUrl,
+          IsProjectArchived,
+          ConfigurationsList != null && ConfigurationsList.Configurations != null ? ConfigurationsList.Configurations.Count : 0);
+    }
   }
 }

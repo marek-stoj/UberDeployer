@@ -10,8 +10,8 @@
 
     public string StartDate { get; set; }
 
-    public BuildStatus Status { get; set; }
+    public bool Pinned { get; set; }
 
-    public string WebUrl { get; set; }
+    public string BranchName { get; set; }
   }
 }

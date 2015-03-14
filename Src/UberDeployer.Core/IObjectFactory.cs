@@ -60,5 +60,7 @@ namespace UberDeployer.Core
     IZipFileAdapter CreateZipFileAdapter();
 
     IScriptsToRunWebSelector CreateScriptsToRunWebSelector();
+    
+    ITeamCityRestClient CreateTeamCityRestClient();
   }
 }
