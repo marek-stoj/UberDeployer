@@ -25,6 +25,7 @@ using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.TeamCity;
 using UberDeployer.Core.TeamCity.ApiModels;
 
+using DbScriptsToRunSelection = UberDeployer.Core.Deployment.DbScriptsToRunSelection;
 using DeploymentInfo = UberDeployer.Agent.Proxy.Dto.DeploymentInfo;
 using DeploymentRequest = UberDeployer.Core.Deployment.Pipeline.Modules.DeploymentRequest;
 using DiagnosticMessage = UberDeployer.Core.Deployment.DiagnosticMessage;

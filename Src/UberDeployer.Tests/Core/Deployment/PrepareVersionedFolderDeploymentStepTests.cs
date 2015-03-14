@@ -16,15 +16,15 @@ namespace UberDeployer.Tests.Core.Deployment
       var step =
         new PrepareVersionedFolderDeploymentStep(
           "TestProject",
-          "TestData/VersionedFolders",
+          "Core/TestData/VersionedFolders",
           "TestProject",
           new Lazy<string>(() => "1.0.3.4"));
 
       step.PrepareAndExecute();
 
-      Assert.IsTrue(Directory.Exists("TestData/VersionedFolders/TestProject/1.0.3.4"));
+      Assert.IsTrue(Directory.Exists("Core/TestData/VersionedFolders/TestProject/1.0.3.4"));
 
-      Directory.Delete("TestData/VersionedFolders/TestProject/1.0.3.4");
+      Directory.Delete("Core/TestData/VersionedFolders/TestProject/1.0.3.4");
     }
 
     [Test]
@@ -32,15 +32,15 @@ namespace UberDeployer.Tests.Core.Deployment
     {
       var step = new PrepareVersionedFolderDeploymentStep(
         "TestProject",
-        "TestData/VersionedFolders",
+        "Core/TestData/VersionedFolders",
         "TestProject",
         new Lazy<string>(() => "1.0.3.5"));
 
       step.PrepareAndExecute();
 
-      Assert.IsTrue(Directory.Exists("TestData/VersionedFolders/TestProject/1.0.3.5.1"));
+      Assert.IsTrue(Directory.Exists("Core/TestData/VersionedFolders/TestProject/1.0.3.5.1"));
 
-      Directory.Delete("TestData/VersionedFolders/TestProject/1.0.3.5.1");
+      Directory.Delete("Core/TestData/VersionedFolders/TestProject/1.0.3.5.1");
     }
   }
 }

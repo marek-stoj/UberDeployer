@@ -1,17 +1,19 @@
 using System;
 using System.Linq;
+
 using Moq;
+
 using NUnit.Framework;
+
 using UberDeployer.Common.IO;
-using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Steps;
 using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.FailoverCluster;
 using UberDeployer.Core.Management.NtServices;
-using UberDeployer.Core.Tests.Generators;
+using UberDeployer.Tests.Core.Generators;
 
-namespace UberDeployer.Core.Tests.Deployment
+namespace UberDeployer.Tests.Core.Deployment
 {
   [TestFixture]
   public class DeployExtensionProjectDeploymentTaskTests

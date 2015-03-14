@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+
 using NUnit.Framework;
+
 using UberDeployer.Core.Management.Db;
 
-namespace UberDeployer.Core.Tests.Management.Db
+namespace UberDeployer.Tests.Core.Management.Db
 {
   [TestFixture]
   public class DbVersionProviderTests
@@ -81,15 +83,15 @@ namespace UberDeployer.Core.Tests.Management.Db
             });
 
         // Act
-        List<string> currentVersions =
+        List<DbVersionInfo> currentVersions =
           dbVersionProvider.GetVersions(_DbName, _SqlServerName).ToList();
 
         // Assert
-        Assert.AreEqual(expectedVersions.Length, currentVersions.Count());
+        Assert.AreEqual(expectedVersions.Length, currentVersions.Count);
 
         foreach (var expectedVersion in expectedVersions)
         {
-          Assert.IsTrue(currentVersions.Contains(expectedVersion));
+          Assert.IsTrue(currentVersions.Any(x => x.Version == expectedVersion));
         }
       }
       finally

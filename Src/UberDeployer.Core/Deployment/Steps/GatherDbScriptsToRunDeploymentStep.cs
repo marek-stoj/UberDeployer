@@ -164,6 +164,10 @@ namespace UberDeployer.Core.Deployment.Steps
         case DatabaseScriptToRunSelectionType.LastVersion:
           var lastScriptToRun = scriptsToRunSelection.SelectedScripts.Last();
           int lastScriptPosition = scriptsToRun.FindLastIndex(x => x.GetScriptFileName() == lastScriptToRun);
+          if (lastScriptPosition < 0)
+          {
+            throw new Exception("Selected script does not exist on scripts to run list.");
+          }
           return scriptsToRun.Take(lastScriptPosition + 1);
 
         case DatabaseScriptToRunSelectionType.Multiselect:
