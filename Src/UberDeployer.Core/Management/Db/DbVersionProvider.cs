@@ -47,11 +47,18 @@ namespace UberDeployer.Core.Management.Db
           return Enumerable.Empty<DbVersionInfo>();
         }
 
+        string columnsToSelect = string.Format("[{0}]", versionTableInfo.VersionColumnName);
+
+        if (string.IsNullOrEmpty(versionTableInfo.MigrationColumnName) == false)
+        {
+          columnsToSelect += string.Format(", [{0}]", versionTableInfo.MigrationColumnName);
+        }
+
         string versionQuery = string.Format(
-          "use [{0}]" + "\r\n" +
-          "select [{1}] from [{2}]",
+@"use [{0}]
+select {1} from [{2}]",
           dbName,
-          versionTableInfo.VersionColumnName,
+          columnsToSelect,
           versionTableInfo.TableName);
 
         IEnumerable<dynamic> dbVersions = connection.Query(versionQuery);

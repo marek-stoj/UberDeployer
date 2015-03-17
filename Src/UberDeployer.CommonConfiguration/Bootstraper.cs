@@ -64,33 +64,33 @@ namespace UberDeployer.CommonConfiguration
         Component.For<ITeamCityClient>()
           .UsingFactoryMethod(
             () =>
-              {
-                var appConfig = container.Resolve<IApplicationConfiguration>();
+            {
+              var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                var client = new TeamCityClient(
-                  appConfig.TeamCityHostName,
-                  appConfig.TeamCityPort,
-                  appConfig.TeamCityUserName,
-                  appConfig.TeamCityPassword);
+              var client = new TeamCityClient(
+                appConfig.TeamCityHostName,
+                appConfig.TeamCityPort,
+                appConfig.TeamCityUserName,
+                appConfig.TeamCityPassword);
 
-                container.Release(appConfig);
+              container.Release(appConfig);
 
-                return client;
-              })
+              return client;
+            })
           .LifeStyle.Transient);
-      
+
       container.Register(
         Component.For<ITeamCityRestClient>()
           .UsingFactoryMethod(
             () =>
-              {
-                var appConfig = container.Resolve<IApplicationConfiguration>();
+            {
+              var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                return new TeamCityRestClient(
-                  new Uri(string.Format("http://{0}:{1}", appConfig.TeamCityHostName, appConfig.TeamCityPort)),
-                  appConfig.TeamCityUserName,
-                  appConfig.TeamCityPassword);
-              })
+              return new TeamCityRestClient(
+                new Uri(string.Format("http://{0}:{1}", appConfig.TeamCityHostName, appConfig.TeamCityPort)),
+                appConfig.TeamCityUserName,
+                appConfig.TeamCityPassword);
+            })
           .LifeStyle.Transient);
 
       container.Register(
@@ -164,7 +164,7 @@ namespace UberDeployer.CommonConfiguration
                         {
                           TableName = "VERSION",
                           VersionColumnName = "dbVersion",
-                          MigrationColumnName = "migration"
+                          MigrationColumnName = "migrated"
                         },
                       new DbVersionTableInfo
                         {
