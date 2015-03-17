@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -25,12 +25,12 @@ namespace UberDeployer.Tests.Core.Management.Db
           new DbVersionTableInfo
             {
               TableName = _TableName,
-              ColumnName = _ColumnName
+              VersionColumnName = _ColumnName
             },
           new DbVersionTableInfo
             {
               TableName = "VERSIONHISTORY",
-              ColumnName = "DBLabel"
+              VersionColumnName = "DBLabel"
             }
         };
 
@@ -78,20 +78,20 @@ namespace UberDeployer.Tests.Core.Management.Db
               new DbVersionTableInfo
                 {
                   TableName = _TableName,
-                  ColumnName = _ColumnName
+                  VersionColumnName = _ColumnName
                 }
             });
 
         // Act
-        List<string> currentVersions =
+        List<DbVersionInfo> currentVersions =
           dbVersionProvider.GetVersions(_DbName, _SqlServerName).ToList();
 
         // Assert
-        Assert.AreEqual(expectedVersions.Length, currentVersions.Count());
+        Assert.AreEqual(expectedVersions.Length, currentVersions.Count);
 
         foreach (var expectedVersion in expectedVersions)
         {
-          Assert.IsTrue(currentVersions.Contains(expectedVersion));
+          Assert.IsTrue(currentVersions.Any(x => x.Version == expectedVersion));
         }
       }
       finally
@@ -116,7 +116,7 @@ namespace UberDeployer.Tests.Core.Management.Db
               new DbVersionTableInfo
                 {
                   TableName = "OtherTableName",
-                  ColumnName = "OtherColumnName"
+                  VersionColumnName = "OtherColumnName"
                 }
             });
 

@@ -14,7 +14,7 @@ namespace UberDeployer.Tests.Core.Deployment
     {
       ExtractVersionDeploymentStep step =
         new ExtractVersionDeploymentStep(
-          new Lazy<string>(() => "TestData\\TestVersionExtract"),
+          new Lazy<string>(() => "Core\\TestData\\TestVersionExtract"),
           "subst.exe");
 
       step.PrepareAndExecute();

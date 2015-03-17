@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Castle.Core;
+using Castle.MicroKernel.Registration;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
-using Castle.MicroKernel.Registration;
 using UberDeployer.Common.IO;
 using UberDeployer.Core.Configuration;
-using UberDeployer.Core.DataAccess.NHibernate;
-using UberDeployer.Core.Deployment;
-using UberDeployer.Core.Domain;
-using UberDeployer.Core.DataAccess.Xml;
 using UberDeployer.Core.DataAccess;
+using UberDeployer.Core.DataAccess.NHibernate;
+using UberDeployer.Core.DataAccess.Xml;
+using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Pipeline;
+using UberDeployer.Core.Deployment.Pipeline.Modules;
+using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
+using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.Management.MsDeploy;
-using UberDeployer.Core.TeamCity;
-using UberDeployer.Core.Deployment.Pipeline.Modules;
 using UberDeployer.Core.Management.NtServices;
-using System.IO;
-using UberDeployer.Core.Management.Iis;
 using UberDeployer.Core.Management.ScheduledTasks;
-using UberDeployer.Core.Deployment.Pipeline;
+using UberDeployer.Core.TeamCity;
 
 namespace UberDeployer.CommonConfiguration
 {
@@ -64,33 +64,33 @@ namespace UberDeployer.CommonConfiguration
         Component.For<ITeamCityClient>()
           .UsingFactoryMethod(
             () =>
-              {
-                var appConfig = container.Resolve<IApplicationConfiguration>();
+            {
+              var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                var client = new TeamCityClient(
-                  appConfig.TeamCityHostName,
-                  appConfig.TeamCityPort,
-                  appConfig.TeamCityUserName,
-                  appConfig.TeamCityPassword);
+              var client = new TeamCityClient(
+                appConfig.TeamCityHostName,
+                appConfig.TeamCityPort,
+                appConfig.TeamCityUserName,
+                appConfig.TeamCityPassword);
 
-                container.Release(appConfig);
+              container.Release(appConfig);
 
-                return client;
-              })
+              return client;
+            })
           .LifeStyle.Transient);
-      
+
       container.Register(
         Component.For<ITeamCityRestClient>()
           .UsingFactoryMethod(
             () =>
-              {
-                var appConfig = container.Resolve<IApplicationConfiguration>();
+            {
+              var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                return new TeamCityRestClient(
-                  new Uri(string.Format("http://{0}:{1}", appConfig.TeamCityHostName, appConfig.TeamCityPort)),
-                  appConfig.TeamCityUserName,
-                  appConfig.TeamCityPassword);
-              })
+              return new TeamCityRestClient(
+                new Uri(string.Format("http://{0}:{1}", appConfig.TeamCityHostName, appConfig.TeamCityPort)),
+                appConfig.TeamCityUserName,
+                appConfig.TeamCityPassword);
+            })
           .LifeStyle.Transient);
 
       container.Register(
@@ -106,14 +106,14 @@ namespace UberDeployer.CommonConfiguration
         Component.For<INtServiceManager>()
           .UsingFactoryMethod(
             () =>
-              {
-                var appConfig = container.Resolve<IApplicationConfiguration>();
+            {
+              var appConfig = container.Resolve<IApplicationConfiguration>();
 
-                return
-                  new ScExeBasedNtServiceManager(
-                    appConfig.ScExePath,
-                    _NtServiceManagerOperationsTimeout);
-              })
+              return
+                new ScExeBasedNtServiceManager(
+                  appConfig.ScExePath,
+                  _NtServiceManagerOperationsTimeout);
+            })
           .LifeStyle.Transient);
 
       container.Register(
@@ -138,41 +138,48 @@ namespace UberDeployer.CommonConfiguration
         Component.For<IDeploymentPipeline>()
           .UsingFactoryMethod(
             () =>
-              {
-                var deploymentRequestRepository = container.Resolve<IDeploymentRequestRepository>();
-                var auditingModule = new AuditingModule(deploymentRequestRepository);
-                var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
-                var deploymentPipeline = new DeploymentPipeline();
+            {
+              var deploymentRequestRepository = container.Resolve<IDeploymentRequestRepository>();
+              var auditingModule = new AuditingModule(deploymentRequestRepository);
+              var enforceTargetEnvironmentConstraintsModule = new EnforceTargetEnvironmentConstraintsModule();
+              var deploymentPipeline = new DeploymentPipeline();
 
-                deploymentPipeline.AddModule(auditingModule);
-                deploymentPipeline.AddModule(enforceTargetEnvironmentConstraintsModule);
+              deploymentPipeline.AddModule(auditingModule);
+              deploymentPipeline.AddModule(enforceTargetEnvironmentConstraintsModule);
 
-                return deploymentPipeline;
-              })
+              return deploymentPipeline;
+            })
           .LifeStyle.Transient);
 
       container.Register(
         Component.For<IDbVersionProvider>()
           .UsingFactoryMethod(
             () =>
-              {
-                IEnumerable<DbVersionTableInfo> versionTableInfos =
-                  new List<DbVersionTableInfo>
+            {
+              // order is important - from more specific to less
+              IEnumerable<DbVersionTableInfo> versionTableInfos =
+                new List<DbVersionTableInfo>
                     {
                       new DbVersionTableInfo
                         {
                           TableName = "VERSION",
-                          ColumnName = "dbVersion"
+                          VersionColumnName = "dbVersion",
+                          MigrationColumnName = "migrated"
+                        },
+                      new DbVersionTableInfo
+                        {
+                          TableName = "VERSION",
+                          VersionColumnName = "dbVersion"
                         },
                       new DbVersionTableInfo
                         {
                           TableName = "VERSIONHISTORY",
-                          ColumnName = "DBLabel"
+                          VersionColumnName = "DBLabel"
                         }
                     };
 
-                return new DbVersionProvider(versionTableInfos);
-              })
+              return new DbVersionProvider(versionTableInfos);
+            })
           .LifeStyle.Transient);
 
       container.Register(
@@ -184,10 +191,10 @@ namespace UberDeployer.CommonConfiguration
         Component.For<IDirPathParamsResolver>()
           .UsingFactoryMethod(
             () =>
-              {
-                var appConfig = container.Resolve<IApplicationConfiguration>();
-                return new DirPathParamsResolver(appConfig.ManualDeploymentPackageCurrentDateFormat);
-              })
+            {
+              var appConfig = container.Resolve<IApplicationConfiguration>();
+              return new DirPathParamsResolver(appConfig.ManualDeploymentPackageCurrentDateFormat);
+            })
           .LifeStyle.Is(LifestyleType.Transient));
     }
 

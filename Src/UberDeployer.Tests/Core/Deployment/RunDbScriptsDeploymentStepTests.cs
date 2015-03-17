@@ -23,8 +23,8 @@ namespace UberDeployer.Tests.Core.Deployment
     private static readonly IEnumerable<DbScriptToRun> _ScriptsToRun =
       new List<DbScriptToRun>
         {
-          new DbScriptToRun(DbVersion.FromString("1.3"), "TestData/TestSqlScripts/1.3.sql"),
-          new DbScriptToRun(DbVersion.FromString("1.4"), "TestData/TestSqlScripts/1.4.sql"),
+          new DbScriptToRun(DbVersion.FromString("1.3"), "Core/TestData/TestSqlScripts/1.3.sql"),
+          new DbScriptToRun(DbVersion.FromString("1.4"), "Core/TestData/TestSqlScripts/1.4.sql"),
         };
 
     private Mock<IDbScriptRunner> _dbScriptRunnerFake;
@@ -92,7 +92,7 @@ namespace UberDeployer.Tests.Core.Deployment
     public void DoExecute_fails_on_nonversioned_script()
     {
       // arrange
-      IEnumerable<DbScriptToRun> nonVersionedScript = new List<DbScriptToRun>() { new DbScriptToRun(DbVersion.FromString("1.0"), "TestData/NonVersionedScript/01.NonVersionedScript.sql") };
+      IEnumerable<DbScriptToRun> nonVersionedScript = new List<DbScriptToRun>() { new DbScriptToRun(DbVersion.FromString("1.0"), "Core/TestData/NonVersionedScript/01.NonVersionedScript.sql") };
 
       _deploymentStep = new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, nonVersionedScript);
 
@@ -104,7 +104,7 @@ namespace UberDeployer.Tests.Core.Deployment
     public void DoExecute_does_not_fail_on_nonversioned_script_when_is_marked_as_non_transactional()
     {
       // arrange  
-      IEnumerable<DbScriptToRun> nonTransactionalScript = new List<DbScriptToRun>() { new DbScriptToRun(DbVersion.FromString("1.0"), "TestData/NonVersionedScript/02.NonVersionedScript.notrans.sql") };
+      IEnumerable<DbScriptToRun> nonTransactionalScript = new List<DbScriptToRun>() { new DbScriptToRun(DbVersion.FromString("1.0"), "Core/TestData/NonVersionedScript/02.NonVersionedScript.notrans.sql") };
 
       _deploymentStep = new RunDbScriptsDeploymentStep(_dbScriptRunnerFake.Object, _DatabaseServerName, nonTransactionalScript);
 

@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 
 using Moq;
@@ -13,7 +12,6 @@ using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using UberDeployer.Tests.Core.Generators;
-using UberDeployer.Tests.Core.TestUtils;
 
 namespace UberDeployer.Tests.Core.Deployment
 {
@@ -27,6 +25,7 @@ namespace UberDeployer.Tests.Core.Deployment
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
     private Mock<IFileAdapter> _fileAdapterFake;
     private Mock<IZipFileAdapter> _zipFileAdapterFake;
+    private Mock<IScriptsToRunWebSelector> _scriptsToRunWebSelectorFake;
 
     private DeployDbProjectDeploymentTask _deploymentTask;
 
@@ -40,6 +39,7 @@ namespace UberDeployer.Tests.Core.Deployment
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
       _fileAdapterFake = new Mock<IFileAdapter>();
       _zipFileAdapterFake = new Mock<IZipFileAdapter>();
+      _scriptsToRunWebSelectorFake = new Mock<IScriptsToRunWebSelector>();
 
       _projectInfoRepositoryFake
         .Setup(x => x.FindByName(It.IsAny<string>()))
@@ -61,21 +61,10 @@ namespace UberDeployer.Tests.Core.Deployment
           _dbScriptRunnerFactoryFake.Object,
           _dbVersionProviderFake.Object,
           _fileAdapterFake.Object,
-          _zipFileAdapterFake.Object);
+          _zipFileAdapterFake.Object,
+          _scriptsToRunWebSelectorFake.Object);
 
       _deploymentTask.Initialize(DeploymentInfoGenerator.GetDbDeploymentInfo());
-    }
-
-    [Test]
-    [TestCase("environmentInfoRepository", typeof(ArgumentNullException))]
-    [TestCase("artifactsRepository", typeof(ArgumentNullException))]
-    [TestCase("dbScriptRunnerFactory", typeof(ArgumentNullException))]
-    [TestCase("dbVersionProvider", typeof(ArgumentNullException))]
-    public void Constructor_fails_when_parameter_is_null(string nullParamName, Type expectedExceptionType)
-    {
-      Assert.Throws(
-        expectedExceptionType,
-        () => ReflectionTestTools.CreateInstance<DeployDbProjectDeploymentTask>(GetConstructorDefaultParams(), nullParamName));
     }
 
     [Test]
@@ -187,21 +176,6 @@ namespace UberDeployer.Tests.Core.Deployment
       }
 
       return -1;
-    }
-
-    private OrderedDictionary GetConstructorDefaultParams()
-    {
-      return
-        new OrderedDictionary
-        {
-          { "projectInfoRepository", _projectInfoRepositoryFake.Object },
-          { "environmentInfoRepository", _environmentInfoRepositoryFake.Object },
-          { "artifactsRepository", _artifactsRepositoryFake.Object },
-          { "dbScriptRunnerFactory", _dbScriptRunnerFactoryFake.Object },
-          { "dbVersionProvider", _dbVersionProviderFake.Object },
-          { "fileAdapter", _fileAdapterFake.Object },
-          { "zipFileAdapter", _zipFileAdapterFake.Object },
-        };
     }
   }
 }

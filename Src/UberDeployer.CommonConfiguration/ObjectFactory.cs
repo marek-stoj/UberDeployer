@@ -1,9 +1,11 @@
-﻿using UberDeployer.Common.IO;
+﻿using Castle.Windsor;
+using UberDeployer.Common.IO;
 using UberDeployer.Core;
 using UberDeployer.Core.Configuration;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
+using UberDeployer.Core.Deployment.Steps;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using UberDeployer.Core.Management.FailoverCluster;
@@ -13,7 +15,6 @@ using UberDeployer.Core.Management.MsDeploy;
 using UberDeployer.Core.Management.NtServices;
 using UberDeployer.Core.Management.ScheduledTasks;
 using UberDeployer.Core.TeamCity;
-using Castle.Windsor;
 
 namespace UberDeployer.CommonConfiguration
 {
@@ -25,16 +26,10 @@ namespace UberDeployer.CommonConfiguration
     private static string _webAppInternalApiEndpointUrl;
     private static int _webAsynchronousPasswordCollectorMaxWaitTimeInSeconds;
 
-    #region Constructor(s)
-
     private ObjectFactory()
     {
       // singleton
     }
-
-    #endregion
-
-    #region IObjectFactory members
 
     public IApplicationConfiguration CreateApplicationConfiguration()
     {
@@ -108,6 +103,23 @@ namespace UberDeployer.CommonConfiguration
           _webAsynchronousPasswordCollectorMaxWaitTimeInSeconds);
     }
 
+    public IScriptsToRunWebSelector CreateScriptsToRunWebSelector()
+    {
+      if (string.IsNullOrEmpty(_webAppInternalApiEndpointUrl))
+      {
+        IApplicationConfiguration applicationConfiguration =
+          CreateApplicationConfiguration();
+
+        _webAppInternalApiEndpointUrl = applicationConfiguration.WebAppInternalApiEndpointUrl;
+        _webAsynchronousPasswordCollectorMaxWaitTimeInSeconds = applicationConfiguration.WebAsynchronousPasswordCollectorMaxWaitTimeInSeconds;
+      }
+
+      return
+        new ScriptsToRunWebSelector(
+          _webAppInternalApiEndpointUrl,
+          _webAsynchronousPasswordCollectorMaxWaitTimeInSeconds);
+    }
+
     public IDbScriptRunnerFactory CreateDbScriptRunnerFactory()
     {
       return new MsSqlDbScriptRunnerFactory();
@@ -153,10 +165,6 @@ namespace UberDeployer.CommonConfiguration
       return _container.Resolve<ITeamCityRestClient>();
     }
 
-    #endregion
-
-    #region Properties
-
     public static IObjectFactory Instance
     {
       get { return (_instance ?? (_instance = new ObjectFactory())); }
@@ -166,7 +174,5 @@ namespace UberDeployer.CommonConfiguration
     {
       get { return _container ?? (_container = new WindsorContainer()); }
     }
-
-    #endregion
   }
 }

@@ -27,7 +27,7 @@ namespace UberDeployer.Agent.Proxy
     List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter);
 
     [OperationContract]
-    List<EnvironmentInfo> GetEnvironmentInfos();    
+    List<EnvironmentInfo> GetEnvironmentInfos();
 
     [OperationContract]
     [FaultContract(typeof(EnvironmentNotFoundFault))]
@@ -66,6 +66,12 @@ namespace UberDeployer.Agent.Proxy
 
     [OperationContract]
     void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password);
+
+    [OperationContract]
+    void SetSelectedDbScriptsToRun(Guid deploymentId, DbScriptsToRunSelection scriptsToRunSelection);
+
+    [OperationContract]
+    void CancelDbScriptsSelection(Guid deploymentId);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]

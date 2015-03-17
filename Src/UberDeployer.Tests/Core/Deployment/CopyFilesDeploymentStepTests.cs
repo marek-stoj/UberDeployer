@@ -25,8 +25,8 @@ namespace UberDeployer.Tests.Core.Deployment
     [Test]
     public void Test_copying_all_files()
     {
-      const string srcDirPath = "TestData\\TestSrcDir";
-      const string dstDirPath = "TestData\\TestDstDir";
+      const string srcDirPath = "Core\\TestData\\TestSrcDir";
+      const string dstDirPath = "Core\\TestData\\TestDstDir";
 
       try
       {
@@ -56,8 +56,8 @@ namespace UberDeployer.Tests.Core.Deployment
     [Test]
     public void Test_copying_all_files_when_dst_exists()
     {
-      const string srcDirPath = "TestData\\TestSrcDir";
-      const string dstDirPath = "TestData\\TestDstDir";
+      const string srcDirPath = "Core\\TestData\\TestSrcDir";
+      const string dstDirPath = "Core\\TestData\\TestDstDir";
 
       try
       {
@@ -89,8 +89,8 @@ namespace UberDeployer.Tests.Core.Deployment
     [Test]
     public void Test_copying_all_files_throws_when_no_src()
     {
-      const string srcDirPath = "TestData\\aoisdiasyd";
-      const string dstDirPath = "TestData\\TestDstDir";
+      const string srcDirPath = "Core\\TestData\\aoisdiasyd";
+      const string dstDirPath = "Core\\TestData\\TestDstDir";
 
       try
       {

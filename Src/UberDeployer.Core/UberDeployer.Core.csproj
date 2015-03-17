@@ -83,9 +83,12 @@
   <ItemGroup>
     <Compile Include="DataAccess\Dapper\SqlMapper.cs" />
     <Compile Include="Deployment\AsynchronousWebPasswordCollector.cs" />
+    <Compile Include="Deployment\ScriptsToRunSelection.cs" />
     <Compile Include="Deployment\Steps\CleanDirectoryDeploymentStep.cs" />
     <Compile Include="Deployment\Steps\ConfigureBinariesStep.cs" />
     <Compile Include="Deployment\Converter.cs" />
+    <Compile Include="Deployment\Steps\IScriptsToRunWebSelector.cs" />
+    <Compile Include="Deployment\Steps\ScriptsToRunWebSelector.cs" />
     <Compile Include="Deployment\Tasks\CreateManualDeploymentPackageDeploymentTask.cs" />
     <Compile Include="Deployment\DbScriptToRun.cs" />
     <Compile Include="Deployment\Steps\DeployUberDeployerAgentUsingConsoleAppDeploymentStep.cs" />
@@ -125,6 +128,7 @@
     <Compile Include="Domain\ProjectToFailoverClusterGroupMapping.cs" />
     <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="InternalException.cs" />
+    <Compile Include="Management\Db\DbVersionInfo.cs" />
     <Compile Include="Management\Db\MsSqlSqlCmdScriptRunner.cs" />
     <Compile Include="Management\FailoverCluster\IFailoverClusterManager.cs" />
     <Compile Include="Management\Db\DbScriptRunnerException.cs" />
@@ -260,10 +264,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UberDeployer.Agent.Proxy\UberDeployer.Agent.Proxy.csproj">
-      <Project>{20970513-4A64-420E-B814-4D8FC89698FA}</Project>
-      <Name>UberDeployer.Agent.Proxy</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UberDeployer.Common\UberDeployer.Common.csproj">
       <Project>{256FF6D7-F1B8-43E7-97CA-7A63455C0BE6}</Project>
       <Name>UberDeployer.Common</Name>

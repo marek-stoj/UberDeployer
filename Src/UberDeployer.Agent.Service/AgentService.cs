@@ -4,7 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.Threading;
+
+using log4net;
+
 using UberDeployer.Agent.Proxy;
+using UberDeployer.Agent.Proxy.Dto;
 using UberDeployer.Agent.Proxy.Dto.TeamCity;
 using UberDeployer.Agent.Proxy.Faults;
 using UberDeployer.Agent.Service.Diagnostics;
@@ -14,15 +18,14 @@ using UberDeployer.CommonConfiguration;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
 using UberDeployer.Core.Deployment.Pipeline.Modules;
+using UberDeployer.Core.Deployment.Steps;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Metadata;
 using UberDeployer.Core.TeamCity;
-using log4net;
-
-using UberDeployer.Agent.Proxy.Dto;
-using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.TeamCity.ApiModels;
 
+using DbScriptsToRunSelection = UberDeployer.Core.Deployment.DbScriptsToRunSelection;
 using DeploymentInfo = UberDeployer.Agent.Proxy.Dto.DeploymentInfo;
 using DeploymentRequest = UberDeployer.Core.Deployment.Pipeline.Modules.DeploymentRequest;
 using DiagnosticMessage = UberDeployer.Core.Deployment.DiagnosticMessage;
@@ -46,8 +49,6 @@ namespace UberDeployer.Agent.Service
     private readonly IDiagnosticMessagesLogger _diagnosticMessagesLogger;
     private readonly IProjectMetadataExplorer _projectMetadataExplorer;
     private readonly IDirPathParamsResolver _dirPathParamsResolver;
-
-    #region Constructor(s)
 
     public AgentService(
       IDeploymentPipeline deploymentPipeline,
@@ -89,10 +90,6 @@ namespace UberDeployer.Agent.Service
         ObjectFactory.Instance.CreateDirPathParamsResolver())
     {
     }
-
-    #endregion
-
-    #region IAgentService Members
 
     public void Deploy(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
@@ -397,7 +394,7 @@ namespace UberDeployer.Agent.Service
       catch (Exception exc)
       {
         _log.ErrorIfEnabled(() => "Unhandled exception.", exc);
-        
+
         throw;
       }
     }
@@ -408,6 +405,18 @@ namespace UberDeployer.Agent.Service
       Guard.NotNullNorEmpty(password, "password");
 
       AsynchronousWebPasswordCollector.SetCollectedCredentials(deploymentId, password);
+    }
+
+    public void SetSelectedDbScriptsToRun(Guid deploymentId, Proxy.Dto.DbScriptsToRunSelection scriptsToRunSelection)
+    {
+      ScriptsToRunWebSelector.SetSelectedScriptsToRun(
+        deploymentId,
+        DtoMapper.Map<Proxy.Dto.DbScriptsToRunSelection, DbScriptsToRunSelection>(scriptsToRunSelection));
+    }
+
+    public void CancelDbScriptsSelection(Guid deploymentId)
+    {
+      ScriptsToRunWebSelector.CancelDbScriptsSelection(deploymentId);
     }
 
     public string GetDefaultPackageDirPath(string environmentName, string projectName)
@@ -424,12 +433,8 @@ namespace UberDeployer.Agent.Service
         return null;
       }
 
-      return _dirPathParamsResolver.ResolveParams(environmentInfo.ManualDeploymentPackageDirPath, projectName);           
+      return _dirPathParamsResolver.ResolveParams(environmentInfo.ManualDeploymentPackageDirPath, projectName);
     }
-
-    #endregion
-
-    #region Private methods
 
     private void HandleDeploymentException(Exception exception, Guid uniqueClientId)
     {
@@ -470,7 +475,7 @@ namespace UberDeployer.Agent.Service
     {
       Core.Domain.DeploymentInfo deploymentInfo =
         DtoMapper.ConvertDeploymentInfo(deploymentInfoDto, projectInfo);
-      
+
       var deploymentContext =
         new DeploymentContext(requesterIdentity);
 
@@ -493,7 +498,5 @@ namespace UberDeployer.Agent.Service
         _deploymentPipeline.DiagnosticMessagePosted -= deploymentPipelineDiagnosticMessageAction;
       }
     }
-
-    #endregion
   }
 }

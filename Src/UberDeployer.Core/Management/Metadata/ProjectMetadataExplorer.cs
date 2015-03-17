@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using log4net;
+using UberDeployer.Common;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.DbDiff;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
-using log4net;
-using UberDeployer.Common;
-using System.Linq;
 
 namespace UberDeployer.Core.Management.Metadata
 {
@@ -146,14 +146,14 @@ namespace UberDeployer.Core.Management.Metadata
       DatabaseServer databaseServer =
         environmentInfo.GetDatabaseServer(dbProjectConfiguration.DatabaseServerId);
 
-      IEnumerable<string> dbVersions =
+      var dbVersions =
         _dbVersionProvider.GetVersions(
           dbProjectInfo.DbName,
           databaseServer.MachineName);
 
       DbVersion latestDbVersion =
         dbVersions
-          .Select(DbVersion.FromString)
+          .Select(s => DbVersion.FromString(s.Version))
           .OrderByDescending(v => v)
           .FirstOrDefault();
 

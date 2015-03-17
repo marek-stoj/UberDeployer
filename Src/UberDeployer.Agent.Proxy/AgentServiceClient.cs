@@ -8,8 +8,6 @@ namespace UberDeployer.Agent.Proxy
 {
   public class AgentServiceClient : WcfProxy<IAgentService>, IAgentService
   {
-    #region IAgentService Members
-
     public void Deploy(Guid deploymentId, Guid uniqueClientId, string requesterIdentity, DeploymentInfo deploymentInfo)
     {
       Exec(@as => @as.Deploy(deploymentId, uniqueClientId, requesterIdentity, deploymentInfo));
@@ -80,11 +78,19 @@ namespace UberDeployer.Agent.Proxy
       Exec(@as => @as.SetCollectedCredentialsForAsynchronousWebCredentialsCollector(deploymentId, password));
     }
 
+    public void SetSelectedDbScriptsToRun(Guid deploymentId, DbScriptsToRunSelection scriptsToRunSelection)
+    {
+      Exec(@as => @as.SetSelectedDbScriptsToRun(deploymentId, scriptsToRunSelection));
+    }
+
+    public void CancelDbScriptsSelection(Guid deploymentId)
+    {
+      Exec(@as => @as.CancelDbScriptsSelection(deploymentId));
+    }
+
     public string GetDefaultPackageDirPath(string environmentName, string projectName)
     {
       return Exec(@as => @as.GetDefaultPackageDirPath(environmentName, projectName));
     }
-
-    #endregion
   }
 }

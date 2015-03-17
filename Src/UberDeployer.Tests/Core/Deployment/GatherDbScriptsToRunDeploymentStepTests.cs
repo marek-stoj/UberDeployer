@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 
@@ -8,11 +7,11 @@ using Moq;
 
 using NUnit.Framework;
 
+using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Steps;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Management.Db;
 using UberDeployer.Tests.Core.Generators;
-using UberDeployer.Tests.Core.TestUtils;
 
 namespace UberDeployer.Tests.Core.Deployment
 {
@@ -20,32 +19,35 @@ namespace UberDeployer.Tests.Core.Deployment
   public class GatherDbScriptsToRunDeploymentStepTests
   {
     private GatherDbScriptsToRunDeploymentStep _deploymentStep;
-    private const string _ScriptPath = "TestData/TestSqlScripts";
+
+    private const string _ScriptPath = "Core/TestData/TestSqlScripts";
+
     private const string _SqlServerName = "sqlServerName";
+
     private const string _Environment = "env";
 
     private Mock<IDbVersionProvider> _dbVersionProviderFake;
+
+    private Mock<IScriptsToRunWebSelector> _scriptsToRunWebSelector;
 
     [SetUp]
     public void SetUp()
     {
       _dbVersionProviderFake = new Mock<IDbVersionProvider>(MockBehavior.Loose);
+      _scriptsToRunWebSelector = new Mock<IScriptsToRunWebSelector>(MockBehavior.Loose);
 
       DbProjectInfo dbProjectInfo = ProjectInfoGenerator.GetDbProjectInfo();
 
-      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(dbProjectInfo.DbName, new Lazy<string>(() => _ScriptPath), _SqlServerName, _Environment, _dbVersionProviderFake.Object);
-    }
+      DeploymentInfo di = DeploymentInfoGenerator.GetDbDeploymentInfo();
 
-    [Test]
-    [TestCase("scriptsDirectoryPath", typeof(ArgumentNullException))]
-    [TestCase("sqlServerName", typeof(ArgumentException))]
-    [TestCase("environmentName", typeof(ArgumentException))]
-    [TestCase("dbVersionProvider", typeof(ArgumentNullException))]
-    public void Constructor_fails_when_parameter_is_null(string nullParamName, Type expectedExceptionType)
-    {
-      Assert.Throws(
-        expectedExceptionType,
-        () => ReflectionTestTools.CreateInstance<GatherDbScriptsToRunDeploymentStep>(GetDefaultConstructorParams(), nullParamName));
+      _deploymentStep = new GatherDbScriptsToRunDeploymentStep(
+        dbProjectInfo.DbName,
+        new Lazy<string>(() => _ScriptPath),
+        _SqlServerName,
+        _Environment,
+        di,
+        _dbVersionProviderFake.Object,
+        _scriptsToRunWebSelector.Object);
     }
 
     [Test]
@@ -62,7 +64,27 @@ namespace UberDeployer.Tests.Core.Deployment
       // arrange
       _dbVersionProviderFake
         .Setup(x => x.GetVersions(It.IsAny<string>(), It.IsAny<string>())).
-        Returns(new List<string>() { "1.2", "1.3" });
+        Returns(
+          new List<DbVersionInfo>
+          {
+            new DbVersionInfo()
+            {
+              Version = "1.2",
+              IsMigrated = true
+            },
+            new DbVersionInfo
+            {
+              Version = "1.3",
+              IsMigrated = true
+            }
+          });
+
+      _scriptsToRunWebSelector.Setup(x => x.GetSelectedScriptsToRun(It.IsAny<Guid>(), It.IsAny<string[]>())).Returns(
+        new DbScriptsToRunSelection
+        {
+          DatabaseScriptToRunSelectionType = DatabaseScriptToRunSelectionType.LastVersion,
+          SelectedScripts = new[] { "1.4" }
+        });
 
       // act
       _deploymentStep.PrepareAndExecute();
@@ -75,17 +97,36 @@ namespace UberDeployer.Tests.Core.Deployment
     public void DoExecute_gathers_not_executed_scripts()
     {
       // arrange
-      string[] executedScriptsVersion = new[] { "1.2", "1.3" };
       const string notExecutedScript = "1.4.sql";
 
       _dbVersionProviderFake
         .Setup(x => x.GetVersions(It.IsAny<string>(), It.IsAny<string>())).
-        Returns(executedScriptsVersion);
+        Returns(
+          new List<DbVersionInfo>
+          {
+            new DbVersionInfo()
+            {
+              Version = "1.2",
+              IsMigrated = true
+            },
+            new DbVersionInfo
+            {
+              Version = "1.3",
+              IsMigrated = true
+            }
+          });
+
+      _scriptsToRunWebSelector.Setup(x => x.GetSelectedScriptsToRun(It.IsAny<Guid>(), It.IsAny<string[]>())).Returns(
+        new DbScriptsToRunSelection
+        {
+          DatabaseScriptToRunSelectionType = DatabaseScriptToRunSelectionType.LastVersion,
+          SelectedScripts = new[] { "1.4" }
+        });
 
       // act
       _deploymentStep.PrepareAndExecute();
 
-      // assert      
+      // assert
       Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == notExecutedScript));
     }
 
@@ -93,12 +134,14 @@ namespace UberDeployer.Tests.Core.Deployment
     public void DoExecute_not_gathers_older_scripts_than_current()
     {
       // arrange
-      string[] executedScriptsVersion = new[] { "1.3" };
-      const string scriptOlderThanCurrent = "1.2.sql";
+      const string scriptOlderThanCurrent = "1.3.sql";
 
-      _dbVersionProviderFake
-        .Setup(x => x.GetVersions(It.IsAny<string>(), It.IsAny<string>())).
-        Returns(executedScriptsVersion);
+      _scriptsToRunWebSelector.Setup(x => x.GetSelectedScriptsToRun(It.IsAny<Guid>(), It.IsAny<string[]>())).Returns(
+        new DbScriptsToRunSelection
+        {
+          DatabaseScriptToRunSelectionType = DatabaseScriptToRunSelectionType.LastVersion,
+          SelectedScripts = new[] { "1.2" }
+        });
 
       // act
       _deploymentStep.PrepareAndExecute();
@@ -111,12 +154,14 @@ namespace UberDeployer.Tests.Core.Deployment
     public void DoExecute_not_gathers_scripts_with_not_supported_name()
     {
       // arrange
-      string[] executedScriptsVersion = new[] { "1.2" };
       const string notSupportedScript = "1.3a.sql";
 
-      _dbVersionProviderFake
-        .Setup(x => x.GetVersions(It.IsAny<string>(), It.IsAny<string>())).
-        Returns(executedScriptsVersion);
+      _scriptsToRunWebSelector.Setup(x => x.GetSelectedScriptsToRun(It.IsAny<Guid>(), It.IsAny<string[]>())).Returns(
+        new DbScriptsToRunSelection
+        {
+          DatabaseScriptToRunSelectionType = DatabaseScriptToRunSelectionType.LastVersion,
+          SelectedScripts = new[] { "1.2" }
+        });
 
       // act
       _deploymentStep.PrepareAndExecute();
@@ -128,33 +173,21 @@ namespace UberDeployer.Tests.Core.Deployment
     [Test]
     public void DoExecute_gathers_scripts_marked_as_non_transactional()
     {
-      // arrange  
-      string[] executedScriptsVersion = new[] { "1.2", "1.3" };
-
+      // arrange
       const string nonTransactionalScriptToExecute = "1.3.notrans.sql";
-
-      _dbVersionProviderFake
-        .Setup(x => x.GetVersions(It.IsAny<string>(), It.IsAny<string>())).
-        Returns(executedScriptsVersion);
+      
+      _scriptsToRunWebSelector.Setup(x => x.GetSelectedScriptsToRun(It.IsAny<Guid>(), It.IsAny<string[]>())).Returns(
+        new DbScriptsToRunSelection
+        {
+          DatabaseScriptToRunSelectionType = DatabaseScriptToRunSelectionType.LastVersion,
+          SelectedScripts = new[] { "1.4" }
+        });
 
       // act
       _deploymentStep.PrepareAndExecute();
 
-      // assert      
+      // assert
       Assert.IsTrue(_deploymentStep.ScriptsToRun.Any(x => Path.GetFileName(x.ScriptPath) == nonTransactionalScriptToExecute));
-    }
-
-    private OrderedDictionary GetDefaultConstructorParams()
-    {
-      return
-        new OrderedDictionary
-        {
-          { "dbName", "database_name" },
-          { "scriptsDirectoryPath", new Lazy<string>(() => _ScriptPath) },
-          { "sqlServerName", _SqlServerName },
-          { "environmentName", _Environment },
-          { "dbVersionProvider", _dbVersionProviderFake.Object }
-        };
     }
   }
 }

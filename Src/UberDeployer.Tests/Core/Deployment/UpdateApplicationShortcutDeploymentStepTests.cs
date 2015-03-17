@@ -15,15 +15,15 @@ namespace UberDeployer.Tests.Core.Deployment
     {
       var step =
         new UpdateApplicationShortcutDeploymentStep(
-          "TestData/Shortcuts",
-          new Lazy<string>(() => "TestData/VersionedFolders/TestProject/1.0.3.5"),
+          "Core/TestData/Shortcuts",
+          new Lazy<string>(() => "Core/TestData/VersionedFolders/TestProject/1.0.3.5"),
           "FolderMattersFile.dummy",
           "TestProject");
 
       step.PrepareAndExecute();
 
-      Assert.IsTrue(File.Exists("TestData/Shortcuts/TestProject.lnk"));
-      File.Delete("TestData/ShortCuts/TestProject.lnk");
+      Assert.IsTrue(File.Exists("Core/TestData/Shortcuts/TestProject.lnk"));
+      File.Delete("Core/TestData/ShortCuts/TestProject.lnk");
     }
 
     [Test]
@@ -31,14 +31,14 @@ namespace UberDeployer.Tests.Core.Deployment
     {
       var step =
         new UpdateApplicationShortcutDeploymentStep(
-          "TestData/Shortcuts",
-          new Lazy<string>(() => "TestData/VersionedFolders/TestProject/1.0.3.5"),
+          "Core/TestData/Shortcuts",
+          new Lazy<string>(() => "Core/TestData/VersionedFolders/TestProject/1.0.3.5"),
           "FolderMattersFile.dummy",
           "ExistingAppShortcut");
 
       step.PrepareAndExecute();
 
-      var modifiedDate = File.GetLastWriteTime("TestData/Shortcuts/ExistingAppShortcut.lnk");
+      var modifiedDate = File.GetLastWriteTime("Core/TestData/Shortcuts/ExistingAppShortcut.lnk");
       Assert.LessOrEqual((DateTime.Now - modifiedDate).TotalMilliseconds, 10);
     }
   }

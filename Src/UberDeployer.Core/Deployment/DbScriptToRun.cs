@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace UberDeployer.Core.Deployment
 {
   using System.Linq;
@@ -36,6 +38,11 @@ namespace UberDeployer.Core.Deployment
       .Select(pattern => new Regex(pattern, RegexOptions.IgnoreCase));
 
       return versionInsertRegexes.Any(r => r.IsMatch(script));
+    }
+
+    public string GetScriptFileName()
+    {
+      return Path.GetFileNameWithoutExtension(ScriptPath);
     }
 
     private static object RevisionRegex(DbVersion dbVersion)

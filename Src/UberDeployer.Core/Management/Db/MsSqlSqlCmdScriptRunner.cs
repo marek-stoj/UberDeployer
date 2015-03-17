@@ -51,7 +51,7 @@ namespace UberDeployer.Core.Management.Db
         Execute(
           SqlCmdExe,
           string.Format(
-            "-S \"{0}\" -E -i \"{2}\" -b -v DatabaseName=\"{1}\"", _databaseServer, _databaseName, _tmpScriptPath));
+            "-S \"{0}\" -E -i \"{2}\" -V15 -b -v DatabaseName=\"{1}\"", _databaseServer, _databaseName, _tmpScriptPath));
 
         _log.Debug("Applying script to database ended successfully.");
       }

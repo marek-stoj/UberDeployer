@@ -8,8 +8,6 @@ namespace UberDeployer.Core.DbDiff
   {
     private static readonly Regex _VersionRegex = new Regex(@"^(?<Major>[0-9]+)(\.(?<Minor>[0-9]+))?(\.(?<Revision>[0-9]+))?(\.(?<Build>[0-9]+))?(?<Tail>.*)$", RegexOptions.Compiled);
 
-    #region Constructor(s)
-
     public DbVersion(int major, int minor = 0, int revision = 0, int build = 0, string tail = "")
     {
       Major = major;
@@ -19,9 +17,15 @@ namespace UberDeployer.Core.DbDiff
       Tail = tail;
     }
 
-    #endregion
+    public int Major { get; private set; }
 
-    #region Public methods
+    public int Minor { get; private set; }
+
+    public int Revision { get; private set; }
+
+    public int Build { get; private set; }
+
+    public string Tail { get; private set; }
 
     public static DbVersion FromString(string versionStr)
     {
@@ -103,10 +107,6 @@ namespace UberDeployer.Core.DbDiff
       return !IsSmallerThan(dbVersion) && !IsEqualTo(dbVersion);
     }
 
-    #endregion
-
-    #region IComparable<DbVersion> members
-
     public int CompareTo(DbVersion other)
     {
       Guard.NotNull(other, "other");
@@ -119,16 +119,10 @@ namespace UberDeployer.Core.DbDiff
       return IsSmallerThan(other) ? -1 : 1;
     }
 
-    #endregion
-
-    #region Object overrides
-
     public override string ToString()
     {
       return string.Format("{0}.{1}.{2}.{3}{4}", Major, Minor, Revision, Build, Tail);
     }
-
-    #endregion
 
     #region Equality members
 
@@ -159,20 +153,6 @@ namespace UberDeployer.Core.DbDiff
         return result;
       }
     }
-
-    #endregion
-
-    #region Properties
-
-    public int Major { get; private set; }
-
-    public int Minor { get; private set; }
-
-    public int Revision { get; private set; }
-
-    public int Build { get; private set; }
-
-    public string Tail { get; private set; }
 
     #endregion
   }
