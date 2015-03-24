@@ -55,6 +55,11 @@ namespace UberDeployer.Core.Management.Db
 
         _log.Debug("Applying script to database ended successfully.");
       }
+      catch (Exception exception)
+      {
+        _log.Error(exception);
+        throw;
+      }
       finally
       {
         File.Delete(_tmpScriptPath);
