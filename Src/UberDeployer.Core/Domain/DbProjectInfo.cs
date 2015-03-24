@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain
 {
   public class DbProjectInfo : ProjectInfo
   {
-    public DbProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string dbName, string databaseServerId)
+    public DbProjectInfo(string name, string artifactsRepositoryName, IEnumerable<string> allowedEnvironmentNames, string artifactsRepositoryDirName, bool artifactsAreNotEnvironmentSpecific, string dbName, string databaseServerId, bool isTransactional)
       : base(name, artifactsRepositoryName, allowedEnvironmentNames, artifactsRepositoryDirName, artifactsAreNotEnvironmentSpecific)
     {
       DbName = dbName;
       DatabaseServerId = databaseServerId;
+      IsTransactional = isTransactional;
     }
 
     public override ProjectType Type
@@ -39,7 +41,8 @@ namespace UberDeployer.Core.Domain
           objectFactory.CreateDbScriptRunnerFactory(),
           objectFactory.CreateDbVersionProvider(),
           objectFactory.CreateFileAdapter(),
-          objectFactory.CreateZipFileAdapter());
+          objectFactory.CreateZipFileAdapter(),
+          objectFactory.CreateScriptsToRunWebSelector());
     }
 
     public override IEnumerable<string> GetTargetFolders(IObjectFactory objectFactory, EnvironmentInfo environmentInfo)
@@ -55,5 +58,7 @@ namespace UberDeployer.Core.Domain
     public string DbName { get; private set; }
 
     public string DatabaseServerId { get; set; }
+
+    public bool IsTransactional { get; set; }
   }
 }

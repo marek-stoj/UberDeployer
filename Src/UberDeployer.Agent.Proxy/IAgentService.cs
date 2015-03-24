@@ -27,7 +27,7 @@ namespace UberDeployer.Agent.Proxy
     List<ProjectInfo> GetProjectInfos(ProjectFilter projectFilter);
 
     [OperationContract]
-    List<EnvironmentInfo> GetEnvironmentInfos();    
+    List<EnvironmentInfo> GetEnvironmentInfos();
 
     [OperationContract]
     [FaultContract(typeof(EnvironmentNotFoundFault))]
@@ -35,12 +35,12 @@ namespace UberDeployer.Agent.Proxy
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
-    List<ProjectConfiguration> GetProjectConfigurations(string projectName, ProjectConfigurationFilter projectConfigurationFilter);
+    List<ProjectConfiguration> GetProjectConfigurations(string projectName);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
     [FaultContract(typeof(ProjectConfigurationNotFoundFault))]
-    List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, int maxCount, ProjectConfigurationBuildFilter projectConfigurationBuildFilter);
+    List<ProjectConfigurationBuild> GetProjectConfigurationBuilds(string projectName, string projectConfigurationName, string branchName, int maxCount);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]
@@ -66,6 +66,12 @@ namespace UberDeployer.Agent.Proxy
 
     [OperationContract]
     void SetCollectedCredentialsForAsynchronousWebCredentialsCollector(Guid deploymentId, string password);
+
+    [OperationContract]
+    void SetSelectedDbScriptsToRun(Guid deploymentId, DbScriptsToRunSelection scriptsToRunSelection);
+
+    [OperationContract]
+    void CancelDbScriptsSelection(Guid deploymentId);
 
     [OperationContract]
     [FaultContract(typeof(ProjectNotFoundFault))]

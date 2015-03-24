@@ -7,6 +7,7 @@ using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Domain.Input;
 using System.Linq;
+using UberDeployer.Core.Deployment.Tasks;
 
 namespace UberDeployer.Core.Domain
 {

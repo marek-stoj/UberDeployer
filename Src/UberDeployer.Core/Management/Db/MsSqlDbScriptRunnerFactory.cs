@@ -1,14 +1,17 @@
+using UberDeployer.Core.Domain;
+
 namespace UberDeployer.Core.Management.Db
 {
   public class MsSqlDbScriptRunnerFactory : IDbScriptRunnerFactory
   {
-    #region IDbScriptRunnerFactory Members
-
-    public IDbScriptRunner CreateDbScriptRunner(string databaseServerMachineName)
+    public IDbScriptRunner CreateDbScriptRunner(bool usesSqlCmdUpgradeScripts, string databaseServerName, string databaseName)
     {
-      return new MsSqlDbScriptRunner(databaseServerMachineName);
-    }
+      if (usesSqlCmdUpgradeScripts)
+      {
+        return new MsSqlSqlCmdScriptRunner(databaseServerName, databaseName);
+      }
 
-    #endregion
+      return new MsSqlDbScriptRunner(databaseServerName);
+    }
   }
 }

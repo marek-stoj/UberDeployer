@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UberDeployer.Common.SyntaxSugar;
 using UberDeployer.Core.Deployment;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain.Input;
 
 namespace UberDeployer.Core.Domain

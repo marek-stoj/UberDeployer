@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9D43050A-2614-4022-A024-28FE293BB203}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UberDeployer.Tests</RootNamespace>
+    <AssemblyName>UberDeployer.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\tests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\tests\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\Lib\Moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NAnt.Core">
+      <HintPath>..\..\Lib\NAnt\NAnt.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Lib\NUnit\framework\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Agent.Service\AgentServiceTests.cs" />
+    <Compile Include="Common\CollectionsExtensionsTests.cs" />
+    <Compile Include="Common\RetryUtilsTests.cs" />
+    <Compile Include="Core\DataAccess\TeamCityArtifactsRepositoryTests.cs" />
+    <Compile Include="Core\Deployment\BackupFilesDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\CopyFilesDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\CtorTester.cs" />
+    <Compile Include="Core\Deployment\DbScriptToRunTests.cs" />
+    <Compile Include="Core\Deployment\DeployDbProjectDeploymentTaskTests.cs" />
+    <Compile Include="Core\Deployment\DeployExtensionProjectDeploymentTaskTests.cs" />
+    <Compile Include="Core\Deployment\DeployNtServiceDeploymentTaskTests.cs" />
+    <Compile Include="Core\Deployment\DeploySchedulerAppDeploymentTaskTests.cs" />
+    <Compile Include="Core\Deployment\DeployWebAppDeploymentTaskTests.cs" />
+    <Compile Include="Core\Deployment\DeployWebDeployPackageDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\ExtractArtifactsDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\ExtractVersionDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\GatherDbScriptsToRunDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\InstallNtServiceDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\MsSqlDbScriptRunnerTests.cs" />
+    <Compile Include="Core\Deployment\NtServiceControlDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\Pipeline\DeploymentPipelineTests.cs" />
+    <Compile Include="Core\Deployment\Pipeline\DummyDeploymentTask.cs" />
+    <Compile Include="Core\Deployment\Pipeline\Modules\AuditingModuleTests.cs" />
+    <Compile Include="Core\Deployment\Pipeline\Modules\DeploymentRequestTests.cs" />
+    <Compile Include="Core\Deployment\Pipeline\Modules\EnforceTargetEnvironmentConstraintsModuleTests.cs" />
+    <Compile Include="Core\Deployment\PrepareVersionedFolderDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\RunDbScriptsDeploymentStepTests.cs" />
+    <Compile Include="Core\Deployment\UpdateApplicationShortcutDeploymentStepTests.cs" />
+    <Compile Include="Core\Domain\EnvironmentInfoTests.cs" />
+    <Compile Include="Core\Domain\IisAppPoolInfoTests.cs" />
+    <Compile Include="Core\Domain\NtServiceProjectInfoTests.cs" />
+    <Compile Include="Core\Domain\SchedulerAppProjectInfoTests.cs" />
+    <Compile Include="Core\Domain\TerminalAppProjectInfoTests.cs" />
+    <Compile Include="Core\Domain\WebAppProjectInfoTests.cs" />
+    <Compile Include="Core\Generators\DeploymentDataGenerator.cs" />
+    <Compile Include="Core\Generators\DeploymentInfoGenerator.cs" />
+    <Compile Include="Core\Generators\ProjectInfoGenerator.cs" />
+    <Compile Include="Core\InternalExceptionTests.cs" />
+    <Compile Include="Core\Management\Db\DbVersionProviderTests.cs" />
+    <Compile Include="Core\Management\Db\DbVersionProviderTestUtils.cs" />
+    <Compile Include="Core\Management\Iis\MsDeployBasedIisManagerTests.cs" />
+    <Compile Include="Core\Management\NtServices\NtServiceDescriptorTests.cs" />
+    <Compile Include="Core\Management\NtServices\ScExeBasedNtServiceManagerTests.cs" />
+    <Compile Include="Core\TeamCity\ModelsTests.cs" />
+    <Compile Include="Core\TeamCity\TeamCityClientTests.cs" />
+    <Compile Include="Core\TeamCity\TeamCityRestClientTests.cs" />
+    <Compile Include="Core\TestData.cs" />
+    <Compile Include="Core\TestUtils\ReflectionTools.cs" />
+    <Compile Include="DbDiff\DbVersionTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebApp\ApiControllerTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UberDeployer.Agent.Proxy\UberDeployer.Agent.Proxy.csproj">
+      <Project>{20970513-4A64-420E-B814-4D8FC89698FA}</Project>
+      <Name>UberDeployer.Agent.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Agent.Service\UberDeployer.Agent.Service.csproj">
+      <Project>{31B1E1BD-5D9D-4156-99D7-EDE0E662CCC6}</Project>
+      <Name>UberDeployer.Agent.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.CommonConfiguration\UberDeployer.CommonConfiguration.csproj">
+      <Project>{1F7893B7-4540-4469-BE29-39A3BEEE2584}</Project>
+      <Name>UberDeployer.CommonConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Common\UberDeployer.Common.csproj">
+      <Project>{256FF6D7-F1B8-43E7-97CA-7A63455C0BE6}</Project>
+      <Name>UberDeployer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Core.DbDiff\UberDeployer.Core.DbDiff.csproj">
+      <Project>{42554C30-1E25-4ABC-814C-A4B624713212}</Project>
+      <Name>UberDeployer.Core.DbDiff</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.Core\UberDeployer.Core.csproj">
+      <Project>{FF46EF5A-C434-4B3C-9F90-5BD242238B83}</Project>
+      <Name>UberDeployer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UberDeployer.WebApp\UberDeployer.WebApp.csproj">
+      <Project>{720257A5-4AAE-4891-AF33-4D98923DB86F}</Project>
+      <Name>UberDeployer.WebApp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Data\EnvironmentInfo_Local.xml">
+      <Link>Data\EnvironmentInfo_Local.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\EnvironmentInfo_Remote.xml">
+      <Link>Data\EnvironmentInfo_Remote.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\NonVersionedScript\01.NonVersionedScript.sql">
+      <SubType>Form</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\NonVersionedScript\02.NonVersionedScript.notrans.sql">
+      <SubType>Form</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSqlScripts\1.2.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSqlScripts\1.3.notrans.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSqlScripts\1.3.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSqlScripts\1.3a.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSqlScripts\1.4.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSrcDir\SubDir1\File3.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSrcDir\SubDir1\File4.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSrcDir\SubDir1\SubSubDir\File1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestSrcDir\SubDir2\File5.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\TestData\TestVersionExtract\subst.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Core\TestData\Shortcuts\ExistingAppShortcut.lnk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Core\TestData\Shortcuts\FolderMattersFile.dummy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Core\TestData\TestArtifacts\artifacts.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Core\TestData\TestSrcDir\File7.doc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Core\TestData\TestSrcDir\File8.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Core\TestData\TestSrcDir\SubDir1\SubSubDir\File2.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Core\TestData\TestSrcDir\SubDir2\File6.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Core\TestData\VersionedFolders\TestProject\1.0.3.5\FolderMattersFile.dummy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="..\..\Data\ApplicationConfiguration.xml">
+      <Link>Data\ApplicationConfiguration.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Data\ProjectInfos.xml">
+      <Link>Data\ProjectInfos.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

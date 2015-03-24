@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UberDeployer.Common.SyntaxSugar;
+using UberDeployer.Core.Deployment.Tasks;
 using UberDeployer.Core.Domain;
 
 namespace UberDeployer.Core.Deployment.Pipeline

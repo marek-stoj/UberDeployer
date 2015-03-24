@@ -6,6 +6,7 @@ using UberDeployer.CommonConfiguration;
 using UberDeployer.Core.Domain;
 using UberDeployer.Core.Deployment;
 using UberDeployer.Core.Deployment.Pipeline;
+using UberDeployer.Core.Deployment.Tasks;
 
 namespace UberDeployer.NAnt
 {

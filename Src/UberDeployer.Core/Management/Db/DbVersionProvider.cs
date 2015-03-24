@@ -10,19 +10,19 @@ namespace UberDeployer.Core.Management.Db
   {
     private const string _ConnectionStringPattern = "Server={0};Integrated Security=SSPI";
 
-    private readonly List<DbVersionTableInfo> _versionTableInfos;    
+    private readonly List<DbVersionTableInfo> _versionTableInfos;
 
     public DbVersionProvider(IEnumerable<DbVersionTableInfo> versionTableInfos)
     {
       if (versionTableInfos == null)
       {
         throw new ArgumentNullException("versionTableInfos");
-      }      
+      }
 
       _versionTableInfos = new List<DbVersionTableInfo>(versionTableInfos);
     }
 
-    public IEnumerable<string> GetVersions(string dbName, string sqlServerName)
+    public IEnumerable<DbVersionInfo> GetVersions(string dbName, string sqlServerName)
     {
       if (string.IsNullOrEmpty(dbName))
       {
@@ -33,26 +33,32 @@ namespace UberDeployer.Core.Management.Db
       {
         throw new ArgumentException("Argument can't be null nor empty.", "sqlServerName");
       }
-      
+
       string connectionString = string.Format(_ConnectionStringPattern, sqlServerName);
 
       using (var connection = new SqlConnection(connectionString))
       {
         connection.Open();
 
-        DbVersionTableInfo versionTableInfo =
-          GetVersionTableInfo(dbName, connection);
+        DbVersionTableInfo versionTableInfo = GetVersionTableInfo(dbName, connection);
 
         if (versionTableInfo == null)
         {
-          return new List<string>();
+          return Enumerable.Empty<DbVersionInfo>();
+        }
+
+        string columnsToSelect = string.Format("[{0}]", versionTableInfo.VersionColumnName);
+
+        if (string.IsNullOrEmpty(versionTableInfo.MigrationColumnName) == false)
+        {
+          columnsToSelect += string.Format(", [{0}]", versionTableInfo.MigrationColumnName);
         }
 
         string versionQuery = string.Format(
-          "use [{0}]" + "\r\n" +
-          "select [{1}] from [{2}]",
+@"use [{0}]
+select {1} from [{2}]",
           dbName,
-          versionTableInfo.ColumnName,
+          columnsToSelect,
           versionTableInfo.TableName);
 
         IEnumerable<dynamic> dbVersions = connection.Query(versionQuery);
@@ -60,11 +66,21 @@ namespace UberDeployer.Core.Management.Db
         return dbVersions
           .Select(
             dbVersion =>
-              {
-                object value = ((IDictionary<string, object>)dbVersion)[versionTableInfo.ColumnName];
+            {
+              object versionValue = ((IDictionary<string, object>)dbVersion)[versionTableInfo.VersionColumnName];
+              object migationValue = true;
 
-                return value != null ? (string)value : null;
-              })
+              if (string.IsNullOrEmpty(versionTableInfo.MigrationColumnName) == false)
+              {
+                migationValue = ((IDictionary<string, object>)dbVersion)[versionTableInfo.MigrationColumnName];
+              }
+
+              return new DbVersionInfo
+              {
+                Version = versionValue != null ? (string)versionValue : null,
+                IsMigrated = migationValue != null
+              };
+            })
           .ToList();
       }
     }
@@ -75,15 +91,23 @@ namespace UberDeployer.Core.Management.Db
         "use [{0}]" + "\r\n" +
         "select * from sys.tables",
         dbName));
-      
+
       HashSet<string> tableNames = new HashSet<string>(tables.Select(t => ((string)t.name).ToUpper()));
 
       foreach (var versionTableInfo in _versionTableInfos)
       {
         if (tableNames.Contains(versionTableInfo.TableName.ToUpper())
-         && TableContainsColumn(connection, dbName, versionTableInfo.TableName, versionTableInfo.ColumnName))
+         && TableContainsColumn(connection, dbName, versionTableInfo.TableName, versionTableInfo.VersionColumnName))
         {
-          return versionTableInfo;
+          if (string.IsNullOrEmpty(versionTableInfo.MigrationColumnName))
+          {
+            return versionTableInfo;
+          }
+
+          if (TableContainsColumn(connection, dbName, versionTableInfo.TableName, versionTableInfo.MigrationColumnName))
+          {
+            return versionTableInfo;
+          }
         }
       }
 

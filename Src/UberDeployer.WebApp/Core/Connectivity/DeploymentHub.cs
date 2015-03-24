@@ -26,49 +26,6 @@ namespace UberDeployer.WebApp.Core.Connectivity
     {
     }
 
-    public static void PromptForCredentials(Guid deploymentId, string userIdentity, string projectName, string projectConfigurationName, string targetEnvironmentName, string machineName, string username)
-    {
-      Guard.NotEmpty(deploymentId, "deploymentId");
-      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
-      Guard.NotNullNorEmpty(projectName, "projectName");
-      Guard.NotNullNorEmpty(projectConfigurationName, "projectConfigurationName");
-      Guard.NotNullNorEmpty(targetEnvironmentName, "targetEnvironmentName");
-      Guard.NotNullNorEmpty(machineName, "machineName");
-      Guard.NotNullNorEmpty(username, "username");
-
-      dynamic client = GetClient(userIdentity);
-
-      if (client == null)
-      {
-        throw new ClientNotConnectedException(userIdentity);
-      }
-
-      client.promptForCredentials(
-        new
-        {
-          deploymentId = deploymentId,
-          projectName = projectName,
-          projectConfigurationName = projectConfigurationName,
-          targetEnvironmentName = targetEnvironmentName,
-          machineName,
-          username = username,
-        });
-    }
-
-    public static void CancelPromptForCredentials(string userIdentity)
-    {
-      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
-
-      dynamic client = GetClient(userIdentity);
-
-      if (client == null)
-      {
-        throw new ClientNotConnectedException(userIdentity);
-      }
-
-      client.cancelPromptForCredentials(new object());
-    }
-
     public override Task OnConnected()
     {
       _connectionIdUserIdentityDict[UserIdentity] = Context.ConnectionId;
@@ -84,6 +41,68 @@ namespace UberDeployer.WebApp.Core.Connectivity
       return base.OnDisconnected();
     }
 
+    public static void PromptForCredentials(Guid deploymentId, string userIdentity, string projectName, string projectConfigurationName, string targetEnvironmentName, string machineName, string username)
+    {
+      Guard.NotEmpty(deploymentId, "deploymentId");
+      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
+      Guard.NotNullNorEmpty(projectName, "projectName");
+      Guard.NotNullNorEmpty(projectConfigurationName, "projectConfigurationName");
+      Guard.NotNullNorEmpty(targetEnvironmentName, "targetEnvironmentName");
+      Guard.NotNullNorEmpty(machineName, "machineName");
+      Guard.NotNullNorEmpty(username, "username");
+
+      dynamic client = GetClient(userIdentity);
+
+      client.promptForCredentials(
+        new
+        {
+          deploymentId,
+          projectName,
+          projectConfigurationName,
+          targetEnvironmentName,
+          machineName,
+          username,
+        });
+    }
+
+    public static void CancelPromptForCredentials(string userIdentity)
+    {
+      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
+
+      dynamic client = GetClient(userIdentity);
+
+      client.cancelPromptForCredentials(new object());
+    }
+
+    public static void PromptForScriptsToRun(Guid deploymentId, string userIdentity, string projectName, string projectConfigurationName, string[] scriptsToRun)
+    {
+      Guard.NotEmpty(deploymentId, "deploymentId");
+      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
+      Guard.NotNullNorEmpty(projectName, "projectName");
+      Guard.NotNullNorEmpty(projectConfigurationName, "projectConfigurationName");
+      Guard.NotNull(scriptsToRun, "scriptsToRun");
+
+      dynamic client = GetClient(userIdentity);
+
+      client.promptForScriptsToRun(
+        new
+        {
+          deploymentId,
+          projectName,
+          projectConfigurationName,
+          scriptsToRun
+        });
+    }
+
+    public static void CancelPromptForScriptsToRun(string userIdentity)
+    {
+      Guard.NotNullNorEmpty(userIdentity, "userIdentity");
+
+      dynamic client = GetClient(userIdentity);
+
+      client.cancelPromptForScriptsToRun(new object());
+    }
+
     private static dynamic GetClient(string userIdentity)
     {
       Guard.NotNullNorEmpty(userIdentity, "userIdentity");
@@ -97,7 +116,14 @@ namespace UberDeployer.WebApp.Core.Connectivity
 
       IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<DeploymentHub>();
 
-      return hubContext.Clients.Client(connectionId);
+      dynamic client = hubContext.Clients.Client(connectionId);
+
+      if (client == null)
+      {
+        throw new ClientNotConnectedException(userIdentity);
+      }
+
+      return client;
     }
 
     private static string UserIdentity
